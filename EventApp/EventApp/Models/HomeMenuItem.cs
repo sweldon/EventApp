@@ -6,8 +6,9 @@ namespace EventApp.Models
 {
     public enum MenuItemType
     {
-        Browse,
-        About
+        Login,
+        Browse
+        
     }
     public class HomeMenuItem
     {

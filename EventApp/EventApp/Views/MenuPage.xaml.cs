@@ -19,8 +19,8 @@ namespace EventApp.Views
 
             menuItems = new List<HomeMenuItem>
             {
-                new HomeMenuItem {Id = MenuItemType.Browse, Title="Users" },
-                new HomeMenuItem {Id = MenuItemType.About, Title="My Event App" }
+                new HomeMenuItem {Id = MenuItemType.Login, Title="My Events" },
+                new HomeMenuItem {Id = MenuItemType.Browse, Title="Users" }
             };
 
             ListViewMenu.ItemsSource = menuItems;

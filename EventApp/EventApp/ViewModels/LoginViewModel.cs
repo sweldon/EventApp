@@ -5,9 +5,9 @@ using Xamarin.Forms;
 
 namespace EventApp.ViewModels
 {
-    public class AboutViewModel : BaseViewModel
+    public class LoginViewModel : BaseViewModel
     {
-        public AboutViewModel()
+        public LoginViewModel()
         {
             Title = "Login or Register";
 
