@@ -42,7 +42,7 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <Label Text="Username" FontSize="Medium"  BindingContext="{x:Reference Name=NameEntry}"/>
+                <Label Text="Username" FontSize="Medium"/>
                 <Entry  FontSize="Small" x:Name="NameEntry" />
                 <Label Text="Password" FontSize="Medium" />
                 <Entry  FontSize="Small" IsPassword="True" x:Name="PassEntry" />
