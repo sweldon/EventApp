@@ -36,13 +36,9 @@ namespace EventApp.Views
                 };
 
                 var content = new FormUrlEncodedContent(values);
-
                 var response = await client.PostAsync(ec2Instance + "/Login", content);
-
                 var responseString = await response.Content.ReadAsStringAsync();
-
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-
                 int status = responseJSON.status;
 
                 if (status == 200)
@@ -86,10 +82,8 @@ namespace EventApp.Views
 
                 var content = new FormUrlEncodedContent(values);
                 var response = await client.PostAsync(ec2Instance + "/CreateUser", content);
-
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-
                 int status = responseJSON.StatusCode;
 
                 if (status == 200)
