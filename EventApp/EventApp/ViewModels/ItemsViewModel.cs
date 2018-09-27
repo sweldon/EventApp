@@ -42,7 +42,7 @@ namespace EventApp.ViewModels
                 var items = await DataStore.GetItemsAsync(true);
                 foreach (var item in items)
                 {
-                    Items.Add(item);
+                    Items.Insert(0, item);
                 }
             }
             catch (Exception ex)

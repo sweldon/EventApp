@@ -42,16 +42,16 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <Label Text="Username" FontSize="Medium" />
-                <Entry  FontSize="Small" />
+                <Label Text="Username" FontSize="Medium"  BindingContext="{x:Reference Name=NameEntry}"/>
+                <Entry  FontSize="Small" x:Name="NameEntry" />
                 <Label Text="Password" FontSize="Medium" />
-                <Entry  FontSize="Small" IsPassword="True" />
+                <Entry  FontSize="Small" IsPassword="True" x:Name="PassEntry" />
                 <Button Margin="0,10,0,0" Text="Login"
-                        Command="{Binding LoginCommand}"
+                        Clicked="LoginUser"
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="White" />
                 <Button Margin="0,10,0,0" Text="Register"
-                        Command="{Binding RegisterCommand}"
+                        Clicked="RegisterUser"
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="White" />
             </StackLayout>

@@ -33,7 +33,6 @@ namespace EventApp.Views
 
             await Navigation.PushAsync(new ItemDetailPage(new ItemDetailViewModel(item)));
 
-            // Manually deselect item.
             ItemsListView.SelectedItem = null;
         }
 
