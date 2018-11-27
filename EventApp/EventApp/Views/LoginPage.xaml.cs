@@ -15,8 +15,7 @@ namespace EventApp.Views
     {
         HttpClient client = new HttpClient();
         string ec2Instance = "http://ec2-18-205-119-102.compute-1.amazonaws.com:5555";
-        MainPage RootPage { get => Application.Current.MainPage as MainPage; }
-
+        public NavigationPage NavigationPage { get; private set; }
         public LoginPage()
         {
             InitializeComponent();
@@ -43,11 +42,14 @@ namespace EventApp.Views
 
                 if (status == 200)
                 {
-                    await DisplayAlert("Success!",
-                                 "You have authenticated successfully.",
-                                  "Go to Home Page");
-
-                    await RootPage.Detail.Navigation.PushAsync(new ItemsPage());
+                    Application.Current.Properties["IsLoggedIn"] = Boolean.TrueString;
+                    //await RootPage.Detail.Navigation.PushAsync(new ItemsPage());
+                    var menuPage = new MenuPage();
+                    NavigationPage = new NavigationPage(new ItemsPage());
+                    var rootPage = new MainPage(); 
+                    rootPage.Master = menuPage; 
+                    rootPage.Detail = NavigationPage; 
+                    Application.Current.MainPage = rootPage; 
                 }
                 else if (status == 400)
                 {
@@ -55,12 +57,12 @@ namespace EventApp.Views
                 }
                 else
                 {
-                    await DisplayAlert("Error", "Username or password incorrect", "Try Again");
+                    await DisplayAlert("Error", "Username or password incorrect", "Oops");
                 }
             }
             else
             {
-                await DisplayAlert("Error", "Enter some text first!", "Try Again");
+                await DisplayAlert("Error", "Enter some text first!", "Alrighty");
             }
 
         }
@@ -71,7 +73,7 @@ namespace EventApp.Views
 
             if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(pass) || userName.Contains(" "))
             {
-                await DisplayAlert("Error!", "Username or password invalid", "OK");
+                await DisplayAlert("Error!", "Username or password invalid", "Dang");
             }
             else
             {
@@ -88,16 +90,22 @@ namespace EventApp.Views
 
                 if (status == 200)
                 {
-                    await DisplayAlert("Success!", "You registered successfully", "Nice!");
-                    await RootPage.Detail.Navigation.PushAsync(new ItemsPage());
+                    Application.Current.Properties["IsLoggedIn"] = Boolean.TrueString;
+                    //await RootPage.Detail.Navigation.PushAsync(new ItemsPage());
+                    var menuPage = new MenuPage();
+                    NavigationPage = new NavigationPage(new ItemsPage());
+                    var rootPage = new MainPage();
+                    rootPage.Master = menuPage;
+                    rootPage.Detail = NavigationPage;
+                    Application.Current.MainPage = rootPage;
                 }
                 else if (status == 1000)
                 {
-                    await DisplayAlert("Error!", "User already exists.", "OK");
+                    await DisplayAlert("Error!", "Username already exists.", "Dang");
                 }
                 else
                 {
-                    await DisplayAlert("Sorry!", "Something went wrong on our end", "Try again");
+                    await DisplayAlert("Sorry!", "Something went wrong on our end", "Alrighty");
                 }
             }
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using System.Diagnostics;
 
 namespace EventApp.Views
 {
@@ -16,8 +17,8 @@ namespace EventApp.Views
             InitializeComponent();
 
             MasterBehavior = MasterBehavior.Popover;
+         
 
-            MenuPages.Add((int)MenuItemType.Login, (NavigationPage)Detail);
         }
 
         public async Task NavigateFromMenu(int id)
@@ -26,13 +27,12 @@ namespace EventApp.Views
             {
                 switch (id)
                 {
-                    case (int)MenuItemType.Login:
-                        MenuPages.Add(id, new NavigationPage(new LoginPage()));
-                        break;
                     case (int)MenuItemType.Browse:
                         MenuPages.Add(id, new NavigationPage(new ItemsPage()));
                         break;
-
+                    //case (int)MenuItemType.Login:
+                    //    MenuPages.Add(id, new NavigationPage(new LoginPage()));
+                    //    break;
                 }
             }
 

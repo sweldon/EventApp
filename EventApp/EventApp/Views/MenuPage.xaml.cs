@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using System.Net.Http;
-
+using System.Threading.Tasks;
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -16,10 +16,8 @@ namespace EventApp.Views
         public MenuPage()
         {
             InitializeComponent();
-
             menuItems = new List<HomeMenuItem>
             {
-                new HomeMenuItem {Id = MenuItemType.Login, Title="My Events" },
                 new HomeMenuItem {Id = MenuItemType.Browse, Title="Users" }
             };
 
@@ -34,6 +32,12 @@ namespace EventApp.Views
                 var id = (int)((HomeMenuItem)e.SelectedItem).Id;
                 await RootPage.NavigateFromMenu(id);
             };
+        }
+
+        public async Task LogoutUser(object sender, EventArgs e)
+        {
+            Application.Current.Properties["IsLoggedIn"] = Boolean.FalseString;
+            Application.Current.MainPage = new NavigationPage(new LoginPage());
         }
     }
 }
