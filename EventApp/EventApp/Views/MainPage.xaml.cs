@@ -30,9 +30,6 @@ namespace EventApp.Views
                     case (int)MenuItemType.Browse:
                         MenuPages.Add(id, new NavigationPage(new ItemsPage()));
                         break;
-                    //case (int)MenuItemType.Login:
-                    //    MenuPages.Add(id, new NavigationPage(new LoginPage()));
-                    //    break;
                 }
             }
 
