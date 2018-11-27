@@ -34,7 +34,7 @@ namespace EventApp.Views
             };
         }
 
-        public async Task LogoutUser(object sender, EventArgs e)
+        public void LogoutUser(object sender, EventArgs e)
         {
             Application.Current.Properties["IsLoggedIn"] = Boolean.FalseString;
             Application.Current.MainPage = new NavigationPage(new LoginPage());
