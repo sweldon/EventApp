@@ -12,7 +12,17 @@ namespace EventApp
         public App()
         {
             InitializeComponent();
-            bool isLoggedIn = Current.Properties.ContainsKey("IsLoggedIn") ? Convert.ToBoolean(Current.Properties["IsLoggedIn"]) : false;
+            bool isLoggedIn = false;
+            if (Current.Properties.ContainsKey("IsLoggedIn"))
+            {
+                isLoggedIn = Convert.ToBoolean(Current.Properties["IsLoggedIn"]);
+            }
+            else 
+            {
+                Current.Properties.Add("IsLoggedIn", false);
+                isLoggedIn = false;
+            }
+
             if (!isLoggedIn)
             {
                 MainPage = new LoginPage();
