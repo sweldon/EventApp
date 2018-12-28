@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.MenuPage"
@@ -24,7 +24,7 @@
                 </ContentView>
             </StackLayout>
         </StackLayout>
-        <ScrollView Grid.Row="1">
+        <StackLayout Grid.Row="1">
             <StackLayout Orientation="Vertical" Padding="16,10,16,10" Spacing="10">
                 <ListView x:Name="ListViewMenu"
                     HasUnevenRows="True">
@@ -32,7 +32,7 @@
                         <DataTemplate>
                             <ViewCell>
                                 <Grid Padding="10">
-                                    <Label Text="{Binding Title}" FontSize="20"/>
+                                    <Image Source="{Binding ImageSource}"/><Label Text="{Binding Title}" FontSize="20"/>
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>
@@ -43,6 +43,6 @@
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="White" />
             </StackLayout>
-        </ScrollView>
+        </StackLayout>
     </Grid>
 </ContentPage>

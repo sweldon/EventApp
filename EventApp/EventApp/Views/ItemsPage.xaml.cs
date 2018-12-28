@@ -23,6 +23,7 @@ namespace EventApp.Views
             InitializeComponent();
 
             BindingContext = viewModel = new ItemsViewModel();
+
         }
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
@@ -34,6 +35,8 @@ namespace EventApp.Views
             await Navigation.PushAsync(new ItemDetailPage(new ItemDetailViewModel(item)));
 
             ItemsListView.SelectedItem = null;
+        
+
         }
 
         async void AddItem_Clicked(object sender, EventArgs e)
