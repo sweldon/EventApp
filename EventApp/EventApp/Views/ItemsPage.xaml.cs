@@ -25,8 +25,8 @@ namespace EventApp.Views
             BindingContext = viewModel = new ItemsViewModel();
             DateTime currentDate = DateTime.Today;
             string dateString = currentDate.ToString("dd-MM-yyyy");
-            string dayNumber = dateString.Split("-")[0];
-            int monthNumber = Int32.Parse(dateString.Split("-")[1]);
+            string dayNumber = dateString.Split('-')[0];
+            int monthNumber = Int32.Parse(dateString.Split('-')[1]);
             DayNumberLabel.Text = dayNumber;
 
             Debug.WriteLine(dayNumber);
