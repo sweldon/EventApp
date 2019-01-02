@@ -13,8 +13,21 @@ namespace EventApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {
+
+        public string isLoggedIn
+        {
+            get { return Settings.GeneralSettings; }
+            set
+            {
+                if (Settings.GeneralSettings == value)
+                    return;
+                Settings.GeneralSettings = value;
+                OnPropertyChanged();
+            }
+        }
+
         HttpClient client = new HttpClient();
-        string ec2Instance = "http://ec2-18-205-119-102.compute-1.amazonaws.com:5555";
+        string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
         public NavigationPage NavigationPage { get; private set; }
         public LoginPage()
         {
@@ -35,14 +48,14 @@ namespace EventApp.Views
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(ec2Instance + "/Login", content);
+                var response = await client.PostAsync(ec2Instance + "/portal/login/", content);
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                int status = responseJSON.status;
+                int status = responseJSON.StatusCode;
 
                 if (status == 200)
                 {
-                    Application.Current.Properties["IsLoggedIn"] = Boolean.TrueString;
+                    isLoggedIn = "yes";
                     //await RootPage.Detail.Navigation.PushAsync(new ItemsPage());
                     var menuPage = new MenuPage();
                     NavigationPage = new NavigationPage(new ItemsPage());
@@ -83,14 +96,14 @@ namespace EventApp.Views
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(ec2Instance + "/CreateUser", content);
+                var response = await client.PostAsync(ec2Instance + "/portal/register/", content);
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                 int status = responseJSON.StatusCode;
 
                 if (status == 200)
                 {
-                    Application.Current.Properties["IsLoggedIn"] = Boolean.TrueString;
+                    isLoggedIn = "yes";
                     //await RootPage.Detail.Navigation.PushAsync(new ItemsPage());
                     var menuPage = new MenuPage();
                     NavigationPage = new NavigationPage(new ItemsPage());

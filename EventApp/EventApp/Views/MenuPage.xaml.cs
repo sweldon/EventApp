@@ -15,6 +15,18 @@ namespace EventApp.Views
 
         List<HomeMenuItem> menuItems;
 
+        public string isLoggedIn
+        {
+            get { return Settings.GeneralSettings; }
+            set
+            {
+                if (Settings.GeneralSettings == value)
+                    return;
+                Settings.GeneralSettings = value;
+                OnPropertyChanged();
+            }
+        }
+
         public MenuPage()
         {
             InitializeComponent();
@@ -38,7 +50,7 @@ namespace EventApp.Views
 
         public void LogoutUser(object sender, EventArgs e)
         {
-            Application.Current.Properties["IsLoggedIn"] = Boolean.FalseString;
+            isLoggedIn = "no";
             Application.Current.MainPage = new NavigationPage(new LoginPage());
         }
     }

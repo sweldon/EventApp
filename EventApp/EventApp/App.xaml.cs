@@ -3,32 +3,37 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using EventApp.Views;
 using System.Diagnostics;
+
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace EventApp
 {
     public partial class App : Application
     {
+    
+        public string isLoggedIn
+        {
+            get { return Settings.GeneralSettings; }
+            set
+            {
+                if (Settings.GeneralSettings == value)
+                return;
+                Settings.GeneralSettings = value;
+                OnPropertyChanged();
+            }
+        }
+
         public NavigationPage NavigationPage { get; private set; }
         public App()
         {
             InitializeComponent();
-            bool isLoggedIn = false;
-            if (Current.Properties.ContainsKey("IsLoggedIn"))
-            {
-                isLoggedIn = Convert.ToBoolean(Current.Properties["IsLoggedIn"]);
-            }
-            else 
-            {
-                Current.Properties.Add("IsLoggedIn", false);
-                isLoggedIn = false;
-            }
 
-            if (!isLoggedIn)
+            if (isLoggedIn == "no")
             {
                 MainPage = new LoginPage();
             }
             else
             {
+                isLoggedIn = "yes";
                 var menuPage = new MenuPage(); // Build hamburger menu
                 NavigationPage = new NavigationPage(new ItemsPage()); // Push main logged-in page on top of stack
                 var rootPage = new MainPage(); // Root handles master detail navigation

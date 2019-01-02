@@ -17,7 +17,7 @@ namespace EventApp.ViewModels
 
         public ItemsViewModel()
         {
-            Title = "Users";
+            Title = "What's today?";
             Items = new ObservableCollection<User>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
@@ -27,6 +27,7 @@ namespace EventApp.ViewModels
                 Items.Add(newItem);
                 await DataStore.AddItemAsync(newItem);
             });
+
         }
 
         async Task ExecuteLoadItemsCommand()
