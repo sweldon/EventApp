@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
 using EventApp.Models;
 using EventApp.Views;
 using EventApp.ViewModels;
+using System.Diagnostics;
 
 namespace EventApp.Views
 {
@@ -23,6 +23,23 @@ namespace EventApp.Views
             InitializeComponent();
 
             BindingContext = viewModel = new ItemsViewModel();
+            DateTime currentDate = DateTime.Today;
+            string dateString = currentDate.ToString("dd-MM-yyyy");
+            string dayNumber = dateString.Split('-')[0];
+            int monthNumber = Int32.Parse(dateString.Split('-')[1]);
+            DayNumberLabel.Text = dayNumber;
+
+            Debug.WriteLine(dayNumber);
+            Debug.WriteLine(monthNumber);
+
+            List<string> months = new List<string>() { 
+                "January","February","March","April","May","June","July",
+                "August", "September", "October", "November", "December"
+            };
+
+            string monthString = months[monthNumber - 1];
+            MonthLabel.Text = monthString;
+
         }
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
@@ -33,7 +50,9 @@ namespace EventApp.Views
 
             await Navigation.PushAsync(new ItemDetailPage(new ItemDetailViewModel(item)));
 
-            ItemsListView.SelectedItem = null;
+            //ItemsListView.SelectedItem = null;
+        
+
         }
 
         async void AddItem_Clicked(object sender, EventArgs e)

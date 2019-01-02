@@ -5,6 +5,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using System.Net.Http;
 using System.Threading.Tasks;
+
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -13,12 +14,25 @@ namespace EventApp.Views
         MainPage RootPage { get => Application.Current.MainPage as MainPage; }
 
         List<HomeMenuItem> menuItems;
+
+        public string isLoggedIn
+        {
+            get { return Settings.GeneralSettings; }
+            set
+            {
+                if (Settings.GeneralSettings == value)
+                    return;
+                Settings.GeneralSettings = value;
+                OnPropertyChanged();
+            }
+        }
+
         public MenuPage()
         {
             InitializeComponent();
             menuItems = new List<HomeMenuItem>
             {
-                new HomeMenuItem {Id = MenuItemType.Browse, Title="Users" }
+                new HomeMenuItem {Id = MenuItemType.Browse, Title="Users", Image=new Image {Source="EventApp.iOS.Resources.user_menu.png"}}
             };
 
             ListViewMenu.ItemsSource = menuItems;
@@ -36,7 +50,7 @@ namespace EventApp.Views
 
         public void LogoutUser(object sender, EventArgs e)
         {
-            Application.Current.Properties["IsLoggedIn"] = Boolean.FalseString;
+            isLoggedIn = "no";
             Application.Current.MainPage = new NavigationPage(new LoginPage());
         }
     }

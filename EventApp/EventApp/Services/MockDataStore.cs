@@ -13,7 +13,7 @@ namespace EventApp.Services
     {
 
         List<User> items;
-        string ec2Instance = "http://ec2-18-205-119-102.compute-1.amazonaws.com:5555";
+        string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
         HttpClient client = new HttpClient();
 
         public MockDataStore()
@@ -62,12 +62,11 @@ namespace EventApp.Services
         {
             items = new List<User>();
 
-            var response = await client.GetAsync(ec2Instance + "/GetUsers");
+            var response = await client.GetAsync(ec2Instance + "/portal/list_users/");
 
             var responseString = await response.Content.ReadAsStringAsync();
             Debug.WriteLine(responseString);
-            dynamic responseJSON = JsonConvert.
-            DeserializeObject(responseString);
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
 
             dynamic userList = responseJSON.UserList;
             
