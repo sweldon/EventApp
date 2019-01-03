@@ -62,13 +62,13 @@ namespace EventApp.Services
         {
             items = new List<User>();
 
-            var response = await client.GetAsync(ec2Instance + "/portal/list_users/");
+            var response = await client.GetAsync(ec2Instance + "/portal/get_holidays/");
 
             var responseString = await response.Content.ReadAsStringAsync();
             Debug.WriteLine(responseString);
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
 
-            dynamic userList = responseJSON.UserList;
+            dynamic userList = responseJSON.HolidayList;
             
 
             foreach (var userItem in userList)
