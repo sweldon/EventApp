@@ -18,6 +18,8 @@ namespace EventApp.Views
             InitializeComponent();
 
             BindingContext = this.viewModel = viewModel;
+
+
         }
 
         public ItemDetailPage()
@@ -26,12 +28,13 @@ namespace EventApp.Views
 
             var item = new Item
             {
-                Text = "Item 1",
-                Description = "This is an item description."
+                Description = "More info on this holiday will be displayed here soon!"
             };
 
             viewModel = new ItemDetailViewModel(item);
             BindingContext = viewModel;
+
+            
         }
     }
 }

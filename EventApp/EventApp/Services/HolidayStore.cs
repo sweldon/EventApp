@@ -9,44 +9,23 @@ using System.Diagnostics;
 
 namespace EventApp.Services
 {
-    public class MockDataStore : IDataStore<User>
+    public class HolidayStore : IHolidayStore<Item>
     {
 
-        List<User> items;
+        Item holiday;
         string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
         HttpClient client = new HttpClient();
 
-        public MockDataStore()
+        public HolidayStore()
         {
-            
+
 
         }
 
-        public async Task<bool> AddItemAsync(User user)
+
+        public async Task<Item> GetHolidayAsync(bool forceRefresh = false)
         {
-            items.Add(user);
-
-            return await Task.FromResult(true);
-        }
-
-        public async Task<bool> UpdateItemAsync(User user)
-        {
-            var oldItem = items.Where((User arg) => arg.UserName == user.UserName).FirstOrDefault();
-            items.Remove(oldItem);
-            items.Add(user);
-
-            return await Task.FromResult(true);
-        }
-
-
-        public async Task<User> GetItemAsync(string username)
-        {
-            return await Task.FromResult(items.FirstOrDefault(s => s.UserName == username));
-        }
-
-        public async Task<IEnumerable<User>> GetItemsAsync(bool forceRefresh = false)
-        {
-            items = new List<User>();
+            holiday = new Item();
 
             DateTime currentDate = DateTime.Today;
             string dateString = currentDate.ToString("dd-MM-yyyy");
@@ -71,15 +50,12 @@ namespace EventApp.Services
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
 
-            dynamic userList = responseJSON.HolidayList;
+            string holidayDescription = responseJSON.Holiday;
+
+            holiday.Description = holidayDescription;
             
 
-            foreach (var userItem in userList)
-            {
-                items.Insert(0, new User() { UserName = userItem });
-            }
-
-            return await Task.FromResult(items);
+            return await Task.FromResult(holiday);
         }
     }
 }

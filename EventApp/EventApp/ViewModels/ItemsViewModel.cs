@@ -17,16 +17,16 @@ namespace EventApp.ViewModels
 
         public ItemsViewModel()
         {
-            Title = "What's today?";
+            Title = "Holidaily";
             Items = new ObservableCollection<User>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
-            MessagingCenter.Subscribe<NewItemPage, User>(this, "AddItem", async (obj, item) =>
-            {
-                var newItem = item as User;
-                Items.Add(newItem);
-                await DataStore.AddItemAsync(newItem);
-            });
+            //MessagingCenter.Subscribe<NewItemPage, User>(this, "AddItem", async (obj, item) =>
+            //{
+            //    var newItem = item as User;
+            //    Items.Add(newItem);
+            //    await DataStore.AddItemAsync(newItem);
+            //});
 
         }
 
