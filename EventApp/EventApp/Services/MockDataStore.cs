@@ -9,10 +9,10 @@ using System.Diagnostics;
 
 namespace EventApp.Services
 {
-    public class MockDataStore : IDataStore<User>
+    public class MockDataStore : IDataStore<Holiday>
     {
 
-        List<User> items;
+        List<Holiday> items;
         string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
         HttpClient client = new HttpClient();
 
@@ -22,31 +22,31 @@ namespace EventApp.Services
 
         }
 
-        public async Task<bool> AddItemAsync(User user)
+        public async Task<bool> AddItemAsync(Holiday item)
         {
-            items.Add(user);
+            items.Add(item);
 
             return await Task.FromResult(true);
         }
 
-        public async Task<bool> UpdateItemAsync(User user)
+        public async Task<bool> UpdateItemAsync(Holiday item)
         {
-            var oldItem = items.Where((User arg) => arg.UserName == user.UserName).FirstOrDefault();
+            var oldItem = items.Where((Holiday arg) => arg.Description == item.Description).FirstOrDefault();
             items.Remove(oldItem);
-            items.Add(user);
+            items.Add(item);
 
             return await Task.FromResult(true);
         }
 
 
-        public async Task<User> GetItemAsync(string username)
+        public async Task<Holiday> GetItemAsync(string description)
         {
-            return await Task.FromResult(items.FirstOrDefault(s => s.UserName == username));
+            return await Task.FromResult(items.FirstOrDefault(s => s.Description == description));
         }
 
-        public async Task<IEnumerable<User>> GetItemsAsync(bool forceRefresh = false)
+        public async Task<IEnumerable<Holiday>> GetItemsAsync(bool forceRefresh = false)
         {
-            items = new List<User>();
+            items = new List<Holiday>();
 
             DateTime currentDate = DateTime.Today;
             string dateString = currentDate.ToString("dd-MM-yyyy");
@@ -71,12 +71,11 @@ namespace EventApp.Services
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
 
-            dynamic userList = responseJSON.HolidayList;
-            
+            dynamic holidayList = responseJSON.HolidayList;
 
-            foreach (var userItem in userList)
+            foreach (var holiday in holidayList)
             {
-                items.Insert(0, new User() { UserName = userItem });
+                items.Insert(0, new Holiday() { Id = holiday.id, Name = holiday.name, Description = holiday.description });
             }
 
             return await Task.FromResult(items);

@@ -11,39 +11,16 @@ namespace EventApp.ViewModels
 {
     public class ItemDetailViewModel : BaseViewModel
     {
-        public Item Item { get; set; }
+        public Holiday Item { get; set; }
         public Command LoadItemsCommand { get; set; }
 
-        public ItemDetailViewModel(Item item)
+        public ItemDetailViewModel(Holiday item)
         {
-            Title = "Selected Holiday";
+            
             Item = item;
-            LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
+            Title = item.Name;
+
         }
-
-        async Task ExecuteLoadItemsCommand()
-        {
-            if (IsBusy)
-                return;
-
-            IsBusy = true;
-
-            try
-            {
-  
-                var item = await HolidayStore.GetHolidayAsync(true);
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
-
 
     }
 }

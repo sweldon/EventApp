@@ -50,7 +50,7 @@
                         <StackLayout Orientation="Horizontal">
                             <BoxView />
                             <StackLayout Grid.Column="0"  >
-                                <Label Text="{Binding UserName}" 
+                                <Label Text="{Binding Name}" 
                                 FontSize="16" />
                             </StackLayout>
                         </StackLayout>

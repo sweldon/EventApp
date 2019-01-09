@@ -11,15 +11,15 @@ namespace EventApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class NewItemPage : ContentPage
     {
-        public Item Item { get; set; }
+        public Holiday Item { get; set; }
 
         public NewItemPage()
         {
             InitializeComponent();
 
-            Item = new Item
+            Item = new Holiday
             {
-                Text = "A name for your event",
+                Name = "A name for your event",
                 Description = "Some description for your event"
             };
 

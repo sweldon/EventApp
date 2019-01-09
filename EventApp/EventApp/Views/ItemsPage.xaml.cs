@@ -51,7 +51,7 @@ namespace EventApp.Views
             {
                 return; // ensures we ignore this handler when the selection is just being cleared
             }
-            var item = args.SelectedItem as Item;
+            var item = args.SelectedItem as Holiday;
             await Navigation.PushAsync(new ItemDetailPage(new ItemDetailViewModel(item)));
             ((ListView)sender).SelectedItem = null; // clears the 'selected' background
 

@@ -3953,7 +3953,10 @@ namespace EventApp.Droid
 			public const int icon_round = 2130903041;
 			
 			// aapt resource value: 0x7f030002
-			public const int launcher_foreground = 2130903042;
+			public const int Icon_xam = 2130903042;
+			
+			// aapt resource value: 0x7f030003
+			public const int launcher_foreground = 2130903043;
 			
 			static Mipmap()
 			{

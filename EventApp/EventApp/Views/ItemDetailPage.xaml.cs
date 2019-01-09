@@ -26,13 +26,6 @@ namespace EventApp.Views
         {
             InitializeComponent();
 
-            var item = new Item
-            {
-                Description = "More info on this holiday will be displayed here soon!"
-            };
-
-            viewModel = new ItemDetailViewModel(item);
-            BindingContext = viewModel;
 
             
         }

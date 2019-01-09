@@ -27,7 +27,7 @@ namespace EventApp
 
         protected override void OnStart()
         {
-            // Initial startup
+             
         }
 
         protected override void OnSleep()

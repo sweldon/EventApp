@@ -12,13 +12,12 @@ namespace EventApp.ViewModels
 {
     public class ItemsViewModel : BaseViewModel
     {
-        public ObservableCollection<User> Items { get; set; }
+        public ObservableCollection<Holiday> Items { get; set; }
         public Command LoadItemsCommand { get; set; }
 
         public ItemsViewModel()
         {
-            Title = "Holidaily";
-            Items = new ObservableCollection<User>();
+            Items = new ObservableCollection<Holiday>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
             //MessagingCenter.Subscribe<NewItemPage, User>(this, "AddItem", async (obj, item) =>
