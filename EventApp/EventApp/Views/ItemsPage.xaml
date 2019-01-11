@@ -4,29 +4,19 @@
              x:Class="EventApp.Views.ItemsPage"
               Title="{Binding Title}"
              x:Name="BrowseItemsPage">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Add" Clicked="AddItem_Clicked">
-            <ToolbarItem.Icon>
-                <OnPlatform x:TypeArguments="FileImageSource">
-                    <On Platform="UWP" Value="add.png"/>
-                </OnPlatform>
-            </ToolbarItem.Icon>
-        </ToolbarItem>
-    </ContentPage.ToolbarItems>
 
     <StackLayout>
         
         <Label x:Name="MonthLabel" 
                HorizontalTextAlignment="Center" 
                FontSize="30"
-               Margin="0,10,0,0"/>
+               Margin="0,10,0,-15"/>
         <Label x:Name="DayNumberLabel" 
                HorizontalTextAlignment="Center"
-               VerticalTextAlignment="Center"
-               FontSize="150"
-               HeightRequest="135"/>
+               FontSize="70"
+              />
           
-        
+         
         <ListView x:Name="ItemsListView"
               SeparatorVisibility="None"
                 ItemsSource="{Binding Items}"
@@ -60,7 +50,7 @@
                         <StackLayout Orientation="Horizontal">
                             <BoxView />
                             <StackLayout Grid.Column="0"  >
-                                <Label Text="{Binding UserName}" 
+                                <Label Text="{Binding Name}" 
                                 FontSize="16" />
                             </StackLayout>
                         </StackLayout>

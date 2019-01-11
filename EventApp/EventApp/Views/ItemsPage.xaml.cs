@@ -25,7 +25,7 @@ namespace EventApp.Views
             BindingContext = viewModel = new ItemsViewModel();
             DateTime currentDate = DateTime.Today;
             string dateString = currentDate.ToString("dd-MM-yyyy");
-            string dayNumber = dateString.Split('-')[0];
+            string dayNumber = dateString.Split('-')[0].TrimStart('0');
             int monthNumber = Int32.Parse(dateString.Split('-')[1]);
             DayNumberLabel.Text = dayNumber;
 
@@ -39,25 +39,28 @@ namespace EventApp.Views
 
             string monthString = months[monthNumber - 1];
             MonthLabel.Text = monthString;
+            ItemsListView.ItemSelected += OnItemSelected;
+
 
         }
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
-            var item = args.SelectedItem as Item;
-            if (item == null)
-                return;
 
+            if (args.SelectedItem == null)
+            {
+                return; // ensures we ignore this handler when the selection is just being cleared
+            }
+            var item = args.SelectedItem as Holiday;
             await Navigation.PushAsync(new ItemDetailPage(new ItemDetailViewModel(item)));
+            ((ListView)sender).SelectedItem = null; // clears the 'selected' background
 
-            //ItemsListView.SelectedItem = null;
-        
 
         }
 
         async void AddItem_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushModalAsync(new NavigationPage(new NewItemPage()));
+            //await Navigation.PushModalAsync(new NavigationPage(new NewItemPage()));
         }
 
         protected override void OnAppearing()

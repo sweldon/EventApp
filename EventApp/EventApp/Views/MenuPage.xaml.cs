@@ -32,7 +32,7 @@ namespace EventApp.Views
             InitializeComponent();
             menuItems = new List<HomeMenuItem>
             {
-                new HomeMenuItem {Id = MenuItemType.Browse, Title="Users", Image=new Image {Source="EventApp.iOS.Resources.user_menu.png"}}
+                new HomeMenuItem {Id = MenuItemType.Browse, Title="Today", Image=new Image {Source="EventApp.iOS.Resources.user_menu.png"}}
             };
 
             ListViewMenu.ItemsSource = menuItems;

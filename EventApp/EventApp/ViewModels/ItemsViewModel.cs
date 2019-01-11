@@ -12,21 +12,20 @@ namespace EventApp.ViewModels
 {
     public class ItemsViewModel : BaseViewModel
     {
-        public ObservableCollection<User> Items { get; set; }
+        public ObservableCollection<Holiday> Items { get; set; }
         public Command LoadItemsCommand { get; set; }
 
         public ItemsViewModel()
         {
-            Title = "What's today?";
-            Items = new ObservableCollection<User>();
+            Items = new ObservableCollection<Holiday>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
-            MessagingCenter.Subscribe<NewItemPage, User>(this, "AddItem", async (obj, item) =>
-            {
-                var newItem = item as User;
-                Items.Add(newItem);
-                await DataStore.AddItemAsync(newItem);
-            });
+            //MessagingCenter.Subscribe<NewItemPage, User>(this, "AddItem", async (obj, item) =>
+            //{
+            //    var newItem = item as User;
+            //    Items.Add(newItem);
+            //    await DataStore.AddItemAsync(newItem);
+            //});
 
         }
 
@@ -40,10 +39,10 @@ namespace EventApp.ViewModels
             try
             {
                 Items.Clear();
-                var items = await DataStore.GetItemsAsync(true);
-                foreach (var item in items)
+                var holidays = await DataStore.GetItemsAsync(true);
+                foreach (var holiday in holidays)
                 {
-                    Items.Insert(0, item);
+                    Items.Insert(0, holiday);
                 }
             }
             catch (Exception ex)

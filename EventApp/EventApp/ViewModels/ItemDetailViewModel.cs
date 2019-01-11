@@ -1,16 +1,62 @@
 ﻿using System;
-
 using EventApp.Models;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Xamarin.Forms;
+using EventApp.Views;
+
 
 namespace EventApp.ViewModels
 {
     public class ItemDetailViewModel : BaseViewModel
     {
-        public Item Item { get; set; }
-        public ItemDetailViewModel(Item item = null)
+        public Holiday Holiday { get; set; }
+        public ObservableCollection<Comment> Comments { get; set; }
+        public Command LoadHolidayComments { get; set; }
+
+        public ItemDetailViewModel(Holiday holiday)
         {
-            Title = item?.Text;
-            Item = item;
+            
+            Holiday = holiday;
+            Title = holiday.Name;
+
+            Comments = new ObservableCollection<Comment>();
+            LoadHolidayComments = new Command(async () => await ExecuteLoadCommentsCommand());
+
+
+            MessagingCenter.Subscribe<NewItemPage>(this, "UpdateComments", (sender) => {
+                ExecuteLoadCommentsCommand();
+            });
+
         }
+
+        async Task ExecuteLoadCommentsCommand()
+        {
+            if (IsBusy)
+                return;
+
+            IsBusy = true;
+
+            try
+            {
+                Comments.Clear();
+                var comments = await CommentStore.GetHolidayCommentsAsync(true, Holiday.Id);
+                foreach (var comment in comments)
+                {
+                    Debug.WriteLine(comment.Content);
+                    Comments.Insert(0, comment);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
     }
 }
