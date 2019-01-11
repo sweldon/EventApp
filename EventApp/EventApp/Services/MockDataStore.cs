@@ -9,10 +9,12 @@ using System.Diagnostics;
 
 namespace EventApp.Services
 {
+
     public class MockDataStore : IDataStore<Holiday>
     {
 
         List<Holiday> items;
+
         string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
         HttpClient client = new HttpClient();
 
@@ -80,5 +82,6 @@ namespace EventApp.Services
 
             return await Task.FromResult(items);
         }
+
     }
 }

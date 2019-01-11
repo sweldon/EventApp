@@ -6,4 +6,4 @@ namespace EventApp.Models
     {
         public string UserName { get; set; }
     }
-}
+} 

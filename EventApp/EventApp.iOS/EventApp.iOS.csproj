@@ -165,6 +165,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\user_menu.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\comment.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\EventApp\EventApp.projitems" Label="Shared" />
 </Project>

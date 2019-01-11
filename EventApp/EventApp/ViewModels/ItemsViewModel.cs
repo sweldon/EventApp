@@ -39,10 +39,10 @@ namespace EventApp.ViewModels
             try
             {
                 Items.Clear();
-                var items = await DataStore.GetItemsAsync(true);
-                foreach (var item in items)
+                var holidays = await DataStore.GetItemsAsync(true);
+                foreach (var holiday in holidays)
                 {
-                    Items.Insert(0, item);
+                    Items.Insert(0, holiday);
                 }
             }
             catch (Exception ex)
