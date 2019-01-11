@@ -38,6 +38,12 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+                
+                    <Button Margin="0,10,0,0" Text="Logout" x:Name="LogoutButton"
+                        Clicked="LogoutUser"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White" />
+                
             </StackLayout>
         </StackLayout>
     </Grid>

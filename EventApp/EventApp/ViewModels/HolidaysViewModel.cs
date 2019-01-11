@@ -10,22 +10,15 @@ using EventApp.Views;
 
 namespace EventApp.ViewModels
 {
-    public class ItemsViewModel : BaseViewModel
+    public class HolidaysViewModel : BaseViewModel
     {
         public ObservableCollection<Holiday> Items { get; set; }
         public Command LoadItemsCommand { get; set; }
 
-        public ItemsViewModel()
+        public HolidaysViewModel()
         {
             Items = new ObservableCollection<Holiday>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
-
-            //MessagingCenter.Subscribe<NewItemPage, User>(this, "AddItem", async (obj, item) =>
-            //{
-            //    var newItem = item as User;
-            //    Items.Add(newItem);
-            //    await DataStore.AddItemAsync(newItem);
-            //});
 
         }
 
@@ -39,7 +32,7 @@ namespace EventApp.ViewModels
             try
             {
                 Items.Clear();
-                var holidays = await DataStore.GetItemsAsync(true);
+                var holidays = await HolidayStore.GetItemsAsync(true);
                 foreach (var holiday in holidays)
                 {
                     Items.Insert(0, holiday);

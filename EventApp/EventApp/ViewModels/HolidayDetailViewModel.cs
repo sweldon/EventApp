@@ -9,23 +9,35 @@ using EventApp.Views;
 
 namespace EventApp.ViewModels
 {
-    public class ItemDetailViewModel : BaseViewModel
+    public class HolidayDetailViewModel : BaseViewModel
     {
         public Holiday Holiday { get; set; }
         public ObservableCollection<Comment> Comments { get; set; }
         public Command LoadHolidayComments { get; set; }
 
-        public ItemDetailViewModel(Holiday holiday)
+
+        public string currentUser
+        {
+            get { return Settings.GeneralSettings; }
+            set
+            {
+                if (Settings.GeneralSettings == value)
+                    return;
+                Settings.GeneralSettings = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public HolidayDetailViewModel(Holiday holiday)
         {
             
             Holiday = holiday;
             Title = holiday.Name;
-
             Comments = new ObservableCollection<Comment>();
             LoadHolidayComments = new Command(async () => await ExecuteLoadCommentsCommand());
 
 
-            MessagingCenter.Subscribe<NewItemPage>(this, "UpdateComments", (sender) => {
+            MessagingCenter.Subscribe<NewCommentPage>(this, "UpdateComments", (sender) => {
                 ExecuteLoadCommentsCommand();
             });
 
