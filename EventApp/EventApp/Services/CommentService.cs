@@ -52,7 +52,7 @@ namespace EventApp.Services
 
             foreach (var comment in commentList)
             {
-                comments.Insert(0, new Comment() { Id = comment.id, Content = comment.content, HolidayId = comment.holiday_id });
+                comments.Insert(0, new Comment() { Id = comment.id, Content = comment.content, HolidayId = comment.holiday_id, UserName = comment.user });
             }
 
             return await Task.FromResult(comments);

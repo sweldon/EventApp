@@ -26,6 +26,18 @@ namespace EventApp.Views
             }
         }
 
+        public string currentUser
+        {
+            get { return Settings.GeneralSettings; }
+            set
+            {
+                if (Settings.GeneralSettings == value)
+                    return;
+                Settings.GeneralSettings = value;
+                OnPropertyChanged();
+            }
+        }
+
         HttpClient client = new HttpClient();
         string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
         public NavigationPage NavigationPage { get; private set; }
@@ -61,8 +73,10 @@ namespace EventApp.Views
                     NavigationPage = new NavigationPage(new ItemsPage());
                     var rootPage = new MainPage(); 
                     rootPage.Master = menuPage; 
-                    rootPage.Detail = NavigationPage; 
-                    Application.Current.MainPage = rootPage; 
+                    rootPage.Detail = NavigationPage;
+                    currentUser = userName;
+                    await Navigation.PopModalAsync();
+                    //Application.Current.MainPage = rootPage; 
                 }
                 else if (status == 400)
                 {

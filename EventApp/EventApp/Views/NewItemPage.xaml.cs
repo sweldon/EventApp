@@ -20,6 +20,18 @@ namespace EventApp.Views
         public Holiday OpenedHoliday { get; set; }
         public string CommentTitle { get; set; }
 
+        public string currentUser
+        {
+            get { return Settings.GeneralSettings; }
+            set
+            {
+                if (Settings.GeneralSettings == value)
+                    return;
+                Settings.GeneralSettings = value;
+                OnPropertyChanged();
+            }
+        }
+
         public NewItemPage(Holiday holiday)
         {
             InitializeComponent();
@@ -40,7 +52,9 @@ namespace EventApp.Views
             else {
                 var values = new Dictionary<string, string>{
                    { "holiday_id", OpenedHoliday.Id },
-                   { "comment", CommentContent.Text }
+                   { "comment", CommentContent.Text },
+                   { "user", currentUser}
+
                 };
 
                 var content = new FormUrlEncodedContent(values);

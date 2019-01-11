@@ -15,12 +15,24 @@ namespace EventApp.ViewModels
         public ObservableCollection<Comment> Comments { get; set; }
         public Command LoadHolidayComments { get; set; }
 
+
+        public string currentUser
+        {
+            get { return Settings.GeneralSettings; }
+            set
+            {
+                if (Settings.GeneralSettings == value)
+                    return;
+                Settings.GeneralSettings = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ItemDetailViewModel(Holiday holiday)
         {
             
             Holiday = holiday;
             Title = holiday.Name;
-
             Comments = new ObservableCollection<Comment>();
             LoadHolidayComments = new Command(async () => await ExecuteLoadCommentsCommand());
 

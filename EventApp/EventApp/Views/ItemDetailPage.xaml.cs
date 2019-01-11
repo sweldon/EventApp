@@ -15,6 +15,33 @@ namespace EventApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ItemDetailPage : ContentPage
     {
+
+        public string isLoggedIn
+        {
+            get { return Settings.GeneralSettings; }
+            set
+            {
+                if (Settings.GeneralSettings == value)
+                    return;
+                Settings.GeneralSettings = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string currentUser
+        {
+            get { return Settings.GeneralSettings; }
+            set
+            {
+                if (Settings.GeneralSettings == value)
+                    return;
+                Settings.GeneralSettings = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+
         ItemDetailViewModel viewModel;
         public Comment Comment { get; set; }
 
@@ -23,6 +50,7 @@ namespace EventApp.Views
             InitializeComponent();
 
             BindingContext = this.viewModel = viewModel;
+
         }
 
         public ItemDetailPage()
@@ -41,11 +69,21 @@ namespace EventApp.Views
 
         async void OnTapGestureRecognizerTapped(object sender, EventArgs args)
         {
-            var labelSender = (Label)sender;
-            this.IsEnabled = false;
-            await Navigation.PushModalAsync(new NavigationPage(new NewItemPage(viewModel.Holiday)));
-            // await Navigation.PushModalAsync(new NewItemPage(new NewItemPageViewModel(viewModel.Item));
-            this.IsEnabled = true;
+
+            if (isLoggedIn == "no")
+            {
+                //Application.Current.MainPage = new LoginPage();
+                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+            }
+            else {
+                var labelSender = (Label)sender;
+                this.IsEnabled = false;
+                await Navigation.PushModalAsync(new NavigationPage(new NewItemPage(viewModel.Holiday)));
+                // await Navigation.PushModalAsync(new NewItemPage(new NewItemPageViewModel(viewModel.Item));
+                this.IsEnabled = true;
+            }
+
+
         }
 
 

@@ -74,6 +74,7 @@
                                         <BoxView />
                                         <StackLayout Grid.Column="0"  >
                                             <Label Text="{Binding Content}" FontSize="16" />
+                                            <Label Text="{Binding UserName}" FontSize="16" />
                                         </StackLayout>
                                     </StackLayout>
                                 </Frame>
