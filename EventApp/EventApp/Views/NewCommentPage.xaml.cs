@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class NewItemPage : ContentPage
+    public partial class NewCommentPage : ContentPage
     {
 
         HttpClient client = new HttpClient();
@@ -32,7 +32,7 @@ namespace EventApp.Views
             }
         }
 
-        public NewItemPage(Holiday holiday)
+        public NewCommentPage(Holiday holiday)
         {
             InitializeComponent();
 

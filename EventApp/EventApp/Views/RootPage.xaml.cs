@@ -9,10 +9,10 @@ using System.Diagnostics;
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MainPage : MasterDetailPage
+    public partial class RootPage : MasterDetailPage
     {
         Dictionary<int, NavigationPage> MenuPages = new Dictionary<int, NavigationPage>();
-        public MainPage()
+        public RootPage()
         {
             InitializeComponent();
 
@@ -28,7 +28,7 @@ namespace EventApp.Views
                 switch (id)
                 {
                     case (int)MenuItemType.Browse:
-                        MenuPages.Add(id, new NavigationPage(new ItemsPage()));
+                        MenuPages.Add(id, new NavigationPage(new HolidaysPage()));
                         break;
                 }
             }

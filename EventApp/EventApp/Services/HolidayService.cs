@@ -10,7 +10,7 @@ using System.Diagnostics;
 namespace EventApp.Services
 {
 
-    public class MockDataStore : IDataStore<Holiday>
+    public class HolidayService : HolidayInterface<Holiday>
     {
 
         List<Holiday> items;
@@ -18,7 +18,7 @@ namespace EventApp.Services
         string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
         HttpClient client = new HttpClient();
 
-        public MockDataStore()
+        public HolidayService()
         {
             
 

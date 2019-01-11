@@ -9,7 +9,7 @@ using EventApp.Views;
 
 namespace EventApp.ViewModels
 {
-    public class ItemDetailViewModel : BaseViewModel
+    public class HolidayDetailViewModel : BaseViewModel
     {
         public Holiday Holiday { get; set; }
         public ObservableCollection<Comment> Comments { get; set; }
@@ -28,7 +28,7 @@ namespace EventApp.ViewModels
             }
         }
 
-        public ItemDetailViewModel(Holiday holiday)
+        public HolidayDetailViewModel(Holiday holiday)
         {
             
             Holiday = holiday;
@@ -37,7 +37,7 @@ namespace EventApp.ViewModels
             LoadHolidayComments = new Command(async () => await ExecuteLoadCommentsCommand());
 
 
-            MessagingCenter.Subscribe<NewItemPage>(this, "UpdateComments", (sender) => {
+            MessagingCenter.Subscribe<NewCommentPage>(this, "UpdateComments", (sender) => {
                 ExecuteLoadCommentsCommand();
             });
 

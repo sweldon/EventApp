@@ -5,13 +5,14 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MenuPage : ContentPage
     {
-        MainPage RootPage { get => Application.Current.MainPage as MainPage; }
+        RootPage RootPage { get => Application.Current.MainPage as RootPage; }
 
         List<HomeMenuItem> menuItems;
 
@@ -27,9 +28,11 @@ namespace EventApp.Views
             }
         }
 
+        public NavigationPage NavigationPage { get; private set; }
         public MenuPage()
         {
             InitializeComponent();
+
             menuItems = new List<HomeMenuItem>
             {
                 new HomeMenuItem {Id = MenuItemType.Browse, Title="Today", Image=new Image {Source="EventApp.iOS.Resources.user_menu.png"}}
@@ -46,12 +49,29 @@ namespace EventApp.Views
                 var id = (int)((HomeMenuItem)e.SelectedItem).Id;
                 await RootPage.NavigateFromMenu(id);
             };
+
         }
 
-        public void LogoutUser(object sender, EventArgs e)
+        public async Task LogoutUser(object sender, EventArgs e)
         {
+
             isLoggedIn = "no";
-            Application.Current.MainPage = new NavigationPage(new LoginPage());
+            LogoutButton.IsVisible = false;
+            await RootPage.NavigateFromMenu(1);
+
         }
+        protected override void OnAppearing()
+        {
+            Debug.WriteLine("Menu appearing");
+            if (isLoggedIn == "no")
+            {
+                LogoutButton.IsVisible = false;
+            }
+            else
+            {
+                LogoutButton.IsVisible = true;
+            }
+        }
+
     }
 }

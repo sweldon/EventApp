@@ -14,15 +14,15 @@ using System.Diagnostics;
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ItemsPage : ContentPage
+    public partial class HolidaysPage : ContentPage
     {
-        ItemsViewModel viewModel;
+        HolidaysViewModel viewModel;
 
-        public ItemsPage()
+        public HolidaysPage()
         {
             InitializeComponent();
 
-            BindingContext = viewModel = new ItemsViewModel();
+            BindingContext = viewModel = new HolidaysViewModel();
             DateTime currentDate = DateTime.Today;
             string dateString = currentDate.ToString("dd-MM-yyyy");
             string dayNumber = dateString.Split('-')[0].TrimStart('0');
@@ -49,18 +49,13 @@ namespace EventApp.Views
 
             if (args.SelectedItem == null)
             {
-                return; // ensures we ignore this handler when the selection is just being cleared
+                return;
             }
             var item = args.SelectedItem as Holiday;
-            await Navigation.PushAsync(new ItemDetailPage(new ItemDetailViewModel(item)));
-            ((ListView)sender).SelectedItem = null; // clears the 'selected' background
+            await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item)));
+            ((ListView)sender).SelectedItem = null; 
 
 
-        }
-
-        async void AddItem_Clicked(object sender, EventArgs e)
-        {
-            //await Navigation.PushModalAsync(new NavigationPage(new NewItemPage()));
         }
 
         protected override void OnAppearing()

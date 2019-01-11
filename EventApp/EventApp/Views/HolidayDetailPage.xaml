@@ -1,11 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="EventApp.Views.ItemDetailPage"
+             x:Class="EventApp.Views.HolidayDetailPage"
+             xmlns:local="clr-namespace:CustomListViewNamespace"  
              Title="{Binding Title}">
-    <!--<StackLayout Spacing="20" Padding="15">
-        <Label Text="{Binding Item.Description}" FontSize="Small"/>
-    </StackLayout>-->
+
 
     <StackLayout>
 
@@ -20,18 +19,18 @@
                 BackgroundColor="#EAEAEA" 
                 HorizontalOptions="FillAndExpand" />
 
-        <Grid Margin="0, -5, 0, 0">
+        <Grid Padding="10" HorizontalOptions="FillAndExpand">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width=".5*" />
                 <ColumnDefinition Width="9*" />
             </Grid.ColumnDefinitions>
-            <ContentView Grid.Column="0" Padding="5">
-                <Image Source="comment.png" VerticalOptions="Center" />
+            
+            <ContentView Grid.Column="0">
+                <Image Source="comment.png" VerticalOptions="Center"/>
             </ContentView>
 
             <Label Grid.Column="1" Text="Comment" FontSize="Small"
-                   VerticalTextAlignment="Center"
-                   Margin="-5,-3,0,0">
+                   VerticalTextAlignment="Center" Margin="0,-2,0,0">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Tapped="OnTapGestureRecognizerTapped"  />
@@ -40,6 +39,9 @@
 
         </Grid>
         
+        <ContentView Padding="5,5,0,5" BackgroundColor="#D2D2D2">
+            
+        <!--<local:CustomListView x:Name="HolidayDetailList"-->
         <ListView x:Name="HolidayDetailList"
                   SeparatorVisibility="None"
                     ItemsSource="{Binding Comments}"
@@ -48,33 +50,31 @@
                     RefreshCommand="{Binding LoadHolidayComments}"
                     IsPullToRefreshEnabled="true"
                     IsRefreshing="{Binding IsBusy, Mode=OneWay}"
-                    CachingStrategy="RecycleElement">
-            <ListView.RowHeight>
-                <OnPlatform x:TypeArguments="x:Int32">
-                    <On Platform="iOS, Android" Value="80" />
-                    <On Platform="UWP" Value="90" />
-                </OnPlatform>
-            </ListView.RowHeight>
+                    >
+<!--                CachingStrategy="RecycleElement">-->
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
 
-                        <Grid BackgroundColor="White" Margin="0,5,0,0" >
+                        <Grid Margin="0, 5,0,0">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <ContentView>
-                                <Frame CornerRadius="0" HasShadow="False">
+                            <ContentView HorizontalOptions="FillAndExpand">
+                                <Frame CornerRadius="2" HasShadow="False" Padding="10" >
                                     <StackLayout Orientation="Horizontal">
-                                        <BoxView />
+                      
                                         <StackLayout Grid.Column="0"  >
-                                            <Label Text="{Binding Content}" FontSize="16" />
-                                            <Label Text="{Binding UserName}" FontSize="16" />
+                                        <Label Text="{Binding UserName}" 
+                                           FontSize="12" 
+                                           FontAttributes="Bold" 
+                                           Opacity=".5"/>
+                                        <Label Text="{Binding Content}" FontSize="16" />
                                         </StackLayout>
                                     </StackLayout>
                                 </Frame>
@@ -83,6 +83,8 @@
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
-        </ListView>
+<!--        </local:CustomListView>-->
+            </ListView>
+            </ContentView>
     </StackLayout>
 </ContentPage>

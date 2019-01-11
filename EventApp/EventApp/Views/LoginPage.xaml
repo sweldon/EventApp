@@ -5,6 +5,17 @@
              xmlns:vm="clr-namespace:EventApp.ViewModels"
              Title="{Binding Title}">
     
+    
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Back" Clicked="CancelLogin">
+            <ToolbarItem.Icon>
+                <OnPlatform x:TypeArguments="FileImageSource">
+                    <On Platform="UWP" Value="cancel.png"/>
+                </OnPlatform>
+            </ToolbarItem.Icon>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+    
     <ContentPage.BindingContext>
         <vm:LoginViewModel />
     </ContentPage.BindingContext>
@@ -25,7 +36,7 @@
         <StackLayout BackgroundColor="{StaticResource Accent}" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
                 <ContentView Padding="0,40,0,40" VerticalOptions="FillAndExpand">
-                    <Image Source="eventapp_logo.png" VerticalOptions="Center" HeightRequest="64" />
+                    <Image Source="holidaily_logo.png" VerticalOptions="Center" HeightRequest="64" />
                 </ContentView>
             </StackLayout>
         </StackLayout>
@@ -35,7 +46,8 @@
                     <Label.FormattedText>
                         <FormattedString>
                             <FormattedString.Spans>
-                                <Span Text="Welcome" FontAttributes="Bold" FontSize="22" />
+                                <Span Text="Welcome!" 
+                                      FontAttributes="Bold" FontSize="22" />
                                 <Span Text=" " />
                             </FormattedString.Spans>
                         </FormattedString>

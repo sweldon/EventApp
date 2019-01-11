@@ -12,8 +12,8 @@ namespace EventApp.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Holiday> DataStore => DependencyService.Get<IDataStore<Holiday>>() ?? new MockDataStore();
-        public ICommentStore<Comment> CommentStore => DependencyService.Get<ICommentStore<Comment>>() ?? new CommentService();
+        public HolidayInterface<Holiday> HolidayStore => DependencyService.Get<HolidayInterface<Holiday>>() ?? new HolidayService();
+        public CommentInterface<Comment> CommentStore => DependencyService.Get<CommentInterface<Comment>>() ?? new CommentService();
 
         bool isBusy = false;
         public bool IsBusy

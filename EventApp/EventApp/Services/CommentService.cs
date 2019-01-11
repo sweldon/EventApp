@@ -10,7 +10,7 @@ using System.Diagnostics;
 namespace EventApp.Services
 {
 
-    public class CommentService : ICommentStore<Comment>
+    public class CommentService : CommentInterface<Comment>
     {
 
         List<Comment> comments;

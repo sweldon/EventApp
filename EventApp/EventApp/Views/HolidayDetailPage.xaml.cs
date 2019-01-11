@@ -13,7 +13,7 @@ using System.Collections.Generic;
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ItemDetailPage : ContentPage
+    public partial class HolidayDetailPage : ContentPage
     {
 
         public string isLoggedIn
@@ -42,10 +42,10 @@ namespace EventApp.Views
 
 
 
-        ItemDetailViewModel viewModel;
-        public Comment Comment { get; set; }
+    HolidayDetailViewModel viewModel;
+    public Comment Comment { get; set; }
 
-    public ItemDetailPage(ItemDetailViewModel viewModel)
+    public HolidayDetailPage(HolidayDetailViewModel viewModel)
         {
             InitializeComponent();
 
@@ -53,7 +53,7 @@ namespace EventApp.Views
 
         }
 
-        public ItemDetailPage()
+        public HolidayDetailPage()
         {
             InitializeComponent();
 
@@ -78,8 +78,7 @@ namespace EventApp.Views
             else {
                 var labelSender = (Label)sender;
                 this.IsEnabled = false;
-                await Navigation.PushModalAsync(new NavigationPage(new NewItemPage(viewModel.Holiday)));
-                // await Navigation.PushModalAsync(new NewItemPage(new NewItemPageViewModel(viewModel.Item));
+                await Navigation.PushModalAsync(new NavigationPage(new NewCommentPage(viewModel.Holiday)));
                 this.IsEnabled = true;
             }
 
