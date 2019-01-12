@@ -72,7 +72,6 @@ namespace EventApp.Views
 
             if (isLoggedIn == "no")
             {
-                //Application.Current.MainPage = new LoginPage();
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             }
             else {

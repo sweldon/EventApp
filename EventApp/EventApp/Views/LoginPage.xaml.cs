@@ -64,6 +64,7 @@ namespace EventApp.Views
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                 int status = responseJSON.StatusCode;
+                string message = responseJSON.Message;
 
                 if (status == 200)
                 {
@@ -78,13 +79,9 @@ namespace EventApp.Views
                     await Navigation.PopModalAsync();
                     //Application.Current.MainPage = rootPage; 
                 }
-                else if (status == 400)
-                {
-                    await DisplayAlert("Error", "Your info doesn't look right...", "Try again");
-                }
                 else
                 {
-                    await DisplayAlert("Error", "Username or password incorrect", "Oops");
+                    await DisplayAlert("Error", message, "Okay");
                 }
             }
             else
