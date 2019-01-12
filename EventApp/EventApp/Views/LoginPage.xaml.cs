@@ -124,6 +124,7 @@ namespace EventApp.Views
                     var rootPage = new RootPage();
                     rootPage.Master = menuPage;
                     rootPage.Detail = NavigationPage;
+                    currentUser = userName;
                     Application.Current.MainPage = rootPage;
                 }
                 else if (status == 1000)
