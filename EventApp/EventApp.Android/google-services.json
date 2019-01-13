@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "854025491863",
+    "firebase_url": "https://holidaily-2c0ff.firebaseio.com",
+    "project_id": "holidaily-2c0ff",
+    "storage_bucket": "holidaily-2c0ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854025491863:android:ce91bf443205bd7a",
+        "android_client_info": {
+          "package_name": "com.companyname.EventApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "854025491863-qmf14bf4i18nepguhll9flodkv55c0qr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2Vh_GJqe_Hnk0BU_zuLpby_ack1dMqOU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

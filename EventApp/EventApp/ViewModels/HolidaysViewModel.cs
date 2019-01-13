@@ -8,6 +8,7 @@ using Xamarin.Forms;
 using EventApp.Models;
 using EventApp.Views;
 
+
 namespace EventApp.ViewModels
 {
     public class HolidaysViewModel : BaseViewModel
@@ -46,6 +47,8 @@ namespace EventApp.ViewModels
             {
                 IsBusy = false;
             }
+
+
         }
     }
 }
