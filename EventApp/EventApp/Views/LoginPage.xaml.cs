@@ -60,7 +60,7 @@ namespace EventApp.Views
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(ec2Instance + "/portal/login_mobile/", content);
+                var response = await client.PostAsync(ec2Instance + "/portal/login_mobile/", content); 
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                 int status = responseJSON.StatusCode;
