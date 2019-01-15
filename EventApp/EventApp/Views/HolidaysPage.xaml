@@ -43,9 +43,7 @@
                             <ContentView HorizontalOptions="FillAndExpand">
                                 <Frame CornerRadius="2" HasShadow="False" Padding="20" >
                                     <StackLayout Orientation="Horizontal">
-                      
-                                        
-       
+                     
                                         <Label Text="{Binding Name}" FontSize="16" />
                                        
                                     </StackLayout>
