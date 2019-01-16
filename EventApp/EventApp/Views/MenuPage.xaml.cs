@@ -52,24 +52,31 @@ namespace EventApp.Views
 
         }
 
+        public async Task PromptLogin(object sender, EventArgs e) {
+            await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+        }
+
         public async Task LogoutUser(object sender, EventArgs e)
         {
 
             isLoggedIn = "no";
             LogoutButton.IsVisible = false;
+            LoginButton.IsVisible = true;
             await RootPage.NavigateFromMenu(1);
 
         }
         protected override void OnAppearing()
         {
-            Debug.WriteLine("Menu appearing");
+
             if (isLoggedIn == "no")
             {
                 LogoutButton.IsVisible = false;
+                LoginButton.IsVisible = true;
             }
             else
             {
                 LogoutButton.IsVisible = true;
+                LoginButton.IsVisible = false;
             }
         }
 

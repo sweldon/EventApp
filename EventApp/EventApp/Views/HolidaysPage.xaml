@@ -16,7 +16,7 @@
                FontSize="70"
               />
           
-        <ContentView Padding="5, 0,0,5" BackgroundColor="#D2D2D2">
+        <ContentView Padding="5,0,0,5" BackgroundColor="#D2D2D2">
             
         <ListView x:Name="ItemsListView"
                   SeparatorVisibility="None"
@@ -43,9 +43,7 @@
                             <ContentView HorizontalOptions="FillAndExpand">
                                 <Frame CornerRadius="2" HasShadow="False" Padding="20" >
                                     <StackLayout Orientation="Horizontal">
-                      
-                                        
-       
+                     
                                         <Label Text="{Binding Name}" FontSize="16" />
                                        
                                     </StackLayout>
