@@ -15,10 +15,11 @@
                HorizontalTextAlignment="Center"
                FontSize="70"
               />
-          
-        <ContentView Padding="5,0,0,5" BackgroundColor="#D2D2D2">
-            
-        <ListView x:Name="ItemsListView"
+
+        <ContentView Padding="5,0,5,0" BackgroundColor="#D2D2D2">
+            <StackLayout>
+                <ListView x:Name="ItemsListView"
+
                   SeparatorVisibility="None"
                     ItemsSource="{Binding Items}"
                     BackgroundColor="#D2D2D2"
@@ -27,34 +28,26 @@
                     IsPullToRefreshEnabled="true"
                     IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                     >
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-
-                        <Grid Margin="0, 5,0,0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <ContentView HorizontalOptions="FillAndExpand">
-                                <Frame CornerRadius="2" HasShadow="False" Padding="20" >
-                                    <StackLayout Orientation="Horizontal">
-                     
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <ContentView >
+                                    <Frame Margin="0,5,0,0" CornerRadius="2" HasShadow="False" Padding="15" >
                                         <Label Text="{Binding Name}" FontSize="16" />
-                                       
-                                    </StackLayout>
-                                </Frame>
-                            </ContentView>
-                        </Grid>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-            </ListView>
-            </ContentView>
-         
+                                    </Frame>
+                                </ContentView>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                
+   
+             
+            </StackLayout>
+        </ContentView>
+
+
+        
+
     </StackLayout>
 </ContentPage>
