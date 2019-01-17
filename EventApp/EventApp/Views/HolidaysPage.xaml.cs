@@ -43,15 +43,13 @@ namespace EventApp.Views
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
-
+            ((ListView)sender).SelectedItem = null;
             if (args.SelectedItem == null)
             {
                 return;
             }
             var item = args.SelectedItem as Holiday;
             await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item)));
-            ((ListView)sender).SelectedItem = null; 
-
 
         }
 

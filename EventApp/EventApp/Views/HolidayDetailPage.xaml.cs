@@ -51,6 +51,15 @@ namespace EventApp.Views
 
             BindingContext = this.viewModel = viewModel;
 
+            HolidayDetailList.ItemSelected += OnCommentSelected;
+
+        }
+
+
+        async void OnCommentSelected(object sender, SelectedItemChangedEventArgs args)
+        {
+            ((ListView)sender).SelectedItem = null;
+
         }
 
         public HolidayDetailPage()
