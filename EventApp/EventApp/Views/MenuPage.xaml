@@ -49,7 +49,10 @@
                         Clicked="PromptLogin"
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="White" />
-
+                
+                <Label Text="Divinity Apps 2019 &#8482;" 
+                       HorizontalTextAlignment="Center"
+                       FontSize="def" />
             </StackLayout>
         </StackLayout>
     </Grid>
