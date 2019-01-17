@@ -8,5 +8,6 @@ namespace EventApp.Models
         public string Content { get; set; }
         public string HolidayId { get; set; }
         public string UserName { get; set; }
+        public string TimeSince { get; set; }
     }
 }

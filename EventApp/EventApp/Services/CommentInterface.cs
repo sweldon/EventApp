@@ -8,6 +8,7 @@ namespace EventApp.Services
     {
         Task<IEnumerable<T>> GetHolidayCommentsAsync(bool forceRefresh = false, string holidayId = null);
         Task<bool> AddComment(T comment);
+        string GetRelativeTime(DateTime commentDate);
     }
 
 }

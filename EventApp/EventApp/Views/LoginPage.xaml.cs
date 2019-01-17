@@ -69,7 +69,6 @@ namespace EventApp.Views
                 if (status == 200)
                 {
                     isLoggedIn = "yes";
-                    //await RootPage.Detail.Navigation.PushAsync(new ItemsPage());
                     var menuPage = new MenuPage();
                     NavigationPage = new NavigationPage(new HolidaysPage());
                     var rootPage = new RootPage(); 
@@ -77,7 +76,6 @@ namespace EventApp.Views
                     rootPage.Detail = NavigationPage;
                     currentUser = userName;
                     await Navigation.PopModalAsync();
-                    //Application.Current.MainPage = rootPage; 
                 }
                 else
                 {
