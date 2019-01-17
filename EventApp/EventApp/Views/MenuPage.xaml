@@ -27,6 +27,7 @@
         <StackLayout Grid.Row="1">
             <StackLayout Orientation="Vertical" Padding="16,10,16,10" Spacing="10">
                 <ListView x:Name="ListViewMenu"
+                SeparatorVisibility="None"
                     HasUnevenRows="True">
                     <ListView.ItemTemplate>
                         <DataTemplate>
