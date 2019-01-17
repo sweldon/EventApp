@@ -29,9 +29,6 @@ namespace EventApp.Views
             int monthNumber = Int32.Parse(dateString.Split('-')[1]);
             DayNumberLabel.Text = dayNumber;
 
-            Debug.WriteLine(dayNumber);
-            Debug.WriteLine(monthNumber);
-
             List<string> months = new List<string>() { 
                 "January","February","March","April","May","June","July",
                 "August", "September", "October", "November", "December"
