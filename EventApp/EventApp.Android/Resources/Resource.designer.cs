@@ -3040,7 +3040,7 @@ namespace EventApp.Droid
 			public const int splash = 2130837810;
 			
 			// aapt resource value: 0x7f020133
-			public const int splash_screen = 2130837811;
+			public const int splashscreen = 2130837811;
 			
 			// aapt resource value: 0x7f020134
 			public const int tooltip_frame_dark = 2130837812;
@@ -4744,9 +4744,6 @@ namespace EventApp.Droid
 			// aapt resource value: 0x7f0c0190
 			public const int MainTheme_Base = 2131493264;
 			
-			// aapt resource value: 0x7f0c0192
-			public const int MainTheme_Splash = 2131493266;
-			
 			// aapt resource value: 0x7f0c002d
 			public const int Platform_AppCompat = 2131492909;
 			
@@ -5424,6 +5421,9 @@ namespace EventApp.Droid
 			
 			// aapt resource value: 0x7f0c000a
 			public const int Widget_MediaRouter_MediaRouteButton = 2131492874;
+			
+			// aapt resource value: 0x7f0c0192
+			public const int splashscreen = 2131493266;
 			
 			static Style()
 			{

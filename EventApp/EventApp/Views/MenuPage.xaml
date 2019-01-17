@@ -51,8 +51,7 @@
                         TextColor="White" />
                 
                 <Label Text="Divinity Apps 2019 &#8482;" 
-                       HorizontalTextAlignment="Center"
-                       FontSize="def" />
+                       HorizontalTextAlignment="Center" />
             </StackLayout>
         </StackLayout>
     </Grid>
