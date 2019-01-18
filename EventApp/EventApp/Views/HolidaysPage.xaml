@@ -5,24 +5,22 @@
               Title="{Binding Title}"
              x:Name="BrowseItemsPage">
 
-    <StackLayout>
-        
-        <Label x:Name="MonthLabel" 
-               HorizontalTextAlignment="Center" 
-               FontSize="30"
-               Margin="0,10,0,-15"/>
-        <Label x:Name="DayNumberLabel" 
-               HorizontalTextAlignment="Center"
-               FontSize="70"
-              />
-
-
-
-        <ContentView Padding="5,0,5,5" BackgroundColor="#D2D2D2" VerticalOptions="FillAndExpand">
+    <StackLayout Spacing="0">
             
+        <Frame HasShadow="False" OutlineColor="#EAEAEA" Padding="0">
+            <StackLayout Spacing="0" Padding="0" Margin="0">
+                <Label x:Name="MonthLabel" 
+                    HorizontalTextAlignment="Center" 
+                    FontSize="30"/>
+                <Label x:Name="DayNumberLabel" 
+                    HorizontalTextAlignment="Center"
+                    FontSize="55"/>
+            </StackLayout>
+        </Frame>
+            
+        <ContentView Padding="5,0,5,5" BackgroundColor="#D2D2D2" VerticalOptions="FillAndExpand">
+
             <StackLayout>
-
-
 
                 <ListView x:Name="ItemsListView"
 
