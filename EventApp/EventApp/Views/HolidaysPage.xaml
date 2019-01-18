@@ -16,8 +16,14 @@
                FontSize="70"
               />
 
+
+
         <ContentView Padding="5,0,5,5" BackgroundColor="#D2D2D2" VerticalOptions="FillAndExpand">
+            
             <StackLayout>
+
+
+
                 <ListView x:Name="ItemsListView"
 
                   SeparatorVisibility="None"
@@ -46,9 +52,9 @@
 
                                                 <Label Text="{Binding Name}"
                                                     FontSize="16"
-                                                    FontAttributes="Bold" Grid.Row="0" Grid.Column="0" />
+                                                    FontAttributes="Bold" Grid.Row="0" Grid.Column="0" TextColor="#2196F3"/>
 
-                                                <Label Text="Today"
+                                                <Label Text="{Binding TimeSince}"
                                                     FontSize="12" 
                                                     Grid.Row="0"
                                                     Grid.Column="1"

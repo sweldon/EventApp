@@ -77,7 +77,7 @@ namespace EventApp.Services
 
             foreach (var holiday in holidayList)
             {
-                items.Insert(0, new Holiday() { Id = holiday.id, Name = holiday.name, Description = holiday.description, NumComments = holiday.num_comments });
+                items.Insert(0, new Holiday() { Id = holiday.id, Name = holiday.name, Description = holiday.description, NumComments = holiday.num_comments, TimeSince = holiday.time_since });
             }
 
             return await Task.FromResult(items);

@@ -9,5 +9,6 @@ namespace EventApp.Models
         public string Description { get; set; }
         public int Votes { get; set; }
         public int NumComments { get; set; }
+        public string TimeSince { get; set; }
     }
 }
