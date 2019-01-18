@@ -39,7 +39,7 @@
 
         </Grid>
         
-        <ContentView Padding="5,0,5,0" BackgroundColor="#D2D2D2">
+        <ContentView Padding="5,0,5,0" BackgroundColor="#D2D2D2" VerticalOptions="FillAndExpand">
             
         <ListView x:Name="HolidayDetailList"
 
