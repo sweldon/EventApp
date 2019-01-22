@@ -30,6 +30,9 @@ namespace EventApp.Views
                     case (int)MenuItemType.Browse:
                         MenuPages.Add(id, new NavigationPage(new HolidaysPage()));
                         break;
+                    case (int)MenuItemType.Trending:
+                        MenuPages.Add(id, new NavigationPage(new Trending()));
+                        break;
                 }
             }
 

@@ -27,6 +27,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\BaseViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\HolidayDetailViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\HolidaysViewModel.cs" />
+      <Compile Include="$(MSBuildThisFileDirectory)Views\Trending.xaml.cs">
+      <DependentUpon>Trending.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\RootPage.xaml.cs">
       <DependentUpon>RootPage.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -54,6 +58,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\Trending.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\LoginPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -73,4 +81,5 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Helpers\" />
   </ItemGroup>
+  
 </Project>
