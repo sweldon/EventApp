@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Collections.Generic;
-
+using System.Text.RegularExpressions;
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -93,7 +93,9 @@ namespace EventApp.Views
             string userName = NameEntry.Text.Trim();
             string pass = PassEntry.Text;
 
-            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(pass) || userName.Contains(" "))
+            Regex r = new Regex("^[a-zA-Z0-9]*$");
+
+            if (!r.IsMatch(userName))
             {
                 await DisplayAlert("Error!", "Username or password invalid", "Dang");
             }

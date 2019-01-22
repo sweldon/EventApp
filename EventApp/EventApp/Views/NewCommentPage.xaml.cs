@@ -63,6 +63,7 @@ namespace EventApp.Views
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                 int status = responseJSON.StatusCode;
+                string message = responseJSON.Message;
 
                 if (status == 200)
                 {
@@ -72,7 +73,7 @@ namespace EventApp.Views
                 }
                 else
                 {
-                    await DisplayAlert("Error", "Something went wrong on our end. We couldn't save your comment.", "Try again");
+                    await DisplayAlert("Error", message, "OK");
                     this.IsEnabled = true;
                 }
             }
