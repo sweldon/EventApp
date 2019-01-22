@@ -99,6 +99,10 @@ namespace EventApp.Views
             {
                 await DisplayAlert("Error!", "Username or password invalid", "Dang");
             }
+            else if(userName.Length > 32 || userName.Length < 3)
+            {
+                await DisplayAlert("Error!", "Your username must be between 3 and 32 characters long.", "Dang");
+            }
             else
             {
                 var values = new Dictionary<string, string>{
