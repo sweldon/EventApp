@@ -7,7 +7,7 @@
 
     <StackLayout Spacing="0">
             
-        <Frame HasShadow="False" OutlineColor="#EAEAEA" Padding="0">
+        <Frame  HasShadow="False" CornerRadius="2" OutlineColor="#EAEAEA" Padding="0">
             <StackLayout Spacing="0" Padding="0" Margin="0">
                 <Label x:Name="MonthLabel" 
                     HorizontalTextAlignment="Center" 
