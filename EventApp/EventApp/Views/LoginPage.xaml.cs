@@ -8,6 +8,8 @@ using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Microsoft.AppCenter;
+
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -40,6 +42,7 @@ namespace EventApp.Views
 
         HttpClient client = new HttpClient();
         string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
+        string devicePushId = AppCenter.GetInstallIdAsync().Result.Value.ToString();
         public NavigationPage NavigationPage { get; private set; }
         public LoginPage()
         {
@@ -56,7 +59,8 @@ namespace EventApp.Views
 
                 var values = new Dictionary<string, string>{
                     { "username", userName },
-                    { "password", pass }
+                    { "password", pass },
+                    { "device_id", devicePushId }
                 };
 
                 var content = new FormUrlEncodedContent(values);
@@ -107,7 +111,8 @@ namespace EventApp.Views
             {
                 var values = new Dictionary<string, string>{
                    { "username", userName },
-                   { "password", pass }
+                   { "password", pass },
+                   { "device_id", devicePushId }
                 };
 
                 var content = new FormUrlEncodedContent(values);
