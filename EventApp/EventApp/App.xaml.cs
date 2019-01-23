@@ -12,6 +12,19 @@ namespace EventApp
     {
 
         public NavigationPage NavigationPage { get; private set; }
+
+        public string devicePushId
+        {
+            get { return Settings.DevicePushId; }
+            set
+            {
+                if (Settings.DevicePushId == value)
+                    return;
+                Settings.DevicePushId = value;
+                OnPropertyChanged();
+            }
+        }
+
         public App()
         {
             InitializeComponent();
@@ -56,7 +69,7 @@ namespace EventApp
             }
 
             AppCenter.Start("android=bcc3eb00-cbdb-4d66-82f7-860eb3b56e56;ios=296e7478-5c95-4aa1-b904-b43c78377d1c;", typeof(Push), typeof(Analytics));
-
+            devicePushId = AppCenter.GetInstallIdAsync().Result.Value.ToString();
         }
 
         protected override void OnSleep()

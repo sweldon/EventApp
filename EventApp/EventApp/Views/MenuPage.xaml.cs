@@ -18,12 +18,12 @@ namespace EventApp.Views
 
         public string isLoggedIn
         {
-            get { return Settings.GeneralSettings; }
+            get { return Settings.IsLoggedIn; }
             set
             {
-                if (Settings.GeneralSettings == value)
+                if (Settings.IsLoggedIn == value)
                     return;
-                Settings.GeneralSettings = value;
+                Settings.IsLoggedIn = value;
                 OnPropertyChanged();
             }
         }

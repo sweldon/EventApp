@@ -22,12 +22,12 @@ namespace EventApp.Views
 
         public string currentUser
         {
-            get { return Settings.GeneralSettings; }
+            get { return Settings.CurrentUser; }
             set
             {
-                if (Settings.GeneralSettings == value)
+                if (Settings.CurrentUser == value)
                     return;
-                Settings.GeneralSettings = value;
+                Settings.CurrentUser = value;
                 OnPropertyChanged();
             }
         }
@@ -43,11 +43,13 @@ namespace EventApp.Views
 
         public async Task SubmitComment(object sender, EventArgs e)
         {
-            this.IsEnabled = false;
+            SaveCommentButton.IsEnabled = false;
+            SaveCommentButton.Text = "Posting...";
             if (string.IsNullOrEmpty(CommentContent.Text))
             {
                 await DisplayAlert("Nothing to say?", "You have to type something to say something...", "Well okay.");
-                this.IsEnabled = true;
+                SaveCommentButton.IsEnabled = true;
+                SaveCommentButton.Text = "Post";
             }
             else {
                 var values = new Dictionary<string, string>{
@@ -68,13 +70,15 @@ namespace EventApp.Views
                 if (status == 200)
                 {
                     await Navigation.PopModalAsync();
-                    this.IsEnabled = true;
+                    SaveCommentButton.IsEnabled = true;
+                    SaveCommentButton.Text = "Post";
                     MessagingCenter.Send(this, "UpdateComments");
                 }
                 else
                 {
                     await DisplayAlert("Error", message, "OK");
-                    this.IsEnabled = true;
+                   SaveCommentButton.IsEnabled = true;
+                   SaveCommentButton.Text = "Post";
                 }
             }
 

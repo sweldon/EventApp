@@ -15,28 +15,38 @@ namespace EventApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {
-
-        public string devicePushId = AppCenter.GetInstallIdAsync().Result.Value.ToString();
         public string isLoggedIn
         {
-            get { return Settings.GeneralSettings; }
+            get { return Settings.IsLoggedIn; }
             set
             {
-                if (Settings.GeneralSettings == value)
+                if (Settings.IsLoggedIn == value)
                     return;
-                Settings.GeneralSettings = value;
+                Settings.IsLoggedIn = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string devicePushId
+        {
+            get { return Settings.DevicePushId; }
+            set
+            {
+                if (Settings.DevicePushId == value)
+                    return;
+                Settings.DevicePushId = value;
                 OnPropertyChanged();
             }
         }
 
         public string currentUser
         {
-            get { return Settings.GeneralSettings; }
+            get { return Settings.CurrentUser; }
             set
             {
-                if (Settings.GeneralSettings == value)
+                if (Settings.CurrentUser == value)
                     return;
-                Settings.GeneralSettings = value;
+                Settings.CurrentUser = value;
                 OnPropertyChanged();
             }
         }

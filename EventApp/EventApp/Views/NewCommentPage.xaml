@@ -3,7 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.NewCommentPage"
              Title="Your Thoughts">
-
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!--Page Level Resources: Compatibile with Xamarin Live Player -->
+            <Color x:Key="Primary">#2196F3</Color>
+            <Color x:Key="Accent">#96d1ff</Color>
+            <Color x:Key="LightTextColor">#999999</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Cancel" Clicked="Cancel_Clicked">
             <ToolbarItem.Icon>
@@ -12,19 +19,17 @@
                 </OnPlatform>
             </ToolbarItem.Icon>
         </ToolbarItem>
-        <ToolbarItem Text="Save" Clicked="SubmitComment">
-            <ToolbarItem.Icon>
-                <OnPlatform x:TypeArguments="FileImageSource">
-                    <On Platform="UWP" Value="save.png"/>
-                </OnPlatform>
-            </ToolbarItem.Icon>
-        </ToolbarItem>
+
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
         <StackLayout Spacing="20" Padding="15">
             <Label Text="{Binding CommentTitle}" FontSize="Medium" />
             <Entry x:Name="CommentContent" Placeholder="Type your comment" FontSize="Small" Margin="0" />
+            <Button Text="Post" x:Name="SaveCommentButton"
+                        Clicked="SubmitComment"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
