@@ -16,6 +16,7 @@ namespace EventApp.Views
     public partial class LoginPage : ContentPage
     {
 
+        public string devicePushId = AppCenter.GetInstallIdAsync().Result.Value.ToString();
         public string isLoggedIn
         {
             get { return Settings.GeneralSettings; }
@@ -42,7 +43,7 @@ namespace EventApp.Views
 
         HttpClient client = new HttpClient();
         string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
-        string devicePushId = AppCenter.GetInstallIdAsync().Result.Value.ToString();
+
         public NavigationPage NavigationPage { get; private set; }
         public LoginPage()
         {
@@ -56,7 +57,6 @@ namespace EventApp.Views
 
             if (!string.IsNullOrEmpty(userName))
             {
-
                 var values = new Dictionary<string, string>{
                     { "username", userName },
                     { "password", pass },

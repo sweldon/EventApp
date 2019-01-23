@@ -10,7 +10,6 @@ namespace EventApp
 {
     public partial class App : Application
     {
-    
 
         public NavigationPage NavigationPage { get; private set; }
         public App()
@@ -29,8 +28,7 @@ namespace EventApp
         protected override void OnStart()
         {
 
-            // This should come before AppCenter.Start() is called
-            // Avoid duplicate event registration:
+            // Todo: use custom data to bring user to correct page if necessary
             if (!AppCenter.Configured)
             {
                 Push.PushNotificationReceived += (sender, e) =>
