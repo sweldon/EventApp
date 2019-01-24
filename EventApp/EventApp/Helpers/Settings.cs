@@ -33,8 +33,22 @@ namespace EventApp
         private const string CurrentUserKey = "current_user_key";
         private static readonly string CurrentUserDefault = "none";
 
+        private const string IsActiveKey = "is_active_key";
+        private static readonly bool IsActiveDefault = false;
+
         #endregion
 
+        public static bool IsActive
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(IsActiveKey, IsActiveDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(IsActiveKey, value);
+            }
+        }
 
         public static string GeneralSettings
         {

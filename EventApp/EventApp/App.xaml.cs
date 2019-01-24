@@ -32,6 +32,18 @@ namespace EventApp
             }
         }
 
+        public bool isActive
+        {
+            get { return Settings.IsActive; }
+            set
+            {
+                if (Settings.IsActive == value)
+                    return;
+                Settings.IsActive = value;
+                OnPropertyChanged();
+            }
+        }
+
         public App()
         {
             InitializeComponent();
@@ -42,12 +54,16 @@ namespace EventApp
             rootPage.Master = menuPage; // Menu
             rootPage.Detail = NavigationPage; // Content
             MainPage = rootPage; // Set root to built master detail
-            
+            isActive = true;
+            Debug.WriteLine("User initial active value: " + isActive);
+
         }
 
         protected override void OnStart()
         {
-       
+            // First start, act on push
+            isActive = false;
+            Debug.WriteLine("User onStart active value: " + isActive);
             if (!AppCenter.Configured)
             {
                 Push.PushNotificationReceived += (sender, e) =>
@@ -68,23 +84,22 @@ namespace EventApp
                             string timeSince = e.CustomData["time_since"];
                             string holidayName = e.CustomData["holiday_name"];
                             string holidayDesc = e.CustomData["holiday_desc"];
-
                             string currentTimeZone = TimeZone.CurrentTimeZone.StandardName;
                             Debug.WriteLine(currentTimeZone);
                             var commentDate = DateTime.ParseExact(timeSince, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-
                             TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById(currentTimeZone);
                             DateTime localCommentDate = TimeZoneInfo.ConvertTimeFromUtc(commentDate, easternZone);
-
                             string TimeAgo = GetRelativeTime(localCommentDate);
 
 
-                            // push async holiday id 
-                            OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
-                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
-                            // push async comment on top
-                            OpenComment = new Comment { Id = commentId, Content = content, UserName = commentUser, TimeSince = TimeAgo };
-                            NavigationPage.PushAsync(new CommentPage(new CommentViewModel(OpenComment, holidayId)));
+                            if (!isActive) {
+                                OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
+                                NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
+                                OpenComment = new Comment { Id = commentId, Content = content, UserName = commentUser, TimeSince = TimeAgo };
+                                NavigationPage.PushAsync(new CommentPage(new CommentViewModel(OpenComment, holidayId)));
+                                isActive = true; // push used, user is now active
+                            }
+
 
 
                         } else if (e.CustomData.ContainsKey("holiday_id")) {
@@ -92,11 +107,12 @@ namespace EventApp
                             string holidayName = e.CustomData["holiday_name"];
                             string holidayDesc = e.CustomData["description"];
 
-                            // Use a function to 
-                            OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
+                            if (!isActive) {
+                                OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
+                                NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
+                                isActive = true; // push used, user is now active
+                            }
 
-                            //This works with the id! but you need to get the name and description to populate the rest of the page! maybe in the getitemasync in holiday service?
-                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
                         }
 
 
@@ -112,12 +128,14 @@ namespace EventApp
 
         protected override void OnSleep()
         {
-            // Sleep
+            isActive = false;
+            Debug.WriteLine("User active: " + isActive);
         }
 
         protected override void OnResume()
         {
-            // On resume
+            isActive = true;
+            Debug.WriteLine("User resuming activity: " + isActive);
         }
 
         public string GetRelativeTime(DateTime commentDate)

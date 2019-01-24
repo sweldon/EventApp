@@ -4,8 +4,7 @@
              x:Class="EventApp.Views.HolidayDetailPage"
              xmlns:local="clr-namespace:CustomListViewNamespace"  
              Title="{Binding Title}">
-
-
+             
     <StackLayout>
 
         <ScrollView>
