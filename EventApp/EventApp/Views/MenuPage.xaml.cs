@@ -35,8 +35,8 @@ namespace EventApp.Views
 
             menuItems = new List<HomeMenuItem>
             {
-                new HomeMenuItem {Id = MenuItemType.Browse, Title="Today", Image=new Image {Source="user_menu.png"}},
-                new HomeMenuItem {Id = MenuItemType.Trending, Title="Trending", Image=new Image {Source="user_menu.png"}}
+                new HomeMenuItem {Id = MenuItemType.Holidays, Title="Today", Image=new Image {Source="user_menu.png"}},
+                //new HomeMenuItem {Id = MenuItemType.Trending, Title="Trending", Image=new Image {Source="user_menu.png"}}
             };
 
             ListViewMenu.ItemsSource = menuItems;

@@ -43,6 +43,7 @@ namespace EventApp.Views
 
 
     HolidayDetailViewModel viewModel;
+
     public Comment Comment { get; set; }
 
     public HolidayDetailPage(HolidayDetailViewModel viewModel)
@@ -59,6 +60,12 @@ namespace EventApp.Views
         async void OnCommentSelected(object sender, SelectedItemChangedEventArgs args)
         {
             ((ListView)sender).SelectedItem = null;
+            if (args.SelectedItem == null)
+            {
+                return;
+            }
+            var item = args.SelectedItem as Comment;
+            await Navigation.PushAsync(new CommentPage(new CommentViewModel(item, viewModel.Holiday.Id)));
 
         }
 

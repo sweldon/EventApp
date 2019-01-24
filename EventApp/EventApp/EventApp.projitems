@@ -23,11 +23,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\CommentInterface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\HolidayInterface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\HolidayService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\CommentViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoginViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\BaseViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\HolidayDetailViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\HolidaysViewModel.cs" />
-      <Compile Include="$(MSBuildThisFileDirectory)Views\Trending.xaml.cs">
+    <Compile Include="$(MSBuildThisFileDirectory)Views\CommentPage.xaml.cs">
+      <DependentUpon>CommentPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Trending.xaml.cs">
       <DependentUpon>Trending.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -58,6 +63,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\CommentPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\Trending.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
@@ -81,5 +90,4 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Helpers\" />
   </ItemGroup>
-  
 </Project>
