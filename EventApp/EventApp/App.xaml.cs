@@ -66,23 +66,24 @@ namespace EventApp
                 Push.PushNotificationReceived += (sender, e) =>
                 {
 
-                    string commentId = e.CustomData["comment_id"];
-                    string content = e.CustomData["content"];
-                    string commentUser = e.CustomData["comment_user"];
-                    string timeSince = e.CustomData["time_since"];
-                    string holidayId = e.CustomData["holiday_id"];
-                    string holidayName = e.CustomData["holiday_name"];
-                    string holidayDesc = e.CustomData["holiday_desc"];
-                    string currentTimeZone = TimeZone.CurrentTimeZone.StandardName;
-                    var commentDate = DateTime.ParseExact(timeSince, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-                    TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById(currentTimeZone);
-                    DateTime localCommentDate = TimeZoneInfo.ConvertTimeFromUtc(commentDate, easternZone);
-                    string TimeAgo = GetRelativeTime(localCommentDate);
-
                     if (e.Message == null)
                     {
                         if (e.CustomData.ContainsKey("comment_id"))
                         {
+
+                            string commentId = e.CustomData["comment_id"];
+                            string content = e.CustomData["content"];
+                            string commentUser = e.CustomData["comment_user"];
+                            string timeSince = e.CustomData["time_since"];
+                            string holidayId = e.CustomData["holiday_id"];
+                            string holidayName = e.CustomData["holiday_name"];
+                            string holidayDesc = e.CustomData["holiday_desc"];
+                            string currentTimeZone = TimeZone.CurrentTimeZone.StandardName;
+                            var commentDate = DateTime.ParseExact(timeSince, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                            TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById(currentTimeZone);
+                            DateTime localCommentDate = TimeZoneInfo.ConvertTimeFromUtc(commentDate, easternZone);
+                            string TimeAgo = GetRelativeTime(localCommentDate);
+                            
                             OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
                             NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
                             OpenComment = new Comment { Id = commentId, Content = content, UserName = commentUser, TimeSince = TimeAgo };
@@ -90,6 +91,9 @@ namespace EventApp
                         }
                         else if (e.CustomData.ContainsKey("holiday_id"))
                         {
+                            string holidayId = e.CustomData["holiday_id"];
+                            string holidayName = e.CustomData["holiday_name"];
+                            string holidayDesc = e.CustomData["description"];
                             OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
                             NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
                         }
@@ -97,7 +101,21 @@ namespace EventApp
                     }
                     else
                     {
-                        AlertUser(commentId, holidayId, content, commentUser, timeSince, holidayName, holidayDesc, TimeAgo);
+                        if (e.CustomData.ContainsKey("comment_id")) {
+                            string commentId = e.CustomData["comment_id"];
+                            string content = e.CustomData["content"];
+                            string commentUser = e.CustomData["comment_user"];
+                            string timeSince = e.CustomData["time_since"];
+                            string holidayId = e.CustomData["holiday_id"];
+                            string holidayName = e.CustomData["holiday_name"];
+                            string holidayDesc = e.CustomData["holiday_desc"];
+                            string currentTimeZone = TimeZone.CurrentTimeZone.StandardName;
+                            var commentDate = DateTime.ParseExact(timeSince, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                            TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById(currentTimeZone);
+                            DateTime localCommentDate = TimeZoneInfo.ConvertTimeFromUtc(commentDate, easternZone);
+                            string TimeAgo = GetRelativeTime(localCommentDate);
+                            AlertUser(commentId, holidayId, content, commentUser, timeSince, holidayName, holidayDesc, TimeAgo);
+                        }
                     }
 
                 };
