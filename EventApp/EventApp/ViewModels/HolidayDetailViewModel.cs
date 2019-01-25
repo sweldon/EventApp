@@ -56,7 +56,7 @@ namespace EventApp.ViewModels
                 var comments = await CommentStore.GetHolidayCommentsAsync(true, Holiday.Id);
                 foreach (var comment in comments)
                 {
-                    Debug.WriteLine(comment.Content);
+                    Debug.WriteLine("Refreshing comments");
                     Comments.Insert(0, comment);
                 }
             }

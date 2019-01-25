@@ -55,20 +55,18 @@ namespace EventApp
             rootPage.Detail = NavigationPage; // Content
             MainPage = rootPage; // Set root to built master detail
             isActive = true;
-            Debug.WriteLine("User initial active value: " + isActive);
 
         }
 
         protected override void OnStart()
         {
-            // First start, act on push
-            isActive = false;
-            Debug.WriteLine("User onStart active value: " + isActive);
+       
+            Debug.WriteLine("User initial active value: " + isActive);
             if (!AppCenter.Configured)
             {
                 Push.PushNotificationReceived += (sender, e) =>
                 {
-
+                
                     var summary = $"Push notification received:" +
                                         $"\n\tNotification title: {e.Title}" +
                                         $"\n\tMessage: {e.Message}";
@@ -91,13 +89,12 @@ namespace EventApp
                             DateTime localCommentDate = TimeZoneInfo.ConvertTimeFromUtc(commentDate, easternZone);
                             string TimeAgo = GetRelativeTime(localCommentDate);
 
-
+                            // Will be true unless you tell it you're coming back from a resume
                             if (!isActive) {
                                 OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
                                 NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
                                 OpenComment = new Comment { Id = commentId, Content = content, UserName = commentUser, TimeSince = TimeAgo };
                                 NavigationPage.PushAsync(new CommentPage(new CommentViewModel(OpenComment, holidayId)));
-                                isActive = true; // push used, user is now active
                             }
 
 
@@ -110,7 +107,6 @@ namespace EventApp
                             if (!isActive) {
                                 OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
                                 NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
-                                isActive = true; // push used, user is now active
                             }
 
                         }
@@ -129,13 +125,11 @@ namespace EventApp
         protected override void OnSleep()
         {
             isActive = false;
-            Debug.WriteLine("User active: " + isActive);
         }
 
         protected override void OnResume()
         {
             isActive = true;
-            Debug.WriteLine("User resuming activity: " + isActive);
         }
 
         public string GetRelativeTime(DateTime commentDate)

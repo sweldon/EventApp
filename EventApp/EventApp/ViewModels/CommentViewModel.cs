@@ -16,7 +16,7 @@ namespace EventApp.ViewModels
         public string UserName { get; set; }
         public string TimeSince { get; set; }
         public string HolidayId { get; set; }
-
+        public string UserNameMention { get; set; }
         public string currentUser
         {
             get { return Settings.CurrentUser; }
@@ -35,6 +35,8 @@ namespace EventApp.ViewModels
             HolidayId = holidayId;
             Content = comment.Content;
             UserName = comment.UserName;
+            int UserNameLength = UserName.Length;
+            UserNameMention = UserName.PadRight(UserNameLength + 1, ' ');
             TimeSince = comment.TimeSince;
             Title = "Mention";
 
