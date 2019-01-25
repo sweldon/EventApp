@@ -54,7 +54,6 @@ namespace EventApp
             rootPage.Master = menuPage; // Menu
             rootPage.Detail = NavigationPage; // Content
             MainPage = rootPage; // Set root to built master detail
-            isActive = true;
 
         }
 
@@ -66,53 +65,39 @@ namespace EventApp
             {
                 Push.PushNotificationReceived += (sender, e) =>
                 {
-                
-                    var summary = $"Push notification received:" +
-                                        $"\n\tNotification title: {e.Title}" +
-                                        $"\n\tMessage: {e.Message}";
 
-                    if (e.CustomData != null)
+                    string commentId = e.CustomData["comment_id"];
+                    string content = e.CustomData["content"];
+                    string commentUser = e.CustomData["comment_user"];
+                    string timeSince = e.CustomData["time_since"];
+                    string holidayId = e.CustomData["holiday_id"];
+                    string holidayName = e.CustomData["holiday_name"];
+                    string holidayDesc = e.CustomData["holiday_desc"];
+                    string currentTimeZone = TimeZone.CurrentTimeZone.StandardName;
+                    var commentDate = DateTime.ParseExact(timeSince, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                    TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById(currentTimeZone);
+                    DateTime localCommentDate = TimeZoneInfo.ConvertTimeFromUtc(commentDate, easternZone);
+                    string TimeAgo = GetRelativeTime(localCommentDate);
+
+                    if (e.Message == null)
                     {
-
-                         if (e.CustomData.ContainsKey("comment_id")){
-                            string commentId = e.CustomData["comment_id"];
-                            string holidayId = e.CustomData["holiday_id"];
-                            string content = e.CustomData["content"];
-                            string commentUser = e.CustomData["comment_user"];
-                            string timeSince = e.CustomData["time_since"];
-                            string holidayName = e.CustomData["holiday_name"];
-                            string holidayDesc = e.CustomData["holiday_desc"];
-                            string currentTimeZone = TimeZone.CurrentTimeZone.StandardName;
-                            Debug.WriteLine(currentTimeZone);
-                            var commentDate = DateTime.ParseExact(timeSince, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-                            TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById(currentTimeZone);
-                            DateTime localCommentDate = TimeZoneInfo.ConvertTimeFromUtc(commentDate, easternZone);
-                            string TimeAgo = GetRelativeTime(localCommentDate);
-
-                            // Will be true unless you tell it you're coming back from a resume
-                            if (!isActive) {
-                                OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
-                                NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
-                                OpenComment = new Comment { Id = commentId, Content = content, UserName = commentUser, TimeSince = TimeAgo };
-                                NavigationPage.PushAsync(new CommentPage(new CommentViewModel(OpenComment, holidayId)));
-                            }
-
-
-
-                        } else if (e.CustomData.ContainsKey("holiday_id")) {
-                            string holidayId = e.CustomData["holiday_id"];
-                            string holidayName = e.CustomData["holiday_name"];
-                            string holidayDesc = e.CustomData["description"];
-
-                            if (!isActive) {
-                                OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
-                                NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
-                            }
-
+                        if (e.CustomData.ContainsKey("comment_id"))
+                        {
+                            OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
+                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
+                            OpenComment = new Comment { Id = commentId, Content = content, UserName = commentUser, TimeSince = TimeAgo };
+                            NavigationPage.PushAsync(new CommentPage(new CommentViewModel(OpenComment, holidayId)));
+                        }
+                        else if (e.CustomData.ContainsKey("holiday_id"))
+                        {
+                            OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
+                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
                         }
 
-
-
+                    }
+                    else
+                    {
+                        AlertUser(commentId, holidayId, content, commentUser, timeSince, holidayName, holidayDesc, TimeAgo);
                     }
 
                 };
@@ -120,6 +105,20 @@ namespace EventApp
 
             AppCenter.Start("android=bcc3eb00-cbdb-4d66-82f7-860eb3b56e56;ios=296e7478-5c95-4aa1-b904-b43c78377d1c;", typeof(Push), typeof(Analytics));
             devicePushId = AppCenter.GetInstallIdAsync().Result.Value.ToString();
+        }
+
+        async void AlertUser(string commentId, string holidayId, string content, string commentUser, string timeSince, string holidayName, string holidayDesc, string TimeAgo)
+        {
+
+            var title = commentUser + " mentioned you!";   
+            var userAlert = await Application.Current.MainPage.DisplayAlert(title, content, "Go to Comment", "Close");
+            if (userAlert) {
+                OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
+                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
+                OpenComment = new Comment { Id = commentId, Content = content, UserName = commentUser, TimeSince = TimeAgo };
+                await NavigationPage.PushAsync(new CommentPage(new CommentViewModel(OpenComment, holidayId)));
+            }
+
         }
 
         protected override void OnSleep()
