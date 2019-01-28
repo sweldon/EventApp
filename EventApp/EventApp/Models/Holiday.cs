@@ -10,5 +10,6 @@ namespace EventApp.Models
         public int Votes { get; set; }
         public int NumComments { get; set; }
         public string TimeSince { get; set; }
+        public string DescriptionShort { get; set; }
     }
 }

@@ -89,9 +89,13 @@ namespace EventApp.Services
 
             dynamic holidayList = responseJSON.HolidayList;
 
+
+
             foreach (var holiday in holidayList)
             {
-                items.Insert(0, new Holiday() { Id = holiday.id, Name = holiday.name, Description = holiday.description, NumComments = holiday.num_comments, TimeSince = holiday.time_since });
+                string holidayDescription = holiday.description;
+                string HolidayDescriptionShort = holidayDescription.Length <= 90 ? holidayDescription : holidayDescription.Substring(0, 90) + "...";
+                items.Insert(0, new Holiday() { Id = holiday.id, Name = holiday.name, Description = holiday.description, NumComments = holiday.num_comments, TimeSince = holiday.time_since, DescriptionShort= HolidayDescriptionShort });
             }
 
             return await Task.FromResult(items);

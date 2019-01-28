@@ -65,7 +65,7 @@ namespace EventApp
             {
                 Push.PushNotificationReceived += (sender, e) =>
                 {
-
+                    Debug.WriteLine("PUSH MESSAGE: " + e.Message);
                     if (e.Message == null)
                     {
                         if (e.CustomData.ContainsKey("comment_id"))
@@ -116,6 +116,15 @@ namespace EventApp
                             string TimeAgo = GetRelativeTime(localCommentDate);
                             AlertUser(commentId, holidayId, content, commentUser, timeSince, holidayName, holidayDesc, TimeAgo);
                         }
+                        else if (e.CustomData.ContainsKey("holiday_id"))
+                        {
+                            string holidayId = e.CustomData["holiday_id"];
+                            string holidayName = e.CustomData["holiday_name"];
+                            string holidayDesc = e.CustomData["description"];
+                            //AlertUserHolidays(holidayId, holidayName, holidayDesc);
+                            OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
+                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
+                        }
                     }
 
                 };
@@ -138,6 +147,21 @@ namespace EventApp
             }
 
         }
+
+        //async void AlertUserHolidays(string holidayId, string holidayName, string holidayDesc)
+        //{
+
+        //    var title = "Todays holidays!";
+        //    var userAlert = await Application.Current.MainPage.DisplayAlert(title, "Test", "Check it out", "Close");
+        //    if (userAlert)
+        //    {
+        //        OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
+        //        await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
+
+        //    }
+
+        //}
+
 
         protected override void OnSleep()
         {
