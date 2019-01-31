@@ -15,6 +15,7 @@ namespace EventApp.Services
 
         List<Holiday> items;
         Holiday individualHoliday;
+        Dictionary<string, string> holidayResult;
 
         string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
         HttpClient client = new HttpClient();
@@ -60,7 +61,26 @@ namespace EventApp.Services
             return await Task.FromResult(individualHoliday);
         }
 
-        public async Task<IEnumerable<Holiday>> GetItemsAsync(bool forceRefresh = false)
+        public async Task<Holiday> GetHolidayById(string id)
+        {
+
+            var values = new Dictionary<string, string>{
+                   { "id", id }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+            var response = await client.PostAsync(ec2Instance + "/portal/get_holiday_by_id/", content);
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+
+            individualHoliday = new Holiday() { Id=id, Name = responseJSON.name, Description = responseJSON.description };
+
+            return await Task.FromResult(individualHoliday);
+
+        }
+
+        public async Task<IEnumerable<Holiday>> GetHolidaysAsync(bool forceRefresh = false)
         {
             items = new List<Holiday>();
 

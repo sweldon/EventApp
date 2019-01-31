@@ -9,7 +9,7 @@
 
         <ScrollView>
             <ContentView Padding="15" >
-                <Label Text="{Binding Holiday.Description}" FontSize="Small"/>
+                <Label x:Name="Description" FontSize="Small"/>
             </ContentView>
         </ScrollView>
 

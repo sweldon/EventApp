@@ -65,68 +65,37 @@ namespace EventApp
             {
                 Push.PushNotificationReceived += (sender, e) =>
                 {
-                    Debug.WriteLine("PUSH MESSAGE: " + e.Message);
                     if (e.Message == null)
                     {
+                        // Background Android
                         if (e.CustomData.ContainsKey("comment_id"))
                         {
-
                             string commentId = e.CustomData["comment_id"];
-                            string content = e.CustomData["content"];
-                            string commentUser = e.CustomData["comment_user"];
-                            string timeSince = e.CustomData["time_since"];
                             string holidayId = e.CustomData["holiday_id"];
-                            string holidayName = e.CustomData["holiday_name"];
-                            string holidayDesc = e.CustomData["holiday_desc"];
-                            string currentTimeZone = TimeZone.CurrentTimeZone.StandardName;
-                            var commentDate = DateTime.ParseExact(timeSince, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-                            TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById(currentTimeZone);
-                            DateTime localCommentDate = TimeZoneInfo.ConvertTimeFromUtc(commentDate, easternZone);
-                            string TimeAgo = GetRelativeTime(localCommentDate);
-                            
-                            OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
-                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
-                            OpenComment = new Comment { Id = commentId, Content = content, UserName = commentUser, TimeSince = TimeAgo };
-                            NavigationPage.PushAsync(new CommentPage(new CommentViewModel(OpenComment, holidayId)));
+                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                            NavigationPage.PushAsync(new CommentPage(new CommentViewModel(commentId, holidayId)));
                         }
                         else if (e.CustomData.ContainsKey("holiday_id"))
                         {
                             string holidayId = e.CustomData["holiday_id"];
-                            string holidayName = e.CustomData["holiday_name"];
-                            string holidayDesc = e.CustomData["description"];
-                            OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
-                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
+                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
                         }
-
                     }
                     else
                     {
+                        // Foreground Android
                         if (e.CustomData.ContainsKey("comment_id")) {
                             string commentId = e.CustomData["comment_id"];
-                            string content = e.CustomData["content"];
                             string commentUser = e.CustomData["comment_user"];
-                            string timeSince = e.CustomData["time_since"];
                             string holidayId = e.CustomData["holiday_id"];
-                            string holidayName = e.CustomData["holiday_name"];
-                            string holidayDesc = e.CustomData["holiday_desc"];
-                            string currentTimeZone = TimeZone.CurrentTimeZone.StandardName;
-                            var commentDate = DateTime.ParseExact(timeSince, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-                            TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById(currentTimeZone);
-                            DateTime localCommentDate = TimeZoneInfo.ConvertTimeFromUtc(commentDate, easternZone);
-                            string TimeAgo = GetRelativeTime(localCommentDate);
-                            AlertUser(commentId, holidayId, content, commentUser, timeSince, holidayName, holidayDesc, TimeAgo);
+                            AlertUser(commentId, holidayId, commentUser);
                         }
                         else if (e.CustomData.ContainsKey("holiday_id"))
                         {
                             string holidayId = e.CustomData["holiday_id"];
-                            string holidayName = e.CustomData["holiday_name"];
-                            string holidayDesc = e.CustomData["description"];
-                            //AlertUserHolidays(holidayId, holidayName, holidayDesc);
-                            OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
-                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
+                            AlertUserHolidays(holidayId);
                         }
                     }
-
                 };
             }
 
@@ -134,34 +103,29 @@ namespace EventApp
             devicePushId = AppCenter.GetInstallIdAsync().Result.Value.ToString();
         }
 
-        async void AlertUser(string commentId, string holidayId, string content, string commentUser, string timeSince, string holidayName, string holidayDesc, string TimeAgo)
+        async void AlertUser(string commentId, string holidayId, string commentUser)
         {
 
             var title = commentUser + " mentioned you!";   
-            var userAlert = await Application.Current.MainPage.DisplayAlert(title, content, "Go to Comment", "Close");
+            var userAlert = await Application.Current.MainPage.DisplayAlert(title, "", "Go to Comment", "Close");
             if (userAlert) {
-                OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
-                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
-                OpenComment = new Comment { Id = commentId, Content = content, UserName = commentUser, TimeSince = TimeAgo };
-                await NavigationPage.PushAsync(new CommentPage(new CommentViewModel(OpenComment, holidayId)));
+                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                //OpenComment = new Comment { Id = commentId, Content = content, UserName = commentUser, TimeSince = TimeAgo };
+                await NavigationPage.PushAsync(new CommentPage(new CommentViewModel(commentId, holidayId)));
             }
 
         }
 
-        //async void AlertUserHolidays(string holidayId, string holidayName, string holidayDesc)
-        //{
+        async void AlertUserHolidays(string holidayId)
+        {
 
-        //    var title = "Todays holidays!";
-        //    var userAlert = await Application.Current.MainPage.DisplayAlert(title, "Test", "Check it out", "Close");
-        //    if (userAlert)
-        //    {
-        //        OpenHolidayPage = new Holiday { Id = holidayId, Name = holidayName, Description = holidayDesc };
-        //        await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(OpenHolidayPage)));
-
-        //    }
-
-        //}
-
+            var title = "Todays holidays are out!";
+            var userAlert = await Application.Current.MainPage.DisplayAlert(title, "Want to see a random one?", "OK", "Close");
+            if (userAlert)
+            {
+                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+            }
+        }
 
         protected override void OnSleep()
         {

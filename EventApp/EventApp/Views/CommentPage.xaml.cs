@@ -45,9 +45,22 @@ namespace EventApp.Views
 
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
+
+            viewModel.Comment = await viewModel.CommentStore.GetCommentById(viewModel.CommentId);
+
+            //Description.Text = viewModel.Holiday.Description;
+            //this.Title = viewModel.Holiday.Name;
+            string UserNameValue = viewModel.Comment.UserName;
+            Content.Text = viewModel.Comment.Content;
+            TimeSince.Text = viewModel.Comment.TimeSince;
+            UserName.Text = UserNameValue;
+            this.Title = viewModel.Comment.UserName + "'s Comment"; 
+            int UserNameLength = UserNameValue.Length;
+            ReplyCommentContent.Text = '@'+UserNameValue.PadRight(UserNameLength + 1, ' ');
+
 
         }
 
@@ -83,7 +96,6 @@ namespace EventApp.Views
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                 int status = responseJSON.StatusCode;
                 string message = responseJSON.Message;
-                Debug.WriteLine("REPLY STATUS: "+status);
                 if (status == 200)
                 {
                     await Navigation.PopAsync();

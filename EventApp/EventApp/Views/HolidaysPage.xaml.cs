@@ -24,6 +24,7 @@ namespace EventApp.Views
 
             BindingContext = viewModel = new HolidaysViewModel();
             DateTime currentDate = DateTime.Today;
+            
             string dateString = currentDate.ToString("dd-MM-yyyy");
             string dayNumber = dateString.Split('-')[0].TrimStart('0');
             int monthNumber = Int32.Parse(dateString.Split('-')[1]);
@@ -38,6 +39,9 @@ namespace EventApp.Views
             MonthLabel.Text = monthString;
             ItemsListView.ItemSelected += OnItemSelected;
 
+            //viewModel.Title = monthString + " " + dayNumber;
+            viewModel.Title = currentDate.DayOfWeek.ToString();
+
 
         }
 
@@ -49,7 +53,7 @@ namespace EventApp.Views
                 return;
             }
             var item = args.SelectedItem as Holiday;
-            await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item)));
+            await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id)));
 
         }
 
@@ -57,7 +61,7 @@ namespace EventApp.Views
         {
             base.OnAppearing();
 
-            if (viewModel.Items.Count == 0)
+            if (viewModel.GroupedHolidayList.Count == 0)
                 viewModel.LoadItemsCommand.Execute(null);
         }
     }

@@ -5,16 +5,18 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using EventApp.Views;
-
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Net.Http;
 
 namespace EventApp.ViewModels
 {
     public class HolidayDetailViewModel : BaseViewModel
     {
-        public Holiday Holiday { get; set; }
+        public Holiday Holiday { get; set; } // Set by async GetHolidayById call when page loads
         public ObservableCollection<Comment> Comments { get; set; }
         public Command LoadHolidayComments { get; set; }
-
+        public string HolidayId { get; set; }
 
         public string currentUser
         {
@@ -28,14 +30,14 @@ namespace EventApp.ViewModels
             }
         }
 
-        public HolidayDetailViewModel(Holiday holiday)
+        public HolidayDetailViewModel(string holidayId)
         {
+
+            HolidayId = holidayId;
             
-            Holiday = holiday;
-            Title = holiday.Name;
+
             Comments = new ObservableCollection<Comment>();
             LoadHolidayComments = new Command(async () => await ExecuteLoadCommentsCommand());
-
 
             MessagingCenter.Subscribe<NewCommentPage>(this, "UpdateComments", (sender) => {
                 ExecuteLoadCommentsCommand();
@@ -53,7 +55,7 @@ namespace EventApp.ViewModels
             try
             {
                 Comments.Clear();
-                var comments = await CommentStore.GetHolidayCommentsAsync(true, Holiday.Id);
+                var comments = await CommentStore.GetHolidayCommentsAsync(true, HolidayId);
                 foreach (var comment in comments)
                 {
                     Debug.WriteLine("Refreshing comments");

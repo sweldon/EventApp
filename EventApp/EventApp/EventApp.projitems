@@ -16,6 +16,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Models\Comment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\HolidayList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\User.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Holiday.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\HomeMenuItem.cs" />

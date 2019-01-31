@@ -14,6 +14,7 @@ namespace EventApp.Services
     {
 
         List<Comment> comments;
+        Comment individualComment; 
 
         string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
         HttpClient client = new HttpClient();
@@ -66,6 +67,35 @@ namespace EventApp.Services
             }
 
             return await Task.FromResult(comments);
+        }
+
+        public async Task<Comment> GetCommentById(string id)
+        {
+
+            var values = new Dictionary<string, string>{
+                   { "id", id }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+            var response = await client.PostAsync(ec2Instance + "/portal/get_comment_by_id/", content);
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+
+            string commentTimestamp = responseJSON.timestamp;
+            string currentTimeZone = TimeZone.CurrentTimeZone.StandardName;
+            Debug.WriteLine(currentTimeZone);
+            var commentDate = DateTime.ParseExact(commentTimestamp, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+
+            TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById(currentTimeZone);
+            DateTime localCommentDate = TimeZoneInfo.ConvertTimeFromUtc(commentDate, easternZone);
+
+            string TimeAgo = GetRelativeTime(localCommentDate);
+
+            individualComment = new Comment() { Content = responseJSON.content, HolidayId = responseJSON.holiday_id, UserName=responseJSON.user, TimeSince = TimeAgo };
+
+            return await Task.FromResult(individualComment);
+
         }
 
         public string GetRelativeTime(DateTime commentDate) {

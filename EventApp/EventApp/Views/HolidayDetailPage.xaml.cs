@@ -42,19 +42,19 @@ namespace EventApp.Views
 
 
 
-    HolidayDetailViewModel viewModel;
+        HolidayDetailViewModel viewModel;
 
-    public Comment Comment { get; set; }
+        public Comment Comment { get; set; }
 
-    public HolidayDetailPage(HolidayDetailViewModel viewModel)
-        {
-            InitializeComponent();
+        public HolidayDetailPage(HolidayDetailViewModel viewModel)
+            {
+                InitializeComponent();
 
-            BindingContext = this.viewModel = viewModel;
+                BindingContext = this.viewModel = viewModel;
 
-            HolidayDetailList.ItemSelected += OnCommentSelected;
+                HolidayDetailList.ItemSelected += OnCommentSelected;
 
-        }
+            }
 
 
         async void OnCommentSelected(object sender, SelectedItemChangedEventArgs args)
@@ -65,7 +65,7 @@ namespace EventApp.Views
                 return;
             }
             var item = args.SelectedItem as Comment;
-            await Navigation.PushAsync(new CommentPage(new CommentViewModel(item, viewModel.Holiday.Id)));
+            await Navigation.PushAsync(new CommentPage(new CommentViewModel(item.Id, viewModel.Holiday.Id)));
 
         }
 
@@ -75,12 +75,17 @@ namespace EventApp.Views
 
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
 
             if (viewModel.Comments.Count == 0)
                 viewModel.LoadHolidayComments.Execute(null);
+
+            viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
+            Description.Text = viewModel.Holiday.Description;
+            this.Title = viewModel.Holiday.Name;
+
         }
 
         async void OnTapGestureRecognizerTapped(object sender, EventArgs args)

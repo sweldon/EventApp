@@ -9,7 +9,8 @@ namespace EventApp.Services
         Task<bool> AddItemAsync(T item);
         Task<bool> UpdateItemAsync(T item);
         Task<T> GetHolidayByName(string name);
-        Task<IEnumerable<T>> GetItemsAsync(bool forceRefresh = false);
+        Task<T> GetHolidayById(string id);
+        Task<IEnumerable<T>> GetHolidaysAsync(bool forceRefresh = false);
     }
 
 }
