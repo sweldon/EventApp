@@ -31,6 +31,7 @@
             <StackLayout>
 
                 <ListView x:Name="ItemsListView"
+                   IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                     SeparatorVisibility="None"
                     IsGroupingEnabled="true"
                     ItemsSource="{Binding GroupedHolidayList}"
@@ -38,7 +39,8 @@
                     HasUnevenRows="true"
                     RefreshCommand="{Binding LoadItemsCommand}"
                     IsPullToRefreshEnabled="true"
-                    IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                   
+                    CachingStrategy="RecycleElement"
                     >
                     <ListView.GroupHeaderTemplate>
                         <DataTemplate>

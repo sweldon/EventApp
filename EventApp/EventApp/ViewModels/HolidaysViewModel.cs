@@ -13,18 +13,13 @@ namespace EventApp.ViewModels
 {
     public class HolidaysViewModel : BaseViewModel
     {
-        public HolidayList Items { get; set; }
-        public HolidayList OldList { get; set; }
-        public HolidayList TomorrowList { get; set; }
+
         public Command LoadItemsCommand { get; set; }
         private List<HolidayList> HolidayList;
         public List<HolidayList> GroupedHolidayList { get { return HolidayList; } set { HolidayList = value; base.OnPropertyChanged(); } }
 
         public HolidaysViewModel()
         {
-            Items = new HolidayList();
-            OldList = new HolidayList();
-            TomorrowList = new HolidayList();
             GroupedHolidayList = new List<HolidayList>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
@@ -39,10 +34,14 @@ namespace EventApp.ViewModels
 
             try
             {
-                Items.Clear();
-                OldList.Clear();
-                TomorrowList.Clear();
+
+                var Items = new HolidayList();
+                var OldList = new HolidayList();
+                var TomorrowList = new HolidayList();
+                GroupedHolidayList = new List<HolidayList>();
+
                 var holidays = await HolidayStore.GetHolidaysAsync(true);
+
                 foreach (var holiday in holidays)
                 {
                     if (holiday.TimeSince == "Today") {
