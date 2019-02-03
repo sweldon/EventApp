@@ -46,7 +46,7 @@
                     <ListView.GroupHeaderTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <ContentView Padding="0" Margin="0,5,0,0"> <!-- Counter listview spacing margin -->
+                                <ContentView Padding="0" Margin="0,5,0,0"  BackgroundColor="#FFFFFF"> <!-- Counter listview spacing margin -->
                                     <Grid Padding="10" HorizontalOptions="FillAndExpand">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width=".5*" />
@@ -57,7 +57,7 @@
                                             <Image Source="{Binding HeadingImage}" VerticalOptions="Center"/>
                                         </ContentView>
 
-                                        <Label Text="{Binding Heading}" Grid.Column="1" />
+                                        <Label Text="{Binding Heading}" Grid.Column="1" FontAttributes="Bold"/>
                                     </Grid>
                                     
                                 </ContentView>
