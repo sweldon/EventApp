@@ -58,6 +58,7 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Settings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomListView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SwipeContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\RootPage.xaml">

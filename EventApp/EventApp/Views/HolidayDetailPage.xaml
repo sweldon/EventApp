@@ -2,96 +2,98 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.HolidayDetailPage"
-             xmlns:local="clr-namespace:CustomListViewNamespace"  
+             xmlns:local="clr-namespace:EventApp"  
              Title="{Binding Title}">
              
-    <StackLayout>
-
-        <ScrollView>
-            <ContentView Padding="15" >
-                <Label x:Name="Description" FontSize="Small"/>
-            </ContentView>
-        </ScrollView>
-
-        <BoxView 
-                HeightRequest="1" 
-                BackgroundColor="#EAEAEA" 
-                HorizontalOptions="FillAndExpand" />
-
-        <Grid Padding="10" HorizontalOptions="FillAndExpand">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width=".5*" />
-                <ColumnDefinition Width="9*" />
-            </Grid.ColumnDefinitions>
-            
-            <ContentView Grid.Column="0">
-                <Image Source="comment.png" VerticalOptions="Center"/>
-            </ContentView>
-
-            <Label Grid.Column="1" Text="Comment" FontSize="Small"
-                   VerticalTextAlignment="Center" Margin="0,-2,0,0">
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer
-                        Tapped="OnTapGestureRecognizerTapped"  />
-                </Label.GestureRecognizers>
-            </Label>
-
-        </Grid>
+     <local:SwipeContainer x:Name="swipeContainer">
+        <StackLayout>
         
-        <ContentView Padding="5,0,5,0" BackgroundColor="#D2D2D2" VerticalOptions="FillAndExpand">
+            <ScrollView>
+                <ContentView Padding="15" >
+                    <Label x:Name="Description" FontSize="Small"/>
+                </ContentView>
+            </ScrollView>
+
+            <BoxView 
+                    HeightRequest="1" 
+                    BackgroundColor="#EAEAEA" 
+                    HorizontalOptions="FillAndExpand" />
+
+            <Grid Padding="10" HorizontalOptions="FillAndExpand">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width=".5*" />
+                    <ColumnDefinition Width="9*" />
+                </Grid.ColumnDefinitions>
+                
+                <ContentView Grid.Column="0">
+                    <Image Source="comment.png" VerticalOptions="Center"/>
+                </ContentView>
+
+                <Label Grid.Column="1" Text="Comment" FontSize="Small"
+                       VerticalTextAlignment="Center" Margin="0,-2,0,0">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Tapped="OnTapGestureRecognizerTapped"  />
+                    </Label.GestureRecognizers>
+                </Label>
+
+            </Grid>
             
-        <ListView x:Name="HolidayDetailList"
+            <ContentView Padding="5,0,5,0" BackgroundColor="#D2D2D2" VerticalOptions="FillAndExpand">
+                
+            <ListView x:Name="HolidayDetailList"
 
-                  SeparatorVisibility="None"
-                    ItemsSource="{Binding Comments}"
-                    BackgroundColor="#D2D2D2"
-                    HasUnevenRows="true"
-                    RefreshCommand="{Binding LoadHolidayComments}"
-                    IsPullToRefreshEnabled="true"
-                    IsRefreshing="{Binding IsBusy, Mode=OneWay}"
-                    >
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
+                      SeparatorVisibility="None"
+                        ItemsSource="{Binding Comments}"
+                        BackgroundColor="#D2D2D2"
+                        HasUnevenRows="true"
+                        RefreshCommand="{Binding LoadHolidayComments}"
+                        IsPullToRefreshEnabled="true"
+                        IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                        >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
 
 
 
-                            <ContentView HorizontalOptions="FillAndExpand">
-                                <Frame Margin="0,5,0,0" CornerRadius="2" HasShadow="False" Padding="10" >
-                                  <StackLayout>
-                                  <Grid HorizontalOptions="FillAndExpand">
-                                    <Grid.RowDefinitions>
-                                      <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                      <ColumnDefinition Width="5*" />
-                                      <ColumnDefinition Width="5*" />
-                                    </Grid.ColumnDefinitions>
+                                <ContentView HorizontalOptions="FillAndExpand">
+                                    <Frame Margin="0,5,0,0" CornerRadius="2" HasShadow="False" Padding="10" >
+                                      <StackLayout>
+                                      <Grid HorizontalOptions="FillAndExpand">
+                                        <Grid.RowDefinitions>
+                                          <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                          <ColumnDefinition Width="5*" />
+                                          <ColumnDefinition Width="5*" />
+                                        </Grid.ColumnDefinitions>
 
-                                      <Label Text="{Binding UserName}"
-                                        FontSize="12"
-                                        FontAttributes="Bold"
-                                        Opacity=".5" Grid.Row="0" Grid.Column="0" />
-                                    
-                                      <Label Text="{Binding TimeSince}"
-                                           FontSize="12" 
-                                             Grid.Row="0"
-                                             Grid.Column="1"
-                                             HorizontalTextAlignment="End" 
-                                             Opacity=".8" />        
-  
-                                  </Grid>
+                                          <Label Text="{Binding UserName}"
+                                            FontSize="12"
+                                            FontAttributes="Bold"
+                                            Opacity=".5" Grid.Row="0" Grid.Column="0" />
+                                        
+                                          <Label Text="{Binding TimeSince}"
+                                               FontSize="12" 
+                                                 Grid.Row="0"
+                                                 Grid.Column="1"
+                                                 HorizontalTextAlignment="End" 
+                                                 Opacity=".8" />        
+      
+                                      </Grid>
 
-                                  <Label Text="{Binding Content}" FontSize="16" />
-                                  </StackLayout>
+                                      <Label Text="{Binding Content}" FontSize="16" />
+                                      </StackLayout>
 
-                                </Frame>
-                            </ContentView>
-                       
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-            </ListView>
-            </ContentView>
-    </StackLayout>
+                                    </Frame>
+                                </ContentView>
+                           
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                </ListView>
+                </ContentView>
+        </StackLayout>
+    </local:SwipeContainer>
 </ContentPage>

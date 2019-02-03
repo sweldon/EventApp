@@ -35,7 +35,7 @@ namespace EventApp.Views
 
             menuItems = new List<HomeMenuItem>
             {
-                new HomeMenuItem {Id = MenuItemType.Holidays, Title="Today", Image=new Image {Source="user_menu.png"}},
+                new HomeMenuItem {Id = MenuItemType.Holidays, Title="Today", MenuImage="today_icon.png"},
                 //new HomeMenuItem {Id = MenuItemType.Trending, Title="Trending", Image=new Image {Source="user_menu.png"}}
             };
 
@@ -49,6 +49,16 @@ namespace EventApp.Views
 
                 var id = (int)((HomeMenuItem)e.SelectedItem).Id;
                 await RootPage.NavigateFromMenu(id);
+            };
+
+            swipeContainer.Swipe += (sender, e) =>
+            {
+                switch (e.Direction)
+                {
+                    case SwipeDirection.Left:
+                        (Application.Current.MainPage as MasterDetailPage).IsPresented = false;
+                        break;
+                }
             };
 
         }

@@ -15,6 +15,6 @@ namespace EventApp.Models
 
         public string Title { get; set; }
 
-        public Image Image { get; set; }
+        public string MenuImage { get; set; }
     }
 }
