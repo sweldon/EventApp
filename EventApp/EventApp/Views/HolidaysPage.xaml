@@ -5,6 +5,14 @@
               Title="{Binding Title}"
              x:Name="BrowseItemsPage">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Primary">#2196F3</Color>
+            <Color x:Key="Accent">#96d1ff</Color>
+            <Color x:Key="LightTextColor">#999999</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <StackLayout Spacing="0" BackgroundColor="#d2d2d2">
 
         <Frame  HasShadow="False" CornerRadius="2" OutlineColor="#EAEAEA" Padding="0">
@@ -39,13 +47,17 @@
                     HasUnevenRows="true"
                     RefreshCommand="{Binding LoadItemsCommand}"
                     IsPullToRefreshEnabled="true"
-                   
-                    CachingStrategy="RecycleElement"
-                    >
+                    CachingStrategy="RecycleElement">
+
+                    <!--<ListView.Header>
+                        <StackLayout Orientation="Horizontal" BackgroundColor="{StaticResource Accent}">
+                        </StackLayout>
+                    </ListView.Header>-->
+                    
                     <ListView.GroupHeaderTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <ContentView Padding="0" Margin="0,5,0,0"> <!-- Counter listview spacing margin -->
+                                <ContentView Padding="0" Margin="0,5,0,0"  BackgroundColor="#FFFFFF"> <!-- Counter listview spacing margin -->
                                     <Grid Padding="10" HorizontalOptions="FillAndExpand">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width=".5*" />
@@ -56,7 +68,7 @@
                                             <Image Source="{Binding HeadingImage}" VerticalOptions="Center"/>
                                         </ContentView>
 
-                                        <Label Text="{Binding Heading}" Grid.Column="1" />
+                                        <Label Text="{Binding Heading}" Grid.Column="1" FontAttributes="Bold"/>
                                     </Grid>
                                     
                                 </ContentView>
