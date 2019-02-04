@@ -60,7 +60,7 @@ namespace EventApp.Views
             InitializeComponent();
         }
 
-        public async Task LoginUser(object sender, EventArgs e)
+        public async void LoginUser(object sender, EventArgs e)
         {
             string userName = NameEntry.Text.Trim();
             string pass = PassEntry.Text;
@@ -102,7 +102,7 @@ namespace EventApp.Views
             }
 
         }
-        public async Task RegisterUser(object sender, EventArgs e)
+        public async void RegisterUser(object sender, EventArgs e)
         {
             string userName = NameEntry.Text.Trim();
             string pass = PassEntry.Text;

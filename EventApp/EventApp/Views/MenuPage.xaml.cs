@@ -63,13 +63,13 @@ namespace EventApp.Views
 
         }
 
-        public async Task PromptLogin(object sender, EventArgs e) {
+        public async void PromptLogin(object sender, EventArgs e) {
             LoginButton.IsEnabled = false;
             await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             LoginButton.IsEnabled = true;
         }
 
-        public async Task LogoutUser(object sender, EventArgs e)
+        public async void LogoutUser(object sender, EventArgs e)
         {
 
             isLoggedIn = "no";

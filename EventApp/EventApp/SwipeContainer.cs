@@ -5,7 +5,7 @@ namespace EventApp
 {
     public class SwipeContainer : ContentView
     {
-        public event EventHandler<SwipedEventArgs> Swipe;
+        public event EventHandler<SwipedEventArgs> Swipe;       
 
         public SwipeContainer()
         {

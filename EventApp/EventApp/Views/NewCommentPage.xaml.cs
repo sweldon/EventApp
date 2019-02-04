@@ -41,7 +41,7 @@ namespace EventApp.Views
             BindingContext = this;
         }
 
-        public async Task SubmitComment(object sender, EventArgs e)
+        public async void SubmitComment(object sender, EventArgs e)
         {
             SaveCommentButton.IsEnabled = false;
             SaveCommentButton.Text = "Posting...";

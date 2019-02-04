@@ -70,7 +70,7 @@ namespace EventApp.Views
 
         }
 
-        public async Task SubmitReply(object sender, EventArgs e)
+        public async void SubmitReply(object sender, EventArgs e)
         {
             SaveReplyButton.IsEnabled = false;
             SaveReplyButton.Text = "Replying...";
