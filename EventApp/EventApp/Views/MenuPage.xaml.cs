@@ -75,7 +75,7 @@ namespace EventApp.Views
             isLoggedIn = "no";
             LogoutButton.IsVisible = false;
             LoginButton.IsVisible = true;
-            await RootPage.NavigateFromMenu(1);
+            await RootPage.NavigateFromMenu(0);
 
         }
         protected override void OnAppearing()

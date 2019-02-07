@@ -5,11 +5,13 @@
               Title="{Binding Title}"
               xmlns:local="clr-namespace:EventApp"  
              x:Name="BrowseItemsPage">
-             
+      
+  
+    
  <local:SwipeContainer x:Name="swipeContainer">
-    <StackLayout Spacing="0" BackgroundColor="#d2d2d2">
+    <StackLayout Spacing="0" BackgroundColor="#D2D2D2">
 
-        <Frame  HasShadow="False" CornerRadius="2" OutlineColor="#EAEAEA" Padding="0">
+        <Frame HasShadow="False" CornerRadius="2" Padding="0">
             <StackLayout Spacing="0" Padding="0" Margin="0">
                 <Label x:Name="MonthLabel" 
                     HorizontalTextAlignment="Center" 
@@ -37,16 +39,19 @@
                     SeparatorVisibility="None"
                     IsGroupingEnabled="true"
                     ItemsSource="{Binding GroupedHolidayList}"
-                    BackgroundColor="#DEDEDE"
+                    BackgroundColor="#D2D2D2"
                     HasUnevenRows="true"
                     RefreshCommand="{Binding LoadItemsCommand}"
                     IsPullToRefreshEnabled="true"
                     CachingStrategy="RecycleElement"
+                       
                     >
+                        
                     <ListView.GroupHeaderTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <ContentView Padding="0" Margin="0,5,0,0"  BackgroundColor="#FFFFFF"> <!-- Counter listview spacing margin -->
+
+                                <ContentView>
                                     <Grid Padding="10" HorizontalOptions="FillAndExpand">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width=".5*" />
@@ -57,19 +62,21 @@
                                             <Image Source="{Binding HeadingImage}" VerticalOptions="Center"/>
                                         </ContentView>
 
-                                        <Label Text="{Binding Heading}" Grid.Column="1" FontAttributes="Bold"/>
+                                        <Label Text="{Binding Heading}" Grid.Column="1" FontAttributes="Bold" Margin="0,2,0,0" />
                                     </Grid>
-                                    
+                                   
                                 </ContentView>
+              
                             </ViewCell>
                         </DataTemplate>
                     </ListView.GroupHeaderTemplate>
+                        
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
 
                                 <ContentView HorizontalOptions="FillAndExpand">
-                                    <Frame Margin="0,5,0,0"  CornerRadius="0" HasShadow="False" Padding="10" >
+                                    <Frame Margin="0,0,0,5"  CornerRadius="0" HasShadow="False" Padding="10" >
                                         <StackLayout>
                                             <Grid HorizontalOptions="FillAndExpand">
                                                 <Grid.RowDefinitions>

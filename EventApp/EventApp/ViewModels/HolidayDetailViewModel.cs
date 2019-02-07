@@ -43,6 +43,11 @@ namespace EventApp.ViewModels
                 ExecuteLoadCommentsCommand();
             });
 
+            MessagingCenter.Subscribe<CommentPage>(this, "UpdateComments", (sender) => {
+                ExecuteLoadCommentsCommand();
+            });
+
+
         }
 
         async Task ExecuteLoadCommentsCommand()
