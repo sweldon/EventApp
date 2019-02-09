@@ -60,7 +60,6 @@ namespace EventApp
         protected override void OnStart()
         {
        
-            Debug.WriteLine("User initial active value: " + isActive);
             if (!AppCenter.Configured)
             {
                 Push.PushNotificationReceived += (sender, e) =>

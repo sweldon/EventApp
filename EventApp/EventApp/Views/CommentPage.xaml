@@ -48,15 +48,24 @@
                     HorizontalOptions="FillAndExpand" />
                   </ContentView>
 
-                    <ContentView>
-                        <Entry x:Name="ReplyCommentContent" FontSize="Small" />
-                  </ContentView>
-                    <ContentView>
+                <ContentView IsVisible="false" x:Name="ReplyTextContentView">
+                    <Entry x:Name="ReplyCommentContent" FontSize="Small" />
+                </ContentView>
+                    
+                <ContentView IsVisible="false" x:Name="ReplyContentView">
                   <Button Text="Reply" x:Name="SaveReplyButton"
                               Clicked="SubmitReply"
                               BackgroundColor="{StaticResource Primary}"
                               TextColor="White" />
-                  </ContentView>
+                 </ContentView>
+                    
+                <ContentView IsVisible="false" x:Name="DeleteContentView">
+                  <Button Text="Delete" x:Name="DeleteButton"
+                              Clicked="DeleteComment"
+                              BackgroundColor="Red"
+                              TextColor="White"/>
+                </ContentView>
+                    
                 </StackLayout>
             </Frame>
 

@@ -56,7 +56,6 @@ namespace EventApp.Services
 
                 string commentTimestamp = comment.timestamp;
                 string currentTimeZone = TimeZone.CurrentTimeZone.StandardName;
-                Debug.WriteLine(currentTimeZone);
                 var commentDate = DateTime.ParseExact(commentTimestamp, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
 
                 TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById(currentTimeZone);

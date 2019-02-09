@@ -24,6 +24,30 @@ namespace EventApp.Views
         CommentViewModel viewModel;
         public Comment Comment { get; set; }
 
+        public string currentUser
+        {
+            get { return Settings.CurrentUser; }
+            set
+            {
+                if (Settings.CurrentUser == value)
+                    return;
+                Settings.CurrentUser = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string devicePushId
+        {
+            get { return Settings.DevicePushId; }
+            set
+            {
+                if (Settings.DevicePushId == value)
+                    return;
+                Settings.DevicePushId = value;
+                OnPropertyChanged();
+            }
+        }
+
         public CommentPage(CommentViewModel viewModel)
         {
             InitializeComponent();
@@ -61,6 +85,15 @@ namespace EventApp.Views
             int UserNameLength = UserNameValue.Length;
             ReplyCommentContent.Text = '@'+UserNameValue.PadRight(UserNameLength + 1, ' ');
 
+            if (String.Equals(currentUser, UserNameValue, StringComparison.OrdinalIgnoreCase))
+            {
+                DeleteContentView.IsVisible = true;
+            }
+            else
+            {
+                ReplyContentView.IsVisible = true;
+                ReplyTextContentView.IsVisible = true;
+            }
 
         }
 
@@ -68,6 +101,38 @@ namespace EventApp.Views
         {
 
 
+        }
+
+        public async void DeleteComment(object sender, EventArgs e)
+        {
+            var deleteComment = await DisplayAlert("Delete Forever", 
+            "Are you sure you want to delete this comment?", "Yes", "No");
+            if (deleteComment)
+            {
+
+                var values = new Dictionary<string, string>{
+                   { "comment_id", viewModel.CommentId },
+                   { "device_id", devicePushId }
+                };
+
+                var content = new FormUrlEncodedContent(values);
+                var response = await client.PostAsync(ec2Instance + "/portal/delete_comment/", content);
+
+                var responseString = await response.Content.ReadAsStringAsync();
+                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                int status = responseJSON.status_code;
+                string message = responseJSON.message;
+                if (status == 200)
+                {
+                    MessagingCenter.Send(this, "UpdateComments");
+                    await Navigation.PopAsync();
+                }
+                else
+                {
+                    await DisplayAlert("Error", message, "OK");
+                }
+
+            }
         }
 
         public async void SubmitReply(object sender, EventArgs e)
