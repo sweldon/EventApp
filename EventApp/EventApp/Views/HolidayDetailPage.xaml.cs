@@ -54,15 +54,15 @@ namespace EventApp.Views
 
                 HolidayDetailList.ItemSelected += OnCommentSelected;
 
-                swipeContainer.Swipe += (sender, e) =>
-                {
-                    switch (e.Direction)
-                    {
-                        case SwipeDirection.Right:
-                            Navigation.PopAsync();
-                            break;
-                    }
-                };
+                //swipeContainer.Swipe += (sender, e) =>
+                //{
+                //    switch (e.Direction)
+                //    {
+                //        case SwipeDirection.Right:
+                //            Navigation.PopAsync();
+                //            break;
+                //    }
+                //};
 
         }
 

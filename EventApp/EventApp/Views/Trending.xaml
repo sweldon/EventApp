@@ -4,10 +4,67 @@
              x:Class="EventApp.Views.Trending"
              Title="{Binding Title}">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Trending holidays coming soon!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+
+
+        <ContentView Padding="5,0,5,0" BackgroundColor="#D2D2D2" VerticalOptions="FillAndExpand">
+
+            <ListView x:Name="TopHolidayList"
+                   IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                    SeparatorVisibility="None"
+                    ItemsSource="{Binding TopHolidays}"
+                    BackgroundColor="#D2D2D2"
+                    HasUnevenRows="true"
+                    RefreshCommand="{Binding LoadTopHolidays}"
+                    IsPullToRefreshEnabled="true"
+                    CachingStrategy="RecycleElement"
+                      Margin="0,5,0,0"
+                    >
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ContentView HorizontalOptions="FillAndExpand">
+                                <Frame Margin="0,0,0,5"  CornerRadius="0" HasShadow="False" Padding="10" >
+                                    <StackLayout>
+                                        <Grid HorizontalOptions="FillAndExpand">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="8*" />
+                                                <ColumnDefinition Width="2*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label Text="{Binding Name}"
+                                                    FontSize="16"
+                                                    FontAttributes="Bold" Grid.Row="0" Grid.Column="0" TextColor="#2196F3"/>
+
+                                            <Label Text="{Binding Votes, StringFormat='+{0}'}"
+                                                    FontSize="16" 
+                                                    Grid.Row="0"
+                                                    Grid.Column="1"
+                                                    HorizontalTextAlignment="End" 
+                                                    FontAttributes="Bold" 
+                                                    TextColor="#FF9912"/>
+
+                                        </Grid>
+
+                                        <Label Text="{Binding DescriptionShort}" FontSize="14" />
+
+
+                                    </StackLayout>
+
+                                </Frame>
+
+                            </ContentView>
+
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            
+            
+        </ContentView>
+
     </ContentPage.Content>
 </ContentPage>

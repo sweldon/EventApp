@@ -36,12 +36,11 @@ namespace EventApp.Views
             menuItems = new List<HomeMenuItem>
             {
                 new HomeMenuItem {Id = MenuItemType.Holidays, Title="Today", MenuImage="today_icon.png"},
-                //new HomeMenuItem {Id = MenuItemType.Trending, Title="Trending", Image=new Image {Source="user_menu.png"}}
+                new HomeMenuItem {Id = MenuItemType.Trending, Title="Trending", MenuImage="trending.png"}
             };
 
             ListViewMenu.ItemsSource = menuItems;
-
-            ListViewMenu.SelectedItem = menuItems[0];
+            //ListViewMenu.SelectedItem = menuItems[0];
             ListViewMenu.ItemSelected += async (sender, e) =>
             {
                 if (e.SelectedItem == null)
@@ -51,15 +50,15 @@ namespace EventApp.Views
                 await RootPage.NavigateFromMenu(id);
             };
 
-            swipeContainer.Swipe += (sender, e) =>
-            {
-                switch (e.Direction)
-                {
-                    case SwipeDirection.Left:
-                        (Application.Current.MainPage as MasterDetailPage).IsPresented = false;
-                        break;
-                }
-            };
+            //swipeContainer.Swipe += (sender, e) =>
+            //{
+            //    switch (e.Direction)
+            //    {
+            //        case SwipeDirection.Left:
+            //            (Application.Current.MainPage as MasterDetailPage).IsPresented = false;
+            //            break;
+            //    }
+            //};
 
         }
 

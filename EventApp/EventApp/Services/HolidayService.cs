@@ -121,5 +121,23 @@ namespace EventApp.Services
             return await Task.FromResult(items);
         }
 
+
+        public async Task<IEnumerable<Holiday>> GetTopHolidays(bool forceRefresh = false)
+        {
+            items = new List<Holiday>();
+            var response = await client.GetAsync(ec2Instance + "/portal/get_top_holidays/");
+            var responseString = await response.Content.ReadAsStringAsync();
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+            dynamic holidayList = responseJSON.TopHolidayList;
+            foreach (var holiday in holidayList)
+            {
+                string holidayDescription = holiday.description;;
+                string HolidayDescriptionShort = holidayDescription.Length <= 90 ? holidayDescription : holidayDescription.Substring(0, 90) + "...";
+                items.Insert(0, new Holiday() { Id = holiday.id, Name = holiday.name, Description = holiday.description, NumComments = holiday.num_comments, TimeSince = holiday.time_since, DescriptionShort = HolidayDescriptionShort, Votes=holiday.votes });
+            }
+
+            return await Task.FromResult(items);
+        }
+
     }
 }

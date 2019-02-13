@@ -29,6 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\BaseViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\HolidayDetailViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\HolidaysViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TrendingViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\CommentPage.xaml.cs">
       <DependentUpon>CommentPage.xaml</DependentUpon>
       <SubType>Code</SubType>

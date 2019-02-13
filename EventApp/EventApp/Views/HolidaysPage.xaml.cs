@@ -42,15 +42,15 @@ namespace EventApp.Views
             //viewModel.Title = monthString + " " + dayNumber;
             viewModel.Title = currentDate.DayOfWeek.ToString();
 
-            swipeContainer.Swipe += (sender, e) =>
-            {
-                switch (e.Direction)
-                {
-                    case SwipeDirection.Right:
-                        (Application.Current.MainPage as MasterDetailPage).IsPresented = true;
-                        break;
-                }
-            };
+            //swipeContainer.Swipe += (sender, e) =>
+            //{
+            //    switch (e.Direction)
+            //    {
+            //        case SwipeDirection.Right:
+            //            (Application.Current.MainPage as MasterDetailPage).IsPresented = true;
+            //            break;
+            //    }
+            //};
 
 
         }
@@ -75,7 +75,7 @@ namespace EventApp.Views
                 viewModel.LoadItemsCommand.Execute(null);
 
             // Manually open menu page on swipe only on main page
-            (Application.Current.MainPage as RootPage).IsGestureEnabled = false;
+            //(Application.Current.MainPage as RootPage).IsGestureEnabled = false;
 
         }
     }

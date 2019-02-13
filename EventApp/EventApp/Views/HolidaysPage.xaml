@@ -8,7 +8,7 @@
       
   
     
- <local:SwipeContainer x:Name="swipeContainer">
+
     <StackLayout Spacing="0" BackgroundColor="#D2D2D2">
 
         <Frame HasShadow="False" CornerRadius="2" Padding="0">
@@ -62,7 +62,7 @@
                                             <Image Source="{Binding HeadingImage}" VerticalOptions="Center"/>
                                         </ContentView>
 
-                                        <Label Text="{Binding Heading}" Grid.Column="1" FontAttributes="Bold" Margin="0,2,0,0" />
+                                        <Label Text="{Binding Heading}" Grid.Column="1" FontAttributes="Bold" />
                                     </Grid>
                                    
                                 </ContentView>
@@ -141,5 +141,5 @@
         
 
     </StackLayout>
-         </local:SwipeContainer>
+   
 </ContentPage>

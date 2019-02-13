@@ -11,6 +11,7 @@ namespace EventApp.Services
         Task<T> GetHolidayByName(string name);
         Task<T> GetHolidayById(string id);
         Task<IEnumerable<T>> GetHolidaysAsync(bool forceRefresh = false);
+        Task<IEnumerable<T>> GetTopHolidays(bool forceRefresh = false);
     }
 
 }
