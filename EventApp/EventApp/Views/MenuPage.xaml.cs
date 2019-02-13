@@ -28,6 +28,18 @@ namespace EventApp.Views
             }
         }
 
+        public string currentUser
+        {
+            get { return Settings.CurrentUser; }
+            set
+            {
+                if (Settings.CurrentUser == value)
+                    return;
+                Settings.CurrentUser = value;
+                OnPropertyChanged();
+            }
+        }
+       
         public NavigationPage NavigationPage { get; private set; }
         public MenuPage()
         {
@@ -49,6 +61,7 @@ namespace EventApp.Views
                 var id = (int)((HomeMenuItem)e.SelectedItem).Id;
                 await RootPage.NavigateFromMenu(id);
             };
+
 
             //swipeContainer.Swipe += (sender, e) =>
             //{

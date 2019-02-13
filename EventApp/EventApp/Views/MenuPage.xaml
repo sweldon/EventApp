@@ -20,11 +20,11 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackLayout BackgroundColor="{StaticResource Accent}" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
-                <ContentView Padding="0,40,0,40" VerticalOptions="FillAndExpand">
-                    <Image Source="holidaily_logo_white.png" VerticalOptions="Center" HeightRequest="64" />
-                </ContentView>
+        <StackLayout  >
+            <StackLayout>
+                <ContentView Padding="0,40,0,40" >
+                        <Image Source="user.png"   />
+                    </ContentView>
             <BoxView 
                 HeightRequest="1" 
                 BackgroundColor="#EAEAEA" 
