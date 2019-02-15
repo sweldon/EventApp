@@ -19,6 +19,7 @@ namespace EventApp
         public NavigationPage NavigationPage { get; private set; }
         public Holiday OpenHolidayPage { get; set; }
         public Comment OpenComment { get; set; }
+        public static string HolidailyHost = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
 
         public string devicePushId
         {

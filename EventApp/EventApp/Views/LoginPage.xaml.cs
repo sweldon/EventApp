@@ -52,7 +52,6 @@ namespace EventApp.Views
         }
 
         HttpClient client = new HttpClient();
-        string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
 
         public NavigationPage NavigationPage { get; private set; }
         public LoginPage()
@@ -74,7 +73,7 @@ namespace EventApp.Views
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(ec2Instance + "/portal/login_mobile/", content); 
+                var response = await client.PostAsync(App.HolidailyHost + "/portal/login_mobile/", content); 
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                 int status = responseJSON.StatusCode;
@@ -126,7 +125,7 @@ namespace EventApp.Views
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(ec2Instance + "/portal/register/", content);
+                var response = await client.PostAsync(App.HolidailyHost + "/portal/register/", content);
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                 int status = responseJSON.StatusCode;

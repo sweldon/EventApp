@@ -17,7 +17,6 @@ namespace EventApp.Services
         Holiday individualHoliday;
         Dictionary<string, string> holidayResult;
 
-        string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
         HttpClient client = new HttpClient();
 
         public HolidayService()
@@ -51,7 +50,7 @@ namespace EventApp.Services
                 };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(ec2Instance + "/portal/get_holiday/", content);
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_holiday/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
@@ -69,7 +68,7 @@ namespace EventApp.Services
                 };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(ec2Instance + "/portal/get_holiday_by_id/", content);
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_holiday_by_id/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
@@ -102,7 +101,7 @@ namespace EventApp.Services
                 };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(ec2Instance + "/portal/get_holidays/", content);
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_holidays/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
@@ -125,7 +124,7 @@ namespace EventApp.Services
         public async Task<IEnumerable<Holiday>> GetTopHolidays(bool forceRefresh = false)
         {
             items = new List<Holiday>();
-            var response = await client.GetAsync(ec2Instance + "/portal/get_top_holidays/");
+            var response = await client.GetAsync(App.HolidailyHost + "/portal/get_top_holidays/");
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
             dynamic holidayList = responseJSON.TopHolidayList;

@@ -16,7 +16,6 @@ namespace EventApp.Services
         List<Comment> comments;
         Comment individualComment; 
 
-        string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
         HttpClient client = new HttpClient();
 
         public CommentService()
@@ -44,7 +43,7 @@ namespace EventApp.Services
                 };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(ec2Instance + "/portal/get_comments/", content);
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_comments/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
@@ -76,7 +75,7 @@ namespace EventApp.Services
                 };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(ec2Instance + "/portal/get_comment_by_id/", content);
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_comment_by_id/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);

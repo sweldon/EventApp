@@ -20,9 +20,12 @@
 
             <Grid Padding="10" HorizontalOptions="FillAndExpand">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width=".5*" />
-                    <ColumnDefinition Width="9*" />
-                </Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="32" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="32" />
+            </Grid.ColumnDefinitions>
                 
                 <ContentView Grid.Column="0">
                     <Image Source="comment.png" VerticalOptions="Center"/>
@@ -36,7 +39,28 @@
                     </Label.GestureRecognizers>
                 </Label>
 
-            </Grid>
+            <Image Source="down.png" Grid.Column="2" Opacity=".5" x:Name="DownVoteImage">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer
+                Tapped="DownVote"
+                NumberOfTapsRequired="1" />
+                </Image.GestureRecognizers>
+            </Image>
+
+            <Label Text="{Binding Votes}" FontSize="Small" HorizontalTextAlignment="End" Grid.Column="3"
+                       VerticalTextAlignment="Center" Margin="0,-2,0,0"  x:Name="CurrentVotes">
+            </Label>
+
+            <Image Source="up.png" Grid.Column="4"  Opacity=".5" x:Name="UpVoteImage">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer
+                Tapped="UpVote"
+                NumberOfTapsRequired="1" />
+                </Image.GestureRecognizers>
+            </Image>
+
+
+        </Grid>
             
             <ContentView Padding="5,0,5,0" BackgroundColor="#D2D2D2" VerticalOptions="FillAndExpand">
                 

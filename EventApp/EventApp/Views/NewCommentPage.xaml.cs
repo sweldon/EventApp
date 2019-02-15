@@ -15,7 +15,6 @@ namespace EventApp.Views
     {
 
         HttpClient client = new HttpClient();
-        string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
 
         public Holiday OpenedHoliday { get; set; }
         public string CommentTitle { get; set; }
@@ -60,7 +59,7 @@ namespace EventApp.Views
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(ec2Instance + "/portal/add_comment/", content);
+                var response = await client.PostAsync(App.HolidailyHost + "/portal/add_comment/", content);
 
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);

@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
+using Xamarin.Essentials;
 
 namespace EventApp.Views
 {
@@ -45,7 +46,6 @@ namespace EventApp.Views
         HolidayDetailViewModel viewModel;
 
         public Comment Comment { get; set; }
-
         public HolidayDetailPage(HolidayDetailViewModel viewModel)
             {
                 InitializeComponent();
@@ -95,6 +95,7 @@ namespace EventApp.Views
             viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
             Description.Text = viewModel.Holiday.Description;
             this.Title = viewModel.Holiday.Name;
+            CurrentVotes.Text = viewModel.Holiday.Votes.ToString();
 
         }
 
@@ -112,6 +113,109 @@ namespace EventApp.Views
                 this.IsEnabled = true;
             }
 
+
+        }
+
+
+        async void DownVote(object sender, EventArgs args)
+        {
+            var duration = TimeSpan.FromSeconds(.025);
+            Vibration.Vibrate(duration);
+            string newVotes = CurrentVotes.Text;
+            int newVotesInt = Int32.Parse(newVotes);
+            var DownVoteImageFile = DownVoteImage.Source as FileImageSource;
+            var DownVoteIcon = DownVoteImageFile.File;
+            var UpVoteImageFile = UpVoteImage.Source as FileImageSource;
+            var UpVoteIcon = UpVoteImageFile.File;
+
+            if (UpVoteIcon == "up_active.png")
+            {
+                newVotesInt -= 2;
+                CurrentVotes.Text = newVotesInt.ToString();
+                UpVoteImage.Source = "up.png";
+                DownVoteImage.Source = "down_active.png";
+            }
+            else
+            {
+                if (DownVoteIcon == "down_active.png")
+                {
+                    // Undo
+                    newVotesInt += 1;
+                    CurrentVotes.Text = newVotesInt.ToString();
+                    DownVoteImage.Source = "down.png";
+                }
+                else
+                {
+                    // Only allow if user hasnt already downvoted
+                    newVotesInt -= 1;
+                    if (newVotesInt <= viewModel.Holiday.Votes + 1 && newVotesInt >= viewModel.Holiday.Votes - 1)
+                    {
+                        CurrentVotes.Text = newVotesInt.ToString();
+                        DownVoteImage.Source = "down_active.png";
+                    }
+                    else
+                    {
+                        // Undo
+                        newVotesInt += 2;
+                        CurrentVotes.Text = newVotesInt.ToString();
+                        DownVoteImage.Source = "down.png";
+                    }
+                }
+            }
+
+
+
+        }
+
+        async void UpVote(object sender, EventArgs args)
+        {
+            var duration = TimeSpan.FromSeconds(.025);
+            Vibration.Vibrate(duration);
+            string newVotes = CurrentVotes.Text;
+            int newVotesInt = Int32.Parse(newVotes);
+            var DownVoteImageFile = DownVoteImage.Source as FileImageSource;
+            var DownVoteIcon = DownVoteImageFile.File;
+            var UpVoteImageFile = UpVoteImage.Source as FileImageSource;
+            var UpVoteIcon = UpVoteImageFile.File;
+
+            if (DownVoteIcon == "down_active.png")
+            {
+                Debug.WriteLine("Down was active upvoting twice");
+                newVotesInt += 2;
+                CurrentVotes.Text = newVotesInt.ToString();
+                DownVoteImage.Source = "down.png";
+                UpVoteImage.Source = "up_active.png";
+            }
+            else
+            {
+                if (UpVoteIcon == "up_active.png")
+                {
+                    // Undo
+                    
+                    newVotesInt -= 1;
+                    CurrentVotes.Text = newVotesInt.ToString();
+                    UpVoteImage.Source = "up.png";
+                }
+                else
+                {
+                    // Only allow if user hasnt already downvoted
+                    newVotesInt += 1;
+                    if (newVotesInt <= viewModel.Holiday.Votes + 1 && newVotesInt >= viewModel.Holiday.Votes - 1)
+                    {
+                        CurrentVotes.Text = newVotesInt.ToString();
+                        UpVoteImage.Source = "up_active.png";
+                    }
+                    else
+                    {
+                        newVotesInt -= 2;
+                        CurrentVotes.Text = newVotesInt.ToString();
+                        UpVoteImage.Source = "up.png";
+                    }
+
+                }
+
+
+            }
 
         }
 
