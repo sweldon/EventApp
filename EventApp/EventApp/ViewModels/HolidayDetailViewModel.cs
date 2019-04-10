@@ -35,7 +35,6 @@ namespace EventApp.ViewModels
 
             HolidayId = holidayId;
             
-
             Comments = new ObservableCollection<Comment>();
             LoadHolidayComments = new Command(async () => await ExecuteLoadCommentsCommand());
 

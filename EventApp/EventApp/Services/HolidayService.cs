@@ -73,7 +73,7 @@ namespace EventApp.Services
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
 
-            individualHoliday = new Holiday() { Id=id, Name = responseJSON.name, Description = responseJSON.description };
+            individualHoliday = new Holiday() { Id=id, Name = responseJSON.name, Description = responseJSON.description, Votes = responseJSON.votes };
 
             return await Task.FromResult(individualHoliday);
 
@@ -137,6 +137,44 @@ namespace EventApp.Services
 
             return await Task.FromResult(items);
         }
+
+        public async Task VoteHoliday(string holidayId, string userName, string vote)
+        {
+
+            var values = new Dictionary<string, string>{
+                   { "holiday_id", holidayId },
+                   { "user", userName },
+                   { "vote", vote }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/vote_holiday/", content);
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+
+        }
+
+        public async Task<string> CheckUserVotes(string holidayId, string userName)
+        {
+
+            var values = new Dictionary<string, string>{
+                   { "holiday_id", holidayId },
+                   { "user", userName }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/check_user_votes/", content);
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+
+            return responseJSON.Choice;
+
+        }
+
 
     }
 }

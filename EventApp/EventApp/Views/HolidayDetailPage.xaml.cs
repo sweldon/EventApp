@@ -96,6 +96,21 @@ namespace EventApp.Views
             Description.Text = viewModel.Holiday.Description;
             this.Title = viewModel.Holiday.Name;
             CurrentVotes.Text = viewModel.Holiday.Votes.ToString();
+ 
+            if (isLoggedIn == "yes")
+            {
+                string currentVote = await viewModel.HolidayStore.CheckUserVotes(viewModel.HolidayId, currentUser);
+                if(currentVote == "1" || currentVote == "4")
+                {
+                    UpVoteImage.Source = "up_active.png";
+                    DownVoteImage.Source = "down.png";
+                }
+                else if(currentVote == "0" || currentVote == "5")
+                {
+                    DownVoteImage.Source = "down_active.png";
+                    UpVoteImage.Source = "up.png";
+                }
+            }
 
         }
 
@@ -138,39 +153,62 @@ namespace EventApp.Views
             var UpVoteImageFile = UpVoteImage.Source as FileImageSource;
             var UpVoteIcon = UpVoteImageFile.File;
 
-            if (UpVoteIcon == "up_active.png")
+            if (isLoggedIn == "no")
             {
-                newVotesInt -= 2;
-                CurrentVotes.Text = newVotesInt.ToString();
-                UpVoteImage.Source = "up.png";
-                DownVoteImage.Source = "down_active.png";
+                this.IsEnabled = false;
+                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                this.IsEnabled = true;
             }
             else
             {
-                if (DownVoteIcon == "down_active.png")
+                var duration = TimeSpan.FromSeconds(.025);
+                Vibration.Vibrate(duration);
+                string newVotes = CurrentVotes.Text;
+                int newVotesInt = Int32.Parse(newVotes);
+                var DownVoteImageFile = DownVoteImage.Source as FileImageSource;
+                var DownVoteIcon = DownVoteImageFile.File;
+                var UpVoteImageFile = UpVoteImage.Source as FileImageSource;
+                var UpVoteIcon = UpVoteImageFile.File;
+
+                if (UpVoteIcon == "up_active.png")
                 {
-                    // Undo
-                    newVotesInt += 1;
+                    newVotesInt -= 2;
                     CurrentVotes.Text = newVotesInt.ToString();
-                    DownVoteImage.Source = "down.png";
+                    UpVoteImage.Source = "up.png";
+                    DownVoteImage.Source = "down_active.png";
+                    await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "5");
                 }
                 else
                 {
-                    // Only allow if user hasnt already downvoted
-                    newVotesInt -= 1;
-                    if (newVotesInt <= viewModel.Holiday.Votes + 1 && newVotesInt >= viewModel.Holiday.Votes - 1)
+                    if (DownVoteIcon == "down_active.png")
                     {
+                        // Undo
+                        newVotesInt += 1;
                         CurrentVotes.Text = newVotesInt.ToString();
-                        DownVoteImage.Source = "down_active.png";
+                        DownVoteImage.Source = "down.png";
+                        await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "2");
                     }
                     else
                     {
-                        // Undo
-                        newVotesInt += 2;
-                        CurrentVotes.Text = newVotesInt.ToString();
-                        DownVoteImage.Source = "down.png";
+                        // Only allow if user hasnt already downvoted
+                        newVotesInt -= 1;
+                        if (newVotesInt <= viewModel.Holiday.Votes + 1 && newVotesInt >= viewModel.Holiday.Votes - 1)
+                        {
+                            CurrentVotes.Text = newVotesInt.ToString();
+                            DownVoteImage.Source = "down_active.png";
+                            await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "0");
+                        }
+                        else
+                        {
+                            // Undo
+                            newVotesInt += 2;
+                            CurrentVotes.Text = newVotesInt.ToString();
+                            DownVoteImage.Source = "down.png";
+                            await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "4");
+                        }
                     }
                 }
+
             }
 
 
@@ -198,43 +236,65 @@ namespace EventApp.Views
             var UpVoteImageFile = UpVoteImage.Source as FileImageSource;
             var UpVoteIcon = UpVoteImageFile.File;
 
-            if (DownVoteIcon == "down_active.png")
+            if (isLoggedIn == "no")
             {
-                Debug.WriteLine("Down was active upvoting twice");
-                newVotesInt += 2;
-                CurrentVotes.Text = newVotesInt.ToString();
-                DownVoteImage.Source = "down.png";
-                UpVoteImage.Source = "up_active.png";
+                this.IsEnabled = false;
+                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                this.IsEnabled = true;
             }
             else
             {
-                if (UpVoteIcon == "up_active.png")
+                var duration = TimeSpan.FromSeconds(.025);
+                Vibration.Vibrate(duration);
+                string newVotes = CurrentVotes.Text;
+                int newVotesInt = Int32.Parse(newVotes);
+                var DownVoteImageFile = DownVoteImage.Source as FileImageSource;
+                var DownVoteIcon = DownVoteImageFile.File;
+                var UpVoteImageFile = UpVoteImage.Source as FileImageSource;
+                var UpVoteIcon = UpVoteImageFile.File;
+
+                if (DownVoteIcon == "down_active.png")
                 {
-                    // Undo
-                    
-                    newVotesInt -= 1;
+                    Debug.WriteLine("Down was active upvoting twice");
+                    newVotesInt += 2;
                     CurrentVotes.Text = newVotesInt.ToString();
-                    UpVoteImage.Source = "up.png";
+                    DownVoteImage.Source = "down.png";
+                    UpVoteImage.Source = "up_active.png";
+                    await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "4");
                 }
                 else
                 {
-                    // Only allow if user hasnt already downvoted
-                    newVotesInt += 1;
-                    if (newVotesInt <= viewModel.Holiday.Votes + 1 && newVotesInt >= viewModel.Holiday.Votes - 1)
+                    if (UpVoteIcon == "up_active.png")
                     {
+                        // Undo
+
+                        newVotesInt -= 1;
                         CurrentVotes.Text = newVotesInt.ToString();
-                        UpVoteImage.Source = "up_active.png";
+                        UpVoteImage.Source = "up.png";
+                        await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "3");
                     }
                     else
                     {
-                        newVotesInt -= 2;
-                        CurrentVotes.Text = newVotesInt.ToString();
-                        UpVoteImage.Source = "up.png";
+                        // Only allow if user hasnt already downvoted
+                        newVotesInt += 1;
+                        if (newVotesInt <= viewModel.Holiday.Votes + 1 && newVotesInt >= viewModel.Holiday.Votes - 1)
+                        {
+                            CurrentVotes.Text = newVotesInt.ToString();
+                            UpVoteImage.Source = "up_active.png";
+                            await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "1");
+                        }
+                        else
+                        {
+                            newVotesInt -= 2;
+                            CurrentVotes.Text = newVotesInt.ToString();
+                            UpVoteImage.Source = "up.png";
+                            await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "5");
+                        }
+
                     }
 
+
                 }
-
-
             }
 
         }
