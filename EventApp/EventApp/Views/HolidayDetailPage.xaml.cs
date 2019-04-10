@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
 using Xamarin.Essentials;
-
+using UIKit;
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -119,8 +119,18 @@ namespace EventApp.Views
 
         async void DownVote(object sender, EventArgs args)
         {
-            var duration = TimeSpan.FromSeconds(.025);
-            Vibration.Vibrate(duration);
+            #if __IOS__
+                var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
+                haptic.Prepare();
+                haptic.ImpactOccurred();
+                haptic.Dispose();
+            #endif
+
+            #if __ANDROID__
+                var duration = TimeSpan.FromSeconds(.025);
+                Vibration.Vibrate(duration);
+            #endif
+
             string newVotes = CurrentVotes.Text;
             int newVotesInt = Int32.Parse(newVotes);
             var DownVoteImageFile = DownVoteImage.Source as FileImageSource;
@@ -169,8 +179,18 @@ namespace EventApp.Views
 
         async void UpVote(object sender, EventArgs args)
         {
-            var duration = TimeSpan.FromSeconds(.025);
-            Vibration.Vibrate(duration);
+            #if __IOS__
+                var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
+                haptic.Prepare();
+                haptic.ImpactOccurred();
+                haptic.Dispose();
+            #endif
+
+            #if __ANDROID__
+                var duration = TimeSpan.FromSeconds(.025);
+                Vibration.Vibrate(duration);
+            #endif
+
             string newVotes = CurrentVotes.Text;
             int newVotesInt = Int32.Parse(newVotes);
             var DownVoteImageFile = DownVoteImage.Source as FileImageSource;
