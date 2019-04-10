@@ -147,6 +147,12 @@
       <Visible>false</Visible>
     </ImageAsset>
     <BundleResource Include="Resources\holidaily_logo_white.png" />
+    <BundleResource Include="Resources\down_active.png" />
+    <BundleResource Include="Resources\down.png" />
+    <BundleResource Include="Resources\trending.png" />
+    <BundleResource Include="Resources\up_active.png" />
+    <BundleResource Include="Resources\up.png" />
+    <BundleResource Include="Resources\user.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
