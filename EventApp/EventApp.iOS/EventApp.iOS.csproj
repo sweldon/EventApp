@@ -209,6 +209,24 @@
   <ItemGroup>
     <BundleResource Include="Resources\past_icon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\down_active.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\trending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\up_active.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\EventApp\EventApp.projitems" Label="Shared" />
 </Project>
