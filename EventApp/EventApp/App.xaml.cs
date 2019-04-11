@@ -68,10 +68,17 @@ namespace EventApp
                     if (e.Message == null)
                     {
                         // Background Android
+                        var menuPage = new MenuPage(); // Build hamburger menu
+                        NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
+                        var rootPage = new RootPage(); // Root handles master detail navigation
+                        rootPage.Master = menuPage; // Menu
+                        rootPage.Detail = NavigationPage; // Content
+                        MainPage = rootPage; // Set root to built master detail
                         if (e.CustomData.ContainsKey("comment_id"))
                         {
                             string commentId = e.CustomData["comment_id"];
                             string holidayId = e.CustomData["holiday_id"];
+
                             NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
                             NavigationPage.PushAsync(new CommentPage(new CommentViewModel(commentId, holidayId)));
                         }
@@ -111,6 +118,12 @@ namespace EventApp
             var title = commentUser + " mentioned you!";   
             var userAlert = await Application.Current.MainPage.DisplayAlert(title, "", "Go to Comment", "Close");
             if (userAlert) {
+                var menuPage = new MenuPage(); // Build hamburger menu
+                NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
+                var rootPage = new RootPage(); // Root handles master detail navigation
+                rootPage.Master = menuPage; // Menu
+                rootPage.Detail = NavigationPage; // Content
+                MainPage = rootPage; // Set root to built master detail
                 await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
                 //OpenComment = new Comment { Id = commentId, Content = content, UserName = commentUser, TimeSince = TimeAgo };
                 await NavigationPage.PushAsync(new CommentPage(new CommentViewModel(commentId, holidayId)));

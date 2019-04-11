@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
 using Xamarin.Essentials;
+#if __IOS__
 using UIKit;
+#endif
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
