@@ -161,14 +161,6 @@ namespace EventApp.Views
             }
             else
             {
-                var duration = TimeSpan.FromSeconds(.025);
-                Vibration.Vibrate(duration);
-                string newVotes = CurrentVotes.Text;
-                int newVotesInt = Int32.Parse(newVotes);
-                var DownVoteImageFile = DownVoteImage.Source as FileImageSource;
-                var DownVoteIcon = DownVoteImageFile.File;
-                var UpVoteImageFile = UpVoteImage.Source as FileImageSource;
-                var UpVoteIcon = UpVoteImageFile.File;
 
                 if (UpVoteIcon == "up_active.png")
                 {
@@ -192,7 +184,7 @@ namespace EventApp.Views
                     {
                         // Only allow if user hasnt already downvoted
                         newVotesInt -= 1;
-                        if (newVotesInt <= viewModel.Holiday.Votes + 1 && newVotesInt >= viewModel.Holiday.Votes - 1)
+                        if (newVotesInt <= Int32.Parse(CurrentVotes.Text) + 1 && newVotesInt >= Int32.Parse(CurrentVotes.Text) - 1)
                         {
                             CurrentVotes.Text = newVotesInt.ToString();
                             DownVoteImage.Source = "down_active.png";
@@ -244,14 +236,6 @@ namespace EventApp.Views
             }
             else
             {
-                var duration = TimeSpan.FromSeconds(.025);
-                Vibration.Vibrate(duration);
-                string newVotes = CurrentVotes.Text;
-                int newVotesInt = Int32.Parse(newVotes);
-                var DownVoteImageFile = DownVoteImage.Source as FileImageSource;
-                var DownVoteIcon = DownVoteImageFile.File;
-                var UpVoteImageFile = UpVoteImage.Source as FileImageSource;
-                var UpVoteIcon = UpVoteImageFile.File;
 
                 if (DownVoteIcon == "down_active.png")
                 {
@@ -277,7 +261,7 @@ namespace EventApp.Views
                     {
                         // Only allow if user hasnt already downvoted
                         newVotesInt += 1;
-                        if (newVotesInt <= viewModel.Holiday.Votes + 1 && newVotesInt >= viewModel.Holiday.Votes - 1)
+                        if (newVotesInt <= Int32.Parse(CurrentVotes.Text) + 1 && newVotesInt >= Int32.Parse(CurrentVotes.Text) - 1)
                         {
                             CurrentVotes.Text = newVotesInt.ToString();
                             UpVoteImage.Source = "up_active.png";
