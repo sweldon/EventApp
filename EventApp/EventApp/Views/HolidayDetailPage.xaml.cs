@@ -10,13 +10,12 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
 using Xamarin.Essentials;
-using UIKit;
 using System.Net.Http;
 using Newtonsoft.Json;
-
-namespace EventApp.Views
+#if __IOS__
+using UIKit;
+#endif
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class HolidayDetailPage : ContentPage
     {
 
