@@ -90,5 +90,14 @@ namespace EventApp.Views
             await Navigation.PopModalAsync();
             this.IsEnabled = true;
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            CommentContent.Focus();
+
+        }
+
     }
 }

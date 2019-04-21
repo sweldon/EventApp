@@ -11,6 +11,9 @@ using System.Threading;
 using System.Collections.Generic;
 using Xamarin.Essentials;
 using UIKit;
+using System.Net.Http;
+using Newtonsoft.Json;
+
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -42,6 +45,17 @@ namespace EventApp.Views
         }
 
 
+        public string devicePushId
+        {
+            get { return Settings.DevicePushId; }
+            set
+            {
+                if (Settings.DevicePushId == value)
+                    return;
+                Settings.DevicePushId = value;
+                OnPropertyChanged();
+            }
+        }
 
         HolidayDetailViewModel viewModel;
 
@@ -52,20 +66,85 @@ namespace EventApp.Views
 
                 BindingContext = this.viewModel = viewModel;
 
-                HolidayDetailList.ItemSelected += OnCommentSelected;
+            // Remove when reply button added
+            HolidayDetailList.ItemSelected += OnCommentSelected;
+            //HolidayDetailList.ItemTapped += (object sender, ItemTappedEventArgs e) =>
+            //{
+            //    // Attempt to disable highlighting
+            //    if (sender is ListView lv) lv.SelectedItem = null;
 
-                //swipeContainer.Swipe += (sender, e) =>
-                //{
-                //    switch (e.Direction)
-                //    {
-                //        case SwipeDirection.Right:
-                //            Navigation.PopAsync();
-                //            break;
-                //    }
-                //};
+
+            //};
+
 
         }
 
+
+        async void OnDeleteTapped(object sender, EventArgs args)
+        {
+
+            if (isLoggedIn == "no")
+            {
+                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+            }
+            else
+            {
+                var item = (sender as Label).BindingContext as Comment;
+
+                if (String.Equals(item.UserName, currentUser,
+                       StringComparison.OrdinalIgnoreCase))
+                {
+
+
+                    var deleteComment = await DisplayAlert("Delete Forever",
+                    "Are you sure you want to delete this comment?", "Yes", "No");
+                    if (deleteComment)
+                    {
+
+                        var values = new Dictionary<string, string>{
+                   { "comment_id", item.Id },
+                   { "device_id", devicePushId }
+                    };
+
+
+                        var content = new FormUrlEncodedContent(values);
+                        HttpClient client = new HttpClient();
+                        var response = await client.PostAsync(App.HolidailyHost + "/portal/delete_comment/", content);
+
+                        var responseString = await response.Content.ReadAsStringAsync();
+                        dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                        int status = responseJSON.status_code;
+                        string message = responseJSON.message;
+                        if (status == 200)
+                        {
+                            MessagingCenter.Send(this, "UpdateComments");
+                            //await Navigation.PopAsync();
+                        }
+                        else
+                        {
+                            await DisplayAlert("Error", message, "OK");
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+
+        async void OnReplyTapped(object sender, EventArgs args)
+        {
+
+            if (isLoggedIn == "no")
+            {
+                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+            }
+            else
+            {
+                var item = (sender as Label).BindingContext as Comment;
+                await Navigation.PushAsync(new CommentPage(new CommentViewModel(item.Id, viewModel.Holiday.Id)));
+            }
+        }
 
         async void OnCommentSelected(object sender, SelectedItemChangedEventArgs args)
         {
@@ -74,8 +153,9 @@ namespace EventApp.Views
             {
                 return;
             }
+
             var item = args.SelectedItem as Comment;
-            await Navigation.PushAsync(new CommentPage(new CommentViewModel(item.Id, viewModel.Holiday.Id)));
+            //await Navigation.PushAsync(new CommentPage(new CommentViewModel(item.Id, viewModel.Holiday.Id)));
 
         }
 
@@ -91,8 +171,9 @@ namespace EventApp.Views
 
             if (viewModel.Comments.Count == 0)
                 viewModel.LoadHolidayComments.Execute(null);
+               
 
-            viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
+                viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
             Description.Text = viewModel.Holiday.Description;
             this.Title = viewModel.Holiday.Name;
             CurrentVotes.Text = viewModel.Holiday.Votes.ToString();

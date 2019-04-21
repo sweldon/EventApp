@@ -153,6 +153,8 @@
     <BundleResource Include="Resources\up_active.png" />
     <BundleResource Include="Resources\up.png" />
     <BundleResource Include="Resources\user.png" />
+    <BundleResource Include="Resources\reply.png" />
+    <BundleResource Include="Resources\delete.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

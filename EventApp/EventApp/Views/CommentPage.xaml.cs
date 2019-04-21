@@ -72,6 +72,8 @@ namespace EventApp.Views
         {
             base.OnAppearing();
 
+            ReplyCommentContent.Focus();
+
             viewModel.Comment = await viewModel.CommentStore.GetCommentById(viewModel.CommentId);
 
             //Description.Text = viewModel.Holiday.Description;

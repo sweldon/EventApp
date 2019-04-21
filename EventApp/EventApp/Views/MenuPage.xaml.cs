@@ -87,6 +87,7 @@ namespace EventApp.Views
             isLoggedIn = "no";
             LogoutButton.IsVisible = false;
             LoginButton.IsVisible = true;
+            currentUser = null;
             await RootPage.NavigateFromMenu(0);
 
         }
