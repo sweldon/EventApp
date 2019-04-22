@@ -46,6 +46,10 @@ namespace EventApp.ViewModels
                 ExecuteLoadCommentsCommand();
             });
 
+            MessagingCenter.Subscribe<HolidayDetailPage>(this, "UpdateComments", (sender) => {
+                ExecuteLoadCommentsCommand();
+            });
+
 
         }
 

@@ -89,6 +89,7 @@ namespace EventApp.Views
             LogoutButton.IsVisible = false;
             LoginButton.IsVisible = true;
             UserLabel.Text = "Welcome, guest!";
+            currentUser = null;
             await RootPage.NavigateFromMenu(0);
 
         }

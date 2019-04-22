@@ -9,5 +9,7 @@ namespace EventApp.Models
         public string HolidayId { get; set; }
         public string UserName { get; set; }
         public string TimeSince { get; set; }
+        public string ShowReply { get; set; }
+        public string ShowDelete { get; set; }
     }
 }

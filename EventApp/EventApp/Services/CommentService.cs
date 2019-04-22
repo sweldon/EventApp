@@ -17,11 +17,18 @@ namespace EventApp.Services
         Comment individualComment; 
 
         HttpClient client = new HttpClient();
-
+        public string ShowReplyVal;
+        public string ShowDeleteVal;
         public CommentService()
         {
 
 
+        }
+
+
+        public string currentUser
+        {
+            get { return Settings.CurrentUser; }
         }
 
 
@@ -61,7 +68,18 @@ namespace EventApp.Services
                 DateTime localCommentDate = TimeZoneInfo.ConvertTimeFromUtc(commentDate, easternZone);
 
                 string TimeAgo = GetRelativeTime(localCommentDate);
-                comments.Insert(0, new Comment() { Id = comment.id, Content = comment.content, HolidayId = comment.holiday_id, UserName = comment.user, TimeSince = TimeAgo });
+                string commentUser = comment.user;
+                if (String.Equals(commentUser, currentUser, StringComparison.OrdinalIgnoreCase)){
+                    ShowReplyVal = "false";
+                    ShowDeleteVal = "true";
+                }
+                else 
+                {
+                    ShowReplyVal = "true";
+                    ShowDeleteVal = "false";
+                }
+
+                comments.Insert(0, new Comment() { Id = comment.id, Content = comment.content, HolidayId = comment.holiday_id, UserName = comment.user, TimeSince = TimeAgo, ShowReply = ShowReplyVal, ShowDelete = ShowDeleteVal });
             }
 
             return await Task.FromResult(comments);
