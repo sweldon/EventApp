@@ -2,23 +2,23 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.HolidaysPage"
-              Title="{Binding Title}"
+              Title="Holidaily"
               xmlns:local="clr-namespace:EventApp"  
              x:Name="BrowseItemsPage">
       
-  
-    
-
     <StackLayout Spacing="0" BackgroundColor="#D2D2D2">
 
-        <Frame HasShadow="False" CornerRadius="2" Padding="0">
+        <Frame Margin="5" HasShadow="False" CornerRadius="2" Padding="10">
             <StackLayout Spacing="0" Padding="0" Margin="0">
-                <Label x:Name="MonthLabel" 
+                <Label x:Name="TodayLabel" 
+                    HorizontalTextAlignment="Center" 
+                    FontSize="24" TextColor="#2196F3"/>
+                <!--<Label x:Name="MonthLabel" 
                     HorizontalTextAlignment="Center" 
                     FontSize="30"/>
                 <Label x:Name="DayNumberLabel" 
                     HorizontalTextAlignment="Center"
-                    FontSize="55"/>
+                    FontSize="55"/>-->
             </StackLayout>
         </Frame>
 
@@ -76,7 +76,7 @@
                             <ViewCell>
 
                                 <ContentView HorizontalOptions="FillAndExpand">
-                                    <Frame Margin="0,0,0,5"  CornerRadius="0" HasShadow="False" Padding="10" >
+                                    <Frame Margin="5"  CornerRadius="0" HasShadow="False" Padding="10" >
                                         <StackLayout>
                                             <Grid HorizontalOptions="FillAndExpand">
                                                 <Grid.RowDefinitions>
@@ -131,14 +131,14 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+
                 
-   
-             
+
             </StackLayout>
         </ContentView>
 
 
-        
+        <!--<local:AdControlView BackgroundColor="Red" />-->
 
     </StackLayout>
    

@@ -22,13 +22,14 @@
         </Grid.RowDefinitions>
         <StackLayout  >
             <StackLayout>
-                <ContentView Padding="0,40,0,40" >
-                        <Image Source="user.png"   />
-                    </ContentView>
-            <BoxView 
-                HeightRequest="1" 
-                BackgroundColor="#EAEAEA" 
-                HorizontalOptions="FillAndExpand" />
+                <ContentView Padding="0,40,0,10" >
+                    <Image Source="user.png"   />
+                </ContentView>
+                <Label x:Name="UserLabel" HorizontalTextAlignment="Center" FontAttributes="Bold" />
+                <BoxView 
+                    HeightRequest="1" 
+                    BackgroundColor="#EAEAEA" 
+                    HorizontalOptions="FillAndExpand" />
             </StackLayout>
         </StackLayout>
         <StackLayout Grid.Row="1">

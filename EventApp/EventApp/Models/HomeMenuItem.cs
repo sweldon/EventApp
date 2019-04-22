@@ -7,7 +7,8 @@ namespace EventApp.Models
     public enum MenuItemType
     {
         Holidays,
-        Trending
+        Trending,
+        Notifications
     }
     public class HomeMenuItem
     {

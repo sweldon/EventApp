@@ -47,6 +47,7 @@ namespace EventApp.Views
 
             menuItems = new List<HomeMenuItem>
             {
+                new HomeMenuItem {Id = MenuItemType.Notifications, Title="Notifications", MenuImage="alarm.png"},
                 new HomeMenuItem {Id = MenuItemType.Holidays, Title="Today", MenuImage="today_icon.png"},
                 new HomeMenuItem {Id = MenuItemType.Trending, Title="Trending", MenuImage="trending.png"}
             };
@@ -87,6 +88,7 @@ namespace EventApp.Views
             isLoggedIn = "no";
             LogoutButton.IsVisible = false;
             LoginButton.IsVisible = true;
+            UserLabel.Text = "Welcome, guest!";
             await RootPage.NavigateFromMenu(0);
 
         }
@@ -97,11 +99,13 @@ namespace EventApp.Views
             {
                 LogoutButton.IsVisible = false;
                 LoginButton.IsVisible = true;
+                UserLabel.Text = "Welcome, guest!";
             }
             else
             {
                 LogoutButton.IsVisible = true;
                 LoginButton.IsVisible = false;
+                UserLabel.Text = "Hey, "+currentUser+"!";
             }
         }
 

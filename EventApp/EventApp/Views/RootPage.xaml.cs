@@ -27,6 +27,9 @@ namespace EventApp.Views
             {
                 switch (id)
                 {
+                    case (int)MenuItemType.Notifications:
+                        MenuPages.Add(id, new NavigationPage(new NotificationsPage()));
+                        break;
                     case (int)MenuItemType.Holidays:
                         MenuPages.Add(id, new NavigationPage(new HolidaysPage()));
                         break;

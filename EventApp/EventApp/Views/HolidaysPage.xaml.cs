@@ -28,7 +28,7 @@ namespace EventApp.Views
             string dateString = currentDate.ToString("dd-MM-yyyy");
             string dayNumber = dateString.Split('-')[0].TrimStart('0');
             int monthNumber = Int32.Parse(dateString.Split('-')[1]);
-            DayNumberLabel.Text = dayNumber;
+            //DayNumberLabel.Text = dayNumber;
 
             List<string> months = new List<string>() { 
                 "January","February","March","April","May","June","July",
@@ -36,11 +36,13 @@ namespace EventApp.Views
             };
 
             string monthString = months[monthNumber - 1];
-            MonthLabel.Text = monthString;
+            string todayString = currentDate.DayOfWeek.ToString();
+            //MonthLabel.Text = monthString;
             ItemsListView.ItemSelected += OnItemSelected;
+            TodayLabel.Text = todayString + ", " + monthString + " " + dayNumber;
 
             //viewModel.Title = monthString + " " + dayNumber;
-            viewModel.Title = currentDate.DayOfWeek.ToString();
+            //viewModel.Title = currentDate.DayOfWeek.ToString();
 
             //swipeContainer.Swipe += (sender, e) =>
             //{
