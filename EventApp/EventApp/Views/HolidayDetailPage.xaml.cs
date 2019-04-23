@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 #if __IOS__
 using UIKit;
 #endif
+namespace EventApp.Views
 {
     public partial class HolidayDetailPage : ContentPage
     {
