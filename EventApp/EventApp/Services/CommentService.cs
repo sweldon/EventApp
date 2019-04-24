@@ -41,12 +41,13 @@ namespace EventApp.Services
         }
 
 
-        public async Task<IEnumerable<Comment>> GetHolidayCommentsAsync(bool forceRefresh = false, string holidayId = null)
+        public async Task<IEnumerable<Comment>> GetHolidayCommentsAsync(bool forceRefresh = false, string holidayId = null, string user = null)
         {
             comments = new List<Comment>();
 
             var values = new Dictionary<string, string>{
-                   { "holiday_id", holidayId }
+                   { "holiday_id", holidayId },
+                    { "user", currentUser }
                 };
 
             var content = new FormUrlEncodedContent(values);
@@ -78,16 +79,34 @@ namespace EventApp.Services
                     ShowReplyVal = "true";
                     ShowDeleteVal = "false";
                 }
-
-                comments.Insert(0, new Comment() { Id = comment.id, Content = comment.content, HolidayId = comment.holiday_id, UserName = comment.user, TimeSince = TimeAgo, ShowReply = ShowReplyVal, ShowDelete = ShowDeleteVal });
+                // Maybe pass user id to this, and if it isnt none (theyre logged in) use it to set UpVote and DownVote
+                comments.Insert(0, new Comment() { Id = comment.id, Content = comment.content, HolidayId = comment.holiday_id, UserName = comment.user, TimeSince = TimeAgo, ShowReply = ShowReplyVal, ShowDelete = ShowDeleteVal, Votes = comment.votes, UpVoteStatus=comment.up_vote_status, DownVoteStatus=comment.down_vote_status });
             }
 
             return await Task.FromResult(comments);
         }
 
-        public async Task<Comment> GetCommentById(string id)
+        public async Task VoteComment(string commentId, string userName, string vote)
         {
 
+            var values = new Dictionary<string, string>{
+                   { "comment", commentId },
+                   { "user", userName },
+                   { "vote", vote }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/vote_comment/", content);
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+
+        }
+
+        public async Task<Comment> GetCommentById(string id)
+        {
+            Debug.WriteLine(id);
             var values = new Dictionary<string, string>{
                    { "id", id }
                 };
@@ -95,20 +114,29 @@ namespace EventApp.Services
             var content = new FormUrlEncodedContent(values);
             var response = await client.PostAsync(App.HolidailyHost + "/portal/get_comment_by_id/", content);
             var responseString = await response.Content.ReadAsStringAsync();
-
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+            dynamic commentJSON = responseJSON.comment;
+            string commentTimestamp = commentJSON.timestamp;
+            int statusCode = responseJSON.status_code;
+            
+            if(statusCode == 200)
+            {
+                string currentTimeZone = TimeZone.CurrentTimeZone.StandardName;
 
-            string commentTimestamp = responseJSON.timestamp;
-            string currentTimeZone = TimeZone.CurrentTimeZone.StandardName;
-            Debug.WriteLine(currentTimeZone);
-            var commentDate = DateTime.ParseExact(commentTimestamp, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                var commentDate = DateTime.ParseExact(commentTimestamp, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
 
-            TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById(currentTimeZone);
-            DateTime localCommentDate = TimeZoneInfo.ConvertTimeFromUtc(commentDate, easternZone);
+                TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById(currentTimeZone);
+                DateTime localCommentDate = TimeZoneInfo.ConvertTimeFromUtc(commentDate, easternZone);
 
-            string TimeAgo = GetRelativeTime(localCommentDate);
+                string TimeAgo = GetRelativeTime(localCommentDate);
 
-            individualComment = new Comment() { Content = responseJSON.content, HolidayId = responseJSON.holiday_id, UserName=responseJSON.user, TimeSince = TimeAgo };
+                individualComment = new Comment() { Content = commentJSON.content, HolidayId = commentJSON.holiday_id, UserName = commentJSON.user, TimeSince = TimeAgo };
+            }
+            else
+            {
+                individualComment = null;
+            }
+
 
             return await Task.FromResult(individualComment);
 

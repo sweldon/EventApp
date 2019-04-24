@@ -5,46 +5,45 @@
               Title="Holidaily"
               xmlns:local="clr-namespace:EventApp"  
              x:Name="BrowseItemsPage">
-      
-    <StackLayout Spacing="0" BackgroundColor="#D2D2D2">
 
-        <Frame Margin="5" HasShadow="False" CornerRadius="2" Padding="10">
-            <StackLayout Spacing="0" Padding="0" Margin="0">
-                <Label x:Name="TodayLabel" 
+    <StackLayout Spacing="0" BackgroundColor="#F2F2F2" Padding="0">
+
+        <Frame IsClippedToBounds="True"
+           CornerRadius="1"
+            HasShadow="True"
+            BackgroundColor="White" 
+          >
+            <Frame.OutlineColor>
+                <OnPlatform x:TypeArguments="Color"
+                Android="#F5F5F5"
+                iOS="#F5F5F5"/>
+            </Frame.OutlineColor>
+            <Frame.Margin>
+                <OnPlatform x:TypeArguments="Thickness"
+            Android="0" iOS="0"/>
+            </Frame.Margin>
+            <Frame.Padding>
+                <OnPlatform x:TypeArguments="Thickness"
+                            Android="5" iOS="5"/>
+            </Frame.Padding>
+            <Label x:Name="TodayLabel" 
                     HorizontalTextAlignment="Center" 
                     FontSize="24" TextColor="#2196F3"/>
-                <!--<Label x:Name="MonthLabel" 
-                    HorizontalTextAlignment="Center" 
-                    FontSize="30"/>
-                <Label x:Name="DayNumberLabel" 
-                    HorizontalTextAlignment="Center"
-                    FontSize="55"/>-->
-            </StackLayout>
         </Frame>
 
-        <!--<Frame HasShadow="False" CornerRadius="0" Padding="5" Margin="0, 5, 0, 0">
-            <StackLayout>
-                <Label Text="Hello!" 
-                    HorizontalTextAlignment="Center"
-                    FontSize="15"/>
-            </StackLayout>
-        </Frame>-->
 
-        <ContentView Padding="0" VerticalOptions="FillAndExpand">
 
-            <StackLayout>
-
-                <ListView x:Name="ItemsListView"
+        <ListView x:Name="ItemsListView"
                    IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                     SeparatorVisibility="None"
                     IsGroupingEnabled="true"
                     ItemsSource="{Binding GroupedHolidayList}"
-                    BackgroundColor="#D2D2D2"
+                    BackgroundColor="#F2F2F2"
                     HasUnevenRows="true"
                     RefreshCommand="{Binding LoadItemsCommand}"
                     IsPullToRefreshEnabled="true"
                     CachingStrategy="RecycleElement"
-                       
+   
                     >
                         
                     <ListView.GroupHeaderTemplate>
@@ -76,8 +75,25 @@
                             <ViewCell>
 
                                 <ContentView HorizontalOptions="FillAndExpand">
-                                    <Frame Margin="5"  CornerRadius="0" HasShadow="False" Padding="10" >
-                                        <StackLayout>
+                                    <Frame IsClippedToBounds="True"
+                                           CornerRadius="1"
+                                            HasShadow="True"
+                                            BackgroundColor="White" 
+                                          >
+                                        <Frame.OutlineColor>
+                                            <OnPlatform x:TypeArguments="Color"
+                                                Android="#F5F5F5"
+                                                iOS="#F5F5F5"/>
+                                        </Frame.OutlineColor>
+                                        <Frame.Margin>
+                                            <OnPlatform x:TypeArguments="Thickness"
+                                            Android="7" iOS="7"/>
+                                        </Frame.Margin>
+                                        <Frame.Padding>
+                                            <OnPlatform x:TypeArguments="Thickness"
+                                                            Android="5" iOS="5"/>
+                                        </Frame.Padding>
+                                        <StackLayout Orientation="Vertical" Padding="5">
                                             <Grid HorizontalOptions="FillAndExpand">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
@@ -88,23 +104,23 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <Label Text="{Binding Name}"
-                                                    FontSize="16"
+                                                             FontSize="16"
                                                     FontAttributes="Bold" Grid.Row="0" Grid.Column="0" TextColor="#2196F3"/>
 
                                                 <Label Text="{Binding TimeSince}"
-                                                    FontSize="12" 
-                                                    Grid.Row="0"
-                                                    Grid.Column="1"
-                                                    HorizontalTextAlignment="End" 
-                                                    Opacity=".8" />
+                                                       FontSize="12" 
+                                                       Grid.Row="0"
+                                                       Grid.Column="1"
+                                                       HorizontalTextAlignment="End" 
+                                                       Opacity=".8" />
 
                                             </Grid>
 
                                             <Label Text="{Binding DescriptionShort}" FontSize="14" />
                                             <BoxView 
-                                                    HeightRequest="1" 
-                                                    BackgroundColor="#EAEAEA" 
-                                                    HorizontalOptions="FillAndExpand" />
+                                           HeightRequest="1" 
+                                               BackgroundColor="#EAEAEA" 
+                                               HorizontalOptions="FillAndExpand" />
 
                                             <Grid HorizontalOptions="FillAndExpand">
                                                 <Grid.ColumnDefinitions>
@@ -117,14 +133,14 @@
                                                 </ContentView>
 
                                                 <Label Grid.Column="1" Text="{Binding NumComments, StringFormat='Comments ({0})'}" FontSize="Small"
-                                                        VerticalTextAlignment="Center" Margin="0,-2,0,0" >
+                                                     VerticalTextAlignment="Center" Margin="0,-2,0,0" >
                                                 </Label>
 
                                             </Grid>
-                                        </StackLayout>
 
+                                        </StackLayout>
                                     </Frame>
-                                    
+
                                 </ContentView>
 
                             </ViewCell>
@@ -132,11 +148,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
-                
-
-            </StackLayout>
-        </ContentView>
-
+               
 
         <!--<local:AdControlView BackgroundColor="Red" />-->
 

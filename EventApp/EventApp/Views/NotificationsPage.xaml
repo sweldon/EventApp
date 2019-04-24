@@ -6,9 +6,62 @@
     <ContentPage.Content>
 
 
-        <ContentView>
+        <ContentView Padding="5,0,5,0" BackgroundColor="#D2D2D2" VerticalOptions="FillAndExpand">
+
+            <ListView x:Name="NotificationsList"
+                   IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                    SeparatorVisibility="None"
+                    ItemsSource="{Binding Notifications}"
+                    BackgroundColor="#D2D2D2"
+                    HasUnevenRows="true"
+                    RefreshCommand="{Binding LoadNotifications}"
+                    IsPullToRefreshEnabled="true"
+                    CachingStrategy="RecycleElement"
+                      Margin="0,5,0,0"
+                    >
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ContentView HorizontalOptions="FillAndExpand">
+                                <Frame Margin="0,0,0,5"  CornerRadius="0" HasShadow="False" Padding="10" >
+                                    <StackLayout>
+                                        <Grid HorizontalOptions="FillAndExpand">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="8*" />
+                                                <ColumnDefinition Width="2*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label Text="{Binding Type}"
+                                                    FontSize="16"
+                                                    TextColor="#2196F3"
+                                                    Grid.Row="0" Grid.Column="0"/>
+
+                                            <Label Text="{Binding TimeSince}"
+                                                    FontSize="12" 
+                                                    Grid.Row="0"
+                                                    Grid.Column="1"
+                                                    HorizontalTextAlignment="End" 
+                                                    Opacity=".8" />
+
+                                        </Grid>
+
+                                        <Label Text="{Binding Content}" FontSize="14" />
 
 
+                                    </StackLayout>
+
+                                </Frame>
+
+                            </ContentView>
+
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
 
 
         </ContentView>

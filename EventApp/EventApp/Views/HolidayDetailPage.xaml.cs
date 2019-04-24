@@ -216,6 +216,7 @@ namespace EventApp.Views
 
         async void DownVote(object sender, EventArgs args)
         {
+
             #if __IOS__
                 var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
                 haptic.Prepare();
@@ -364,6 +365,199 @@ namespace EventApp.Views
             }
 
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        async void DownVoteComment(object sender, EventArgs args)
+        {
+            //var voteStatus = (sender as Image).Source;
+            var item = (sender as Image).BindingContext as Comment;
+            string commentId = item.Id;
+
+            #if __IOS__
+                var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
+                haptic.Prepare();
+                haptic.ImpactOccurred();
+                haptic.Dispose();
+            #endif
+
+            #if __ANDROID__
+                var duration = TimeSpan.FromSeconds(.025);
+                Vibration.Vibrate(duration);
+            #endif
+
+            int CurrentVotes = item.Votes;
+            //var DownVoteImageFile = DownVoteImage.Source as FileImageSource;
+            //var DownVoteIcon = DownVoteImageFile.File;
+            //var UpVoteImageFile = UpVoteImage.Source as FileImageSource;
+            //var UpVoteIcon = UpVoteImageFile.File;
+
+            if (isLoggedIn == "no")
+            {
+                this.IsEnabled = false;
+                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                this.IsEnabled = true;
+            }
+            else
+            {
+
+                if (item.UpVoteStatus == "up_active.png")
+                {
+                    item.Votes -= 2;
+                    //CurrentVotes.Text = newVotesInt.ToString();
+                    //UpVoteImage.Source = "up.png";
+                    //DownVoteImage.Source = "down_active.png";
+                    item.UpVoteStatus = "up.png";
+                    item.DownVoteStatus = "down_active.png";
+                    await viewModel.CommentStore.VoteComment(commentId, currentUser, "5");
+                }
+                else
+                {
+                    if (item.DownVoteStatus == "down_active.png")
+                    {
+                        // Undo
+                        item.Votes += 1;
+                        //CurrentVotes.Text = newVotesInt.ToString();
+                        //DownVoteImage.Source = "down.png";
+                        item.DownVoteStatus = "down.png";
+                        await viewModel.CommentStore.VoteComment(commentId, currentUser, "2");
+                    }
+                    else
+                    {
+                        // Only allow if user hasnt already downvoted
+                        int newVotes = item.Votes - 1;
+                        if (newVotes <= item.Votes + 1 && newVotes >= item.Votes - 1)
+                        {
+                            item.Votes -= 1;
+                            //CurrentVotes.Text = newVotesInt.ToString();
+                            //DownVoteImage.Source = "down_active.png";
+                            item.DownVoteStatus = "down_active.png";
+                            await viewModel.CommentStore.VoteComment(commentId, currentUser, "0");
+                        }
+                        else
+                        {
+                            // Undo
+                            item.Votes += 2;
+                            //CurrentVotes.Text = newVotesInt.ToString();
+                            //DownVoteImage.Source = "down.png";
+                            item.DownVoteStatus = "down.png";
+                            await viewModel.CommentStore.VoteComment(commentId, currentUser, "4");
+                        }
+                    }
+                }
+
+            }
+
+
+
+        }
+
+        async void UpVoteComment(object sender, EventArgs args)
+        {
+
+            var item = (sender as Image).BindingContext as Comment;
+            string commentId = item.Id;
+
+            #if __IOS__
+                var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
+                haptic.Prepare();
+                haptic.ImpactOccurred();
+                haptic.Dispose();
+            #endif
+
+            #if __ANDROID__
+                var duration = TimeSpan.FromSeconds(.025);
+                Vibration.Vibrate(duration);
+            #endif
+
+            int CurrentVotes = item.Votes;
+
+            if (isLoggedIn == "no")
+            {
+                this.IsEnabled = false;
+                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                this.IsEnabled = true;
+            }
+            else
+            {
+
+                if (item.DownVoteStatus == "down_active.png")
+                {
+                    Debug.WriteLine("Down was active upvoting twice");
+                    item.Votes += 2;
+                    //CurrentVotes.Text = newVotesInt.ToString();
+                    //DownVoteImage.Source = "down.png";
+                    // UpVoteImage.Source = "up_active.png";
+                    item.DownVoteStatus = "down.png";
+                    item.UpVoteStatus = "up_active.png";
+                    await viewModel.CommentStore.VoteComment(commentId, currentUser, "4");
+                }
+                else
+                {
+                    if (item.UpVoteStatus == "up_active.png")
+                    {
+                        // Undo
+
+                        item.Votes -= 1;
+                        //CurrentVotes.Text = newVotesInt.ToString();
+                        //UpVoteImage.Source = "up.png";
+                        item.UpVoteStatus = "up.png";
+                        await viewModel.CommentStore.VoteComment(commentId, currentUser, "3");
+                    }
+                    else
+                    {
+                        // Only allow if user hasnt already downvoted
+                        int newVotes = item.Votes + 1;
+                        if (newVotes <= item.Votes + 1 && newVotes >= item.Votes - 1)
+                        {
+                            item.Votes += 1;
+                            //CurrentVotes.Text = newVotesInt.ToString();
+                            //UpVoteImage.Source = "up_active.png";
+                            item.UpVoteStatus = "up_active.png";
+                            await viewModel.CommentStore.VoteComment(commentId, currentUser, "1");
+                        }
+                        else
+                        {
+
+                            item.Votes -= 2;
+                            //CurrentVotes.Text = newVotesInt.ToString();
+                            //UpVoteImage.Source = "up.png";
+                            item.UpVoteStatus = "up.png";
+                            await viewModel.CommentStore.VoteComment(commentId, currentUser, "5");
+                        }
+
+                    }
+
+
+                }
+            }
+
+        }
+
+
+
+
 
 
     }

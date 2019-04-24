@@ -6,7 +6,7 @@
              Title="{Binding Title}">
              
  <ScrollView VerticalOptions="Fill">
-        <StackLayout>
+        <StackLayout x:Name="HolidayDetailStackLayout">
        
                 <ContentView Padding="15,15,15,0" >
                 <Label x:Name="Description" FontSize="Small"/>
@@ -142,23 +142,23 @@
                                                             Tapped="OnDeleteTapped"  />
                                                     </Label.GestureRecognizers>
                                                 </Label>
-                                                
-                                                <Image Source="down.png" Grid.Column="3" Opacity=".5" x:Name="DownVoteImage">
+
+                                                <Image Source="{Binding DownVoteStatus}" Grid.Column="3" Opacity=".5" x:Name="DownVoteImageComment">
                                                     <Image.GestureRecognizers>
                                                         <TapGestureRecognizer
-                                                    Tapped="DownVote"
+                                                    Tapped="DownVoteComment"
                                                     NumberOfTapsRequired="1" />
                                                     </Image.GestureRecognizers>
                                                 </Image>
 
-                                                <Label Text="0" FontSize="Small" Grid.Column="4"
-                                                           VerticalTextAlignment="Center" Margin="0,-2,0,0"  x:Name="CurrentVotes">
+                                                <Label Text="{Binding Votes}" FontSize="Small" Grid.Column="4"
+                                                           VerticalTextAlignment="Center" Margin="0,-2,0,0"  x:Name="CurrentVotesComment">
                                                 </Label>
 
-                                                <Image Source="up.png" Grid.Column="5"  Opacity=".5" x:Name="UpVoteImage">
+                                                <Image Source="{Binding UpVoteStatus}" Grid.Column="5"  Opacity=".5" x:Name="UpVoteImageComment">
                                                     <Image.GestureRecognizers>
                                                         <TapGestureRecognizer
-                                                    Tapped="UpVote"
+                                                    Tapped="UpVoteComment"
                                                     NumberOfTapsRequired="1" />
                                                     </Image.GestureRecognizers>
                                                 </Image>

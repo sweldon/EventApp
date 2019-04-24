@@ -53,6 +53,7 @@ namespace EventApp.ViewModels
 
         }
 
+
         async Task ExecuteLoadCommentsCommand()
         {
             if (IsBusy)
@@ -63,7 +64,7 @@ namespace EventApp.ViewModels
             try
             {
                 Comments.Clear();
-                var comments = await CommentStore.GetHolidayCommentsAsync(true, HolidayId);
+                var comments = await CommentStore.GetHolidayCommentsAsync(true, HolidayId, currentUser);
                 foreach (var comment in comments)
                 {
                     Comments.Insert(0, comment);

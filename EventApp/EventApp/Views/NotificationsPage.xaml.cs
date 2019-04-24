@@ -14,26 +14,42 @@ namespace EventApp.Views
     public partial class NotificationsPage : ContentPage
     {
         NotificationsViewModel viewModel;
+        Comment comment;
 
         public NotificationsPage()
         {
             InitializeComponent();
             BindingContext = viewModel = new NotificationsViewModel(); ;
             Title = "Your Recent Activity";
-
-            //TopHolidayList.ItemSelected += OnItemSelected;
+    
+            NotificationsList.ItemSelected += OnItemSelected;
         }
 
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
-            //((ListView)sender).SelectedItem = null;
-            //if (args.SelectedItem == null)
-            //{
-            //    return;
-            //}
-            //var item = args.SelectedItem as Holiday;
-            //await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id)));
+            ((ListView)sender).SelectedItem = null;
+            if (args.SelectedItem == null)
+            {
+                return;
+            }
+            var notif = args.SelectedItem as Notification;
+
+            if(notif.Type == "Comment")
+            {
+                comment = await viewModel.CommentStore.GetCommentById(notif.Id);
+                if(comment == null)
+                {
+                    await DisplayAlert("Uh oh!", "The author has deleted this comment", "Fine");
+                }
+                else
+                {
+                    await Navigation.PushAsync(new CommentPage(new CommentViewModel(notif.Id, comment.HolidayId)));
+                }
+                
+            }
+
+            
 
         }
 
@@ -41,8 +57,8 @@ namespace EventApp.Views
         {
             base.OnAppearing();
 
-            //if (viewModel.TopHolidays.Count == 0)
-            //    viewModel.LoadTopHolidays.Execute(null);
+            if (viewModel.Notifications.Count == 0)
+                viewModel.LoadNotifications.Execute(null);
 
 
         }
