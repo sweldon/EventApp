@@ -15,8 +15,8 @@
           >
             <Frame.OutlineColor>
                 <OnPlatform x:TypeArguments="Color"
-                Android="#F5F5F5"
-                iOS="#F5F5F5"/>
+                Android="#f0f0f0"
+                iOS="#f0f0f0"/>
             </Frame.OutlineColor>
             <Frame.Margin>
                 <OnPlatform x:TypeArguments="Thickness"
@@ -38,7 +38,6 @@
                     SeparatorVisibility="None"
                     IsGroupingEnabled="true"
                     ItemsSource="{Binding GroupedHolidayList}"
-                    BackgroundColor="#F2F2F2"
                     HasUnevenRows="true"
                     RefreshCommand="{Binding LoadItemsCommand}"
                     IsPullToRefreshEnabled="true"

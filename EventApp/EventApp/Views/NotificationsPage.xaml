@@ -6,13 +6,13 @@
     <ContentPage.Content>
 
 
-        <ContentView Padding="5,0,5,0" BackgroundColor="#D2D2D2" VerticalOptions="FillAndExpand">
+        <ContentView Padding="5,0,5,0" BackgroundColor="#F5F5F5" VerticalOptions="FillAndExpand">
 
             <ListView x:Name="NotificationsList"
                    IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                     SeparatorVisibility="None"
                     ItemsSource="{Binding Notifications}"
-                    BackgroundColor="#D2D2D2"
+                    BackgroundColor="#F5F5F5"
                     HasUnevenRows="true"
                     RefreshCommand="{Binding LoadNotifications}"
                     IsPullToRefreshEnabled="true"
@@ -24,15 +24,35 @@
                     <DataTemplate>
                         <ViewCell>
                             <ContentView HorizontalOptions="FillAndExpand">
-                                <Frame Margin="0,0,0,5"  CornerRadius="0" HasShadow="False" Padding="10" >
+
+
+                                <Frame IsClippedToBounds="True"
+                                CornerRadius="1"
+                                HasShadow="True"
+                                BackgroundColor="White">
+                                    <Frame.OutlineColor>
+                                        <OnPlatform x:TypeArguments="Color"
+                                Android="#F2F2F2"
+                                iOS="#F2F2F2"/>
+                                    </Frame.OutlineColor>
+                                    <Frame.Margin>
+                                        <OnPlatform x:TypeArguments="Thickness"
+                                        Android="3" iOS="3"/>
+                                    </Frame.Margin>
+                                    <Frame.Padding>
+                                        <OnPlatform x:TypeArguments="Thickness"
+                                        Android="10" iOS="10"/>
+                                    </Frame.Padding>
+
+
                                     <StackLayout>
                                         <Grid HorizontalOptions="FillAndExpand">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />
                                             </Grid.RowDefinitions>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="8*" />
-                                                <ColumnDefinition Width="2*" />
+                                                <ColumnDefinition Width="5*" />
+                                                <ColumnDefinition Width="5*" />
                                             </Grid.ColumnDefinitions>
 
                                             <Label Text="{Binding Type}"

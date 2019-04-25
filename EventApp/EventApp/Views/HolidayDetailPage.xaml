@@ -5,83 +5,122 @@
              xmlns:local="clr-namespace:EventApp"  
              Title="{Binding Title}">
              
- <ScrollView VerticalOptions="Fill">
-        <StackLayout x:Name="HolidayDetailStackLayout">
-       
-                <ContentView Padding="15,15,15,0" >
-                <Label x:Name="Description" FontSize="Small"/>
-                </ContentView>
 
-                <BoxView 
-                    HeightRequest="1" 
-                    BackgroundColor="#EAEAEA" 
-                    HorizontalOptions="FillAndExpand" />
-                    
-            
-                <Grid Padding="10" HorizontalOptions="FillAndExpand">
-                    <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="16" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="16" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="16" />
-                    </Grid.ColumnDefinitions>
-                
-                    <ContentView Grid.Column="0">
-                        <Image Source="comment.png" VerticalOptions="Center"/>
-                    </ContentView>
-
-                    <Label Grid.Column="1" Text="Comment" FontSize="Small"
-                           VerticalTextAlignment="Center" Margin="0,-2,0,0">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Tapped="OnTapGestureRecognizerTapped"  />
-                        </Label.GestureRecognizers>
-                    </Label>
-
-                    <Image Source="down.png" Grid.Column="2" Opacity=".5" x:Name="DownVoteImage">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer
-                        Tapped="DownVote"
-                        NumberOfTapsRequired="1" />
-                        </Image.GestureRecognizers>
-                    </Image>
-
-                    <Label Text="{Binding Votes}" FontSize="Small" HorizontalTextAlignment="End" Grid.Column="3"
-                               VerticalTextAlignment="Center" Margin="0,-2,0,0"  x:Name="CurrentVotes">
-                    </Label>
-
-                    <Image Source="up.png" Grid.Column="4"  Opacity=".5" x:Name="UpVoteImage">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer
-                        Tapped="UpVote"
-                        NumberOfTapsRequired="1" />
-                        </Image.GestureRecognizers>
-                    </Image>
+        <StackLayout VerticalOptions="FillAndExpand">
 
 
-            </Grid>
-            
-        
-            
-            <ContentView Padding="5,0,5,0" BackgroundColor="#D2D2D2">
+
+
+            <ContentView Padding="5,0,5,0" BackgroundColor="#f5f5f5">
                 
             <ListView x:Name="HolidayDetailList"
                       
                       SeparatorVisibility="None"
                         ItemsSource="{Binding Comments}"
-                        BackgroundColor="#D2D2D2"
+                        BackgroundColor="#F5F5F5"
                         HasUnevenRows="true"
                         RefreshCommand="{Binding LoadHolidayComments}"
                         IsPullToRefreshEnabled="true"
                         IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+
+                <ListView.Header>
+
+                  <StackLayout >
+                    <Frame IsClippedToBounds="True"
+                    CornerRadius="1"
+                    HasShadow="True"
+                    BackgroundColor="White">
+                      <Frame.OutlineColor>
+                        <OnPlatform x:TypeArguments="Color"
+                        Android="#F2F2F2"
+                        iOS="#F2F2F2"/>
+                      </Frame.OutlineColor>
+                      <Frame.Margin>
+                        <OnPlatform x:TypeArguments="Thickness"
+                        Android="0" iOS="0"/>
+                      </Frame.Margin>
+                      <Frame.Padding>
+                        <OnPlatform x:TypeArguments="Thickness"
+                        Android="10" iOS="10"/>
+                      </Frame.Padding>
+                      <Label x:Name="Description" FontSize="Small"/>
+                    </Frame>
+
+
+
+                    <Grid Padding="10" HorizontalOptions="FillAndExpand" >
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="16" />
+                      </Grid.ColumnDefinitions>
+
+                      <ContentView Grid.Column="0">
+                        <Image Source="comment.png" VerticalOptions="Center"/>
+                      </ContentView>
+
+                      <Label Grid.Column="1" Text="Comment" FontSize="Small"
+                         VerticalTextAlignment="Center" Margin="0,-2,0,0">
+                        <Label.GestureRecognizers>
+                          <TapGestureRecognizer
+                          Tapped="OnTapGestureRecognizerTapped"  />
+                        </Label.GestureRecognizers>
+                      </Label>
+
+                      <Image Source="down.png" Grid.Column="2" Opacity=".5" x:Name="DownVoteImage">
+                        <Image.GestureRecognizers>
+                          <TapGestureRecognizer
+                  Tapped="DownVote"
+                  NumberOfTapsRequired="1" />
+                        </Image.GestureRecognizers>
+                      </Image>
+
+                      <Label Text="{Binding Votes}" FontSize="Small" HorizontalTextAlignment="End" Grid.Column="3"
+                             VerticalTextAlignment="Center" Margin="0,-2,0,0"  x:Name="CurrentVotes">
+                      </Label>
+
+                      <Image Source="up.png" Grid.Column="4"  Opacity=".5" x:Name="UpVoteImage">
+                        <Image.GestureRecognizers>
+                          <TapGestureRecognizer
+                  Tapped="UpVote"
+                  NumberOfTapsRequired="1" />
+                        </Image.GestureRecognizers>
+                      </Image>
+
+
+                    </Grid>
+                  </StackLayout>
+
+
+                </ListView.Header>
+
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell >
                        
-                                <ContentView HorizontalOptions="FillAndExpand">
-                                    <Frame Margin="0,5,0,0" CornerRadius="2" HasShadow="False" Padding="10" >
-                                      <StackLayout>
+                            <ContentView HorizontalOptions="FillAndExpand">
+                            <Frame IsClippedToBounds="True"
+                                CornerRadius="1"
+                                HasShadow="True"
+                                BackgroundColor="White" 
+                            >
+                            <Frame.OutlineColor>
+                            <OnPlatform x:TypeArguments="Color"
+                                Android="#F2F2F2"
+                                iOS="#F2F2F2"/>
+                            </Frame.OutlineColor>
+                            <Frame.Margin>
+                            <OnPlatform x:TypeArguments="Thickness"
+                                Android="3" iOS="3"/>
+                            </Frame.Margin>
+                            <Frame.Padding>
+                            <OnPlatform x:TypeArguments="Thickness"
+                                Android="10" iOS="10"/>
+                            </Frame.Padding>
+
+                                        <StackLayout>
                                       <Grid HorizontalOptions="FillAndExpand">
                                         <Grid.RowDefinitions>
                                           <RowDefinition Height="Auto" />
@@ -178,6 +217,6 @@
                 </ListView>
                 </ContentView>
         </StackLayout>
-        </ScrollView>
+
   
 </ContentPage>

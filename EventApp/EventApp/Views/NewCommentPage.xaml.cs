@@ -38,6 +38,7 @@ namespace EventApp.Views
             OpenedHoliday = holiday;
             CommentTitle = "Comment on " + OpenedHoliday.Name;
             BindingContext = this;
+            CommentContent.Focus();
         }
 
         public async void SubmitComment(object sender, EventArgs e)
@@ -91,11 +92,13 @@ namespace EventApp.Views
             this.IsEnabled = true;
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
-            base.OnAppearing();
 
+            base.OnAppearing();
+            await Task.Delay(100);
             CommentContent.Focus();
+
 
         }
 

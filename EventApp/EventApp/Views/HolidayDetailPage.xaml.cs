@@ -77,7 +77,6 @@ namespace EventApp.Views
             //};
 
 
-
         }
 
 
@@ -175,7 +174,10 @@ namespace EventApp.Views
                
 
                 viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
-            Description.Text = viewModel.Holiday.Description;
+            if (!string.IsNullOrEmpty(viewModel.Holiday.Description))
+                Description.Text = viewModel.Holiday.Description;
+            else
+                Description.Text = "This holiday has no information yet!";
             this.Title = viewModel.Holiday.Name;
             CurrentVotes.Text = viewModel.Holiday.Votes.ToString();
  
@@ -367,28 +369,6 @@ namespace EventApp.Views
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         async void DownVoteComment(object sender, EventArgs args)
         {
             //var voteStatus = (sender as Image).Source;
@@ -554,10 +534,6 @@ namespace EventApp.Views
             }
 
         }
-
-
-
-
 
 
     }

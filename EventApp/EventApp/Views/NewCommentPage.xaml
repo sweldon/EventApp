@@ -23,15 +23,13 @@
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
+
         <StackLayout Spacing="20" Padding="15">
             <Label Text="{Binding CommentTitle}" FontSize="Medium" />
-            <Editor HeightRequest="100" x:Name="CommentContent" Placeholder="Type your comment" FontSize="Small" Margin="0" />
-            
-          <BoxView
-            HeightRequest="1"
-            BackgroundColor="#EAEAEA"
-            HorizontalOptions="FillAndExpand" />
-            
+            <ContentView >
+                <Editor HeightRequest="100" Placeholder="Type your comment" x:Name="CommentContent" FontSize="Small" />
+            </ContentView>
+
             <Button Text="Post" x:Name="SaveCommentButton"
                         Clicked="SubmitComment"
                         BackgroundColor="{StaticResource Primary}"
