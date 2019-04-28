@@ -91,9 +91,6 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-60@2x.png">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-60@3x1.png">
-      <Visible>false</Visible>
-    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-Notification@3x.png">
       <Visible>false</Visible>
     </ImageAsset>
@@ -103,34 +100,13 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon1024.png">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon120.png">
-      <Visible>false</Visible>
-    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon152.png">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon167.png">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon20.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon29.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon40.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon58.png">
-      <Visible>false</Visible>
-    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon76.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon80.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon87.png">
       <Visible>false</Visible>
     </ImageAsset>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
@@ -138,9 +114,6 @@
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\logo_splash_screen.imageset\splash.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\logo_splash_screen.imageset\Icon.png">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\LaunchImage.launchimage\Contents.json">
@@ -155,6 +128,20 @@
     <BundleResource Include="Resources\user.png" />
     <BundleResource Include="Resources\reply.png" />
     <BundleResource Include="Resources\delete.png" />
+    <BundleResource Include="Resources\alarm.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-Small-40.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-Small%402x.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-Small%403x.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-60%403x.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-Small-40%402x.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-Small.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-Notification.png" />
+    <ImageAsset Include="Assets.xcassets\logo_splash_screen.imageset\Icon.png" />
+    <ImageAsset Include="Assets.xcassets\logo_splash_screen.imageset\Icon%402x.png" />
+    <BundleResource Include="Resources\icon_splash.png" />
+    <BundleResource Include="Resources\icon_splash_large.png" />
+    <BundleResource Include="Resources\icon_splash_new.png" />
+    <BundleResource Include="Resources\holidaily-logo-1-transparent.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
