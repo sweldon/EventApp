@@ -86,16 +86,6 @@ namespace EventApp.Views
             int UserNameLength = UserNameValue.Length;
             ReplyCommentContent.Text = '@'+UserNameValue.PadRight(UserNameLength + 1, ' ');
 
-            if (String.Equals(currentUser, UserNameValue, StringComparison.OrdinalIgnoreCase))
-            {
-                DeleteContentView.IsVisible = true;
-            }
-            else
-            {
-                ReplyContentView.IsVisible = true;
-                ReplyTextContentView.IsVisible = true;
-            }
-
         }
 
         async void OnTapGestureRecognizerTapped(object sender, EventArgs args)
