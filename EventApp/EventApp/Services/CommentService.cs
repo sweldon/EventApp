@@ -6,6 +6,7 @@ using EventApp.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Diagnostics;
+using System.Collections.ObjectModel;
 
 namespace EventApp.Services
 {
@@ -13,8 +14,9 @@ namespace EventApp.Services
     public class CommentService : CommentInterface<Comment>
     {
 
-        List<Comment> comments;
-        Comment individualComment; 
+        ObservableCollection<ObservableCollection<Comment>> comments;
+        Comment individualComment;
+        ObservableCollection<Comment> commentGroup;
 
         HttpClient client = new HttpClient();
         public string ShowReplyVal;
@@ -32,18 +34,9 @@ namespace EventApp.Services
         }
 
 
-        public async Task<bool> AddComment(Comment comment)
+        public async Task<IEnumerable<IEnumerable<Comment>>> GetHolidayCommentsAsync(bool forceRefresh = false, string holidayId = null, string user = null)
         {
-
-            comments.Insert(0, comment);
-
-            return await Task.FromResult(true);
-        }
-
-
-        public async Task<IEnumerable<Comment>> GetHolidayCommentsAsync(bool forceRefresh = false, string holidayId = null, string user = null)
-        {
-            comments = new List<Comment>();
+            comments = new ObservableCollection<ObservableCollection<Comment>>();
 
             var values = new Dictionary<string, string>{
                    { "holiday_id", holidayId },
@@ -58,24 +51,51 @@ namespace EventApp.Services
 
             dynamic commentList = responseJSON.CommentList;
 
-            foreach (var comment in commentList)
+            foreach (var thread in commentList)
             {
-
-                string commentTimestamp = comment.timestamp;
-
-                string TimeAgo = Time.GetRelativeTime(commentTimestamp);
-                string commentUser = comment.user;
-                if (String.Equals(commentUser, currentUser, StringComparison.OrdinalIgnoreCase)){
-                    ShowReplyVal = "false";
-                    ShowDeleteVal = "true";
-                }
-                else 
+                commentGroup = new ObservableCollection<Comment>();
+                foreach (var comment in thread)
                 {
-                    ShowReplyVal = "true";
-                    ShowDeleteVal = "false";
+                    string commentTimestamp = comment.timestamp;
+
+                    string TimeAgo = Time.GetRelativeTime(commentTimestamp);
+                    string commentUser = comment.user;
+                    if (String.Equals(commentUser, currentUser, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ShowReplyVal = "false";
+                        ShowDeleteVal = "true";
+                    }
+                    else
+                    {
+                        ShowReplyVal = "true";
+                        ShowDeleteVal = "false";
+                    }
+
+                    string padding = comment.padding;
+                    string[] paddingVals = padding.Split(',');
+                    Xamarin.Forms.Thickness paddingThickness = new Xamarin.Forms.Thickness(Convert.ToDouble(paddingVals[0]),
+                                                                                            Convert.ToDouble(paddingVals[1]),
+                                                                                            Convert.ToDouble(paddingVals[2]),
+                                                                                            Convert.ToDouble(paddingVals[3]));
+                    commentGroup.Add(new Comment()
+                    {
+                        Id = comment.id,
+                        Content = comment.content,
+                        HolidayId = comment.holiday_id,
+                        UserName = comment.user,
+                        TimeSince = TimeAgo,
+                        ShowReply = ShowReplyVal,
+                        ShowDelete = ShowDeleteVal,
+                        Votes = comment.votes,
+                        UpVoteStatus = comment.up_vote_status,
+                        DownVoteStatus = comment.down_vote_status,
+                        Parent = comment.parent,
+                        ThreadPadding = paddingThickness
+                    });
                 }
-                // Maybe pass user id to this, and if it isnt none (theyre logged in) use it to set UpVote and DownVote
-                comments.Insert(0, new Comment() { Id = comment.id, Content = comment.content, HolidayId = comment.holiday_id, UserName = comment.user, TimeSince = TimeAgo, ShowReply = ShowReplyVal, ShowDelete = ShowDeleteVal, Votes = comment.votes, UpVoteStatus=comment.up_vote_status, DownVoteStatus=comment.down_vote_status });
+
+                comments.Insert(0, commentGroup);
+
             }
 
             return await Task.FromResult(comments);

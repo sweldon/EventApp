@@ -27,6 +27,7 @@ namespace EventApp.Views
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
+            this.IsEnabled = false;
             ((ListView)sender).SelectedItem = null;
             if (args.SelectedItem == null)
             {
@@ -34,7 +35,7 @@ namespace EventApp.Views
             }
             var item = args.SelectedItem as Holiday;
             await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id)));
-
+            this.IsEnabled = true;
         }
 
         protected override void OnAppearing()

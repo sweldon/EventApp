@@ -13,8 +13,10 @@ namespace EventApp.ViewModels
 {
     public class HolidayDetailViewModel : BaseViewModel
     {
-        public Holiday Holiday { get; set; } // Set by async GetHolidayById call when page loads
-        public ObservableCollection<Comment> Comments { get; set; }
+
+        public Holiday Holiday { get; set; }
+        private List<CommentList> CommentList;
+        public List<CommentList> GroupedCommentList { get { return CommentList; } set { CommentList = value; base.OnPropertyChanged(); } }
         public Command LoadHolidayComments { get; set; }
         public string HolidayId { get; set; }
 
@@ -34,8 +36,7 @@ namespace EventApp.ViewModels
         {
 
             HolidayId = holidayId;
-            
-            Comments = new ObservableCollection<Comment>();
+            GroupedCommentList = new List<CommentList>();
             LoadHolidayComments = new Command(async () => await ExecuteLoadCommentsCommand());
 
             MessagingCenter.Subscribe<NewCommentPage>(this, "UpdateComments", (sender) => {
@@ -64,12 +65,23 @@ namespace EventApp.ViewModels
 
             try
             {
-                Comments.Clear();
-                var comments = await CommentStore.GetHolidayCommentsAsync(true, HolidayId, currentUser);
-                foreach (var comment in comments)
+                GroupedCommentList = new List<CommentList>();
+                var allComments = new List<CommentList>();
+                var threads = await CommentStore.GetHolidayCommentsAsync(true, HolidayId, currentUser);
+
+                foreach (var group in threads)
                 {
-                    Comments.Insert(0, comment);
+                    var commentList = new CommentList();
+                    foreach (var comment in group)
+                    {
+                        commentList.Add(comment);
+                    }
+                    allComments.Insert(0, commentList);
                 }
+
+                GroupedCommentList = allComments;
+
+
             }
             catch (Exception ex)
             {

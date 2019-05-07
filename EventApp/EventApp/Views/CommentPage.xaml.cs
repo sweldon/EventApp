@@ -151,7 +151,8 @@ namespace EventApp.Views
                 var values = new Dictionary<string, string>{
                    { "holiday_id", viewModel.HolidayId },
                    { "comment", ReplyCommentContent.Text },
-                   { "user", viewModel.currentUser}
+                   { "user", viewModel.currentUser},
+                   {"parent", viewModel.CommentId }
 
                 };
 

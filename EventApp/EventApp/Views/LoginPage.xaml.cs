@@ -61,11 +61,13 @@ namespace EventApp.Views
 
         public async void LoginUser(object sender, EventArgs e)
         {
-            string userName = NameEntry.Text.Trim();
-            string pass = PassEntry.Text;
 
-            if (!string.IsNullOrEmpty(userName))
+
+            if (!string.IsNullOrEmpty(NameEntry.Text))
             {
+                string userName = NameEntry.Text.Trim();
+                string pass = PassEntry.Text;
+                Debug.WriteLine(userName);
                 var values = new Dictionary<string, string>{
                     { "username", userName },
                     { "password", pass },
@@ -101,57 +103,18 @@ namespace EventApp.Views
             }
 
         }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await Task.Delay(100);
+        }
+
         public async void RegisterUser(object sender, EventArgs e)
         {
-            string userName = NameEntry.Text.Trim();
-            string pass = PassEntry.Text;
-
-            Regex r = new Regex("^[a-zA-Z0-9]*$");
-
-            if (!r.IsMatch(userName))
-            {
-                await DisplayAlert("Error!", "Username or password invalid", "Dang");
-            }
-            else if(userName.Length > 32 || userName.Length < 3)
-            {
-                await DisplayAlert("Error!", "Your username must be between 3 and 32 characters long.", "Dang");
-            }
-            else
-            {
-                var values = new Dictionary<string, string>{
-                   { "username", userName },
-                   { "password", pass },
-                   { "device_id", devicePushId }
-                };
-
-                var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(App.HolidailyHost + "/portal/register/", content);
-                var responseString = await response.Content.ReadAsStringAsync();
-                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                int status = responseJSON.StatusCode;
-
-                if (status == 200)
-                {
-                    isLoggedIn = "yes";
-                    //await RootPage.Detail.Navigation.PushAsync(new ItemsPage());
-                    var menuPage = new MenuPage();
-                    NavigationPage = new NavigationPage(new HolidaysPage());
-                    var rootPage = new RootPage();
-                    rootPage.Master = menuPage;
-                    rootPage.Detail = NavigationPage;
-                    currentUser = userName;
-                    Application.Current.MainPage = rootPage;
-                }
-                else if (status == 1000)
-                {
-                    await DisplayAlert("Error!", "Username already exists.", "Dang");
-                }
-                else
-                {
-                    await DisplayAlert("Sorry!", "Something went wrong on our end", "Alrighty");
-                }
-            }
-
+            this.IsEnabled = false;
+            await Navigation.PushModalAsync(new NavigationPage(new RegisterPage()));
+            this.IsEnabled = true;
         }
         async void CancelLogin(object sender, EventArgs e)
         {

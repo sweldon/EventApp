@@ -115,7 +115,16 @@ namespace EventApp.Services
             {
                 string holidayDescription = holiday.description;
                 string HolidayDescriptionShort = holidayDescription.Length <= 90 ? holidayDescription : holidayDescription.Substring(0, 90) + "...";
-                items.Insert(0, new Holiday() { Id = holiday.id, Name = holiday.name, Description = holiday.description, NumComments = holiday.num_comments, TimeSince = holiday.time_since, DescriptionShort= HolidayDescriptionShort });
+                items.Insert(0, new Holiday() { Id = holiday.id,
+                    Name = holiday.name,
+                    Description = holiday.description,
+                    NumComments = holiday.num_comments,
+                    TimeSince = holiday.time_since,
+                    DescriptionShort = HolidayDescriptionShort,
+                    HolidayImage = holiday.image
+
+                });
+            
             }
 
             return await Task.FromResult(items);

@@ -88,7 +88,7 @@ namespace EventApp.Views
             isLoggedIn = "no";
             LogoutButton.IsVisible = false;
             LoginButton.IsVisible = true;
-            UserLabel.Text = "Welcome, guest!";
+            UserLabel.Text = "Hey there!";
             currentUser = null;
             await RootPage.NavigateFromMenu(0);
 
@@ -100,7 +100,7 @@ namespace EventApp.Views
             {
                 LogoutButton.IsVisible = false;
                 LoginButton.IsVisible = true;
-                UserLabel.Text = "Welcome, guest!";
+                UserLabel.Text = "Hey there!";
             }
             else
             {

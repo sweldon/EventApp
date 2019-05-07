@@ -11,5 +11,6 @@ namespace EventApp.Models
         public int NumComments { get; set; }
         public string TimeSince { get; set; }
         public string DescriptionShort { get; set; }
+        public string HolidayImage { get; set; }
     }
 }

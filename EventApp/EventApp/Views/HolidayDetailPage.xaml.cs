@@ -169,7 +169,7 @@ namespace EventApp.Views
         {
             base.OnAppearing();
 
-            if (viewModel.Comments.Count == 0)
+            if (viewModel.GroupedCommentList.Count == 0)
                 viewModel.LoadHolidayComments.Execute(null);
                
 
@@ -200,7 +200,7 @@ namespace EventApp.Views
 
         async void OnTapGestureRecognizerTapped(object sender, EventArgs args)
         {
-
+            this.IsEnabled = false;
             if (isLoggedIn == "no")
             {
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
@@ -211,6 +211,7 @@ namespace EventApp.Views
                 await Navigation.PushModalAsync(new NavigationPage(new NewCommentPage(viewModel.Holiday)));
                 this.IsEnabled = true;
             }
+            this.IsEnabled = true;
 
 
         }
