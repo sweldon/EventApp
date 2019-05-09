@@ -18,6 +18,10 @@ namespace EventApp.ViewModels
         {
             Notifications = new ObservableCollection<Notification>();
             LoadNotifications = new Command(async () => await ExecuteLoadNotifications());
+
+            MessagingCenter.Subscribe<NewCommentPage>(this, "UpdateNotifications", (sender) => {
+                ExecuteLoadNotifications();
+            });
         }
 
         async Task ExecuteLoadNotifications()

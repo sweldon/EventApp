@@ -28,6 +28,7 @@ namespace EventApp.Views
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
+            this.IsEnabled = false;
             ((ListView)sender).SelectedItem = null;
             if (args.SelectedItem == null)
             {
@@ -48,8 +49,9 @@ namespace EventApp.Views
                 }
                 
             }
+            this.IsEnabled = true;
 
-            
+
 
         }
 
@@ -57,10 +59,10 @@ namespace EventApp.Views
         {
             base.OnAppearing();
 
-            if (viewModel.Notifications.Count == 0)
-                viewModel.LoadNotifications.Execute(null);
+            //if (viewModel.Notifications.Count == 0)
+            viewModel.LoadNotifications.Execute(null);
 
-
+            
         }
 
     }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-
+using Xamarin.Forms;
 
 namespace EventApp.Models
 {
@@ -14,7 +14,9 @@ namespace EventApp.Models
         public string TimeSince { get; set; }
         public string ShowReply { get; set; }
         public string ShowDelete { get; set; }
+        public Thickness ThreadPadding { get; set; }
 
+        public string Parent { get; set; }
 
         private string upvote;
         public string UpVoteStatus

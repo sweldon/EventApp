@@ -6,7 +6,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <!--Page Level Resources: Compatibile with Xamarin Live Player -->
-            <Color x:Key="Primary">#2196F3</Color>
+            <Color x:Key="Primary">#4c96e8</Color>
             <Color x:Key="Accent">#96d1ff</Color>
             <Color x:Key="LightTextColor">#999999</Color>
         </ResourceDictionary>
@@ -48,29 +48,22 @@
                     HorizontalOptions="FillAndExpand" />
                   </ContentView>
 
-                <ContentView IsVisible="false" x:Name="ReplyTextContentView">
+
                     <Editor HeightRequest="100" x:Name="ReplyCommentContent" FontSize="Small" />
-                </ContentView>
+
                     
                       <BoxView
                     HeightRequest="1"
                     BackgroundColor="#EAEAEA"
                     HorizontalOptions="FillAndExpand" />
                     
-                <ContentView IsVisible="false" x:Name="ReplyContentView">
                   <Button Text="Reply" x:Name="SaveReplyButton"
                               Clicked="SubmitReply"
                               BackgroundColor="{StaticResource Primary}"
                               TextColor="White" />
-                 </ContentView>
+   
                     
-                <ContentView IsVisible="false" x:Name="DeleteContentView">
-                  <Button Text="Delete" x:Name="DeleteButton"
-                              Clicked="DeleteComment"
-                              BackgroundColor="Red"
-                              TextColor="White"/>
-                </ContentView>
-                    
+                   
                 </StackLayout>
             </Frame>
 

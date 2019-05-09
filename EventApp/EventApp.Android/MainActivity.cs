@@ -22,7 +22,7 @@ namespace EventApp.Droid
             base.SetTheme(Resource.Style.MainTheme);
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);      
-            //MobileAds.Initialize(ApplicationContext, "ca-app-pub-1507507245083019~1769987608");
+            MobileAds.Initialize(ApplicationContext, "ca-app-pub-1507507245083019~1769987608");
 
             LoadApplication(new App());
 

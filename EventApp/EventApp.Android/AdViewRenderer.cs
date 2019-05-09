@@ -3,6 +3,7 @@ using Android.Gms.Ads;
 using EventApp;
 using Xamarin.Forms.Platform.Android;
 using Android.Widget;
+using Android.Content;
 
 [assembly: ExportRenderer(typeof(AdControlView), typeof(AdViewRenderer))]
 namespace EventApp
@@ -16,12 +17,15 @@ namespace EventApp
         AdView adView;
 
 
+        public AdViewRenderer(Context context) : base(context)
+        {
+        }
+
         AdView CreateAdView()
         {
             if(adView != null)  
                 return adView;
-            
-
+        
             adView = new AdView(Forms.Context);
 
             adView.AdSize = adSize;
@@ -30,8 +34,13 @@ namespace EventApp
                 LayoutParams.WrapContent, LayoutParams.WrapContent);
 
             adView.LayoutParameters = adParams;
-            adView.LoadAd(new AdRequest.Builder().AddTestDevice("8284655B05EAAE250CC1222024A7BF05").Build());
+            adView.LoadAd(new AdRequest.Builder()
+                .AddTestDevice("8284655B05EAAE250CC1222024A7BF05")
+                .AddTestDevice("5571FEA4780B974C01BC7028D0EF811B")
+                .AddTestDevice("3A8C97FBA67D2A448F34114728865490")
+                .Build());
 
+            //adView.LoadAd(new AdRequest.Builder().AddTestDevice(AdRequest.DeviceIdEmulator).Build());
             return adView;
         }
 

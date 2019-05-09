@@ -39,10 +39,9 @@ namespace EventApp.Views
             string todayString = currentDate.DayOfWeek.ToString();
             //MonthLabel.Text = monthString;
             ItemsListView.ItemSelected += OnItemSelected;
-            TodayLabel.Text = todayString + ", " + monthString + " " + dayNumber;
+            //TodayLabel.Text = todayString + ", " + monthString + " " + dayNumber;
 
-            //viewModel.Title = monthString + " " + dayNumber;
-            //viewModel.Title = currentDate.DayOfWeek.ToString();
+            viewModel.Title = todayString + ", " + monthString + " " + dayNumber;
 
             //swipeContainer.Swipe += (sender, e) =>
             //{
@@ -59,13 +58,19 @@ namespace EventApp.Views
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
+            
             ((ListView)sender).SelectedItem = null;
             if (args.SelectedItem == null)
             {
                 return;
             }
             var item = args.SelectedItem as Holiday;
-            await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id)));
+            if(item.Id != "-1") // Ad
+            {
+                this.IsEnabled = false;
+                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id)));
+                this.IsEnabled = true;
+            }
 
         }
 
@@ -73,7 +78,7 @@ namespace EventApp.Views
         {
             base.OnAppearing();
 
-            if (viewModel.GroupedHolidayList.Count == 0)
+            if (viewModel.Holidays.Count == 0)
                 viewModel.LoadItemsCommand.Execute(null);
 
             // Manually open menu page on swipe only on main page
