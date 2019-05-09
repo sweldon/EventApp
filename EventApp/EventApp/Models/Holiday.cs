@@ -12,5 +12,7 @@ namespace EventApp.Models
         public string TimeSince { get; set; }
         public string DescriptionShort { get; set; }
         public string HolidayImage { get; set; }
+        public bool ShowHolidayContent { get; set; }
+        public bool ShowAd { get; set; }
     }
 }

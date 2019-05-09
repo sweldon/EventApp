@@ -121,8 +121,9 @@ namespace EventApp.Services
                     NumComments = holiday.num_comments,
                     TimeSince = holiday.time_since,
                     DescriptionShort = HolidayDescriptionShort,
-                    HolidayImage = holiday.image
-
+                    HolidayImage = holiday.image,
+                    ShowAd = false,
+                    ShowHolidayContent = true
                 });
             
             }

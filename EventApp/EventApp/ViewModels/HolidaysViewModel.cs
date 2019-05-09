@@ -44,19 +44,57 @@ namespace EventApp.ViewModels
                 //GroupedHolidayList = new List<HolidayList>();
 
                 var holidays = await HolidayStore.GetHolidaysAsync(true);
+                var showAd = false;
+
+                // Final Ad, bottom of stack
+                Holidays.Insert(0, new Holiday()
+                {
+                    Id = "-1",
+                    ShowAd = true,
+                    ShowHolidayContent = false,
+                });
 
                 foreach (var holiday in holidays)
                 {
+
                     if (holiday.TimeSince == "Tomorrow")
                     {
+                        // Skip tomorrow's for now
                         //tomorrowlist.insert(0, holiday);
                     }
                     else
                     {
                         Holidays.Insert(0, holiday);
                     }
-                    
+
+
                 }
+
+                // Add at 3
+                Holidays.Insert(3, new Holiday()
+                {
+                    Id = "-1",
+                    ShowAd = true,
+                    ShowHolidayContent = false,
+                });
+
+                // Then add every 3 after that
+                int listCount = Holidays.Count();
+                for(int i = 0; i < listCount; i++)
+                {
+                    if(i % 3 == 0 && i != 0 && i != 4)
+                    {
+                        Holidays.Insert(i, new Holiday()
+                        {
+                            Id = "-1",
+                            ShowAd = true,
+                            ShowHolidayContent = false,
+                        });
+                    }
+                }
+
+
+
 
 
                 //Items.Heading = "Today";
@@ -72,7 +110,7 @@ namespace EventApp.ViewModels
                 //    Items
                 //};
 
-              
+
 
                 //GroupedHolidayList = list;
             }

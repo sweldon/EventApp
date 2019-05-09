@@ -2,20 +2,20 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.HolidaysPage"
-              Title="Holidaily"
+              Title="{Binding Title}"
               xmlns:local="clr-namespace:EventApp"  
              x:Name="BrowseItemsPage">
 
     <StackLayout VerticalOptions="FillAndExpand" Spacing="0">
 
       
-            <ContentView Padding="3">
+            <!--<ContentView Padding="3">
 
             <Label x:Name="TodayLabel"  BackgroundColor="White"
                 HorizontalTextAlignment="Center" 
                 FontSize="20" TextColor="#4c96e8"/>
  
-             </ContentView>
+             </ContentView>-->
         
         <StackLayout VerticalOptions="FillAndExpand" Padding="0" Spacing="0">
             <BoxView HeightRequest=".5"
@@ -26,16 +26,13 @@
             <ContentView BackgroundColor="#f5f5f5">
 
                 <ListView x:Name="ItemsListView"
-                 IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                 IsRefreshing="false" 
                   SeparatorVisibility="None"
                   ItemsSource="{Binding Holidays}"
                   HasUnevenRows="true"
-                     
                   RefreshCommand="{Binding LoadItemsCommand}"
-                  IsPullToRefreshEnabled="true"
-                  CachingStrategy="RecycleElement"
-                   
-                    >
+                  IsPullToRefreshEnabled="false"
+                   >
 
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -48,7 +45,7 @@
                                                BackgroundColor="#DEDEDE"
                                                HorizontalOptions="FillAndExpand" />
                                         <StackLayout>
-                                            <Grid HorizontalOptions="FillAndExpand" Padding="5,5,5,0">
+                                            <Grid HorizontalOptions="FillAndExpand" Padding="5,5,5,0" IsVisible="{Binding ShowHolidayContent}">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
@@ -70,15 +67,19 @@
                                                 </ContentView>
 
                                             </Grid>
-                                            <ContentView Padding="10,0,10,0">
+                                            <ContentView Padding="10,0,10,0"  IsVisible="{Binding ShowHolidayContent}">
                                                 <Label Text="{Binding DescriptionShort}"  Grid.Row="1" FontSize="14" />
                                             </ContentView>
 
-                                            <ContentView HeightRequest="150">
+                                            <ContentView HeightRequest="150"  IsVisible="{Binding ShowHolidayContent}">
                                                 <Image Source="{Binding HolidayImage}" Aspect="AspectFill" />
                                             </ContentView>
 
-                                            <Grid Padding="10,0,0,0">
+                                            <ContentView IsEnabled="{Binding ShowAd}"  IsVisible="{Binding ShowAd}">
+                                                <local:AdControlView BackgroundColor="#CDCDCD"/>
+                                            </ContentView>
+
+                                            <Grid Padding="10,0,0,0"  IsVisible="{Binding ShowHolidayContent}">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
@@ -98,7 +99,6 @@
 
 
                                             </Grid>
-
 
 
                                         </StackLayout>
@@ -128,7 +128,7 @@
 
             </ContentView>
         </StackLayout>
-        <!--<local:AdControlView BackgroundColor="Red" />-->
+        
 
     </StackLayout>
    
