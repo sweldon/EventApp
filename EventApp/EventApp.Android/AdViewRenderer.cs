@@ -37,6 +37,7 @@ namespace EventApp
             adView.LoadAd(new AdRequest.Builder()
                 .AddTestDevice("8284655B05EAAE250CC1222024A7BF05")
                 .AddTestDevice("5571FEA4780B974C01BC7028D0EF811B")
+                .AddTestDevice("3A8C97FBA67D2A448F34114728865490")
                 .Build());
 
             //adView.LoadAd(new AdRequest.Builder().AddTestDevice(AdRequest.DeviceIdEmulator).Build());

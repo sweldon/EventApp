@@ -82,7 +82,7 @@ namespace EventApp.ViewModels
                 int listCount = Holidays.Count();
                 for(int i = 0; i < listCount; i++)
                 {
-                    if(i % 3 == 0 && i != 0 && i != 4)
+                    if(i % 3 == 0 && i != 0 && i != 3)
                     {
                         Holidays.Insert(i, new Holiday()
                         {
