@@ -13,10 +13,10 @@
         </Grid.RowDefinitions>
             <StackLayout BackgroundColor="#4c96e8">
             <StackLayout>
-                <ContentView Padding="0,40,0,10" >
-                    <Image Source="Icon.png"   />
+                <ContentView Padding="0,40,0,0" >
+                    <Image WidthRequest="100" HeightRequest="124" Source="Icon_Text.png"   />
                 </ContentView>
-                <Label x:Name="UserLabel" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+               
                 <BoxView 
                     HeightRequest="1" 
                     BackgroundColor="#EAEAEA" 
@@ -48,13 +48,15 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                
-                  <Button Margin="0,10,0,0" Text="Logout" x:Name="LogoutButton"
+
+                    <Label x:Name="UserLabel" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="#4c96e8" FontSize="14" />
+
+                    <Button Text="Logout" x:Name="LogoutButton"
                         Clicked="LogoutUser"
                         BackgroundColor="#4c96e8"
                         TextColor="White" />
 
-                <Button Margin="0,10,0,0" Text="Login" x:Name="LoginButton"
+                <Button  Text="Login" x:Name="LoginButton"
                         Clicked="PromptLogin"
                         BackgroundColor="#4c96e8"
                         TextColor="White" />
