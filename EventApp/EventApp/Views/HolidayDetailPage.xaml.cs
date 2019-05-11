@@ -216,6 +216,91 @@ namespace EventApp.Views
 
         }
 
+        async void OnShareTapped(object sender, EventArgs args)
+        {
+            this.IsEnabled = false;
+
+            var labelSender = (Label)sender;
+            this.IsEnabled = false;
+
+            var holidayName = viewModel.Holiday.Name;
+            string HolidayDescriptionShort = viewModel.Holiday.Description.Length <= 90 ? viewModel.Holiday.Description : viewModel.Holiday.Description.Substring(0, 90) + "...\nGet all the info with the Holidaily app! http://holidailyapp.com/applink";
+            this.IsEnabled = false;
+            string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
+            if (action == "Text Message")
+            {
+                try
+                {
+                    var messageContents = holidayName + "! " + HolidayDescriptionShort;
+                    var message = new SmsMessage(messageContents, "");
+                    await Sms.ComposeAsync(message);
+                }
+                catch (FeatureNotSupportedException ex)
+                {
+                    // Sms is not supported on this device.
+                }
+                catch (Exception ex)
+                {
+                    // Other error has occurred.
+                }
+            }
+
+            this.IsEnabled = true;
+
+
+
+        }
+
+        async void OnCommentPicTapped(object sender, EventArgs args)
+        {
+            this.IsEnabled = false;
+            if (isLoggedIn == "no")
+            {
+                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+            }
+            else
+            {
+                var labelSender = (Image)sender;
+                this.IsEnabled = false;
+                await Navigation.PushModalAsync(new NavigationPage(new NewCommentPage(viewModel.Holiday)));
+                this.IsEnabled = true;
+            }
+            this.IsEnabled = true;
+
+
+        }
+
+        async void OnSharePicTapped(object sender, EventArgs args)
+        {
+            this.IsEnabled = false;
+
+            var buttonSender = (Image)sender;
+            var holidayName = viewModel.Holiday.Name;
+            string HolidayDescriptionShort = viewModel.Holiday.Description.Length <= 90 ? viewModel.Holiday.Description : viewModel.Holiday.Description.Substring(0, 90) + "...\nGet all the info with the Holidaily app! http://holidailyapp.com";
+            this.IsEnabled = false;
+            string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
+            if (action == "Text Message")
+            {
+                try
+                {
+                    var messageContents = holidayName + "! "+ HolidayDescriptionShort;
+                    var message = new SmsMessage(messageContents, "");
+                    await Sms.ComposeAsync(message);
+                }
+                catch (FeatureNotSupportedException ex)
+                {
+                    // Sms is not supported on this device.
+                }
+                catch (Exception ex)
+                {
+                    // Other error has occurred.
+                }
+            }
+            this.IsEnabled = true;
+     
+
+        }
+
 
         async void DownVote(object sender, EventArgs args)
         {

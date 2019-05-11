@@ -33,18 +33,30 @@
                         </ContentView>
                         <Grid Padding="10" HorizontalOptions="FillAndExpand" >
                       <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="16" />
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="16" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="16" />
+                            <ColumnDefinition Width="16" />
+                            <ColumnDefinition Width="15*" />
+                            <ColumnDefinition Width="16" />
+                            <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10*" />
+                                <ColumnDefinition Width="16" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="16" />
                       </Grid.ColumnDefinitions>
 
                       <ContentView Grid.Column="0">
-                        <Image Source="comment.png" VerticalOptions="Center"/>
-                      </ContentView>
+                        <Image Source="comment.png" VerticalOptions="Center" >
 
-                      <Label Grid.Column="1" Text="Comment" FontSize="Small"
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer
+                            Tapped="OnCommentPicTapped"  />
+                            </Image.GestureRecognizers>
+                        </Image>
+
+                        </ContentView>
+                            
+                            
+
+                      <Label Grid.Column="1" Text="Comment" FontSize="12"
                          VerticalTextAlignment="Center" Margin="0,-2,0,0">
                         <Label.GestureRecognizers>
                           <TapGestureRecognizer
@@ -52,19 +64,39 @@
                         </Label.GestureRecognizers>
                       </Label>
 
-                      <Image Source="down.png" Grid.Column="2" Opacity=".5" x:Name="DownVoteImage">
-                        <Image.GestureRecognizers>
-                          <TapGestureRecognizer
-                  Tapped="DownVote"
-                  NumberOfTapsRequired="1" />
-                        </Image.GestureRecognizers>
-                      </Image>
 
-                      <Label Text="{Binding Votes}" FontSize="Small" HorizontalTextAlignment="End" Grid.Column="3"
+
+                    <ContentView Grid.Column="2" >
+                        
+                        <Image Source="share.png" VerticalOptions="Center">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Tapped="OnSharePicTapped"  />
+                            </Image.GestureRecognizers>
+                        </Image>
+                    </ContentView>
+
+                    <Label Grid.Column="3" Text="Share" FontSize="12"
+                            VerticalTextAlignment="Center" Margin="0,-2,0,0">
+                        <Label.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Tapped="OnShareTapped"  />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                            <Image Source="down.png" Grid.Column="5" Opacity=".5" x:Name="DownVoteImage">
+                                <Image.GestureRecognizers>
+                                <TapGestureRecognizer
+                                Tapped="DownVote"
+                                NumberOfTapsRequired="1" />
+                                </Image.GestureRecognizers>
+                            </Image>
+
+                      <Label Text="{Binding Votes}" FontSize="Small" HorizontalTextAlignment="End" Grid.Column="6"
                              VerticalTextAlignment="Center" Margin="0,-2,0,0"  x:Name="CurrentVotes">
                       </Label>
 
-                      <Image Source="up.png" Grid.Column="4"  Opacity=".5" x:Name="UpVoteImage">
+                      <Image Source="up.png" Grid.Column="7"  Opacity=".5" x:Name="UpVoteImage">
                         <Image.GestureRecognizers>
                           <TapGestureRecognizer
                   Tapped="UpVote" 
