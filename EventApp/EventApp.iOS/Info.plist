@@ -52,8 +52,12 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
+		<string>bluetooth-central</string>
 	</array>
 	<key>XSLaunchImageAssets</key>
 	<string>Assets.xcassets/LaunchImage.launchimage</string>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-1507507245083019~8341945444
+</string>
 </dict>
 </plist>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Foundation;
+using Google.MobileAds;
 using UIKit;
 
 namespace EventApp.iOS
@@ -23,6 +24,7 @@ namespace EventApp.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            MobileAds.Configure("ca-app-pub-1507507245083019~8341945444");
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

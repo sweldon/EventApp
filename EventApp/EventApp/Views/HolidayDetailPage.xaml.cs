@@ -58,7 +58,7 @@ namespace EventApp.Views
         }
 
         HolidayDetailViewModel viewModel;
-
+        public string HolidayImageSource { get; set;}
         public Comment Comment { get; set; }
         public HolidayDetailPage(HolidayDetailViewModel viewModel)
             {
@@ -68,6 +68,7 @@ namespace EventApp.Views
 
             // Remove when reply button added
             HolidayDetailList.ItemSelected += OnCommentSelected;
+
             //HolidayDetailList.ItemTapped += (object sender, ItemTappedEventArgs e) =>
             //{
             //    // Attempt to disable highlighting
@@ -75,6 +76,8 @@ namespace EventApp.Views
 
 
             //};
+            //HolidayImageSource = viewModel.Holiday.HolidayImage;
+
 
 
         }
@@ -169,6 +172,7 @@ namespace EventApp.Views
         {
             base.OnAppearing();
 
+
             if (viewModel.GroupedCommentList.Count == 0)
                 viewModel.LoadHolidayComments.Execute(null);
                
@@ -195,7 +199,6 @@ namespace EventApp.Views
                     UpVoteImage.Source = "up.png";
                 }
             }
-
         }
 
         async void OnTapGestureRecognizerTapped(object sender, EventArgs args)
