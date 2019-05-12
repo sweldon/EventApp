@@ -18,16 +18,28 @@ namespace EventApp.Views
 
         public string isLoggedIn
         {
-            get { return Settings.GeneralSettings; }
+            get { return Settings.IsLoggedIn; }
             set
             {
-                if (Settings.GeneralSettings == value)
+                if (Settings.IsLoggedIn == value)
                     return;
-                Settings.GeneralSettings = value;
+                Settings.IsLoggedIn = value;
                 OnPropertyChanged();
             }
         }
 
+        public string currentUser
+        {
+            get { return Settings.CurrentUser; }
+            set
+            {
+                if (Settings.CurrentUser == value)
+                    return;
+                Settings.CurrentUser = value;
+                OnPropertyChanged();
+            }
+        }
+       
         public NavigationPage NavigationPage { get; private set; }
         public MenuPage()
         {
@@ -35,12 +47,13 @@ namespace EventApp.Views
 
             menuItems = new List<HomeMenuItem>
             {
-                new HomeMenuItem {Id = MenuItemType.Browse, Title="Today", Image=new Image {Source="EventApp.iOS.Resources.user_menu.png"}}
+                new HomeMenuItem {Id = MenuItemType.Notifications, Title="Notifications", MenuImage="alarm.png"},
+                new HomeMenuItem {Id = MenuItemType.Holidays, Title="Today", MenuImage="today_icon.png"},
+                new HomeMenuItem {Id = MenuItemType.Trending, Title="Trending", MenuImage="trending.png"}
             };
 
             ListViewMenu.ItemsSource = menuItems;
-
-            ListViewMenu.SelectedItem = menuItems[0];
+            //ListViewMenu.SelectedItem = menuItems[0];
             ListViewMenu.ItemSelected += async (sender, e) =>
             {
                 if (e.SelectedItem == null)
@@ -50,19 +63,34 @@ namespace EventApp.Views
                 await RootPage.NavigateFromMenu(id);
             };
 
+
+            //swipeContainer.Swipe += (sender, e) =>
+            //{
+            //    switch (e.Direction)
+            //    {
+            //        case SwipeDirection.Left:
+            //            (Application.Current.MainPage as MasterDetailPage).IsPresented = false;
+            //            break;
+            //    }
+            //};
+
         }
 
-        public async Task PromptLogin(object sender, EventArgs e) {
+        public async void PromptLogin(object sender, EventArgs e) {
+            LoginButton.IsEnabled = false;
             await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+            LoginButton.IsEnabled = true;
         }
 
-        public async Task LogoutUser(object sender, EventArgs e)
+        public async void LogoutUser(object sender, EventArgs e)
         {
 
             isLoggedIn = "no";
             LogoutButton.IsVisible = false;
             LoginButton.IsVisible = true;
-            await RootPage.NavigateFromMenu(1);
+            UserLabel.Text = "Hey there!";
+            currentUser = null;
+            await RootPage.NavigateFromMenu(0);
 
         }
         protected override void OnAppearing()
@@ -72,11 +100,13 @@ namespace EventApp.Views
             {
                 LogoutButton.IsVisible = false;
                 LoginButton.IsVisible = true;
+                UserLabel.Text = "Hey there!";
             }
             else
             {
                 LogoutButton.IsVisible = true;
                 LoginButton.IsVisible = false;
+                UserLabel.Text = "Hey, "+currentUser+"!";
             }
         }
 

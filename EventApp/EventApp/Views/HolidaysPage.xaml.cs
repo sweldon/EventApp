@@ -10,6 +10,7 @@ using EventApp.Models;
 using EventApp.Views;
 using EventApp.ViewModels;
 using System.Diagnostics;
+using Xamarin.Essentials;
 
 namespace EventApp.Views
 {
@@ -24,10 +25,10 @@ namespace EventApp.Views
 
             BindingContext = viewModel = new HolidaysViewModel();
             DateTime currentDate = DateTime.Today;
+           
             string dateString = currentDate.ToString("dd-MM-yyyy");
             string dayNumber = dateString.Split('-')[0].TrimStart('0');
             int monthNumber = Int32.Parse(dateString.Split('-')[1]);
-            DayNumberLabel.Text = dayNumber;
 
             List<string> months = new List<string>() { 
                 "January","February","March","April","May","June","July",
@@ -35,32 +36,137 @@ namespace EventApp.Views
             };
 
             string monthString = months[monthNumber - 1];
-            MonthLabel.Text = monthString;
-            ItemsListView.ItemSelected += OnItemSelected;
+            string todayString = currentDate.DayOfWeek.ToString();
+            //ItemsListView.ItemSelected += OnItemSelected;
+            ItemsListView.ItemTapped += (object sender, ItemTappedEventArgs e) => {
+                 if (e.Item == null) return;
+                 ((ListView)sender).SelectedItem = null;
+             };
+            //TodayLabel.Text = todayString + ", " + monthString + " " + dayNumber;
+            viewModel.Title = todayString + ", " + monthString + " " + dayNumber;
 
 
         }
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
-
+            
+            ((ListView)sender).SelectedItem = null;
             if (args.SelectedItem == null)
             {
                 return;
             }
             var item = args.SelectedItem as Holiday;
-            await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item)));
-            ((ListView)sender).SelectedItem = null; 
+            if(item.Id != "-1") // Ad
+            {
+                this.IsEnabled = false;
+                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id)));
+                this.IsEnabled = true;
+            }
 
+        }
 
+        async void ImageToHoliday(object sender, EventArgs args)
+        {
+
+            var item = (sender as Image).BindingContext as Holiday;
+            string holidayId = item.Id;
+            if (holidayId != "-1") // Ad
+            {
+                this.IsEnabled = false;
+                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                this.IsEnabled = true;
+            }
+        }
+
+        async void LabelToHoliday(object sender, EventArgs args)
+        {
+
+            var item = (sender as Label).BindingContext as Holiday;
+            string holidayId = item.Id;
+            if (holidayId != "-1") // Ad
+            {
+                this.IsEnabled = false;
+                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                this.IsEnabled = true;
+            }
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
 
-            if (viewModel.Items.Count == 0)
+            if (viewModel.Holidays.Count == 0)
                 viewModel.LoadItemsCommand.Execute(null);
+
+            // Manually open menu page on swipe only on main page
+            //(Application.Current.MainPage as RootPage).IsGestureEnabled = false;
+
         }
+
+        async void OnShareTapped(object sender, EventArgs args)
+        {
+            this.IsEnabled = false;
+
+            var holiday = (sender as Label).BindingContext as Holiday;
+            this.IsEnabled = false;
+
+  
+                string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description : holiday.Description.Substring(0, 90) + "...\nGet all the info with the Holidaily app! http://holidailyapp.com/applink";
+                this.IsEnabled = false;
+                string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
+                if (action == "Text Message")
+                {
+                    try
+                    {
+                        var messageContents = holiday.Name + "! " + HolidayDescriptionShort;
+                        var message = new SmsMessage(messageContents, "");
+                        await Sms.ComposeAsync(message);
+                    }
+                    catch (FeatureNotSupportedException ex)
+                    {
+                        // Sms is not supported on this device.
+                    }
+                    catch (Exception ex)
+                    {
+                        // Other error has occurred.
+                    }
+                }
+
+            this.IsEnabled = true;
+
+
+        }
+
+        async void OnSharePicTapped(object sender, EventArgs args)
+        {
+            this.IsEnabled = false;
+            var holiday = (sender as Image).BindingContext as Holiday;
+            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description : holiday.Description.Substring(0, 90) + "...\nGet all the info with the Holidaily app! http://holidailyapp.com";
+            this.IsEnabled = false;
+            string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
+            if (action == "Text Message")
+            {
+                try
+                {
+                    var messageContents = holiday.Name + "! " + HolidayDescriptionShort;
+                    var message = new SmsMessage(messageContents, "");
+                    await Sms.ComposeAsync(message);
+                }
+                catch (FeatureNotSupportedException ex)
+                {
+                    // Sms is not supported on this device.
+                }
+                catch (Exception ex)
+                {
+                    // Other error has occurred.
+                }
+            }
+            
+            this.IsEnabled = true;
+
+
+        }
+
     }
 }

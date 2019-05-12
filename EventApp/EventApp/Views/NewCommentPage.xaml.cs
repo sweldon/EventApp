@@ -15,19 +15,18 @@ namespace EventApp.Views
     {
 
         HttpClient client = new HttpClient();
-        string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
 
         public Holiday OpenedHoliday { get; set; }
         public string CommentTitle { get; set; }
 
         public string currentUser
         {
-            get { return Settings.GeneralSettings; }
+            get { return Settings.CurrentUser; }
             set
             {
-                if (Settings.GeneralSettings == value)
+                if (Settings.CurrentUser == value)
                     return;
-                Settings.GeneralSettings = value;
+                Settings.CurrentUser = value;
                 OnPropertyChanged();
             }
         }
@@ -39,15 +38,18 @@ namespace EventApp.Views
             OpenedHoliday = holiday;
             CommentTitle = "Comment on " + OpenedHoliday.Name;
             BindingContext = this;
+            CommentContent.Focus();
         }
 
-        public async Task SubmitComment(object sender, EventArgs e)
+        public async void SubmitComment(object sender, EventArgs e)
         {
-            this.IsEnabled = false;
+            SaveCommentButton.IsEnabled = false;
+            SaveCommentButton.Text = "Posting...";
             if (string.IsNullOrEmpty(CommentContent.Text))
             {
                 await DisplayAlert("Nothing to say?", "You have to type something to say something...", "Well okay.");
-                this.IsEnabled = true;
+                SaveCommentButton.IsEnabled = true;
+                SaveCommentButton.Text = "Post";
             }
             else {
                 var values = new Dictionary<string, string>{
@@ -58,22 +60,25 @@ namespace EventApp.Views
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(ec2Instance + "/portal/add_comment/", content);
+                var response = await client.PostAsync(App.HolidailyHost + "/portal/add_comment/", content);
 
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                 int status = responseJSON.StatusCode;
+                string message = responseJSON.Message;
 
                 if (status == 200)
                 {
                     await Navigation.PopModalAsync();
-                    this.IsEnabled = true;
+                    SaveCommentButton.IsEnabled = true;
+                    SaveCommentButton.Text = "Post";
                     MessagingCenter.Send(this, "UpdateComments");
                 }
                 else
                 {
-                    await DisplayAlert("Error", "Something went wrong on our end. We couldn't save your comment.", "Try again");
-                    this.IsEnabled = true;
+                    await DisplayAlert("Error", message, "OK");
+                   SaveCommentButton.IsEnabled = true;
+                   SaveCommentButton.Text = "Post";
                 }
             }
 
@@ -86,5 +91,16 @@ namespace EventApp.Views
             await Navigation.PopModalAsync();
             this.IsEnabled = true;
         }
+
+        protected override async void OnAppearing()
+        {
+
+            base.OnAppearing();
+            await Task.Delay(100);
+            CommentContent.Focus();
+
+
+        }
+
     }
 }

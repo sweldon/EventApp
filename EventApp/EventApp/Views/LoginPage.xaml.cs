@@ -7,60 +7,75 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using Microsoft.AppCenter;
 
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {
-
         public string isLoggedIn
         {
-            get { return Settings.GeneralSettings; }
+            get { return Settings.IsLoggedIn; }
             set
             {
-                if (Settings.GeneralSettings == value)
+                if (Settings.IsLoggedIn == value)
                     return;
-                Settings.GeneralSettings = value;
+                Settings.IsLoggedIn = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string devicePushId
+        {
+            get { return Settings.DevicePushId; }
+            set
+            {
+                if (Settings.DevicePushId == value)
+                    return;
+                Settings.DevicePushId = value;
                 OnPropertyChanged();
             }
         }
 
         public string currentUser
         {
-            get { return Settings.GeneralSettings; }
+            get { return Settings.CurrentUser; }
             set
             {
-                if (Settings.GeneralSettings == value)
+                if (Settings.CurrentUser == value)
                     return;
-                Settings.GeneralSettings = value;
+                Settings.CurrentUser = value;
                 OnPropertyChanged();
             }
         }
 
         HttpClient client = new HttpClient();
-        string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
+
         public NavigationPage NavigationPage { get; private set; }
         public LoginPage()
         {
             InitializeComponent();
         }
 
-        public async Task LoginUser(object sender, EventArgs e)
+        public async void LoginUser(object sender, EventArgs e)
         {
-            string userName = NameEntry.Text.Trim();
-            string pass = PassEntry.Text;
 
-            if (!string.IsNullOrEmpty(userName))
+
+            if (!string.IsNullOrEmpty(NameEntry.Text))
             {
-
+                string userName = NameEntry.Text.Trim();
+                string pass = PassEntry.Text;
+                Debug.WriteLine(userName);
                 var values = new Dictionary<string, string>{
                     { "username", userName },
-                    { "password", pass }
+                    { "password", pass },
+                    { "device_id", devicePushId }
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(ec2Instance + "/portal/login_mobile/", content); 
+                var response = await client.PostAsync(App.HolidailyHost + "/portal/login_mobile/", content); 
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                 int status = responseJSON.StatusCode;
@@ -88,50 +103,18 @@ namespace EventApp.Views
             }
 
         }
-        public async Task RegisterUser(object sender, EventArgs e)
+
+        protected override async void OnAppearing()
         {
-            string userName = NameEntry.Text.Trim();
-            string pass = PassEntry.Text;
+            base.OnAppearing();
+            await Task.Delay(100);
+        }
 
-            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(pass) || userName.Contains(" "))
-            {
-                await DisplayAlert("Error!", "Username or password invalid", "Dang");
-            }
-            else
-            {
-                var values = new Dictionary<string, string>{
-                   { "username", userName },
-                   { "password", pass }
-                };
-
-                var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(ec2Instance + "/portal/register/", content);
-                var responseString = await response.Content.ReadAsStringAsync();
-                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                int status = responseJSON.StatusCode;
-
-                if (status == 200)
-                {
-                    isLoggedIn = "yes";
-                    //await RootPage.Detail.Navigation.PushAsync(new ItemsPage());
-                    var menuPage = new MenuPage();
-                    NavigationPage = new NavigationPage(new HolidaysPage());
-                    var rootPage = new RootPage();
-                    rootPage.Master = menuPage;
-                    rootPage.Detail = NavigationPage;
-                    currentUser = userName;
-                    Application.Current.MainPage = rootPage;
-                }
-                else if (status == 1000)
-                {
-                    await DisplayAlert("Error!", "Username already exists.", "Dang");
-                }
-                else
-                {
-                    await DisplayAlert("Sorry!", "Something went wrong on our end", "Alrighty");
-                }
-            }
-
+        public async void RegisterUser(object sender, EventArgs e)
+        {
+            this.IsEnabled = false;
+            await Navigation.PushModalAsync(new NavigationPage(new RegisterPage()));
+            this.IsEnabled = true;
         }
         async void CancelLogin(object sender, EventArgs e)
         {

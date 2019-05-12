@@ -5,43 +5,56 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using EventApp.Views;
-
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Net.Http;
 
 namespace EventApp.ViewModels
 {
     public class HolidayDetailViewModel : BaseViewModel
     {
-        public Holiday Holiday { get; set; }
-        public ObservableCollection<Comment> Comments { get; set; }
-        public Command LoadHolidayComments { get; set; }
 
+        public Holiday Holiday { get; set; }
+        private List<CommentList> CommentList;
+        public List<CommentList> GroupedCommentList { get { return CommentList; } set { CommentList = value; base.OnPropertyChanged(); } }
+        public Command LoadHolidayComments { get; set; }
+        public string HolidayId { get; set; }
 
         public string currentUser
         {
-            get { return Settings.GeneralSettings; }
+            get { return Settings.CurrentUser; }
             set
             {
-                if (Settings.GeneralSettings == value)
+                if (Settings.CurrentUser == value)
                     return;
-                Settings.GeneralSettings = value;
+                Settings.CurrentUser = value;
                 OnPropertyChanged();
             }
         }
 
-        public HolidayDetailViewModel(Holiday holiday)
+        public HolidayDetailViewModel(string holidayId)
         {
-            
-            Holiday = holiday;
-            Title = holiday.Name;
-            Comments = new ObservableCollection<Comment>();
-            LoadHolidayComments = new Command(async () => await ExecuteLoadCommentsCommand());
 
+            HolidayId = holidayId;
+            GroupedCommentList = new List<CommentList>();
+            LoadHolidayComments = new Command(async () => await ExecuteLoadCommentsCommand());
 
             MessagingCenter.Subscribe<NewCommentPage>(this, "UpdateComments", (sender) => {
                 ExecuteLoadCommentsCommand();
             });
 
+            MessagingCenter.Subscribe<CommentPage>(this, "UpdateComments", (sender) => {
+                ExecuteLoadCommentsCommand();
+            });
+
+            MessagingCenter.Subscribe<HolidayDetailPage>(this, "UpdateComments", (sender) => {
+                ExecuteLoadCommentsCommand();
+
+            });
+
+
         }
+
 
         async Task ExecuteLoadCommentsCommand()
         {
@@ -52,13 +65,23 @@ namespace EventApp.ViewModels
 
             try
             {
-                Comments.Clear();
-                var comments = await CommentStore.GetHolidayCommentsAsync(true, Holiday.Id);
-                foreach (var comment in comments)
+                GroupedCommentList = new List<CommentList>();
+                var allComments = new List<CommentList>();
+                var threads = await CommentStore.GetHolidayCommentsAsync(true, HolidayId, currentUser);
+
+                foreach (var group in threads)
                 {
-                    Debug.WriteLine(comment.Content);
-                    Comments.Insert(0, comment);
+                    var commentList = new CommentList();
+                    foreach (var comment in group)
+                    {
+                        commentList.Add(comment);
+                    }
+                    allComments.Insert(0, commentList);
                 }
+
+                GroupedCommentList = allComments;
+
+
             }
             catch (Exception ex)
             {

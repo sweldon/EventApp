@@ -14,6 +14,7 @@ namespace EventApp.ViewModels
     {
         public HolidayInterface<Holiday> HolidayStore => DependencyService.Get<HolidayInterface<Holiday>>() ?? new HolidayService();
         public CommentInterface<Comment> CommentStore => DependencyService.Get<CommentInterface<Comment>>() ?? new CommentService();
+        public NotificationInterface<Notification> NotificationStore => DependencyService.Get<NotificationInterface<Notification>>() ?? new NotificationService();
 
         bool isBusy = false;
         public bool IsBusy

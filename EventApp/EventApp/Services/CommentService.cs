@@ -6,6 +6,7 @@ using EventApp.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Diagnostics;
+using System.Collections.ObjectModel;
 
 namespace EventApp.Services
 {
@@ -13,11 +14,13 @@ namespace EventApp.Services
     public class CommentService : CommentInterface<Comment>
     {
 
-        List<Comment> comments;
+        ObservableCollection<ObservableCollection<Comment>> comments;
+        Comment individualComment;
+        ObservableCollection<Comment> commentGroup;
 
-        string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
         HttpClient client = new HttpClient();
-
+        public string ShowReplyVal;
+        public string ShowDeleteVal;
         public CommentService()
         {
 
@@ -25,94 +28,130 @@ namespace EventApp.Services
         }
 
 
-        public async Task<bool> AddComment(Comment comment)
+        public string currentUser
         {
-
-            comments.Insert(0, comment);
-
-            return await Task.FromResult(true);
+            get { return Settings.CurrentUser; }
         }
 
 
-        public async Task<IEnumerable<Comment>> GetHolidayCommentsAsync(bool forceRefresh = false, string holidayId = null)
+        public async Task<IEnumerable<IEnumerable<Comment>>> GetHolidayCommentsAsync(bool forceRefresh = false, string holidayId = null, string user = null)
         {
-            comments = new List<Comment>();
+            comments = new ObservableCollection<ObservableCollection<Comment>>();
 
             var values = new Dictionary<string, string>{
-                   { "holiday_id", holidayId }
+                   { "holiday_id", holidayId },
+                    { "user", currentUser }
                 };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(ec2Instance + "/portal/get_comments/", content);
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_comments/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
 
             dynamic commentList = responseJSON.CommentList;
 
-            foreach (var comment in commentList)
+            foreach (var thread in commentList)
             {
+                commentGroup = new ObservableCollection<Comment>();
+                foreach (var comment in thread)
+                {
+                    string commentTimestamp = comment.timestamp;
 
-                string commentTimestamp = comment.timestamp;
-                string currentTimeZone = TimeZone.CurrentTimeZone.StandardName;
-                Debug.WriteLine(currentTimeZone);
-                var commentDate = DateTime.ParseExact(commentTimestamp, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                    string TimeAgo = Time.GetRelativeTime(commentTimestamp);
+                    string commentUser = comment.user;
+                    if (String.Equals(commentUser, currentUser, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ShowReplyVal = "false";
+                        ShowDeleteVal = "true";
+                    }
+                    else
+                    {
+                        ShowReplyVal = "true";
+                        ShowDeleteVal = "false";
+                    }
 
-                TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById(currentTimeZone);
-                DateTime localCommentDate = TimeZoneInfo.ConvertTimeFromUtc(commentDate, easternZone);
+                    string padding = comment.padding;
+                    string[] paddingVals = padding.Split(',');
+                    Xamarin.Forms.Thickness paddingThickness = new Xamarin.Forms.Thickness(Convert.ToDouble(paddingVals[0]),
+                                                                                            Convert.ToDouble(paddingVals[1]),
+                                                                                            Convert.ToDouble(paddingVals[2]),
+                                                                                            Convert.ToDouble(paddingVals[3]));
+                    commentGroup.Add(new Comment()
+                    {
+                        Id = comment.id,
+                        Content = comment.content,
+                        HolidayId = comment.holiday_id,
+                        UserName = comment.user,
+                        TimeSince = TimeAgo,
+                        ShowReply = ShowReplyVal,
+                        ShowDelete = ShowDeleteVal,
+                        Votes = comment.votes,
+                        UpVoteStatus = comment.up_vote_status,
+                        DownVoteStatus = comment.down_vote_status,
+                        Parent = comment.parent,
+                        ThreadPadding = paddingThickness
+                    });
+                }
 
-                string TimeAgo = GetRelativeTime(localCommentDate);
-                comments.Insert(0, new Comment() { Id = comment.id, Content = comment.content, HolidayId = comment.holiday_id, UserName = comment.user, TimeSince = TimeAgo });
+                comments.Insert(0, commentGroup);
+
             }
 
             return await Task.FromResult(comments);
         }
 
-        public string GetRelativeTime(DateTime commentDate) {
+        public async Task VoteComment(string commentId, string userName, string vote)
+        {
 
-            const int SECOND = 1;
-            const int MINUTE = 60 * SECOND;
-            const int HOUR = 60 * MINUTE;
-            const int DAY = 24 * HOUR;
-            const int MONTH = 30 * DAY;
+            var values = new Dictionary<string, string>{
+                   { "comment", commentId },
+                   { "user", userName },
+                   { "vote", vote }
+                };
 
-            DateTime currentDate = DateTime.Now;
-            var ts = new TimeSpan(currentDate.Ticks - commentDate.Ticks);
-            double delta = Math.Abs(ts.TotalSeconds);
+            var content = new FormUrlEncodedContent(values);
 
-            if (delta < 1 * MINUTE)
-                return "Just Now";
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/vote_comment/", content);
+            var responseString = await response.Content.ReadAsStringAsync();
 
-            if (delta < 2 * MINUTE)
-                return "a minute ago";
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
 
-            if (delta < 45 * MINUTE)
-                return ts.Minutes + " minutes ago";
+        }
 
-            if (delta < 90 * MINUTE)
-                return "an hour ago";
+        public async Task<Comment> GetCommentById(string id)
+        {
+            Debug.WriteLine(id);
+            var values = new Dictionary<string, string>{
+                   { "id", id }
+                };
 
-            if (delta < 24 * HOUR)
-                return ts.Hours + " hours ago";
-
-            if (delta < 48 * HOUR)
-                return "yesterday";
-
-            if (delta < 30 * DAY)
-                return ts.Days + " days ago";
-
-            if (delta < 12 * MONTH)
+            var content = new FormUrlEncodedContent(values);
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_comment_by_id/", content);
+            var responseString = await response.Content.ReadAsStringAsync();
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+            dynamic commentJSON = responseJSON.comment;
+            string commentTimestamp = commentJSON.timestamp;
+            int statusCode = responseJSON.status_code;
+            
+            if(statusCode == 200)
             {
-                int months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
-                return months <= 1 ? "one month ago" : months + " months ago";
+
+                string TimeAgo = Time.GetRelativeTime(commentTimestamp);
+
+                individualComment = new Comment() { Content = commentJSON.content, HolidayId = commentJSON.holiday_id, UserName = commentJSON.user, TimeSince = TimeAgo };
             }
             else
             {
-                int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
-                return years <= 1 ? "one year ago" : years + " years ago";
+                individualComment = null;
             }
 
+
+            return await Task.FromResult(individualComment);
+
         }
+
+
 
     }
 }

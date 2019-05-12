@@ -9,9 +9,8 @@ namespace EventApp.ViewModels
     {
         public LoginViewModel()
         {
-            Title = "Login or register to continue";
+            Title = "Get Involved!";
         }
-
         public ICommand OpenWebCommand { get; }
     }
 }

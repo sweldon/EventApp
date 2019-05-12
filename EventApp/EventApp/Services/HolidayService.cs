@@ -14,8 +14,10 @@ namespace EventApp.Services
     {
 
         List<Holiday> items;
+        List<Notification> notifications;
+        Holiday individualHoliday;
+        Dictionary<string, string> holidayResult;
 
-        string ec2Instance = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
         HttpClient client = new HttpClient();
 
         public HolidayService()
@@ -41,12 +43,44 @@ namespace EventApp.Services
         }
 
 
-        public async Task<Holiday> GetItemAsync(string description)
+        public async Task<Holiday> GetHolidayByName(string name)
         {
-            return await Task.FromResult(items.FirstOrDefault(s => s.Description == description));
+
+            var values = new Dictionary<string, string>{
+                   { "day_name", name }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_holiday/", content);
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+
+            individualHoliday = new Holiday() { Name=responseJSON.name,Description=responseJSON.description};
+  
+            return await Task.FromResult(individualHoliday);
         }
 
-        public async Task<IEnumerable<Holiday>> GetItemsAsync(bool forceRefresh = false)
+        public async Task<Holiday> GetHolidayById(string id)
+        {
+
+            var values = new Dictionary<string, string>{
+                   { "id", id }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_holiday_by_id/", content);
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+
+            individualHoliday = new Holiday() { Id=id, Name = responseJSON.name, Description = responseJSON.description, Votes = responseJSON.votes };
+
+            return await Task.FromResult(individualHoliday);
+
+        }
+
+        public async Task<IEnumerable<Holiday>> GetHolidaysAsync(bool forceRefresh = false)
         {
             items = new List<Holiday>();
 
@@ -68,20 +102,90 @@ namespace EventApp.Services
                 };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(ec2Instance + "/portal/get_holidays/", content);
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_holidays/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
 
             dynamic holidayList = responseJSON.HolidayList;
 
+
+
             foreach (var holiday in holidayList)
             {
-                items.Insert(0, new Holiday() { Id = holiday.id, Name = holiday.name, Description = holiday.description });
+                string holidayDescription = holiday.description;
+                string HolidayDescriptionShort = holidayDescription.Length <= 90 ? holidayDescription : holidayDescription.Substring(0, 90) + "...";
+                items.Insert(0, new Holiday() { Id = holiday.id,
+                    Name = holiday.name,
+                    Description = holiday.description,
+                    NumComments = holiday.num_comments,
+                    TimeSince = holiday.time_since,
+                    DescriptionShort = HolidayDescriptionShort,
+                    HolidayImage = holiday.image,
+                    ShowAd = false,
+                    ShowHolidayContent = true
+                });
+            
             }
 
             return await Task.FromResult(items);
         }
+
+
+        public async Task<IEnumerable<Holiday>> GetTopHolidays(bool forceRefresh = false)
+        {
+            items = new List<Holiday>();
+            var response = await client.GetAsync(App.HolidailyHost + "/portal/get_top_holidays/");
+            var responseString = await response.Content.ReadAsStringAsync();
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+            dynamic holidayList = responseJSON.TopHolidayList;
+            foreach (var holiday in holidayList)
+            {
+                string holidayDescription = holiday.description;;
+                string HolidayDescriptionShort = holidayDescription.Length <= 90 ? holidayDescription : holidayDescription.Substring(0, 90) + "...";
+                items.Insert(0, new Holiday() { Id = holiday.id, Name = holiday.name, Description = holiday.description, NumComments = holiday.num_comments, TimeSince = holiday.time_since, DescriptionShort = HolidayDescriptionShort, Votes=holiday.votes });
+            }
+
+            return await Task.FromResult(items);
+        }
+
+        public async Task VoteHoliday(string holidayId, string userName, string vote)
+        {
+
+            var values = new Dictionary<string, string>{
+                   { "holiday_id", holidayId },
+                   { "user", userName },
+                   { "vote", vote }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/vote_holiday/", content);
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+
+        }
+
+        public async Task<string> CheckUserVotes(string holidayId, string userName)
+        {
+
+            var values = new Dictionary<string, string>{
+                   { "holiday_id", holidayId },
+                   { "user", userName }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/check_user_votes/", content);
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+
+            return responseJSON.Choice;
+
+        }
+
 
     }
 }

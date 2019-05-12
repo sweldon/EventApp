@@ -7,18 +7,22 @@ using Xamarin.Forms;
 
 using EventApp.Models;
 using EventApp.Views;
-
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EventApp.ViewModels
 {
     public class HolidaysViewModel : BaseViewModel
     {
-        public ObservableCollection<Holiday> Items { get; set; }
-        public Command LoadItemsCommand { get; set; }
 
+        public Command LoadItemsCommand { get; set; }
+        private List<HolidayList> HolidayList;
+        public List<HolidayList> GroupedHolidayList { get { return HolidayList; } set { HolidayList = value; base.OnPropertyChanged(); } }
+        public ObservableCollection<Holiday> Holidays { get; set; }
         public HolidaysViewModel()
         {
-            Items = new ObservableCollection<Holiday>();
+            GroupedHolidayList = new List<HolidayList>();
+            Holidays = new ObservableCollection<Holiday>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
         }
@@ -32,12 +36,83 @@ namespace EventApp.ViewModels
 
             try
             {
-                Items.Clear();
-                var holidays = await HolidayStore.GetItemsAsync(true);
+                Holidays.Clear();
+                //var Items = new List<Holiday>();
+                //var Items = new HolidayList();
+                var OldList = new List<Holiday>();
+                //var TomorrowList = new HolidayList();
+                //GroupedHolidayList = new List<HolidayList>();
+
+                var holidays = await HolidayStore.GetHolidaysAsync(true);
+                var showAd = false;
+
+                // Final Ad, bottom of stack
+                Holidays.Insert(0, new Holiday()
+                {
+                    Id = "-1",
+                    ShowAd = true,
+                    ShowHolidayContent = false,
+                });
+
                 foreach (var holiday in holidays)
                 {
-                    Items.Insert(0, holiday);
+
+                    if (holiday.TimeSince == "Tomorrow")
+                    {
+                        // Skip tomorrow's for now
+                        //tomorrowlist.insert(0, holiday);
+                    }
+                    else
+                    {
+                        Holidays.Insert(0, holiday);
+                    }
+
+
                 }
+
+                // Add at 3
+                Holidays.Insert(3, new Holiday()
+                {
+                    Id = "-1",
+                    ShowAd = true,
+                    ShowHolidayContent = false,
+                });
+
+                // Then add every 3 after that
+                int listCount = Holidays.Count();
+                for(int i = 0; i < listCount; i++)
+                {
+                    if(i % 3 == 0 && i != 0 && i != 3)
+                    {
+                        Holidays.Insert(i, new Holiday()
+                        {
+                            Id = "-1",
+                            ShowAd = true,
+                            ShowHolidayContent = false,
+                        });
+                    }
+                }
+
+
+
+
+
+                //Items.Heading = "Today";
+                //Items.HeadingImage = "today_icon.png";
+                //OldList.Heading = "Past Week";
+                //OldList.HeadingImage ="past_icon.png";
+                //TomorrowList.Heading = "Tomorrow";
+                //TomorrowList.HeadingImage = "tomorrow_icon.png";
+
+
+                //var list = new List<HolidayList>()
+                //{
+                //    Items
+                //};
+
+
+
+                //GroupedHolidayList = list;
             }
             catch (Exception ex)
             {
