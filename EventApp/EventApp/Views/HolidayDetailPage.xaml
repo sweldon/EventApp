@@ -39,9 +39,9 @@
                       <Label x:Name="Description" FontSize="Small"/>
                         </ContentView>
                         
-<!--                        <ContentView>
-                        <Image Source ="{Binding HolidayImageSource}" Aspect="AspectFill" />
-                        </ContentView>-->
+                        <ContentView>
+                            <Image x:Name="HolidayImageSource" HeightRequest="150" Aspect="AspectFill" />
+                        </ContentView>
                         <Grid Padding="10" HorizontalOptions="FillAndExpand" >
                       <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="16" />

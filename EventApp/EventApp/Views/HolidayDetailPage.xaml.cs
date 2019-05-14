@@ -58,7 +58,7 @@ namespace EventApp.Views
         }
 
         HolidayDetailViewModel viewModel;
-        public string HolidayImageSource { get; set;}
+
         public Comment Comment { get; set; }
         public HolidayDetailPage(HolidayDetailViewModel viewModel)
             {
@@ -76,7 +76,6 @@ namespace EventApp.Views
 
 
             //};
-            //HolidayImageSource = viewModel.Holiday.HolidayImage;
 
 
 
@@ -177,7 +176,8 @@ namespace EventApp.Views
                 viewModel.LoadHolidayComments.Execute(null);
                
 
-                viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
+            viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
+            HolidayImageSource.Source = viewModel.Holiday.HolidayImage;
             if (!string.IsNullOrEmpty(viewModel.Holiday.Description))
                 Description.Text = viewModel.Holiday.Description;
             else

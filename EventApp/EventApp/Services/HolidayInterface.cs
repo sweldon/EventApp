@@ -14,6 +14,7 @@ namespace EventApp.Services
         Task<IEnumerable<T>> GetTopHolidays(bool forceRefresh = false);
         Task VoteHoliday(string holidayId, string userName, string vote);
         Task<string> CheckUserVotes(string holidayId, string userName);
+        Task<IEnumerable<T>> SearchHolidays(string holidayId);
     }
 
 }

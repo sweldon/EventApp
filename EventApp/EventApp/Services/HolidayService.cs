@@ -74,10 +74,41 @@ namespace EventApp.Services
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
 
-            individualHoliday = new Holiday() { Id=id, Name = responseJSON.name, Description = responseJSON.description, Votes = responseJSON.votes };
+            individualHoliday = new Holiday() { Id=id, Name = responseJSON.name, Description = responseJSON.description, Votes = responseJSON.votes, HolidayImage = responseJSON.image };
 
             return await Task.FromResult(individualHoliday);
 
+        }
+
+        public async Task<IEnumerable<Holiday>> SearchHolidays(string searchText)
+        {
+            items = new List<Holiday>();
+
+            var values = new Dictionary<string, string>{
+                   { "search_text", searchText },
+                };
+
+            var content = new FormUrlEncodedContent(values);
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/search_holidays/", content);
+            var responseString = await response.Content.ReadAsStringAsync();
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+            dynamic holidayList = responseJSON.SearchResults;
+            foreach (var holiday in holidayList)
+            {
+                string holidayDescription = holiday.description;
+                string HolidayDescriptionShort = holidayDescription.Length <= 90 ? holidayDescription : holidayDescription.Substring(0, 90) + "...";
+                items.Insert(0, new Holiday() { Id = holiday.id,
+                    Name = holiday.name,
+                    Description = holiday.description,
+                    NumComments = holiday.num_comments,
+                    TimeSince = holiday.time_since,
+                    DescriptionShort = HolidayDescriptionShort,
+                    Votes = holiday.votes,
+                    HolidayImage = holiday.image
+                });
+            }
+
+            return await Task.FromResult(items);
         }
 
         public async Task<IEnumerable<Holiday>> GetHolidaysAsync(bool forceRefresh = false)
