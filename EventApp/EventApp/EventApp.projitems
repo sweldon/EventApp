@@ -31,6 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\HolidayService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\NotificationInterface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\NotificationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\UpdateViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\CommentViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoginViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\BaseViewModel.cs" />
@@ -41,6 +42,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\NotificationsViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\CommentPage.xaml.cs">
       <DependentUpon>CommentPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Updates.xaml.cs">
+      <DependentUpon>Updates.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\Trending.xaml.cs">
@@ -120,6 +125,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\MenuPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\Updates.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

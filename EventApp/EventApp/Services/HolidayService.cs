@@ -74,7 +74,13 @@ namespace EventApp.Services
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
 
-            individualHoliday = new Holiday() { Id=id, Name = responseJSON.name, Description = responseJSON.description, Votes = responseJSON.votes, HolidayImage = responseJSON.image };
+            individualHoliday = new Holiday() { Id=id,
+                Name = responseJSON.name,
+                Description = responseJSON.description,
+                Votes = responseJSON.votes,
+                HolidayImage = responseJSON.image,
+                Date = responseJSON.date
+            };
 
             return await Task.FromResult(individualHoliday);
 
@@ -154,7 +160,8 @@ namespace EventApp.Services
                     DescriptionShort = HolidayDescriptionShort,
                     HolidayImage = holiday.image,
                     ShowAd = false,
-                    ShowHolidayContent = true
+                    ShowHolidayContent = true,
+                    Date = holiday.date
                 });
             
             }

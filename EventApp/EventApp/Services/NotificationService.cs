@@ -59,5 +59,30 @@ namespace EventApp.Services
             return await Task.FromResult(notifications);
         }
 
+        public async Task<IEnumerable<Notification>> GetUpdates(bool forceRefresh = false)
+        {
+            notifications = new List<Notification>();
+            items = new List<Holiday>();
+            var response = await client.GetAsync(App.HolidailyHost + "/portal/get_updates/");
+            var responseString = await response.Content.ReadAsStringAsync();
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+            dynamic notifList = responseJSON.Notifications;
+
+            foreach (var n in notifList)
+            {
+                string updateContent = n.content;
+                string notifTimestamp = n.timestamp;
+                string TimeAgo = Time.GetRelativeTime(notifTimestamp);
+                notifications.Insert(0, new Notification() {
+                    Title = n.title,
+                    Content = updateContent,
+                    TimeSince = TimeAgo,
+                    Author = n.author
+                });
+            }
+
+            return await Task.FromResult(notifications);
+        }
+
     }
 }

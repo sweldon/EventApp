@@ -14,5 +14,6 @@ namespace EventApp.Models
         public string HolidayImage { get; set; }
         public bool ShowHolidayContent { get; set; }
         public bool ShowAd { get; set; }
+        public string Date { get; set; }
     }
 }
