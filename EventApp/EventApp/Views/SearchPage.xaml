@@ -240,9 +240,9 @@
 
                 </ListView>
 
-                <ContentView HorizontalOptions="Center" Padding="15" IsVisible="False" x:Name="NoResults">
+                <!--<ContentView HorizontalOptions="Center" Padding="15" IsVisible="False" x:Name="NoResults">
                     <Label Text="No results found" />
-                </ContentView>
+                </ContentView>-->
 
             </ContentView>
         </StackLayout>

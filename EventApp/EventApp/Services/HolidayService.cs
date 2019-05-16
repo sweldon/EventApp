@@ -101,7 +101,9 @@ namespace EventApp.Services
             dynamic holidayList = responseJSON.SearchResults;
             foreach (var holiday in holidayList)
             {
+               
                 string holidayDescription = holiday.description;
+                Debug.WriteLine(holidayDescription);
                 string HolidayDescriptionShort = holidayDescription.Length <= 90 ? holidayDescription : holidayDescription.Substring(0, 90) + "...";
                 items.Insert(0, new Holiday() { Id = holiday.id,
                     Name = holiday.name,
