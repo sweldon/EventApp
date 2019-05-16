@@ -75,24 +75,32 @@ namespace EventApp.Views
 
         public async void DaySearched(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(SearchValue.Text))
+            try
             {
-                var searchText = SearchValue.Text;
-
-                if (searchText.Length > 2)
+                if (!string.IsNullOrEmpty(SearchValue.Text))
                 {
-                    // Do some searching
-                    SearchHolidayList.ItemsSource = await viewModel.HolidayStore.SearchHolidays(searchText);
+                    var searchText = SearchValue.Text;
+
+                    if (searchText.Length > 2)
+                    {
+                        // Do some searching
+                        SearchHolidayList.ItemsSource = await viewModel.HolidayStore.SearchHolidays(searchText);
+                    }
+                    else
+                    {
+                        DisplayAlert("Need more!", "Give us more to work with", "I'll type more");
+                    }
                 }
                 else
                 {
-                    DisplayAlert("Need more!", "Give us more to work with", "I'll type more");
+                    DisplayAlert("Need more!", "We can't give you anything if you don't give us anything", "Obviously");
                 }
             }
-            else
+            catch (Exception ex)
             {
-                DisplayAlert("Need more!", "We can't give you anything if you don't give us anything", "Obviously");
+                // They searched something w/ weird chars, like emojis
             }
+
         
         }
 
