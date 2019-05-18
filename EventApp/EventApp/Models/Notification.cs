@@ -9,5 +9,7 @@ namespace EventApp.Models
         public bool Read { get; set; }
         public string Content { get; set; }
         public string TimeSince { get; set; }
+        public string Title { get; set; }
+        public string Author { get; set; }
     }
 }

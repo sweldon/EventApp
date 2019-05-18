@@ -227,14 +227,15 @@ namespace EventApp.Views
             this.IsEnabled = false;
 
             var holidayName = viewModel.Holiday.Name;
-            string HolidayDescriptionShort = viewModel.Holiday.Description.Length <= 90 ? viewModel.Holiday.Description : viewModel.Holiday.Description.Substring(0, 90) + "...\nGet all the info with the Holidaily app! http://holidailyapp.com/applink";
+            var timeSince = viewModel.Holiday.Date;
+            string HolidayDescriptionShort = viewModel.Holiday.Description.Length <= 90 ? viewModel.Holiday.Description + "\nGet all the info with the Holidaily app! https://holidailyapp.com" : viewModel.Holiday.Description.Substring(0, 90) + "...\nGet all the info with the Holidaily app! https://holidailyapp.com";
             this.IsEnabled = false;
             string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
             if (action == "Text Message")
             {
                 try
                 {
-                    var messageContents = holidayName + "! " + HolidayDescriptionShort;
+                    var messageContents = holidayName + "! ("+timeSince+") " + HolidayDescriptionShort;
                     var message = new SmsMessage(messageContents, "");
                     await Sms.ComposeAsync(message);
                 }
@@ -279,14 +280,15 @@ namespace EventApp.Views
 
             var buttonSender = (Image)sender;
             var holidayName = viewModel.Holiday.Name;
-            string HolidayDescriptionShort = viewModel.Holiday.Description.Length <= 90 ? viewModel.Holiday.Description : viewModel.Holiday.Description.Substring(0, 90) + "...\nGet all the info with the Holidaily app! http://holidailyapp.com";
+            var timeSince = viewModel.Holiday.Date;
+            string HolidayDescriptionShort = viewModel.Holiday.Description.Length <= 90 ? viewModel.Holiday.Description + "\nGet all the info with the Holidaily app! https://holidailyapp.com" : viewModel.Holiday.Description.Substring(0, 90) + "...\nGet all the info with the Holidaily app! https://holidailyapp.com";
             this.IsEnabled = false;
             string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
             if (action == "Text Message")
             {
                 try
                 {
-                    var messageContents = holidayName + "! "+ HolidayDescriptionShort;
+                    var messageContents = holidayName + "! (" + timeSince + ") " + HolidayDescriptionShort;
                     var message = new SmsMessage(messageContents, "");
                     await Sms.ComposeAsync(message);
                 }

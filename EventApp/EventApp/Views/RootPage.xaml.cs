@@ -39,6 +39,9 @@ namespace EventApp.Views
                     case (int)MenuItemType.Search:
                         MenuPages.Add(id, new NavigationPage(new SearchPage()));
                         break;
+                    case (int)MenuItemType.Updates:
+                        MenuPages.Add(id, new NavigationPage(new Updates()));
+                        break;
                 }
             }
 

@@ -19,7 +19,7 @@ namespace EventApp
         public NavigationPage NavigationPage { get; private set; }
         public Holiday OpenHolidayPage { get; set; }
         public Comment OpenComment { get; set; }
-        public static string HolidailyHost = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
+        public static string HolidailyHost = "https://holidailyapp.com";
 
         public string devicePushId
         {
@@ -74,7 +74,12 @@ namespace EventApp
                         rootPage.Master = menuPage; // Menu
                         rootPage.Detail = NavigationPage; // Content
                         MainPage = rootPage; // Set root to built master detail
-                        if (e.CustomData.ContainsKey("comment_id"))
+
+                        if (e.CustomData.ContainsKey("news"))
+                        {
+                            NavigationPage.PushAsync(new Updates());
+                        }
+                        else if (e.CustomData.ContainsKey("comment_id"))
                         {
                             string commentId = e.CustomData["comment_id"];
                             string holidayId = e.CustomData["holiday_id"];
@@ -91,7 +96,12 @@ namespace EventApp
                     else
                     {
                         // Foreground Android
-                        if (e.CustomData.ContainsKey("comment_id")) {
+                        if (e.CustomData.ContainsKey("news"))
+                        {
+                            NavigationPage.PushAsync(new Updates());
+                        }
+                        else if (e.CustomData.ContainsKey("comment_id"))
+                        {
                             string commentId = e.CustomData["comment_id"];
                             string commentUser = e.CustomData["comment_user"];
                             string holidayId = e.CustomData["holiday_id"];

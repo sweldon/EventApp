@@ -74,7 +74,13 @@ namespace EventApp.Services
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
 
-            individualHoliday = new Holiday() { Id=id, Name = responseJSON.name, Description = responseJSON.description, Votes = responseJSON.votes, HolidayImage = responseJSON.image };
+            individualHoliday = new Holiday() { Id=id,
+                Name = responseJSON.name,
+                Description = responseJSON.description,
+                Votes = responseJSON.votes,
+                HolidayImage = responseJSON.image,
+                Date = responseJSON.date
+            };
 
             return await Task.FromResult(individualHoliday);
 
@@ -95,7 +101,9 @@ namespace EventApp.Services
             dynamic holidayList = responseJSON.SearchResults;
             foreach (var holiday in holidayList)
             {
+               
                 string holidayDescription = holiday.description;
+                Debug.WriteLine(holidayDescription);
                 string HolidayDescriptionShort = holidayDescription.Length <= 90 ? holidayDescription : holidayDescription.Substring(0, 90) + "...";
                 items.Insert(0, new Holiday() { Id = holiday.id,
                     Name = holiday.name,
@@ -154,7 +162,8 @@ namespace EventApp.Services
                     DescriptionShort = HolidayDescriptionShort,
                     HolidayImage = holiday.image,
                     ShowAd = false,
-                    ShowHolidayContent = true
+                    ShowHolidayContent = true,
+                    Date = holiday.date
                 });
             
             }
