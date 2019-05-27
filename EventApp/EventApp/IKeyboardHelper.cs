@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using EventApp;
 
+
+#if __ANDROID__
 [assembly: Xamarin.Forms.Dependency(typeof(AndroidKeyboardHelper))]
 namespace EventApp
 {
@@ -11,3 +13,5 @@ namespace EventApp
         void HideKeyboard();
     }
 }
+#endif
+

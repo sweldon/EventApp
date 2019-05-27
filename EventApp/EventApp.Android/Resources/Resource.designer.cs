@@ -3045,11 +3045,19 @@ namespace EventApp.Droid
 			// aapt resource value: 0x7f020133
 			public const int notification_bg_normal_pressed = 2130837811;
 			
+<<<<<<< HEAD
+			// aapt resource value: 0x7f020143
+			public const int notification_template_icon_bg = 2130837827;
+			
+			// aapt resource value: 0x7f020144
+			public const int notification_template_icon_low_bg = 2130837828;
+=======
 			// aapt resource value: 0x7f020134
 			public const int notification_icon_background = 2130837812;
 			
 			// aapt resource value: 0x7f020145
 			public const int notification_template_icon_bg = 2130837829;
+>>>>>>> 1bae0ce45d7053f633247685270097a196fd8747
 			
 			// aapt resource value: 0x7f020146
 			public const int notification_template_icon_low_bg = 2130837830;

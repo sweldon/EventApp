@@ -58,8 +58,9 @@ namespace EventApp.Views
                 SearchByNameText.TextColor = Color.Gray;
                 SearchByDateText.TextColor = Color.FromHex("4c96e8");
                 DateValue.Focus();
+                #if __ANDROID__
                 DependencyService.Get<IKeyboardHelper>().HideKeyboard();
-
+                #endif
             }
 
 
