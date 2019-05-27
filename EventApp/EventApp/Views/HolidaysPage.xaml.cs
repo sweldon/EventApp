@@ -46,6 +46,7 @@ namespace EventApp.Views
             viewModel.Title = todayString + ", " + monthString + " " + dayNumber;
 
 
+
         }
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
@@ -99,9 +100,6 @@ namespace EventApp.Views
             if (viewModel.Holidays.Count == 0)
                 viewModel.LoadItemsCommand.Execute(null);
 
-            // Manually open menu page on swipe only on main page
-            //(Application.Current.MainPage as RootPage).IsGestureEnabled = false;
-
         }
 
         async void OnShareTapped(object sender, EventArgs args)
@@ -110,7 +108,7 @@ namespace EventApp.Views
 
             var holiday = (sender as Label).BindingContext as Holiday;
             var timeSince = holiday.Date;
-            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description + "\nGet all the info with the Holidaily app! https://holidailyapp.com" : holiday.Description.Substring(0, 90) + "...\nGet all the info with the Holidaily app! https://holidailyapp.com";
+            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id : holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id;
             this.IsEnabled = false;
             string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
             if (action == "Text Message")
@@ -141,7 +139,7 @@ namespace EventApp.Views
             this.IsEnabled = false;
             var holiday = (sender as Image).BindingContext as Holiday;
             var timeSince = holiday.Date;
-            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description + "\nGet all the info with the Holidaily app! https://holidailyapp.com" : holiday.Description.Substring(0, 90) + "...\nGet all the info with the Holidaily app! https://holidailyapp.com";
+            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id : holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id;
             this.IsEnabled = false;
             string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
             if (action == "Text Message")

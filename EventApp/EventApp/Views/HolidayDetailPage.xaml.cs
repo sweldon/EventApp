@@ -228,7 +228,7 @@ namespace EventApp.Views
 
             var holidayName = viewModel.Holiday.Name;
             var timeSince = viewModel.Holiday.Date;
-            string HolidayDescriptionShort = viewModel.Holiday.Description.Length <= 90 ? viewModel.Holiday.Description + "\nGet all the info with the Holidaily app! https://holidailyapp.com" : viewModel.Holiday.Description.Substring(0, 90) + "...\nGet all the info with the Holidaily app! https://holidailyapp.com";
+            string HolidayDescriptionShort = viewModel.Holiday.Description.Length <= 90 ? viewModel.Holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + viewModel.Holiday.Id : viewModel.Holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + viewModel.Holiday.Id;
             this.IsEnabled = false;
             string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
             if (action == "Text Message")
@@ -281,7 +281,7 @@ namespace EventApp.Views
             var buttonSender = (Image)sender;
             var holidayName = viewModel.Holiday.Name;
             var timeSince = viewModel.Holiday.Date;
-            string HolidayDescriptionShort = viewModel.Holiday.Description.Length <= 90 ? viewModel.Holiday.Description + "\nGet all the info with the Holidaily app! https://holidailyapp.com" : viewModel.Holiday.Description.Substring(0, 90) + "...\nGet all the info with the Holidaily app! https://holidailyapp.com";
+            string HolidayDescriptionShort = viewModel.Holiday.Description.Length <= 90 ? viewModel.Holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + viewModel.Holiday.Id : viewModel.Holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + viewModel.Holiday.Id;
             this.IsEnabled = false;
             string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
             if (action == "Text Message")
