@@ -51,7 +51,7 @@
                                 <ColumnDefinition Width="10*" />
                                 <ColumnDefinition Width="16" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="16" />
+                            <!--<ColumnDefinition Width="16" />-->
                       </Grid.ColumnDefinitions>
 
                       <ContentView Grid.Column="0">
@@ -95,28 +95,30 @@
                         </Label.GestureRecognizers>
                     </Label>
 
-                            <Image Source="down.png" Grid.Column="5" Opacity=".5" x:Name="DownVoteImage">
+                            <Image Source="celebrate.png" Grid.Column="5"  x:Name="UpVoteImage">
                                 <Image.GestureRecognizers>
-                                <TapGestureRecognizer
+                                    <TapGestureRecognizer
+                                  Tapped="UpVote" 
+                                  NumberOfTapsRequired="1" />
+                                </Image.GestureRecognizers>
+                            </Image>
+
+
+
+                              <Label Text="{Binding Votes}" FontSize="Small" HorizontalTextAlignment="End" Grid.Column="6"
+                                     VerticalTextAlignment="Center" Margin="0,-2,0,0"  x:Name="CurrentVotes">
+                              </Label>
+
+                            <Image Source="down.png"  Grid.Column="7" Opacity=".5" x:Name="DownVoteImage" IsVisible="False">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer
                                 Tapped="DownVote"
                                 NumberOfTapsRequired="1" />
                                 </Image.GestureRecognizers>
                             </Image>
 
-                      <Label Text="{Binding Votes}" FontSize="Small" HorizontalTextAlignment="End" Grid.Column="6"
-                             VerticalTextAlignment="Center" Margin="0,-2,0,0"  x:Name="CurrentVotes">
-                      </Label>
 
-                      <Image Source="up.png" Grid.Column="7"  Opacity=".5" x:Name="UpVoteImage">
-                        <Image.GestureRecognizers>
-                          <TapGestureRecognizer
-                  Tapped="UpVote" 
-                  NumberOfTapsRequired="1" />
-                        </Image.GestureRecognizers>
-                      </Image>
-
-
-                    </Grid>
+                        </Grid>
                   </StackLayout>
 
                 </ListView.Header>
