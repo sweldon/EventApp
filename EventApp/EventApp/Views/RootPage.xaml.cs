@@ -42,6 +42,9 @@ namespace EventApp.Views
                     case (int)MenuItemType.Updates:
                         MenuPages.Add(id, new NavigationPage(new Updates()));
                         break;
+                    case (int)MenuItemType.Premium:
+                        MenuPages.Add(id, new NavigationPage(new Premium()));
+                        break;
                 }
             }
 

@@ -61,10 +61,10 @@ namespace EventApp.Views
 
         public Comment Comment { get; set; }
         public HolidayDetailPage(HolidayDetailViewModel viewModel)
-            {
-                InitializeComponent();
+        {
+            InitializeComponent();
 
-                BindingContext = this.viewModel = viewModel;
+            BindingContext = this.viewModel = viewModel;
 
             // Remove when reply button added
             HolidayDetailList.ItemSelected += OnCommentSelected;
@@ -174,7 +174,7 @@ namespace EventApp.Views
 
             if (viewModel.GroupedCommentList.Count == 0)
                 viewModel.LoadHolidayComments.Execute(null);
-               
+
 
             viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
             HolidayImageSource.Source = viewModel.Holiday.HolidayImage;
@@ -184,16 +184,16 @@ namespace EventApp.Views
                 Description.Text = "This holiday has no information yet!";
             this.Title = viewModel.Holiday.Name;
             CurrentVotes.Text = viewModel.Holiday.Votes.ToString();
- 
+
             if (isLoggedIn == "yes")
             {
                 string currentVote = await viewModel.HolidayStore.CheckUserVotes(viewModel.HolidayId, currentUser);
-                if(currentVote == "1" || currentVote == "4")
+                if (currentVote == "1" || currentVote == "4")
                 {
                     UpVoteImage.Source = "celebrate_active.png";
                     //DownVoteImage.Source = "down.png";
                 }
-                else if(currentVote == "0" || currentVote == "5")
+                else if (currentVote == "0" || currentVote == "5")
                 {
                     //DownVoteImage.Source = "down_active.png";
                     UpVoteImage.Source = "celebrate.png";
@@ -208,7 +208,8 @@ namespace EventApp.Views
             {
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             }
-            else {
+            else
+            {
                 var labelSender = (Label)sender;
                 this.IsEnabled = false;
                 await Navigation.PushModalAsync(new NavigationPage(new NewCommentPage(viewModel.Holiday)));
@@ -235,7 +236,7 @@ namespace EventApp.Views
             {
                 try
                 {
-                    var messageContents = holidayName + "! ("+timeSince+") " + HolidayDescriptionShort;
+                    var messageContents = holidayName + "! (" + timeSince + ") " + HolidayDescriptionShort;
                     var message = new SmsMessage(messageContents, "");
                     await Sms.ComposeAsync(message);
                 }
@@ -302,7 +303,7 @@ namespace EventApp.Views
                 }
             }
             this.IsEnabled = true;
-     
+
 
         }
 
@@ -310,17 +311,17 @@ namespace EventApp.Views
         async void DownVote(object sender, EventArgs args)
         {
 
-            #if __IOS__
+#if __IOS__
                 var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
                 haptic.Prepare();
                 haptic.ImpactOccurred();
                 haptic.Dispose();
-            #endif
+#endif
 
-            #if __ANDROID__
-                var duration = TimeSpan.FromSeconds(.025);
-                Vibration.Vibrate(duration);
-            #endif
+#if __ANDROID__
+            var duration = TimeSpan.FromSeconds(.025);
+            Vibration.Vibrate(duration);
+#endif
 
             string newVotes = CurrentVotes.Text;
             int newVotesInt = Int32.Parse(newVotes);
@@ -385,17 +386,17 @@ namespace EventApp.Views
 
         async void UpVote(object sender, EventArgs args)
         {
-            #if __IOS__
+#if __IOS__
                 var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
                 haptic.Prepare();
                 haptic.ImpactOccurred();
                 haptic.Dispose();
-            #endif
+#endif
 
-            #if __ANDROID__
-                var duration = TimeSpan.FromSeconds(.025);
-                Vibration.Vibrate(duration);
-            #endif
+#if __ANDROID__
+            var duration = TimeSpan.FromSeconds(.025);
+            Vibration.Vibrate(duration);
+#endif
 
             string newVotes = CurrentVotes.Text;
             int newVotesInt = Int32.Parse(newVotes);
@@ -476,17 +477,17 @@ namespace EventApp.Views
             var item = (sender as Image).BindingContext as Comment;
             string commentId = item.Id;
 
-            #if __IOS__
+#if __IOS__
                 var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
                 haptic.Prepare();
                 haptic.ImpactOccurred();
                 haptic.Dispose();
-            #endif
+#endif
 
-            #if __ANDROID__
-                var duration = TimeSpan.FromSeconds(.025);
-                Vibration.Vibrate(duration);
-            #endif
+#if __ANDROID__
+            var duration = TimeSpan.FromSeconds(.025);
+            Vibration.Vibrate(duration);
+#endif
 
             int CurrentVotes = item.Votes;
             //var DownVoteImageFile = DownVoteImage.Source as FileImageSource;
@@ -560,17 +561,17 @@ namespace EventApp.Views
             var item = (sender as Image).BindingContext as Comment;
             string commentId = item.Id;
 
-            #if __IOS__
+#if __IOS__
                 var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
                 haptic.Prepare();
                 haptic.ImpactOccurred();
                 haptic.Dispose();
-            #endif
+#endif
 
-            #if __ANDROID__
-                var duration = TimeSpan.FromSeconds(.025);
-                Vibration.Vibrate(duration);
-            #endif
+#if __ANDROID__
+            var duration = TimeSpan.FromSeconds(.025);
+            Vibration.Vibrate(duration);
+#endif
 
             int CurrentVotes = item.Votes;
 

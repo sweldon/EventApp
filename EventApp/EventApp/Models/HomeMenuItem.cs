@@ -10,7 +10,8 @@ namespace EventApp.Models
         Trending,
         Notifications,
         Search,
-        Updates
+        Updates,
+        Premium
     }
     public class HomeMenuItem
     {

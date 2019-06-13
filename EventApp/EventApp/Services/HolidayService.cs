@@ -163,7 +163,8 @@ namespace EventApp.Services
                     HolidayImage = holiday.image,
                     ShowAd = false,
                     ShowHolidayContent = true,
-                    Date = holiday.date
+                    Date = holiday.date,
+                    Votes = holiday.votes
                 });
             
             }

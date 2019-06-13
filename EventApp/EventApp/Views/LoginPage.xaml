@@ -30,7 +30,7 @@
         <StackLayout BackgroundColor="#4c96e8" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
                 <ContentView Padding="0,40,0,40" VerticalOptions="FillAndExpand">
-                    <Image Source="Icon.png" VerticalOptions="Center" HeightRequest="64" />
+                    <Image Source="Icon_Text.png" Aspect="AspectFill" VerticalOptions="Center" WidthRequest="200" HeightRequest="248" />
                 </ContentView>
             </StackLayout>
 

@@ -51,7 +51,8 @@ namespace EventApp.Views
                 new HomeMenuItem {Id = MenuItemType.Holidays, Title="Today's Holidays", MenuImage="today_icon.png"},
                 new HomeMenuItem {Id = MenuItemType.Notifications, Title="Notifications", MenuImage="alarm.png"},
                 new HomeMenuItem {Id = MenuItemType.Trending, Title="Trending", MenuImage="trending.png"},
-                new HomeMenuItem {Id = MenuItemType.Updates, Title="Holidaily News", MenuImage="news.png"}
+                new HomeMenuItem {Id = MenuItemType.Updates, Title="Holidaily News", MenuImage="news.png"},
+                new HomeMenuItem {Id = MenuItemType.Premium, Title="Premium", MenuImage="premium.png"}
             };
 
             ListViewMenu.ItemsSource = menuItems;
