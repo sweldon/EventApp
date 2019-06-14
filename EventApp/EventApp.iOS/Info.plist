@@ -51,8 +51,8 @@
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>remote-notification</string>
 		<string>bluetooth-central</string>
+		<string>remote-notification</string>
 	</array>
 	<key>XSLaunchImageAssets</key>
 	<string>Assets.xcassets/LaunchImage.launchimage</string>
