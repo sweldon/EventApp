@@ -67,7 +67,8 @@ namespace EventApp.Views
 
         public async void RegisterUser(object sender, EventArgs e)
         {
-
+            this.IsEnabled = false;
+            RegisterButton.Text = "Registering...";
             if (!string.IsNullOrEmpty(NameEntry.Text))
             {
                 string userName = NameEntry.Text.Trim();
@@ -115,6 +116,7 @@ namespace EventApp.Views
                         }
                         else if (status == 1000)
                         {
+
                             await DisplayAlert("Error!", message, "Dang");
                         }
                         else
@@ -128,6 +130,8 @@ namespace EventApp.Views
                     await DisplayAlert("Wait a minute...", "Your passwords didn't match.", "Try again");
                 }
             }
+            RegisterButton.Text = "Register";
+            this.IsEnabled = true;
 
         }
         async void CancelRegister(object sender, EventArgs e)

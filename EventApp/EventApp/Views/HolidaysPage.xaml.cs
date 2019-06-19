@@ -126,6 +126,10 @@ namespace EventApp.Views
             var holidayName = holiday.Name;
             var timeSince = holiday.Date;
             string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id : holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id;
+<<<<<<< HEAD
+=======
+
+>>>>>>> da5faed7cd935bed4501a56fd2a074e8bdc4c264
             this.IsEnabled = false;
             string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
             if (action == "Text Message")
