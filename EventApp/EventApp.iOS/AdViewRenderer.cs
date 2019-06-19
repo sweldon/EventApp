@@ -12,8 +12,8 @@ namespace EventApp
 {
     public class AdViewRenderer : ViewRenderer<AdControlView, BannerView>
     {
-        //actual: ca-app-pub-1507507245083019/4274984562
-        string bannerId = "ca-app-pub-3940256099942544/6300978111";
+        string bannerId = "ca-app-pub-1517355594758692/1421290163";
+        //string bannerId = "ca-app-pub-3940256099942544/6300978111";
 
         BannerView adView;
         BannerView CreateNativeAdControl()

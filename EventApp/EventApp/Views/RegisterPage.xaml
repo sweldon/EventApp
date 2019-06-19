@@ -43,7 +43,7 @@
                 <Entry Placeholder="Email" FontSize="18" x:Name="EmailEntry" />
 
                 <StackLayout VerticalOptions="EndAndExpand">
-                    <Button Margin="0,10,0,0" Text="Register"
+                    <Button Margin="0,10,0,0" Text="Register" x:Name="RegisterButton"
                             Clicked="RegisterUser"
                             BackgroundColor="Green"
                             TextColor="White" />

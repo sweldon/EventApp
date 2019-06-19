@@ -12,6 +12,9 @@ using Android.Content;
 using Xamarin.Forms;
 using EventApp.ViewModels;
 using EventApp.Views;
+using Plugin.InAppBilling;
+using Plugin.CurrentActivity;
+
 namespace EventApp.Droid
 {
     [Activity(Label = "Holidaily", Icon = "@drawable/Icon", Theme = "@style/splashscreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
@@ -27,9 +30,10 @@ namespace EventApp.Droid
             base.SetTheme(Resource.Style.MainTheme);
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);      
-            MobileAds.Initialize(ApplicationContext, "ca-app-pub-1507507245083019~1769987608");
+            MobileAds.Initialize(ApplicationContext, "ca-app-pub-1517355594758692~7084413480");
 
-
+            // In-app purchase
+            CrossCurrentActivity.Current.Init(this, savedInstanceState);
 
             var data = Intent?.Data?.GetQueryParameter("id");
             if (!string.IsNullOrEmpty(data))
@@ -42,7 +46,6 @@ namespace EventApp.Droid
                     rootPage.Master = menuPage; // Menu
                     rootPage.Detail = NavigationPage; // Content
                     App.Current.MainPage = rootPage; // Set root to built master detail
-                    System.Diagnostics.Debug.WriteLine("OPENING HOLIDAY " + data);
                     NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(data)));
                 });
 
@@ -51,5 +54,11 @@ namespace EventApp.Droid
             LoadApplication(new App());
 
     }
+    protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+    {
+        base.OnActivityResult(requestCode, resultCode, data);
+        InAppBillingImplementation.HandleActivityResult(requestCode, resultCode, data);
+    }
+
     }
 }
