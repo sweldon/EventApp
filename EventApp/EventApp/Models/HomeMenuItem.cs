@@ -8,7 +8,10 @@ namespace EventApp.Models
     {
         Holidays,
         Trending,
-        Notifications
+        Notifications,
+        Search,
+        Updates,
+        Premium
     }
     public class HomeMenuItem
     {

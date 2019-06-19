@@ -11,8 +11,8 @@ namespace EventApp
 
     public class AdViewRenderer : ViewRenderer<AdControlView, AdView>
     {
-        //string adUnitId = "ca-app-pub-1507507245083019/3929247084";
-        string adUnitId = "ca-app-pub-3940256099942544/6300978111";
+        string adUnitId = "ca-app-pub-1517355594758692/4921551474";
+        //string adUnitId = "ca-app-pub-3940256099942544/6300978111";
         AdSize adSize = AdSize.SmartBanner;
         AdView adView;
 
@@ -34,13 +34,8 @@ namespace EventApp
                 LayoutParams.WrapContent, LayoutParams.WrapContent);
 
             adView.LayoutParameters = adParams;
-            adView.LoadAd(new AdRequest.Builder()
-                .AddTestDevice("8284655B05EAAE250CC1222024A7BF05")
-                .AddTestDevice("5571FEA4780B974C01BC7028D0EF811B")
-                .AddTestDevice("3A8C97FBA67D2A448F34114728865490")
-                .Build());
-
-            //adView.LoadAd(new AdRequest.Builder().AddTestDevice(AdRequest.DeviceIdEmulator).Build());
+    
+            adView.LoadAd(new AdRequest.Builder().Build());
             return adView;
         }
 

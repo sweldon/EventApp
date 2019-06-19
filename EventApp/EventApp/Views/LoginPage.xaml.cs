@@ -61,8 +61,8 @@ namespace EventApp.Views
 
         public async void LoginUser(object sender, EventArgs e)
         {
-
-
+            this.IsEnabled = false;
+            LoginButton.Text = "Logging in...";
             if (!string.IsNullOrEmpty(NameEntry.Text))
             {
                 string userName = NameEntry.Text.Trim();
@@ -101,7 +101,8 @@ namespace EventApp.Views
             {
                 await DisplayAlert("Error", "Enter some text first!", "Alrighty");
             }
-
+            LoginButton.Text = "Login";
+            this.IsEnabled = true;
         }
 
         protected override async void OnAppearing()

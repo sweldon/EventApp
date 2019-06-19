@@ -24,12 +24,8 @@
 	<string>8.0</string>
 	<key>CFBundleDisplayName</key>
 	<string>Holidaily</string>
-	<key>CFBundleVersion</key>
-	<string>1.0</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
-	<key>CFBundleIdentifier</key>
-	<string>eventapp.com</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -51,13 +47,38 @@
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>remote-notification</string>
 		<string>bluetooth-central</string>
+		<string>remote-notification</string>
 	</array>
 	<key>XSLaunchImageAssets</key>
 	<string>Assets.xcassets/LaunchImage.launchimage</string>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-1507507245083019~8341945444
 </string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>eventapp.com</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>holidaily</string>
+			</array>
+			<key>CFBundleURLTypes</key>
+			<string>Viewer</string>
+		</dict>
+	</array>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>gamekit</string>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>0.5.2</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>CFBundleIdentifier</key>
+	<string>eventapp.com</string>
 </dict>
 </plist>

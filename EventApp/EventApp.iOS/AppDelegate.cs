@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-
+using EventApp.ViewModels;
+using EventApp.Views;
 using Foundation;
 using Google.MobileAds;
 using UIKit;
+using Xamarin.Forms;
 
 namespace EventApp.iOS
 {
@@ -21,13 +24,32 @@ namespace EventApp.iOS
         //
         // You have 17 seconds to return from this method, or iOS will terminate your application.
         //
+        public NavigationPage NavigationPage { get; private set; }
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
-            MobileAds.Configure("ca-app-pub-1507507245083019~8341945444");
+            MobileAds.Configure("ca-app-pub-1517355594758692~1905729683");
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);
         }
+
+        public override bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options)
+        {
+            string holidayId = url.Query.Split("=")[1];
+            var menuPage = new MenuPage(); // Build hamburger menu
+            NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
+            var rootPage = new RootPage(); // Root handles master detail navigation
+            rootPage.Master = menuPage; // Menu
+            rootPage.Detail = NavigationPage; // Content
+            App.Current.MainPage = rootPage; // Set root to built master detail
+            //System.Diagnostics.Debug.WriteLine("OPENING HOLIDAY " + data);
+            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+
+            return true;
+        }
+
     }
+
+
 }

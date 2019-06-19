@@ -8,15 +8,15 @@
 
     <StackLayout VerticalOptions="FillAndExpand" Spacing="0">
 
-      
-            <!--<ContentView Padding="3">
+
+        <!--<ContentView Padding="3">
 
             <Label x:Name="TodayLabel"  BackgroundColor="White"
                 HorizontalTextAlignment="Center" 
                 FontSize="20" TextColor="#4c96e8"/>
  
              </ContentView>-->
-        
+
         <StackLayout VerticalOptions="FillAndExpand" Padding="0" Spacing="0">
             <BoxView HeightRequest=".5"
                    BackgroundColor="#DEDEDE"
@@ -33,34 +33,34 @@
                   RefreshCommand="{Binding LoadItemsCommand}"
                   IsPullToRefreshEnabled="false"
                    >
-                      <ListView.BackgroundColor>
+                    <ListView.BackgroundColor>
                         <OnPlatform x:TypeArguments="Color"
                         iOS="#E0E0E0"/>
-                      </ListView.BackgroundColor>
+                    </ListView.BackgroundColor>
 
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
                                 <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="White">
-                                
+
                                     <ContentView.Margin>
-                                    <OnPlatform x:TypeArguments="Thickness"
+                                        <OnPlatform x:TypeArguments="Thickness"
                                     Android="0,5,0,0" iOS="0,7,0,0"/>
                                     </ContentView.Margin>
-                                    
+
                                     <StackLayout>
                                         <BoxView
                                            HeightRequest=".5"
                                                BackgroundColor="#DEDEDE"
                                                HorizontalOptions="FillAndExpand" >
-                                        
-                                                <BoxView.IsVisible>
-                                                    <OnPlatform x:TypeArguments="x:Boolean"
+
+                                            <BoxView.IsVisible>
+                                                <OnPlatform x:TypeArguments="x:Boolean"
                                                     iOS="false"
                                                     Android="true"/>
-                                                </BoxView.IsVisible>
-                                            </BoxView>
-                                        
+                                            </BoxView.IsVisible>
+                                        </BoxView>
+
                                         <StackLayout>
                                             <Grid HorizontalOptions="FillAndExpand" IsVisible="{Binding ShowHolidayContent}">
                                                 <Grid.RowDefinitions>
@@ -70,16 +70,16 @@
                                                     <ColumnDefinition Width="70*" />
                                                     <ColumnDefinition Width="30*" />
                                                 </Grid.ColumnDefinitions>
-                                                
+
                                                 <Grid.Padding>
-                                                <OnPlatform x:TypeArguments="Thickness"
+                                                    <OnPlatform x:TypeArguments="Thickness"
                                                 Android="5,5,5,0" iOS="8,10,8,0"/>
                                                 </Grid.Padding>
                                                 <ContentView Margin="5,0,0,0"  Grid.Row="0" Grid.Column="0">
 
 
                                                     <Label Text="{Binding Name}" FontSize="15" FontAttributes="Bold" TextColor="#4c96e8">
-                                                        
+
                                                         <Label.GestureRecognizers>
                                                             <TapGestureRecognizer
                                                         Tapped="LabelToHoliday"  />
@@ -96,12 +96,12 @@
 
                                             </Grid>
                                             <ContentView IsVisible="{Binding ShowHolidayContent}">
-                                                
+
                                                 <ContentView.Padding>
                                                     <OnPlatform x:TypeArguments="Thickness"
                                                     Android="10,0,10,0" iOS="14,0,14,5"/>
                                                 </ContentView.Padding>
-                                                
+
                                                 <Label Text="{Binding DescriptionShort}"  Grid.Row="1" FontSize="14">
 
                                                     <Label.GestureRecognizers>
@@ -131,13 +131,12 @@
                                             <Grid Padding="10" HorizontalOptions="FillAndExpand"  IsVisible="{Binding ShowHolidayContent}">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="16" />
-                                                    <ColumnDefinition Width="15*" />
+                                                    <ColumnDefinition Width="18*" />
                                                     <ColumnDefinition Width="16" />
                                                     <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="10*" />
+                                                    <ColumnDefinition Width="8*" />
                                                     <ColumnDefinition Width="16" />
                                                     <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="16" />
                                                 </Grid.ColumnDefinitions>
 
                                                 <ContentView Grid.Column="0">
@@ -181,7 +180,14 @@
                                                     </Label.GestureRecognizers>
                                                 </Label>
 
-  
+                                                <Image Source="celebrate_active.png" Grid.Column="5"  x:Name="UpVoteImage" />
+
+
+
+                                                <Label Grid.Column="6"  Grid.Row="0" Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small"
+                                                     VerticalTextAlignment="Center" Margin="0,-2,0,0" >
+          
+                                                </Label>
 
 
                                             </Grid>
@@ -194,14 +200,14 @@
                                             HeightRequest="1"
                                             BackgroundColor="#DEDEDE"
                                             HorizontalOptions="FillAndExpand" >
-                                            
-                                                <BoxView.IsVisible>
-                                                    <OnPlatform x:TypeArguments="x:Boolean"
+
+                                            <BoxView.IsVisible>
+                                                <OnPlatform x:TypeArguments="x:Boolean"
                                                     iOS="false"
                                                     Android="true"/>
-                                                </BoxView.IsVisible>
+                                            </BoxView.IsVisible>
                                         </BoxView>
-                                        
+
                                     </StackLayout>
 
 
@@ -221,8 +227,8 @@
 
             </ContentView>
         </StackLayout>
-        
+
 
     </StackLayout>
-   
+
 </ContentPage>

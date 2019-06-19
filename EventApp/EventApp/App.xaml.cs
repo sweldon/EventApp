@@ -19,7 +19,7 @@ namespace EventApp
         public NavigationPage NavigationPage { get; private set; }
         public Holiday OpenHolidayPage { get; set; }
         public Comment OpenComment { get; set; }
-        public static string HolidailyHost = "http://ec2-54-156-187-51.compute-1.amazonaws.com";
+        public static string HolidailyHost = "https://holidailyapp.com";
 
         public string devicePushId
         {
@@ -74,7 +74,12 @@ namespace EventApp
                         rootPage.Master = menuPage; // Menu
                         rootPage.Detail = NavigationPage; // Content
                         MainPage = rootPage; // Set root to built master detail
-                        if (e.CustomData.ContainsKey("comment_id"))
+
+                        if (e.CustomData.ContainsKey("news"))
+                        {
+                            NavigationPage.PushAsync(new Updates());
+                        }
+                        else if (e.CustomData.ContainsKey("comment_id"))
                         {
                             string commentId = e.CustomData["comment_id"];
                             string holidayId = e.CustomData["holiday_id"];
@@ -91,7 +96,12 @@ namespace EventApp
                     else
                     {
                         // Foreground Android
-                        if (e.CustomData.ContainsKey("comment_id")) {
+                        if (e.CustomData.ContainsKey("news"))
+                        {
+                            NavigationPage.PushAsync(new Updates());
+                        }
+                        else if (e.CustomData.ContainsKey("comment_id"))
+                        {
                             string commentId = e.CustomData["comment_id"];
                             string commentUser = e.CustomData["comment_user"];
                             string holidayId = e.CustomData["holiday_id"];
@@ -106,7 +116,8 @@ namespace EventApp
                 };
             }
 
-            AppCenter.Start("android=bcc3eb00-cbdb-4d66-82f7-860eb3b56e56;ios=296e7478-5c95-4aa1-b904-b43c78377d1c;", typeof(Push), typeof(Analytics));
+
+            AppCenter.Start("android=7b2a6212-2685-461d-bc70-5e4f1fc387f8;ios=e6263b3a-9c49-4468-815c-3c72fef8032b;", typeof(Push), typeof(Analytics));
             devicePushId = AppCenter.GetInstallIdAsync().Result.Value.ToString();
 
 

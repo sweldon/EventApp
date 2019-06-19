@@ -25,12 +25,12 @@ namespace EventApp.Views
 
             BindingContext = viewModel = new HolidaysViewModel();
             DateTime currentDate = DateTime.Today;
-           
+
             string dateString = currentDate.ToString("dd-MM-yyyy");
             string dayNumber = dateString.Split('-')[0].TrimStart('0');
             int monthNumber = Int32.Parse(dateString.Split('-')[1]);
 
-            List<string> months = new List<string>() { 
+            List<string> months = new List<string>() {
                 "January","February","March","April","May","June","July",
                 "August", "September", "October", "November", "December"
             };
@@ -39,9 +39,9 @@ namespace EventApp.Views
             string todayString = currentDate.DayOfWeek.ToString();
             //ItemsListView.ItemSelected += OnItemSelected;
             ItemsListView.ItemTapped += (object sender, ItemTappedEventArgs e) => {
-                 if (e.Item == null) return;
-                 ((ListView)sender).SelectedItem = null;
-             };
+                if (e.Item == null) return;
+                ((ListView)sender).SelectedItem = null;
+            };
             //TodayLabel.Text = todayString + ", " + monthString + " " + dayNumber;
             viewModel.Title = todayString + ", " + monthString + " " + dayNumber;
 
@@ -50,14 +50,14 @@ namespace EventApp.Views
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
-            
+
             ((ListView)sender).SelectedItem = null;
             if (args.SelectedItem == null)
             {
                 return;
             }
             var item = args.SelectedItem as Holiday;
-            if(item.Id != "-1") // Ad
+            if (item.Id != "-1") // Ad
             {
                 this.IsEnabled = false;
                 await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id)));
@@ -94,10 +94,22 @@ namespace EventApp.Views
 
         protected override void OnAppearing()
         {
+
+
             base.OnAppearing();
 
-            if (viewModel.Holidays.Count == 0)
-                viewModel.LoadItemsCommand.Execute(null);
+            #if __IOS__
+                if (viewModel.Holidays.Count == 0) 
+                {
+                    viewModel.LoadItemsCommand.Execute(null);
+                }
+            #endif
+
+            #if __ANDROID__
+                    viewModel.LoadItemsCommand.Execute(null);
+            #endif
+
+
 
             // Manually open menu page on swipe only on main page
             //(Application.Current.MainPage as RootPage).IsGestureEnabled = false;
@@ -111,45 +123,20 @@ namespace EventApp.Views
             var holiday = (sender as Label).BindingContext as Holiday;
             this.IsEnabled = false;
 
-  
-                string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description : holiday.Description.Substring(0, 90) + "...\nGet all the info with the Holidaily app! http://holidailyapp.com/applink";
-                this.IsEnabled = false;
-                string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
-                if (action == "Text Message")
-                {
-                    try
-                    {
-                        var messageContents = holiday.Name + "! " + HolidayDescriptionShort;
-                        var message = new SmsMessage(messageContents, "");
-                        await Sms.ComposeAsync(message);
-                    }
-                    catch (FeatureNotSupportedException ex)
-                    {
-                        // Sms is not supported on this device.
-                    }
-                    catch (Exception ex)
-                    {
-                        // Other error has occurred.
-                    }
-                }
+            var holidayName = holiday.Name;
+            var timeSince = holiday.Date;
+            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id : holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id;
+<<<<<<< HEAD
+=======
 
-            this.IsEnabled = true;
-
-
-        }
-
-        async void OnSharePicTapped(object sender, EventArgs args)
-        {
-            this.IsEnabled = false;
-            var holiday = (sender as Image).BindingContext as Holiday;
-            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description : holiday.Description.Substring(0, 90) + "...\nGet all the info with the Holidaily app! http://holidailyapp.com";
+>>>>>>> da5faed7cd935bed4501a56fd2a074e8bdc4c264
             this.IsEnabled = false;
             string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
             if (action == "Text Message")
             {
                 try
                 {
-                    var messageContents = holiday.Name + "! " + HolidayDescriptionShort;
+                    var messageContents = holidayName + "! (" + timeSince + ") " + HolidayDescriptionShort;
                     var message = new SmsMessage(messageContents, "");
                     await Sms.ComposeAsync(message);
                 }
@@ -162,7 +149,40 @@ namespace EventApp.Views
                     // Other error has occurred.
                 }
             }
-            
+
+            this.IsEnabled = true;
+
+
+
+        }
+
+        async void OnSharePicTapped(object sender, EventArgs args)
+        {
+            this.IsEnabled = false;
+
+            var holiday = (sender as Image).BindingContext as Holiday;
+            var holidayName = holiday.Name;
+            var timeSince = holiday.Date;
+            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id : holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id;
+            this.IsEnabled = false;
+            string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
+            if (action == "Text Message")
+            {
+                try
+                {
+                    var messageContents = holidayName + "! (" + timeSince + ") " + HolidayDescriptionShort;
+                    var message = new SmsMessage(messageContents, "");
+                    await Sms.ComposeAsync(message);
+                }
+                catch (FeatureNotSupportedException ex)
+                {
+                    // Sms is not supported on this device.
+                }
+                catch (Exception ex)
+                {
+                    // Other error has occurred.
+                }
+            }
             this.IsEnabled = true;
 
 

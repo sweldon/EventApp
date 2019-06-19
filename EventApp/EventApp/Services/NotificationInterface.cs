@@ -7,6 +7,7 @@ namespace EventApp.Services
     public interface NotificationInterface<T>
     {
         Task<IEnumerable<T>> GetUserNotifications(bool forceRefresh = false);
+        Task<IEnumerable<T>> GetUpdates(bool forceRefresh = false);
     }
 
 }

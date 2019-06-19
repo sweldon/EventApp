@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EventApp.Views.Premium"
+             Title="Holidaily Premium!">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!--Page Level Resources: Compatibile with Xamarin Live Player -->
+            <Color x:Key="Primary">#4c96e8</Color>
+            <Color x:Key="Accent">#96d1ff</Color>
+            <Color x:Key="LightTextColor">#999999</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+
+
+        
+        <ScrollView BackgroundColor="#FFFFFF">
+            <StackLayout>
+                <StackLayout>
+                <Image Source="premiumbanner_text.png"/>
+                </StackLayout>
+                <StackLayout Padding="15">
+            <!--<Label FontSize="Medium"
+                Text="Holidaily Premium ($0.99) is a way for you to support the developers if you like the app, but get a few goodies out of it too! At the moment, we have the below to offer you, but we will be constantly adding to the list of premium features. Best part is, this is a one-time payment and you will continue to receive all the premium benefits in the future as we add them. No further payment is required. We will be sure to send you a notification when you get new goodies. At the moment, premium includes:" />-->
+                <Label Text="Holidaily Premium ($0.99) is a way for you to support the developers if you like the app, but get a few goodies out of it too! At the moment, we are still working on these features and they are not yet available. However, you can still become a premium member to support us, and when they are released you will receive all the premium benefits until the end of time. Any new premium feature that gets added, you will immediately have access to! Some features we're currently adding are:" FontSize="Medium" />
+
+                 <Label FontAttributes="Bold" Text="• No ads" FontSize="Medium" />
+                <Label FontAttributes="Bold" Text="• Create your own holiday" FontSize="Medium" />
+                <Label FontAttributes="Bold" Text="• Dark mode" FontSize="Medium" />
+                <Label FontAttributes="Bold" Text="• Exclusive badge next to your username" FontSize="Medium" />
+         
+            <Button Text="Purchase"
+                        Clicked="MakePurchase"
+                        BackgroundColor="Green"
+                        TextColor="White" Margin="0,10,0,0" />
+            </StackLayout>
+
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>
