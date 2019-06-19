@@ -178,15 +178,16 @@ namespace EventApp.Views
             var holiday = (sender as Label).BindingContext as Holiday;
             this.IsEnabled = false;
 
-
-            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description : holiday.Description.Substring(0, 90) + "...\nGet all the info with the Holidaily app! http://holidailyapp.com/applink";
+            var holidayName = holiday.Name;
+            var holidayDate = holiday.Date;
+            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id : holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id;
             this.IsEnabled = false;
             string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
             if (action == "Text Message")
             {
                 try
                 {
-                    var messageContents = holiday.Name + "! " + HolidayDescriptionShort;
+                    var messageContents = holidayName + "! (" + holidayDate + ") " + HolidayDescriptionShort;
                     var message = new SmsMessage(messageContents, "");
                     await Sms.ComposeAsync(message);
                 }
@@ -203,20 +204,24 @@ namespace EventApp.Views
             this.IsEnabled = true;
 
 
+
         }
 
         async void OnSharePicTapped(object sender, EventArgs args)
         {
             this.IsEnabled = false;
+
             var holiday = (sender as Image).BindingContext as Holiday;
-            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description : holiday.Description.Substring(0, 90) + "...\nGet all the info with the Holidaily app! http://holidailyapp.com";
+            var holidayName = holiday.Name;
+            var holidayDate = holiday.Date;
+            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id : holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id;
             this.IsEnabled = false;
             string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
             if (action == "Text Message")
             {
                 try
                 {
-                    var messageContents = holiday.Name + "! " + HolidayDescriptionShort;
+                    var messageContents = holidayName + "! (" + holidayDate + ") " + HolidayDescriptionShort;
                     var message = new SmsMessage(messageContents, "");
                     await Sms.ComposeAsync(message);
                 }
@@ -229,7 +234,6 @@ namespace EventApp.Views
                     // Other error has occurred.
                 }
             }
-
             this.IsEnabled = true;
 
 

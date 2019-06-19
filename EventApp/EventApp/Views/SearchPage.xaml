@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.SearchPage"
@@ -203,7 +203,14 @@
                                                     </Label.GestureRecognizers>
                                                 </Label>
 
+                                                <Image Source="celebrate_active.png" Grid.Column="5"  x:Name="UpVoteImage" />
 
+
+
+                                                <Label Grid.Column="6"  Grid.Row="0" Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small"
+                                                     VerticalTextAlignment="Center" Margin="0,-2,0,0" >
+          
+                                                </Label>
 
 
                                             </Grid>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.Updates"
@@ -22,10 +22,13 @@
                   HasUnevenRows="true"
                   RefreshCommand="{Binding LoadUpdates}"
                   IsPullToRefreshEnabled="true"
-                  CachingStrategy="RecycleElement"
+                  CachingStrategy="RecycleElement">
                     
-                    >
-
+                      <ListView.BackgroundColor>
+                        <OnPlatform x:TypeArguments="Color"
+                        iOS="#E0E0E0"/>
+                      </ListView.BackgroundColor>
+                    
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
@@ -37,7 +40,13 @@
                                                BackgroundColor="#DEDEDE"
                                                HorizontalOptions="FillAndExpand" />
 
-                                        <Grid HorizontalOptions="FillAndExpand" Padding="5,5,5,0">
+                                        <Grid HorizontalOptions="FillAndExpand">
+                                            
+                                            <Grid.Padding>
+                                            <OnPlatform x:TypeArguments="Thickness"
+                                            Android="5,5,5,0" iOS="8,10,8,0"/>
+                                            </Grid.Padding>
+                                            
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />
                                                 <RowDefinition Height="Auto" />
@@ -58,10 +67,7 @@
                                                   Grid.Column="1"
                                                   HorizontalTextAlignment="End"
                                                   Opacity=".8" />
-                                            <Label Text="{Binding Title}"
-                                              FontSize="14"
-                                              TextColor="#4c96e8"
-                                              Grid.Row="0" Grid.Column="0"/>
+
 
                                             <Label LineBreakMode="WordWrap" Grid.Row="1" Margin="0,-4,0,0">
                                                 <Label.FormattedText>
@@ -73,13 +79,31 @@
                                             </Label>
 
                                         </Grid>
+                                        
+                                        
+                                        <ContentView>
 
-                                        <Label Text="{Binding Content}" FontSize="14" Margin="5,0,0,0" />
+                                            <ContentView.Padding>
+                                            <OnPlatform x:TypeArguments="Thickness"
+                                            Android="10,0,10,10" iOS="8,0,8,10"/>
+                                            </ContentView.Padding>
+                                            <Label Text="{Binding Content}" FontSize="14" />
+                                        </ContentView>
+                                        
+                                        
+                                       
 
                                         <BoxView
-                                           HeightRequest="2"
-                                               BackgroundColor="#DEDEDE"
-                                               HorizontalOptions="FillAndExpand" />
+                                            HeightRequest="1"
+                                            BackgroundColor="#DEDEDE"
+                                            HorizontalOptions="FillAndExpand">
+                                                <BoxView.IsVisible>
+                                                    <OnPlatform x:TypeArguments="x:Boolean"
+                                                    iOS="false"
+                                                    Android="true"/>
+                                                </BoxView.IsVisible>
+                                        </BoxView>
+
 
                                     </StackLayout>
 
