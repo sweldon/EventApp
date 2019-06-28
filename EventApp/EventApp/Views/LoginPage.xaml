@@ -60,6 +60,14 @@
                             Clicked="RegisterUser"
                             BackgroundColor="#4c96e8"
                             TextColor="White" />
+              
+                    <Label x:Name="RecoverLink" HorizontalTextAlignment="Center" HorizontalOptions="FillAndExpand" Text="Forgot Password" TextDecorations="Underline" FontSize="18" FontAttributes="Bold" TextColor="#4c96e8">
+
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                            Tapped="Recover"  />
+                        </Label.GestureRecognizers>
+                    </Label>
                 </StackLayout>
             </StackLayout>
         </ScrollView>

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.HolidayDetailPage"
              xmlns:local="clr-namespace:EventApp"  
+
              Title="{Binding Title}">
 
 
@@ -260,7 +261,7 @@
 
 
                                 </StackLayout>
-
+        
                             </ContentView>
 
                         </ViewCell>
@@ -268,22 +269,19 @@
                 </ListView.ItemTemplate>
 
                 <ListView.Footer>
-                    <StackLayout Spacing="0">
-                        <BoxView HeightRequest="1"
-                                    BackgroundColor="#DEDEDE"
-                                    HorizontalOptions="FillAndExpand" />
-                        <BoxView.IsVisible>
-                            <OnPlatform x:TypeArguments="x:Boolean"
-                        iOS="false"
-                        Android="true"/>
-                        </BoxView.IsVisible>
-                        <Label Text="" FontSize="5" />
-                    </StackLayout >
+
+
+
+
+                    <ContentView Margin="0,10,0,0">
+                        <local:AdControlView BackgroundColor="#CDCDCD"/>
+                    </ContentView >
                 </ListView.Footer>
 
             </ListView>
-
+ 
         </ContentView>
+
 
     </StackLayout>
 

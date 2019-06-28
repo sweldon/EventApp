@@ -1,39 +1,37 @@
 {
   "project_info": {
-    "project_number": "854025491863",
-    "firebase_url": "https://holidaily-2c0ff.firebaseio.com",
-    "project_id": "holidaily-2c0ff",
-    "storage_bucket": "holidaily-2c0ff.appspot.com"
+    "project_number": "232257905989",
+    "firebase_url": "https://api-4751753332795874869-301629.firebaseio.com",
+    "project_id": "api-4751753332795874869-301629",
+    "storage_bucket": "api-4751753332795874869-301629.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:854025491863:android:ce91bf443205bd7a",
+        "mobilesdk_app_id": "1:232257905989:android:3cf9cf1df8ee5998",
         "android_client_info": {
-          "package_name": "com.companyname.EventApp"
+          "package_name": "com.divinity.holidailyapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "854025491863-qmf14bf4i18nepguhll9flodkv55c0qr.apps.googleusercontent.com",
+          "client_id": "232257905989-bumd8fslb7n650oovdb65lpa6n18nlfb.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC2Vh_GJqe_Hnk0BU_zuLpby_ack1dMqOU"
+          "current_key": "AIzaSyB9dhNzLYbTq384rW0Y3MHkwK_yMQ5tAek"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "232257905989-bumd8fslb7n650oovdb65lpa6n18nlfb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

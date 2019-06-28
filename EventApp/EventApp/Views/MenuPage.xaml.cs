@@ -39,7 +39,19 @@ namespace EventApp.Views
                 OnPropertyChanged();
             }
         }
-       
+
+        public string appInfo
+        {
+            get { return Settings.AppInfo; }
+            set
+            {
+                if (Settings.AppInfo == value)
+                    return;
+                Settings.AppInfo = value;
+                OnPropertyChanged();
+            }
+        }
+
         public NavigationPage NavigationPage { get; private set; }
         public MenuPage()
         {
@@ -52,7 +64,8 @@ namespace EventApp.Views
                 new HomeMenuItem {Id = MenuItemType.Notifications, Title="Notifications", MenuImage="alarm.png"},
                 new HomeMenuItem {Id = MenuItemType.Trending, Title="Trending", MenuImage="trending.png"},
                 new HomeMenuItem {Id = MenuItemType.Updates, Title="Holidaily News", MenuImage="news.png"},
-                new HomeMenuItem {Id = MenuItemType.Premium, Title="Premium", MenuImage="premium.png"}
+                new HomeMenuItem {Id = MenuItemType.Premium, Title="Premium", MenuImage="premium.png"},
+                new HomeMenuItem {Id = MenuItemType.Rewards, Title="Rewards", MenuImage="trophy.png"}
             };
 
             ListViewMenu.ItemsSource = menuItems;
@@ -66,7 +79,7 @@ namespace EventApp.Views
                 await RootPage.NavigateFromMenu(id);
             };
 
-
+           
             //swipeContainer.Swipe += (sender, e) =>
             //{
             //    switch (e.Direction)
@@ -98,7 +111,7 @@ namespace EventApp.Views
         }
         protected override void OnAppearing()
         {
-
+            AppInfoLabel.Text = appInfo;
             if (isLoggedIn == "no")
             {
                 LogoutButton.IsVisible = false;
@@ -111,6 +124,7 @@ namespace EventApp.Views
                 LoginButton.IsVisible = false;
                 UserLabel.Text = "Hey, "+currentUser+"!";
             }
+
         }
 
     }
