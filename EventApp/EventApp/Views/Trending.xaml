@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.Trending"
@@ -22,10 +22,13 @@
                   HasUnevenRows="true"
                   RefreshCommand="{Binding LoadTopHolidays}"
                   IsPullToRefreshEnabled="true"
-                  CachingStrategy="RecycleElement"
-                   
-                    >
-
+                  CachingStrategy="RecycleElement">
+                  
+                      <ListView.BackgroundColor>
+                        <OnPlatform x:TypeArguments="Color"
+                        iOS="#E0E0E0"/>
+                      </ListView.BackgroundColor>
+                    
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
@@ -65,7 +68,13 @@
                                                     TextColor="#FF9912"/>
 
                                             </Grid>
-                                            <ContentView Padding="10,0,10,0">
+                                            <ContentView>
+                                                
+                                            <ContentView.Padding>
+                                            <OnPlatform x:TypeArguments="Thickness"
+                                            Android="10,0,10,10" iOS="10,0,10,10"/>
+                                            </ContentView.Padding>
+                                                
                                                 <Label Text="{Binding DescriptionShort}" FontSize="14" />
                                             </ContentView>
 
@@ -75,7 +84,13 @@
                                         <BoxView
                                             HeightRequest="1"
                                             BackgroundColor="#DEDEDE"
-                                            HorizontalOptions="FillAndExpand" />
+                                            HorizontalOptions="FillAndExpand">
+                                                <BoxView.IsVisible>
+                                                    <OnPlatform x:TypeArguments="x:Boolean"
+                                                    iOS="false"
+                                                    Android="true"/>
+                                                </BoxView.IsVisible>
+                                        </BoxView>
 
                                     </StackLayout>
 

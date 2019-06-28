@@ -29,8 +29,16 @@
         </Grid.RowDefinitions>
         <StackLayout BackgroundColor="#4c96e8" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
-                <ContentView VerticalOptions="FillAndExpand">
-                    <Image Source="Icon_Text.png" Aspect="AspectFill" VerticalOptions="Center" WidthRequest="200" HeightRequest="248" />
+                <ContentView Padding="0,40,0,40" VerticalOptions="FillAndExpand">
+                    <Image Source="Icon_Text.png" Aspect="AspectFill" VerticalOptions="Center" WidthRequest="200" >
+                
+                        <Image.HeightRequest>
+                            <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="iOS">210</On>
+                            <On Platform="Android">248</On>
+                            </OnPlatform> 
+                        </Image.HeightRequest>
+                    </Image>
                 </ContentView>
             </StackLayout>
 

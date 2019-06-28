@@ -112,7 +112,8 @@ namespace EventApp.Services
                     TimeSince = holiday.time_since,
                     DescriptionShort = HolidayDescriptionShort,
                     Votes = holiday.votes,
-                    HolidayImage = holiday.image
+                    HolidayImage = holiday.image,
+                    Date = holiday.date
                 });
             }
 

@@ -50,10 +50,10 @@
                                 <ColumnDefinition Width="16" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="10*" />
-                                <ColumnDefinition Width="16" />
-                                <ColumnDefinition Width="Auto" />
-                                <!--<ColumnDefinition Width="16" />-->
-                            </Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="22" />
+                            <ColumnDefinition Width="Auto" />
+                            <!--<ColumnDefinition Width="16" />-->
+                      </Grid.ColumnDefinitions>
 
                             <ContentView Grid.Column="0">
                                 <Image Source="comment.png" VerticalOptions="Center" >
