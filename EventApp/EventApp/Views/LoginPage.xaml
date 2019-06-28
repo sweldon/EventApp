@@ -29,7 +29,7 @@
         </Grid.RowDefinitions>
         <StackLayout BackgroundColor="#4c96e8" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
-                <ContentView Padding="0,40,0,40" VerticalOptions="FillAndExpand">
+                <ContentView VerticalOptions="FillAndExpand">
                     <Image Source="Icon_Text.png" Aspect="AspectFill" VerticalOptions="Center" WidthRequest="200" HeightRequest="248" />
                 </ContentView>
             </StackLayout>
@@ -52,6 +52,14 @@
                             Clicked="RegisterUser"
                             BackgroundColor="#4c96e8"
                             TextColor="White" />
+              
+                    <Label x:Name="RecoverLink" HorizontalTextAlignment="Center" HorizontalOptions="FillAndExpand" Text="Forgot Password" TextDecorations="Underline" FontSize="18" FontAttributes="Bold" TextColor="#4c96e8">
+
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer
+                            Tapped="Recover"  />
+                        </Label.GestureRecognizers>
+                    </Label>
                 </StackLayout>
             </StackLayout>
         </ScrollView>

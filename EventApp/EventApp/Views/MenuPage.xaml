@@ -42,7 +42,7 @@
                                             <Image Source="{Binding MenuImage}" VerticalOptions="Center" WidthRequest="20" HeightRequest="20"/>
                                         </ContentView>
 
-                                        <Label Text="{Binding Title}" Grid.Column="1" FontSize="20" />
+                                        <Label Text="{Binding Title}" Grid.Column="1" FontSize="18" />
                                     </Grid>
                             </ViewCell>
                         </DataTemplate>
@@ -60,8 +60,8 @@
                         Clicked="PromptLogin"
                         BackgroundColor="#4c96e8"
                         TextColor="White" />
-                
-                <Label Text="Divinity Apps 2019 &#8482;" 
+
+                <Label x:Name="AppInfoLabel"
                        HorizontalTextAlignment="Center" FontSize="8" />
             </StackLayout>
         </StackLayout>

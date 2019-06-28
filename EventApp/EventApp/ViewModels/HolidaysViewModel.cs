@@ -47,13 +47,13 @@ namespace EventApp.ViewModels
                 var showAd = false;
 
                 // Final Ad, bottom of stack
-                Holidays.Insert(0, new Holiday()
-                {
-                    Id = "-1",
-                    ShowAd = true,
-                    ShowHolidayContent = false,
-                });
-
+                //Holidays.Insert(0, new Holiday()
+                //{
+                //    Id = "-1",
+                //    ShowAd = true,
+                //    ShowHolidayContent = false,
+                //});
+                bool todayDone = false;
                 foreach (var holiday in holidays)
                 {
 
@@ -64,34 +64,45 @@ namespace EventApp.ViewModels
                     }
                     else
                     {
+                        // Put at right after todays
+                        //if(holiday.TimeSince == "Today" && !todayDone)
+                        //{
+                        //    Holidays.Insert(0, new Holiday()
+                        //    {
+                        //        Id = "-1",
+                        //        ShowAd = true,
+                        //        ShowHolidayContent = false,
+                        //    });
+                        //    todayDone = true;
+                        //}
                         Holidays.Insert(0, holiday);
                     }
 
 
                 }
 
-                // Add at 3
-                Holidays.Insert(3, new Holiday()
+                // Add at location 3
+                Holidays.Insert(4, new Holiday()
                 {
                     Id = "-1",
                     ShowAd = true,
                     ShowHolidayContent = false,
                 });
 
-                // Then add every 3 after that
-                int listCount = Holidays.Count();
-                for(int i = 0; i < listCount; i++)
-                {
-                    if(i % 3 == 0 && i != 0 && i != 3)
-                    {
-                        Holidays.Insert(i, new Holiday()
-                        {
-                            Id = "-1",
-                            ShowAd = true,
-                            ShowHolidayContent = false,
-                        });
-                    }
-                }
+                // And then add every 3 after that
+                //int listCount = Holidays.Count();
+                //for(int i = 0; i < listCount; i++)
+                //{
+                //    if(i % 3 == 0 && i != 0 && i != 3)
+                //    {
+                //        Holidays.Insert(i, new Holiday()
+                //        {
+                //            Id = "-1",
+                //            ShowAd = true,
+                //            ShowHolidayContent = false,
+                //        });
+                //    }
+                //}
 
 
 
