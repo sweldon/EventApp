@@ -163,6 +163,9 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\iTunesArtwork%402x.png" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-83.5%402x.png" />
     <BundleResource Include="Resources\premiumbanner_text.png" />
+    <BundleResource Include="Resources\rewards.png" />
+    <BundleResource Include="Resources\star.png" />
+    <BundleResource Include="Resources\trophy.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

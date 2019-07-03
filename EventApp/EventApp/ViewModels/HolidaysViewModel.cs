@@ -82,12 +82,12 @@ namespace EventApp.ViewModels
                 }
 
                 // Add at location 3
-                Holidays.Insert(4, new Holiday()
-                {
-                    Id = "-1",
-                    ShowAd = true,
-                    ShowHolidayContent = false,
-                });
+                //Holidays.Insert(4, new Holiday()
+                //{
+                //    Id = "-1",
+                //    ShowAd = true,
+                //    ShowHolidayContent = false,
+                //});
 
                 // And then add every 3 after that
                 //int listCount = Holidays.Count();
