@@ -28,7 +28,7 @@ namespace EventApp.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
-            MobileAds.Configure("ca-app-pub-1517355594758692~1905729683");
+            MobileAds.Configure("ca-app-pub-9382412071078825~2829867889");
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

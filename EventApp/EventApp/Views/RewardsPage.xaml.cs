@@ -18,7 +18,15 @@ namespace EventApp.Views
 			InitializeComponent ();
 
             // Test ad: ca-app-pub-3940256099942544/5224354917
-            CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-1517355594758692/1318353970");
+
+            #if __IOS__
+                CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/4201400125");
+            #endif
+
+            #if __ANDROID__
+                CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/7152256279");
+            #endif
+            
 
             CrossMTAdmob.Current.OnRewardedVideoStarted += (object sender, EventArgs e) => {
                 WatchAdButton.Text = "Watch Ad for a Reward!";

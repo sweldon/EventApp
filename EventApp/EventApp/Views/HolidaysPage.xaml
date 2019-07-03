@@ -180,13 +180,19 @@
                                                     </Label.GestureRecognizers>
                                                 </Label>
 
-                                                <Image Source="celebrate_active.png" Grid.Column="5"  x:Name="UpVoteImage" />
+                                                <Image Source="{Binding CelebrateStatus}" Grid.Column="5"  x:Name="UpVoteImage" >
+                                                    <Image.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                        Tapped="OnCelebratePicTapped"
+                                                        NumberOfTapsRequired="1" />
+                                                    </Image.GestureRecognizers>
+                                                </Image>
 
-
-
-                                                <Label Grid.Column="6"  Grid.Row="0" Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small"
-                                                     VerticalTextAlignment="Center" Margin="0,-2,0,0" >
-
+                                                <Label Grid.Column="6"  Grid.Row="0" Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small" VerticalTextAlignment="Center" Margin="0,-1,0,0" >
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                            Tapped="OnCelebrateTapped"  />
+                                                    </Label.GestureRecognizers>
                                                 </Label>
 
 

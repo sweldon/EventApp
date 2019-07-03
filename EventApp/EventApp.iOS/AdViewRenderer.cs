@@ -16,11 +16,7 @@ namespace EventApp
         //string bannerId = "ca-app-pub-3940256099942544/6300978111";
 
         //string adUnitId = "ca-app-pub-3940256099942544/6300978111";
-        static List<string> unitIds = new List<string> { "ca-app-pub-1517355594758692/9771559064",
-                                                            "ca-app-pub-1517355594758692/6399699381",
-                                                            "ca-app-pub-1517355594758692/5832314058",
-                                                            "ca-app-pub-1517355594758692/1147372700",
-                                                            "ca-app-pub-1517355594758692/1421290163" };
+        static List<string> unitIds = new List<string> { "ca-app-pub-9382412071078825/1958380167" };
         //static Random rnd = new Random();
         string bannerId = unitIds[App.randomGenerator.Next(unitIds.Count)];
 
