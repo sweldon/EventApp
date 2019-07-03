@@ -14,11 +14,7 @@ namespace EventApp
     public class AdViewRenderer : ViewRenderer<AdControlView, AdView>
     {
         //string adUnitId = "ca-app-pub-3940256099942544/6300978111";
-        static List<string> unitIds = new List<string> { "ca-app-pub-1517355594758692/4921551474",
-                                                            "ca-app-pub-1517355594758692/8438705218",
-                                                            "ca-app-pub-1517355594758692/7578895593",
-                                                            "ca-app-pub-1517355594758692/6561327399",
-                                                            "ca-app-pub-1517355594758692/3993027896" };        
+        static List<string> unitIds = new List<string> { "ca-app-pub-9382412071078825/8154933486" };        
         //static Random rnd = new Random();
         string adUnitId = unitIds[App.randomGenerator.Next(unitIds.Count)];
 

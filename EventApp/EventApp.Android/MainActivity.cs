@@ -30,7 +30,7 @@ namespace EventApp.Droid
             base.SetTheme(Resource.Style.MainTheme);
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);      
-            MobileAds.Initialize(ApplicationContext, "ca-app-pub-1517355594758692~7084413480");
+            MobileAds.Initialize(ApplicationContext, "ca-app-pub-9382412071078825~2735085847");
 
             // In-app purchase
             CrossCurrentActivity.Current.Init(this, savedInstanceState);

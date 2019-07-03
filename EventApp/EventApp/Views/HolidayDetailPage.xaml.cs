@@ -386,17 +386,17 @@ namespace EventApp.Views
 
         async void UpVote(object sender, EventArgs args)
         {
-#if __IOS__
-                var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
-                haptic.Prepare();
-                haptic.ImpactOccurred();
-                haptic.Dispose();
-#endif
+            #if __IOS__
+                            var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
+                            haptic.Prepare();
+                            haptic.ImpactOccurred();
+                            haptic.Dispose();
+            #endif
 
-#if __ANDROID__
-            var duration = TimeSpan.FromSeconds(.025);
-            Vibration.Vibrate(duration);
-#endif
+            #if __ANDROID__
+                        var duration = TimeSpan.FromSeconds(.025);
+                        Vibration.Vibrate(duration);
+            #endif
 
             string newVotes = CurrentVotes.Text;
             int newVotesInt = Int32.Parse(newVotes);

@@ -44,6 +44,13 @@
     <AndroidManagedSymbols>true</AndroidManagedSymbols>
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
     <AndroidCreatePackagePerAbi>true</AndroidCreatePackagePerAbi>
+<<<<<<< HEAD
+=======
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <EnableProguard>false</EnableProguard>
+    <DefineConstants>
+    </DefineConstants>
+>>>>>>> 3369ec1c9c73fe5df4c00d34bca3b8e9e7524d45
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
