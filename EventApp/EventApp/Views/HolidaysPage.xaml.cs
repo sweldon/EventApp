@@ -11,6 +11,9 @@ using EventApp.Views;
 using EventApp.ViewModels;
 using System.Diagnostics;
 using Xamarin.Essentials;
+#if __IOS__
+using UIKit;
+#endif
 
 namespace EventApp.Views
 {
@@ -122,16 +125,7 @@ namespace EventApp.Views
 
             base.OnAppearing();
 
-            #if __IOS__
-                if (viewModel.Holidays.Count == 0) 
-                {
-                    viewModel.LoadItemsCommand.Execute(null);
-                }
-            #endif
-
-            #if __ANDROID__
-                    viewModel.LoadItemsCommand.Execute(null);
-            #endif
+            viewModel.LoadItemsCommand.Execute(null);
 
 
 
