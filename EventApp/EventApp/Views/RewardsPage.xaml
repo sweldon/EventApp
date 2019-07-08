@@ -1,18 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:EventApp"  
              Title="Rewards"
              x:Class="EventApp.Views.RewardsPage">
     <ContentPage.Content>
-        <StackLayout VerticalOptions="FillAndExpand">
-
-            <ContentView Margin="0, 20, 0, 0">
+        
+        <StackLayout>
+ <StackLayout Orientation="Horizontal" VerticalOptions="Start">
+            <ContentView>
                 <Image Source="rewards.png" />
             </ContentView>
-            
+  </StackLayout>
+
+  <StackLayout VerticalOptions="StartAndExpand">
             <ContentView>
-                <Button Text="Loading Rewards..." Margin="0, 20, 0, 0"
+                <Button CornerRadius="0" Text="Loading Rewards..." Margin="0, 5, 0, 0"
                 x:Name="WatchAdButton"
                             Clicked="WatchAd"
                             BackgroundColor="#4c96e8"
@@ -24,13 +27,25 @@
                 <Label HorizontalTextAlignment="Center" Text="Rewards will be used to unlock in-app items, and are a great way to support the developers if you like the app." />
                 
             </ContentView>
+  </StackLayout>
+
+  <StackLayout Orientation="Horizontal" VerticalOptions="End">
 
 
             <ContentView VerticalOptions="End">
-                <local:AdControlView BackgroundColor="#CDCDCD"/>
+                <local:AdControlView BackgroundColor="#E0E0E0"/>
             </ContentView>
 
-        </StackLayout>
+       
+  </StackLayout>
+     </StackLayout>
+        
+
+
+
+            
+
+
 
 
     </ContentPage.Content>

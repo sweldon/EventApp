@@ -171,6 +171,9 @@
       <Visible>false</Visible>
     </ImageAsset>
     <BundleResource Include="Resources\premiumbanner_text.png" />
+    <BundleResource Include="Resources\rewards.png" />
+    <BundleResource Include="Resources\star.png" />
+    <BundleResource Include="Resources\trophy.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

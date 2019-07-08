@@ -6,8 +6,8 @@
 
              Title="{Binding Title}">
 
-
-    <StackLayout VerticalOptions="FillAndExpand" Padding="0" Spacing="0">
+             <StackLayout Spacing="0">
+    <StackLayout VerticalOptions="StartAndExpand" Padding="0" Spacing="0">
 
 
 
@@ -269,11 +269,7 @@
                 <ListView.Footer>
 
 
-
-
-                    <ContentView Margin="0,10,0,0">
-                        <local:AdControlView BackgroundColor="#CDCDCD"/>
-                    </ContentView >
+           
                 </ListView.Footer>
 
             </ListView>
@@ -283,5 +279,10 @@
 
     </StackLayout>
 
-
+    <StackLayout VerticalOptions="End">
+                            <ContentView>
+                        <local:AdControlView BackgroundColor="#E0E0E0"/>
+                    </ContentView >
+    </StackLayout>
+    </StackLayout>
 </ContentPage>
