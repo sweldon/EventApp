@@ -124,17 +124,18 @@
 
                                             </ContentView>
 
-                                            <ContentView IsEnabled="{Binding ShowAd}"  IsVisible="{Binding ShowAd}">
-                                                <local:AdControlView BackgroundColor="#CDCDCD"/>
-                                            </ContentView>
+                                            <Grid Padding="20, 0, 20, 0" HorizontalOptions="FillAndExpand"  IsVisible="{Binding ShowHolidayContent}">
 
-                                            <Grid Padding="10" HorizontalOptions="FillAndExpand"  IsVisible="{Binding ShowHolidayContent}">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="16" />
-                                                    <ColumnDefinition Width="18*" />
+                                                    <ColumnDefinition Width="10*" />
                                                     <ColumnDefinition Width="16" />
-                                                    <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="8*" />
+                                                    <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="16" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
@@ -180,21 +181,23 @@
                                                     </Label.GestureRecognizers>
                                                 </Label>
 
-                                                <Image Source="{Binding CelebrateStatus}" Grid.Column="5"  x:Name="UpVoteImage" >
-                                                    <Image.GestureRecognizers>
-                                                        <TapGestureRecognizer
-                                                        Tapped="OnCelebratePicTapped"
-                                                        NumberOfTapsRequired="1" />
-                                                    </Image.GestureRecognizers>
-                                                </Image>
-
-                                                <Label Grid.Column="6"  Grid.Row="0" Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small" VerticalTextAlignment="Center" Margin="0,-1,0,0" >
-                                                    <Label.GestureRecognizers>
-                                                        <TapGestureRecognizer
-                                                            Tapped="OnCelebrateTapped"  />
-                                                    </Label.GestureRecognizers>
-                                                </Label>
-
+                                 
+                                                    <Image Source="{Binding CelebrateStatus}" Grid.Column="5"  x:Name="UpVoteImage" >
+                                                        <Image.GestureRecognizers>
+                                                            <TapGestureRecognizer
+                                                            Tapped="OnCelebratePicTapped"
+                                                            NumberOfTapsRequired="1" />
+                                                        </Image.GestureRecognizers>
+                                                    </Image>
+                                                
+                                                    <Label Grid.Column="6"  Grid.Row="0" Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small" VerticalOptions="FillAndExpand"
+                                                           VerticalTextAlignment="Center" Margin="0,-1,0,0" >
+                                                        <Label.GestureRecognizers>
+                                                            <TapGestureRecognizer
+                                                                Tapped="OnCelebrateTapped"  />
+                                                        </Label.GestureRecognizers>
+                                                    </Label>
+                                       
 
                                             </Grid>
 

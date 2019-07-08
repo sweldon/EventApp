@@ -14,10 +14,10 @@ namespace EventApp
     public class AdViewRenderer : ViewRenderer<AdControlView, AdView>
     {
         //string adUnitId = "ca-app-pub-3940256099942544/6300978111";
-        static List<string> unitIds = new List<string> { "ca-app-pub-9382412071078825/8154933486" };        
+        //static List<string> unitIds = new List<string> { "ca-app-pub-9382412071078825/8154933486" };
         //static Random rnd = new Random();
-        string adUnitId = unitIds[App.randomGenerator.Next(unitIds.Count)];
-
+        //string adUnitId = unitIds[App.randomGenerator.Next(unitIds.Count)];
+        string adUnitId = "ca-app-pub-9382412071078825/8154933486";
         AdSize adSize = AdSize.SmartBanner;
         AdView adView;
 

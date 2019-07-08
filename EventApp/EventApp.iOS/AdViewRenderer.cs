@@ -12,14 +12,14 @@ namespace EventApp
 {
     public class AdViewRenderer : ViewRenderer<AdControlView, BannerView>
     {
-       // string bannerId = "ca-app-pub-1517355594758692/1421290163";
+        // string bannerId = "ca-app-pub-1517355594758692/1421290163";
         //string bannerId = "ca-app-pub-3940256099942544/6300978111";
 
         //string adUnitId = "ca-app-pub-3940256099942544/6300978111";
-        static List<string> unitIds = new List<string> { "ca-app-pub-9382412071078825/1958380167" };
+        //static List<string> unitIds = new List<string> { "ca-app-pub-9382412071078825/1958380167" };
         //static Random rnd = new Random();
-        string bannerId = unitIds[App.randomGenerator.Next(unitIds.Count)];
-
+        //string bannerId = unitIds[App.randomGenerator.Next(unitIds.Count)];
+        string bannerId = "ca-app-pub-9382412071078825/1958380167";
         BannerView adView;
         BannerView CreateNativeAdControl()
         {
