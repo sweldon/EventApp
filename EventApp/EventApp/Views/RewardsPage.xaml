@@ -24,20 +24,19 @@
 
             <ContentView Padding="15">
 
-                <Label HorizontalTextAlignment="Center" Text="Rewards will be used to unlock in-app items, and are a great way to support the developers if you like the app." />
+                <Label HorizontalTextAlignment="Center" Text="Rewards will be used to unlock in-app items, and are a great way to support the developers if you like the app. Please note that we are still actively building the rewards to spend your points on, but you will be able to use all of these points when the features are released!" />
                 
             </ContentView>
-  </StackLayout>
 
-  <StackLayout Orientation="Horizontal" VerticalOptions="End">
+            <ContentView Padding="15">
 
+                    <Label FontSize="28" TextColor="#4c96e8" HorizontalTextAlignment="Center" Text="{Binding Points}" x:Name="PointsLabel" />
 
-            <ContentView VerticalOptions="End">
-                <local:AdControlView BackgroundColor="#E0E0E0"/>
             </ContentView>
+      
+            </StackLayout>
 
-       
-  </StackLayout>
+
      </StackLayout>
         
 
