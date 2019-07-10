@@ -54,7 +54,7 @@
                                 <ColumnDefinition Width="16" />
                                 <ColumnDefinition Width="8*" />
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="16" />
+                                <ColumnDefinition Width="18" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
@@ -71,7 +71,7 @@
 
 
 
-                            <Label Grid.Column="1" Grid.Row="0" Text="Comment" FontSize="12"
+                            <Label Grid.Column="1" Grid.Row="0" Text="Comment" FontSize="Small"
                          VerticalTextAlignment="Center" Margin="0,-2,0,0">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer
@@ -91,7 +91,7 @@
                                 </Image>
                             </ContentView>
 
-                            <Label Grid.Column="3" Grid.Row="0" Text="Share" FontSize="12"
+                            <Label Grid.Column="3" Grid.Row="0" Text="Share" FontSize="Small"
                             VerticalTextAlignment="Center" Margin="0,-2,0,0">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer
@@ -110,7 +110,7 @@
 
 
                             <Label Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small" HorizontalTextAlignment="End" Grid.Column="6" Grid.Row="0"
-                                    VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" Margin="0,-2,0,0"  x:Name="CurrentVotes">
+                                    VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" Margin="0,0,0,0"  x:Name="CurrentVotes">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="UpVote"  />
                                 </Label.GestureRecognizers>
