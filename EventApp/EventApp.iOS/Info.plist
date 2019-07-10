@@ -53,8 +53,7 @@
 	<key>XSLaunchImageAssets</key>
 	<string>Assets.xcassets/LaunchImage.launchimage</string>
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-1507507245083019~8341945444
-</string>
+	<string>ca-app-pub-9382412071078825~2829867889</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -73,12 +72,12 @@
 		<string>gamekit</string>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>0.5.6</string>
+	<string>0.5.9</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>CFBundleIdentifier</key>
 	<string>eventapp.com</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2</string>
+	<string>1.5</string>
 </dict>
 </plist>
