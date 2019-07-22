@@ -50,12 +50,12 @@ namespace EventApp.Views
 
         public async void SendHoliday(object sender, EventArgs e)
         {
-            this.IsEnabled = false;
+            SendHolidayBtn.IsEnabled = false;
 
             if (isLoggedIn == "no")
             {
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
-                this.IsEnabled = true;
+                SendHolidayBtn.IsEnabled = true;
             }
             else
             {
@@ -85,13 +85,13 @@ namespace EventApp.Views
                     }
                     else
                     {
-                        this.IsEnabled = true;
+                        SendHolidayBtn.IsEnabled = true;
                         await DisplayAlert("Error", "Something went wrong, please try again", "OK");
                     }
                 }
                 else
                 {
-                    this.IsEnabled = true;
+                    SendHolidayBtn.IsEnabled = true;
                     await DisplayAlert("Try Again", "We need you to put someting into all of the fields on this page.", "OK");
                 }
 
