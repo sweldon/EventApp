@@ -12,7 +12,8 @@ namespace EventApp.Models
         Search,
         Updates,
         Premium,
-        Rewards
+        Rewards,
+        AddHoliday
     }
     public class HomeMenuItem
     {

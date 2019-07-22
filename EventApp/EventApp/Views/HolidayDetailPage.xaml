@@ -266,11 +266,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
 
-                <ListView.Footer>
 
-
-           
-                </ListView.Footer>
 
             </ListView>
  
@@ -280,9 +276,7 @@
     </StackLayout>
 
     <StackLayout VerticalOptions="End">
-                            <ContentView>
-                        <local:AdControlView BackgroundColor="#E0E0E0"/>
-                    </ContentView >
-    </StackLayout>
+
+        </StackLayout>
     </StackLayout>
 </ContentPage>

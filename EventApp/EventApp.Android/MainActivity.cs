@@ -14,6 +14,7 @@ using EventApp.ViewModels;
 using EventApp.Views;
 using Plugin.InAppBilling;
 using Plugin.CurrentActivity;
+using ImageCircle.Forms.Plugin.Droid;
 
 namespace EventApp.Droid
 {
@@ -29,6 +30,7 @@ namespace EventApp.Droid
 
             base.SetTheme(Resource.Style.MainTheme);
             base.OnCreate(savedInstanceState);
+            ImageCircleRenderer.Init();
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);      
             MobileAds.Initialize(ApplicationContext, "ca-app-pub-9382412071078825~2735085847");
 

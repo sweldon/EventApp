@@ -47,15 +47,6 @@ namespace EventApp.Views
 
             // Test ad: ca-app-pub-3940256099942544/5224354917
 
-            #if __IOS__
-                CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/4201400125");
-            #endif
-
-            #if __ANDROID__
-                CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/7152256279");
-            #endif
-            
-
             CrossMTAdmob.Current.OnRewardedVideoStarted += (object sender, EventArgs e) => {
                 WatchAdButton.Text = "Watch Ad for a Reward!";
                 WatchAdButton.IsEnabled = true;
@@ -101,6 +92,14 @@ namespace EventApp.Views
 
         protected async override void OnAppearing()
         {
+            #if __IOS__
+                        CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/4201400125");
+            #endif
+
+            #if __ANDROID__
+                        CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/7152256279");
+            #endif
+
             if (isLoggedIn == "no")
             {
                 PointsLabel.Text = "Log in to get points!";
@@ -108,6 +107,7 @@ namespace EventApp.Views
             }
             else
             {
+        
                 UpdateUserPoints();
             }
         }
@@ -125,7 +125,7 @@ namespace EventApp.Views
             var response = await client.PostAsync(App.HolidailyHost + "/portal/claim_reward/", content);
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-            int status = responseJSON.status_code;
+            int status = responseJSON.StatusCode;
             string message = responseJSON.message;
             if (status == 200)
             {

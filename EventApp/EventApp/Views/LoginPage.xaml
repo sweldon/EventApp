@@ -19,31 +19,27 @@
     <ContentPage.BindingContext>
         <vm:LoginViewModel />
     </ContentPage.BindingContext>
-    
 
-    
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <StackLayout BackgroundColor="#4c96e8" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
+
+
+    <StackLayout>
+        <StackLayout BackgroundColor="#4c96e8" HorizontalOptions="Fill">
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
-                <ContentView Padding="0,40,0,40" VerticalOptions="FillAndExpand">
-                    <Image Source="Icon_Text.png" Aspect="AspectFill" VerticalOptions="Center" WidthRequest="200" >
+                <ContentView Padding="0,20,0,10" VerticalOptions="FillAndExpand">
+                    <Image Source="Icon_Text.png" Aspect="AspectFill" VerticalOptions="Center" WidthRequest="150" HeightRequest="190">
                 
-                        <Image.HeightRequest>
+                        <!--<Image.HeightRequest>
                             <OnPlatform x:TypeArguments="x:Double">
-                            <On Platform="iOS">210</On>
-                            <On Platform="Android">248</On>
+                            <On Platform="iOS">190</On>
+                            <On Platform="Android">228</On>
                             </OnPlatform> 
-                        </Image.HeightRequest>
+                        </Image.HeightRequest>-->
                     </Image>
                 </ContentView>
             </StackLayout>
 
         </StackLayout>
-        <ScrollView Grid.Row="1"> 
+        <ContentView> 
             <StackLayout Orientation="Vertical" Padding="16,10,16,10" Spacing="10">
 
 
@@ -70,6 +66,6 @@
                     </Label>
                 </StackLayout>
             </StackLayout>
-        </ScrollView>
-    </Grid>
+        </ContentView>
+    </StackLayout>
 </ContentPage>
