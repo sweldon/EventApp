@@ -8,7 +8,7 @@ using Foundation;
 using Google.MobileAds;
 using UIKit;
 using Xamarin.Forms;
-
+using ImageCircle.Forms.Plugin.iOS;
 namespace EventApp.iOS
 {
     // The UIApplicationDelegate for the application. This class is responsible for launching the 
@@ -28,6 +28,7 @@ namespace EventApp.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            ImageCircleRenderer.Init();
             MobileAds.Configure("ca-app-pub-9382412071078825~2829867889");
             LoadApplication(new App());
 

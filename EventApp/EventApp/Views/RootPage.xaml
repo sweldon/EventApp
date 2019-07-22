@@ -8,6 +8,11 @@
         <views:MenuPage />
     </MasterDetailPage.Master>
 
+    
+    <!--<ContentPage.ToolbarItems>
+        <ToolbarItem Name="ProfileToolbar" Order="Primary" Icon="user.png" Text="Item 1" Priority="0" />
+    </ContentPage.ToolbarItems>-->
+
     <MasterDetailPage.Detail>
         <NavigationPage>
             <NavigationPage.Icon>

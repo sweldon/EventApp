@@ -14,7 +14,7 @@ namespace EventApp
     public class AdViewRenderer : ViewRenderer<AdControlView, AdView>
     {
         // test ca-app-pub-3940256099942544/6300978111
-        string adUnitId = "ca-app-pub-3940256099942544/6300978111";
+        string adUnitId = "ca-app-pub-9382412071078825/6429237516";
         AdSize adSize = AdSize.SmartBanner;
         AdView adView;
 
