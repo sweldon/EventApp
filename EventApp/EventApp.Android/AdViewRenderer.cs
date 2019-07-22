@@ -4,18 +4,19 @@ using EventApp;
 using Xamarin.Forms.Platform.Android;
 using Android.Widget;
 using Android.Content;
-
+using System.Collections.Generic;
+using System;
+using System.Diagnostics;
 [assembly: ExportRenderer(typeof(AdControlView), typeof(AdViewRenderer))]
 namespace EventApp
 {
 
     public class AdViewRenderer : ViewRenderer<AdControlView, AdView>
     {
-        string adUnitId = "ca-app-pub-1517355594758692/4921551474";
-        //string adUnitId = "ca-app-pub-3940256099942544/6300978111";
+        // test ca-app-pub-3940256099942544/6300978111
+        string adUnitId = "ca-app-pub-9382412071078825/6429237516";
         AdSize adSize = AdSize.SmartBanner;
         AdView adView;
-
 
         public AdViewRenderer(Context context) : base(context)
         {

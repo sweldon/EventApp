@@ -6,6 +6,7 @@ using Xamarin.Forms.Xaml;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace EventApp.Views
 {
@@ -39,7 +40,19 @@ namespace EventApp.Views
                 OnPropertyChanged();
             }
         }
-       
+
+        public string appInfo
+        {
+            get { return Settings.AppInfo; }
+            set
+            {
+                if (Settings.AppInfo == value)
+                    return;
+                Settings.AppInfo = value;
+                OnPropertyChanged();
+            }
+        }
+
         public NavigationPage NavigationPage { get; private set; }
         public MenuPage()
         {
@@ -49,10 +62,12 @@ namespace EventApp.Views
             {
                 new HomeMenuItem {Id = MenuItemType.Search, Title="Search Holidays", MenuImage="search.png"},
                 new HomeMenuItem {Id = MenuItemType.Holidays, Title="Today's Holidays", MenuImage="today_icon.png"},
+                new HomeMenuItem {Id = MenuItemType.AddHoliday, Title="Add Holiday", MenuImage="pencil.png"},
                 new HomeMenuItem {Id = MenuItemType.Notifications, Title="Notifications", MenuImage="alarm.png"},
                 new HomeMenuItem {Id = MenuItemType.Trending, Title="Trending", MenuImage="trending.png"},
                 new HomeMenuItem {Id = MenuItemType.Updates, Title="Holidaily News", MenuImage="news.png"},
-                new HomeMenuItem {Id = MenuItemType.Premium, Title="Premium", MenuImage="premium.png"}
+                new HomeMenuItem {Id = MenuItemType.Premium, Title="Premium", MenuImage="premium.png"},
+                //new HomeMenuItem {Id = MenuItemType.Rewards, Title="Rewards", MenuImage="trophy.png"}
             };
 
             ListViewMenu.ItemsSource = menuItems;
@@ -66,7 +81,7 @@ namespace EventApp.Views
                 await RootPage.NavigateFromMenu(id);
             };
 
-
+           
             //swipeContainer.Swipe += (sender, e) =>
             //{
             //    switch (e.Direction)
@@ -83,6 +98,7 @@ namespace EventApp.Views
             LoginButton.IsEnabled = false;
             await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             LoginButton.IsEnabled = true;
+
         }
 
         public async void LogoutUser(object sender, EventArgs e)
@@ -91,26 +107,51 @@ namespace EventApp.Views
             isLoggedIn = "no";
             LogoutButton.IsVisible = false;
             LoginButton.IsVisible = true;
+            DefaultHeader.IsVisible = true;
+            ProfileHeader.IsVisible = false;
+            HeaderDivider.IsVisible = false;
             UserLabel.Text = "Hey there!";
             currentUser = null;
             await RootPage.NavigateFromMenu(0);
 
         }
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
-
+            AppInfoLabel.Text = appInfo;
             if (isLoggedIn == "no")
             {
+                DefaultHeader.IsVisible = true;
+                ProfileHeader.IsVisible = false;
                 LogoutButton.IsVisible = false;
                 LoginButton.IsVisible = true;
+                HeaderDivider.IsVisible = false;
                 UserLabel.Text = "Hey there!";
             }
             else
             {
+                DefaultHeader.IsVisible = false;
+                ProfileHeader.IsVisible = true;
                 LogoutButton.IsVisible = true;
                 LoginButton.IsVisible = false;
-                UserLabel.Text = "Hey, "+currentUser+"!";
+                HeaderDivider.IsVisible = true;
+                UserLabel.Text = "Hey, " + currentUser + "!";
+                UserNameHeader.Text = currentUser;
+
+                // Update points
+                var values = new Dictionary<string, string>{
+                { "user", currentUser }
+                };
+
+                var content = new FormUrlEncodedContent(values);
+                HttpClient client = new HttpClient();
+                var response = await client.PostAsync(App.HolidailyHost + "/portal/get_user_rewards/", content);
+                var responseString = await response.Content.ReadAsStringAsync();
+                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                int points = responseJSON.Points;
+                UserPointsHeader.Text = points.ToString();
+
             }
+
         }
 
     }

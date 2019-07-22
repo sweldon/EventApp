@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:EventApp"  
+             Title="Rewards"
+             x:Class="EventApp.Views.RewardsPage">
+    <ContentPage.Content>
+        
+        <StackLayout>
+ <StackLayout Orientation="Horizontal" VerticalOptions="Start">
+            <ContentView>
+                <Image Source="rewards.png" />
+            </ContentView>
+  </StackLayout>
+
+  <StackLayout VerticalOptions="StartAndExpand">
+            <ContentView>
+                <Button CornerRadius="0" Text="Loading Rewards..." Margin="0, 5, 0, 0"
+                x:Name="WatchAdButton"
+                            Clicked="WatchAd"
+                            BackgroundColor="#4c96e8"
+                            TextColor="White" IsEnabled="False" />
+            </ContentView>
+
+            <ContentView Padding="15">
+
+                <Label HorizontalTextAlignment="Center" Text="Rewards will be used to unlock in-app items, and are a great way to support the developers if you like the app. Please note that we are still actively building the rewards to spend your points on, but you will be able to use all of these points when the features are released!" />
+                
+            </ContentView>
+
+            <ContentView Padding="15">
+
+                    <Label FontSize="28" TextColor="#4c96e8" HorizontalTextAlignment="Center" Text="{Binding Points}" x:Name="PointsLabel" />
+
+            </ContentView>
+      
+            </StackLayout>
+
+
+     </StackLayout>
+        
+
+
+
+            
+
+
+
+
+    </ContentPage.Content>
+</ContentPage>

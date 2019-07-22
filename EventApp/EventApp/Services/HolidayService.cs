@@ -26,6 +26,11 @@ namespace EventApp.Services
 
         }
 
+        public string currentUser
+        {
+            get { return Settings.CurrentUser; }
+        }
+
         public async Task<bool> AddItemAsync(Holiday item)
         {
             items.Add(item);
@@ -138,7 +143,8 @@ namespace EventApp.Services
 
             var values = new Dictionary<string, string>{
                    { "month", monthString },
-                   { "day", dayNumber }
+                   { "day", dayNumber },
+                   { "user", currentUser }
                 };
 
             var content = new FormUrlEncodedContent(values);
@@ -165,7 +171,8 @@ namespace EventApp.Services
                     ShowAd = false,
                     ShowHolidayContent = true,
                     Date = holiday.date,
-                    Votes = holiday.votes
+                    Votes = holiday.votes,
+                    CelebrateStatus = holiday.celebrate_status
                 });
             
             }
@@ -227,6 +234,7 @@ namespace EventApp.Services
             return responseJSON.Choice;
 
         }
+
 
 
     }

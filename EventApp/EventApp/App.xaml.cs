@@ -20,7 +20,8 @@ namespace EventApp
         public Holiday OpenHolidayPage { get; set; }
         public Comment OpenComment { get; set; }
         public static string HolidailyHost = "https://holidailyapp.com";
-
+        // App-wide reusable instance for choosing random ads
+        public static Random randomGenerator = new Random();
         public string devicePushId
         {
             get { return Settings.DevicePushId; }
@@ -119,7 +120,6 @@ namespace EventApp
 
             AppCenter.Start("android=7b2a6212-2685-461d-bc70-5e4f1fc387f8;ios=e6263b3a-9c49-4468-815c-3c72fef8032b;", typeof(Push), typeof(Analytics));
             devicePushId = AppCenter.GetInstallIdAsync().Result.Value.ToString();
-
 
         }
 

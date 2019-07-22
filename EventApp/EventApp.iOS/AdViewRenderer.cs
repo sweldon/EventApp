@@ -5,16 +5,15 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using EventApp;
-
+using System.Collections.Generic;
 
 [assembly: ExportRenderer(typeof(AdControlView), typeof(AdViewRenderer))]
 namespace EventApp
 {
     public class AdViewRenderer : ViewRenderer<AdControlView, BannerView>
     {
-        string bannerId = "ca-app-pub-1517355594758692/1421290163";
-        //string bannerId = "ca-app-pub-3940256099942544/6300978111";
 
+        string bannerId = "ca-app-pub-9382412071078825/1958380167";
         BannerView adView;
         BannerView CreateNativeAdControl()
         {

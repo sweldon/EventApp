@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EventApp.Views.AddHoliday"
+             Title="Add a Holiday to Holidaily">
+
+    <ContentPage.Content>
+
+
+        
+        <ContentView BackgroundColor="#FFFFFF" Padding="15" >
+            <StackLayout VerticalOptions="FillAndExpand">
+
+                <Label FontSize="Medium" Text="If you know a holiday that we don't have, tell us and we'll send you confetti! If we add your holiday, we will show your username with it in the app for all to see." />
+
+
+                <Entry Placeholder="Holiday Name" FontSize="Medium" x:Name="HolidayNameEntry" />
+                <DatePicker x:Name="HolidayDateEntry"  />
+
+                <Label FontSize="Medium" Text="Provide some details below about the holiday, or what you would like to appear in the description if we add it to the app" />
+
+                <Editor HeightRequest="100" x:Name="HolidayDetailEntry" FontSize="Medium" VerticalOptions="FillAndExpand" BackgroundColor="#F5F5F5" />
+
+                <Button VerticalOptions="End" Text="Send It" Clicked="SendHoliday" x:Name="SendHolidayBtn"
+                            BackgroundColor="Green"
+                            TextColor="White" />
+
+            </StackLayout>
+        </ContentView>
+    
+    </ContentPage.Content>
+</ContentPage>

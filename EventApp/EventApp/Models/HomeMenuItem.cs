@@ -11,7 +11,9 @@ namespace EventApp.Models
         Notifications,
         Search,
         Updates,
-        Premium
+        Premium,
+        Rewards,
+        AddHoliday
     }
     public class HomeMenuItem
     {

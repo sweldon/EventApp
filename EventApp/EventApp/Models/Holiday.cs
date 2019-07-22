@@ -1,8 +1,10 @@
-﻿using System;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using Xamarin.Forms;
 
 namespace EventApp.Models
 {
-    public class Holiday
+    public class Holiday : INotifyPropertyChanged
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -15,5 +17,34 @@ namespace EventApp.Models
         public bool ShowHolidayContent { get; set; }
         public bool ShowAd { get; set; }
         public string Date { get; set; }
+
+        public string celebrating;
+        public string CelebrateStatus
+        {
+            get { return celebrating; }
+            set
+            {
+                if (celebrating == value)
+                {
+                    return;
+                }
+                celebrating = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            var changed = PropertyChanged;
+            if (changed == null)
+                return;
+
+            changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion
     }
 }

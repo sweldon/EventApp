@@ -43,17 +43,20 @@ namespace EventApp.Views
 
         async void MakePurchase(object sender, EventArgs e)
         {
+            this.IsEnabled = false;
+            PurchaseButton.Text = "Loading...";
             // await DisplayAlert("Soon!", "Premium isn't quite ready yet, but is coming soon. We will send you a notification when it is ready.", "I'll come back later!");
             try
             {
                 var productId = "holidailypremium";
-
                 var connected = await CrossInAppBilling.Current.ConnectAsync();
 
                 if (!connected)
                 {
                     await DisplayAlert("Uh oh!", "We couldn't connect to the store", "Try again");
                     //Couldn't connect to billing, could be offline, alert user
+                    PurchaseButton.Text = "Purchase";
+                    this.IsEnabled = true;
                     return;
                 }
 
@@ -72,16 +75,22 @@ namespace EventApp.Views
                     var state = purchase.State;
                     await DisplayAlert("Success!", "The transaction was successful. Thank you very much for your support", "You're welcome!");
                 }
+
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error!", ex.ToString(), "Try again");
+
+                // await DisplayAlert("Error!", ex.ToString(), "Try again");
             }
             finally
             {
+
                 //Disconnect, it is okay if we never connected
                 await CrossInAppBilling.Current.DisconnectAsync();
             }
+
+            PurchaseButton.Text = "Purchase";
+            this.IsEnabled = true;
         }
 
         protected override async void OnAppearing()

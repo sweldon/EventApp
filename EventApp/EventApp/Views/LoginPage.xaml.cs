@@ -59,7 +59,13 @@ namespace EventApp.Views
             InitializeComponent();
         }
 
-        public async void LoginUser(object sender, EventArgs e)
+        public async void Recover(object sender, EventArgs e)
+        {
+            this.IsEnabled = false;
+            await Task.Run(() => Xamarin.Forms.Device.OpenUri(new Uri(App.HolidailyHost + "/recover")));
+            this.IsEnabled = true;
+        }
+            public async void LoginUser(object sender, EventArgs e)
         {
             this.IsEnabled = false;
             LoginButton.Text = "Logging in...";

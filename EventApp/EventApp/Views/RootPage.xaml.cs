@@ -45,6 +45,12 @@ namespace EventApp.Views
                     case (int)MenuItemType.Premium:
                         MenuPages.Add(id, new NavigationPage(new Premium()));
                         break;
+                    case (int)MenuItemType.Rewards:
+                        MenuPages.Add(id, new NavigationPage(new RewardsPage()));
+                        break;
+                    case (int)MenuItemType.AddHoliday:
+                        MenuPages.Add(id, new NavigationPage(new AddHoliday()));
+                        break;
                 }
             }
 
