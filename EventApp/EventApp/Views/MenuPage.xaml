@@ -20,15 +20,26 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
         
-            <StackLayout BackgroundColor="#FFFFFF" Padding="30,30,5,30" Grid.Column="0">
+            <StackLayout BackgroundColor="#FFFFFF" Grid.Column="0">
   
+            <StackLayout.Padding>
+            <OnPlatform x:TypeArguments="Thickness"
+            Android="30,30,5,30" iOS="30,60,5,30"/>
+            </StackLayout.Padding>
+                
                 <ContentView HorizontalOptions="Start">
                     <controls:CircleImage Source="default_profile_inverted.png" WidthRequest="80" HeightRequest="80" Aspect="AspectFill" VerticalOptions="Start" HorizontalOptions="CenterAndExpand" />
                 </ContentView>
                 
             </StackLayout>
 
-            <StackLayout Grid.Column="1" BackgroundColor="#FFFFFF" Padding="5, 30, 0, 0">
+            <StackLayout Grid.Column="1" BackgroundColor="#FFFFFF">
+                
+            <StackLayout.Padding>
+            <OnPlatform x:TypeArguments="Thickness"
+            Android="5, 30, 0, 0" iOS="5, 65, 0, 0"/>
+            </StackLayout.Padding>
+                
                 <Label x:Name="UserNameHeader" TextColor="Gray" FontSize="Medium" FontAttributes="Bold" />
                 <Label>
                     <Label.FormattedText>

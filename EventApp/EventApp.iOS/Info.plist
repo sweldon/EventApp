@@ -72,12 +72,12 @@
 		<string>gamekit</string>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>0.5.9</string>
+	<string>0.5.10</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>CFBundleIdentifier</key>
 	<string>eventapp.com</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.5</string>
+	<string>1.6</string>
 </dict>
 </plist>

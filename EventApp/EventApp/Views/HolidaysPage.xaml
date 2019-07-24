@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.HolidaysPage"
               Title="{Binding Title}"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
               xmlns:local="clr-namespace:EventApp"  
              x:Name="BrowseItemsPage">
 
@@ -127,20 +128,20 @@
                                             <Grid Padding="20, 0, 20, 0" HorizontalOptions="FillAndExpand"  IsVisible="{Binding ShowHolidayContent}">
 
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="40*" />
                                                 </Grid.RowDefinitions>
                                                 
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="16" />
-                                                    <ColumnDefinition Width="10*" />
+                                                    <ColumnDefinition Width="8*" />
                                                     <ColumnDefinition Width="16" />
                                                     <ColumnDefinition Width="8*" />
                                                     <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="16" />
+                                                    <ColumnDefinition Width="18" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
 
-                                                <ContentView Grid.Column="0">
+                                                <ContentView Grid.Column="0" Grid.Row="0">
                                                     <Image Source="comment.png" VerticalOptions="Center" >
 
                                                         <Image.GestureRecognizers>
@@ -154,7 +155,7 @@
 
 
                                                 <Label Grid.Column="1"  Grid.Row="0" Text="{Binding NumComments, StringFormat='({0})'}" FontSize="Small"
-                                                     VerticalTextAlignment="Center" Margin="0,-4,0,0" >
+                                                     VerticalTextAlignment="Center" Margin="0,-3,0,0" >
                                                     <Label.GestureRecognizers>
                                                         <TapGestureRecognizer
                                                 Tapped="LabelToHoliday"  />
@@ -163,7 +164,7 @@
 
 
 
-                                                <ContentView Grid.Column="2" >
+                                                <ContentView Grid.Column="2" Grid.Row="0" >
 
                                                     <Image Source="share.png" VerticalOptions="Center">
                                                         <Image.GestureRecognizers>
@@ -173,7 +174,7 @@
                                                     </Image>
                                                 </ContentView>
 
-                                                <Label Grid.Column="3" Text="Share" FontSize="12"
+                                                <Label Grid.Column="3" Grid.Row="0" Text="Share" FontSize="Small"
                                                              VerticalTextAlignment="Center" Margin="0,-2,0,0">
                                                     <Label.GestureRecognizers>
                                                         <TapGestureRecognizer
@@ -182,7 +183,7 @@
                                                 </Label>
 
                                  
-                                                    <Image Source="{Binding CelebrateStatus}" Grid.Column="5"  x:Name="UpVoteImage" >
+                                                    <Image Source="{Binding CelebrateStatus}" Grid.Column="5" Grid.Row="0" x:Name="UpVoteImage" >
                                                         <Image.GestureRecognizers>
                                                             <TapGestureRecognizer
                                                             Tapped="OnCelebratePicTapped"
@@ -190,8 +191,9 @@
                                                         </Image.GestureRecognizers>
                                                     </Image>
                                                 
-                                                    <Label Grid.Column="6"  Grid.Row="0" Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small" VerticalOptions="FillAndExpand"
-                                                           VerticalTextAlignment="Center" Margin="0,-1,0,0" >
+                                                    <Label Grid.Column="6" Grid.Row="0" Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small" 
+                                                           VerticalOptions="FillAndExpand"
+                                                           VerticalTextAlignment="Center" Margin="0,0,0,0" >
                                                         <Label.GestureRecognizers>
                                                             <TapGestureRecognizer
                                                                 Tapped="OnCelebrateTapped"  />

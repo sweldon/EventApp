@@ -125,8 +125,8 @@ namespace EventApp.Views
 
             base.OnAppearing();
 
-            if (viewModel.GroupedHolidayList.Count == 0)
-                viewModel.LoadItemsCommand.Execute(null);
+            //if (viewModel.Holidays.Count == 0)
+            viewModel.LoadItemsCommand.Execute(null);
 
 
 
