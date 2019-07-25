@@ -9,6 +9,9 @@ using EventApp.Models;
 using EventApp.ViewModels;
 using EventApp.Services;
 using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace EventApp
@@ -46,6 +49,33 @@ namespace EventApp
             }
         }
 
+        HttpClient client = new HttpClient();
+
+
+        public string currentUser
+        {
+            get { return Settings.CurrentUser; }
+            set
+            {
+                if (Settings.CurrentUser == value)
+                    return;
+                Settings.CurrentUser = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string isLoggedIn
+        {
+            get { return Settings.IsLoggedIn; }
+            set
+            {
+                if (Settings.IsLoggedIn == value)
+                    return;
+                Settings.IsLoggedIn = value;
+                OnPropertyChanged();
+            }
+        }
+
         public App()
         {
             InitializeComponent();
@@ -59,10 +89,13 @@ namespace EventApp
 
         }
 
-        protected override void OnStart()
+        protected override async void OnStart()
         {
-       
-            if (!AppCenter.Configured)
+
+
+
+
+                if (!AppCenter.Configured)
             {
                 Push.PushNotificationReceived += (sender, e) =>
                 {
@@ -120,6 +153,25 @@ namespace EventApp
 
             AppCenter.Start("android=7b2a6212-2685-461d-bc70-5e4f1fc387f8;ios=e6263b3a-9c49-4468-815c-3c72fef8032b;", typeof(Push), typeof(Analytics));
             devicePushId = AppCenter.GetInstallIdAsync().Result.Value.ToString();
+
+
+            if (isLoggedIn == "yes")
+            {
+                var values = new Dictionary<string, string>{
+                   { "username", currentUser },
+                };
+
+                var content = new FormUrlEncodedContent(values);
+                var response = await client.PostAsync(App.HolidailyHost + "/portal/verify_account/", content);
+                var responseString = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine(responseString);
+                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                bool active = responseJSON.active;
+                if (!active)
+                {
+                    App.Current.MainPage = new NavigationPage(new LimboPage());
+                }
+            }
 
         }
 

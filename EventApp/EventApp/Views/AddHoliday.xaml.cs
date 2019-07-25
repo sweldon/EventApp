@@ -81,7 +81,7 @@ namespace EventApp.Views
                     if (status == 200)
                     {
                         SendHolidayBtn.Text = "Submission Pending...";
-                        await DisplayAlert("Success", "We received your Holiday! We will get back to you ASAP about it's release into the App. Thank you for your contribution to Holidaily!", "OK");
+                        await DisplayAlert("Success", "We received your Holiday! We will get back to you ASAP about its release into the App. Thank you for your contribution to Holidaily!", "OK");
                     }
                     else
                     {
@@ -94,10 +94,6 @@ namespace EventApp.Views
                     this.IsEnabled = true;
                     await DisplayAlert("Try Again", "We need you to put someting into all of the fields on this page.", "OK");
                 }
-
-
-
-                
 
             }
 
