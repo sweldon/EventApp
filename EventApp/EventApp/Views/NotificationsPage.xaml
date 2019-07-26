@@ -3,10 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.NotificationsPage"
              >
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Name="NotificationToolbar" Order="Primary" Text="Back"  Clicked="GoBack" x:Name="BackBtn" />
+    </ContentPage.ToolbarItems>
+
+
     <ContentPage.Content>
 
 
-      <StackLayout VerticalOptions="FillAndExpand" Padding="0" Spacing="0">
+        <StackLayout VerticalOptions="FillAndExpand" Padding="0" Spacing="0">
         <BoxView
                HeightRequest="1"
                    BackgroundColor="#EAEAEA"

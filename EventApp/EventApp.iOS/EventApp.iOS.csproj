@@ -273,6 +273,9 @@
     <ITunesArtwork Include="iTunesArtwork" />
     <ITunesArtwork Include="iTunesArtwork%402x" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\party_popper_icon.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\EventApp\EventApp.projitems" Label="Shared" />
 </Project>

@@ -9,9 +9,9 @@
     </MasterDetailPage.Master>
 
     
-    <!--<ContentPage.ToolbarItems>
-        <ToolbarItem Name="ProfileToolbar" Order="Primary" Icon="user.png" Text="Item 1" Priority="0" />
-    </ContentPage.ToolbarItems>-->
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Name="ProfileToolbar" Order="Primary" Icon="bell.png" Text="Item 1" Priority="0" Clicked="OpenNotifications" x:Name="BellBtn" />
+    </ContentPage.ToolbarItems>
 
     <MasterDetailPage.Detail>
         <NavigationPage>

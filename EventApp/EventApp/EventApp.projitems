@@ -31,6 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\HolidayService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\NotificationInterface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\NotificationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConfettiLeaderViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\UpdateViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\CommentViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoginViewModel.cs" />
@@ -50,6 +51,10 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\LimboPage.xaml.cs">
       <DependentUpon>LimboPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ConfettiLeaders.xaml.cs">
+      <DependentUpon>ConfettiLeaders.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\Premium.xaml.cs">
@@ -156,6 +161,9 @@
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\LimboPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\ConfettiLeaders.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
   </ItemGroup>

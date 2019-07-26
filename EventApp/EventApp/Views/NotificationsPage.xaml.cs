@@ -25,6 +25,13 @@ namespace EventApp.Views
             NotificationsList.ItemSelected += OnItemSelected;
         }
 
+        async void GoBack(object sender, EventArgs e)
+        {
+            BackBtn.IsEnabled = false;
+            await Navigation.PopModalAsync();
+            Task.Delay(2000);
+            BackBtn.IsEnabled = true;
+        }
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {

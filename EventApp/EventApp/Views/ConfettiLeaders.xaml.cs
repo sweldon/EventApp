@@ -8,30 +8,39 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using EventApp.Models;
 using System.Diagnostics;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Collections.ObjectModel;
+
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class Updates : ContentPage
+    public partial class ConfettiLeaders : ContentPage
     {
-        UpdateViewModel viewModel;
 
-        public Updates()
+        HttpClient client = new HttpClient();
+        public ObservableCollection<User> TopConfettiList { get; set; }
+        public Command LoadUsers { get; set; }
+
+        bool IsBusy;
+
+        ConfettiLeaderViewModel viewModel;
+
+        public ConfettiLeaders()
         {
             InitializeComponent();
-            BindingContext = viewModel = new UpdateViewModel();
-            Title = "Holidaily News";
-            UpdateList.ItemSelected += Selected;
+            BindingContext = viewModel = new ConfettiLeaderViewModel();
+            Title = "Confetti Leaders";
+            ConfettiLeadersList.ItemSelected += Selected;
+
         }
 
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
 
-            //if (viewModel.Notifications.Count == 0)
-            viewModel.LoadUpdates.Execute(null);
-
-
+            viewModel.LoadUsers.Execute(null);
         }
 
         async void Selected(object sender, SelectedItemChangedEventArgs args)
@@ -43,6 +52,8 @@ namespace EventApp.Views
             }
 
         }
+
+ 
 
     }
 }
