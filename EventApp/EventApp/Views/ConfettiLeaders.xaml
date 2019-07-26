@@ -87,10 +87,10 @@
                                                 <Label LineBreakMode="WordWrap" Grid.Row="2" FontSize="12">
                                                     <Label.FormattedText>
                                                         <FormattedString>
-                                                            <Span Text="{Binding Submissions}" TextColor="#4c96e8" FontAttributes="Bold"/>
-                                                            <Span  Text=" holiday submissions (" TextColor="Gray" />
+                                                            <!--<Span Text="{Binding Submissions}" TextColor="#4c96e8" FontAttributes="Bold"/>
+                                                            <Span  Text=" holiday submissions (" TextColor="Gray" />-->
                                                             <Span  Text="{Binding Approved}" TextColor="#4c96e8" FontAttributes="Bold" />
-                                                            <Span  Text=" approved)" TextColor="Gray" />
+                                                            <Span  Text=" contributed holidays" TextColor="Gray" />
                                                         </FormattedString>
                                                     </Label.FormattedText>
                                                 </Label>
@@ -104,7 +104,7 @@
                                                    HorizontalTextAlignment="End" 
                                                    HorizontalOptions="EndAndExpand"
                                                    VerticalTextAlignment="Center"
-                                                   FontSize="32"
+                                                   FontSize="Large"
                                                   Grid.Column="2" />
 
                                         </Grid>
