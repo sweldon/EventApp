@@ -36,15 +36,21 @@
 
                                     <StackLayout>
                                         <BoxView
-                                           HeightRequest="1"
-                                               BackgroundColor="#DEDEDE"
-                                               HorizontalOptions="FillAndExpand" />
+                                            HeightRequest="1"
+                                            BackgroundColor="#DEDEDE"
+                                            HorizontalOptions="FillAndExpand" >
+                                                <BoxView.IsVisible>
+                                                    <OnPlatform x:TypeArguments="x:Boolean"
+                                                    iOS="false"
+                                                    Android="true"/>
+                                                    </BoxView.IsVisible>
+                                            </BoxView>
 
                                         <Grid HorizontalOptions="FillAndExpand" >
 
                                             <Grid.Padding>
                                                 <OnPlatform x:TypeArguments="Thickness"
-                                            Android="5,5,5,0" iOS="8,10,8,0"/>
+                                            Android="5,5,5,0" iOS="5,5,5,5"/>
                                             </Grid.Padding>
 
 
