@@ -27,8 +27,6 @@ namespace EventApp.ViewModels
         async Task LoadConfettiLeaders()
         {
 
-
-            Debug.WriteLine("TESTSETJDSL:KJL:KDSJ:LDSFKJLK");
             if (IsBusy)
                 return;
 

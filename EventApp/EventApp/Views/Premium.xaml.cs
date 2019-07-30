@@ -33,6 +33,18 @@ namespace EventApp.Views
             }
         }
 
+        public string isLoggedIn
+        {
+            get { return Settings.IsLoggedIn; }
+            set
+            {
+                if (Settings.IsLoggedIn == value)
+                    return;
+                Settings.IsLoggedIn = value;
+                OnPropertyChanged();
+            }
+        }
+
         public Premium()
         {
             InitializeComponent();
@@ -43,52 +55,83 @@ namespace EventApp.Views
 
         async void MakePurchase(object sender, EventArgs e)
         {
+
             this.IsEnabled = false;
-            PurchaseButton.Text = "Loading...";
-            // await DisplayAlert("Soon!", "Premium isn't quite ready yet, but is coming soon. We will send you a notification when it is ready.", "I'll come back later!");
-            try
+
+            if (isLoggedIn == "no")
             {
-                var productId = "holidailypremium";
-                var connected = await CrossInAppBilling.Current.ConnectAsync();
-
-                if (!connected)
-                {
-                    await DisplayAlert("Uh oh!", "We couldn't connect to the store", "Try again");
-                    //Couldn't connect to billing, could be offline, alert user
-                    PurchaseButton.Text = "Purchase";
-                    this.IsEnabled = true;
-                    return;
-                }
-
-                //try to purchase item
-                var purchase = await CrossInAppBilling.Current.PurchaseAsync(productId, ItemType.InAppPurchase, "apppayload");
-                if (purchase == null)
-                {
-                    await DisplayAlert("Error!", "Something went wrong. You have not been charged for anything.", "Try again");
-                    //Not purchased, alert the user
-                }
-                else
-                {
-                    //Purchased, save this information
-                    var id = purchase.Id;
-                    var token = purchase.PurchaseToken;
-                    var state = purchase.State;
-                    await DisplayAlert("Success!", "The transaction was successful. Thank you very much for your support", "You're welcome!");
-                }
-
+                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             }
-            catch (Exception ex)
+            else
             {
+                PurchaseButton.Text = "Loading...";
+                // await DisplayAlert("Soon!", "Premium isn't quite ready yet, but is coming soon. We will send you a notification when it is ready.", "I'll come back later!");
+                try
+                {
+                    //var productId = "android.test.purchased";
+                    var productId = "holidailypremium";
+                    var connected = await CrossInAppBilling.Current.ConnectAsync();
 
-                // await DisplayAlert("Error!", ex.ToString(), "Try again");
+                    if (!connected)
+                    {
+                        await DisplayAlert("Uh oh!", "We couldn't connect to the store", "Try again");
+                        //Couldn't connect to billing, could be offline, alert user
+                        PurchaseButton.Text = "Purchase";
+                        this.IsEnabled = true;
+                        return;
+                    }
+
+                    //try to purchase item
+                    var purchase = await CrossInAppBilling.Current.PurchaseAsync(productId, ItemType.InAppPurchase, "apppayload");
+                    if (purchase == null)
+                    {
+                        await DisplayAlert("Error!", "Something went wrong. You have not been charged for anything.", "Try again");
+                        //Not purchased, alert the user
+                    }
+                    else
+                    {
+                        //Purchased, save this information
+                        var id = purchase.Id;
+                        var token = purchase.PurchaseToken;
+                        var state = purchase.State.ToString();
+
+
+                        var values = new Dictionary<string, string>{
+                           { "username", currentUser },
+                           { "id", id },
+                           { "token", token },
+                           { "state", state }
+                        };
+
+                        var content = new FormUrlEncodedContent(values);
+                        var response = await client.PostAsync(App.HolidailyHost + "/portal/make_premium/", content);
+                        var responseString = await response.Content.ReadAsStringAsync();
+                        dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                        bool success = responseJSON.success;
+                        if (success)
+                        {
+                            await DisplayAlert("Success!", "The transaction was successful. Thank you very much for your support", "You're welcome!");
+                        }
+                        else
+                        {
+                            await DisplayAlert("Error!", "Something went wrong. If you do not see your premium rewards, please contact holidailyapp@gmail.com and we will resolve it ASAP.", "Try again");
+                        }
+                        
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                    // await DisplayAlert("Error!", ex.ToString(), "Try again");
+                }
+                finally
+                {
+
+                    //Disconnect, it is okay if we never connected
+                    await CrossInAppBilling.Current.DisconnectAsync();
+                }
             }
-            finally
-            {
-
-                //Disconnect, it is okay if we never connected
-                await CrossInAppBilling.Current.DisconnectAsync();
-            }
-
             PurchaseButton.Text = "Purchase";
             this.IsEnabled = true;
         }
