@@ -7,11 +7,14 @@
              Title="{Binding Title}">
 
              <StackLayout Spacing="0">
-    <StackLayout VerticalOptions="StartAndExpand" Padding="0" Spacing="0">
+                 
+                 
+                 
+            <StackLayout VerticalOptions="StartAndExpand" Padding="0" Spacing="0">
 
 
 
-        <ContentView Padding="0">
+            <ContentView Padding="0">
 
 
 
@@ -26,6 +29,7 @@
                         IsPullToRefreshEnabled="true"
                         IsRefreshing="{Binding IsBusy, Mode=OneWay}">
 
+                
                 <ListView.BackgroundColor>
                     <OnPlatform x:TypeArguments="Color"
                         Android="#F2F2F2" iOS="#E0E0E0"/>
@@ -34,13 +38,15 @@
                 <ListView.Header>
 
 
-                    <StackLayout Spacing="0" Orientation="Vertical" BackgroundColor="White">
 
-                        <ContentView Padding="10">
-                            <Label x:Name="Description" FontSize="Small"/>
+                        <StackLayout Spacing="0" Orientation="Vertical" BackgroundColor="White">
+
+                            <ContentView Padding="10">
+
+                                <Label x:Name="Description" FontSize="Small"/>
                         </ContentView>
 
-                        <ContentView>
+                            <ContentView>
                             <Image x:Name="HolidayImageSource" HeightRequest="150" Aspect="AspectFill" />
                         </ContentView>
                         <Grid Padding="20, 0, 20, 0" HorizontalOptions="FillAndExpand" >
@@ -59,6 +65,7 @@
                             </Grid.ColumnDefinitions>
 
                             <ContentView Grid.Column="0" Grid.Row="0">
+                                
                                 <Image Source="comment.png" VerticalOptions="Center" >
 
                                     <Image.GestureRecognizers>
@@ -118,7 +125,10 @@
 
 
                         </Grid>
-                    </StackLayout>
+
+
+
+                        </StackLayout>
 
                 </ListView.Header>
 
@@ -266,7 +276,11 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
 
-
+                    <ListView.Footer>
+                        <ContentView>
+                            <local:AdControlView BackgroundColor="#CDCDCD"/>
+                        </ContentView >
+                    </ListView.Footer>
 
             </ListView>
  

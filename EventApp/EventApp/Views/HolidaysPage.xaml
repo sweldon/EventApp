@@ -34,6 +34,12 @@
                   RefreshCommand="{Binding LoadItemsCommand}"
                   IsPullToRefreshEnabled="false"
                    >
+
+                  <ListView.Header>
+                    <ContentView>
+                      <local:AdControlView BackgroundColor="#CDCDCD"/>
+                    </ContentView >
+                  </ListView.Header>
                     <ListView.BackgroundColor>
                         <OnPlatform x:TypeArguments="Color"
                         iOS="#E0E0E0"/>
