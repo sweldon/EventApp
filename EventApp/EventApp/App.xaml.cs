@@ -118,13 +118,13 @@ namespace EventApp
                             string commentId = e.CustomData["comment_id"];
                             string holidayId = e.CustomData["holiday_id"];
 
-                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
                             NavigationPage.PushAsync(new CommentPage(new CommentViewModel(commentId, holidayId)));
                         }
                         else if (e.CustomData.ContainsKey("holiday_id"))
                         {
                             string holidayId = e.CustomData["holiday_id"];
-                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
                         }
                     }
                     else
@@ -187,7 +187,7 @@ namespace EventApp
                 rootPage.Master = menuPage; // Menu
                 rootPage.Detail = NavigationPage; // Content
                 MainPage = rootPage; // Set root to built master detail
-                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
                 //OpenComment = new Comment { Id = commentId, Content = content, UserName = commentUser, TimeSince = TimeAgo };
                 await NavigationPage.PushAsync(new CommentPage(new CommentViewModel(commentId, holidayId)));
             }
@@ -201,7 +201,7 @@ namespace EventApp
             var userAlert = await Application.Current.MainPage.DisplayAlert(title, "Want to see a random one?", "OK", "Close");
             if (userAlert)
             {
-                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
             }
         }
 

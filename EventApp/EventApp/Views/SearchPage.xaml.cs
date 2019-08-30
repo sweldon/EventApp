@@ -126,7 +126,7 @@ namespace EventApp.Views
             if (item.Id != "-1") // Ad
             {
                 this.IsEnabled = false;
-                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id)));
+                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id, item)));
                 this.IsEnabled = true;
             }
 
@@ -140,7 +140,7 @@ namespace EventApp.Views
             if (holidayId != "-1") // Ad
             {
                 this.IsEnabled = false;
-                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, item)));
                 this.IsEnabled = true;
             }
         }
@@ -153,7 +153,7 @@ namespace EventApp.Views
             if (holidayId != "-1") // Ad
             {
                 this.IsEnabled = false;
-                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, item)));
                 this.IsEnabled = true;
             }
         }

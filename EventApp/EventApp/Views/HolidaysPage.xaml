@@ -18,7 +18,7 @@
  
              </ContentView>-->
 
-        <StackLayout VerticalOptions="FillAndExpand" Padding="0" Spacing="0">
+        <StackLayout VerticalOptions="Start" Padding="0" Spacing="0">
             <BoxView HeightRequest=".5"
                    BackgroundColor="#DEDEDE"
                    HorizontalOptions="FillAndExpand" />
@@ -35,11 +35,6 @@
                   IsPullToRefreshEnabled="false"
                    >
 
-                  <ListView.Header>
-                    <ContentView>
-                      <local:AdControlView BackgroundColor="#CDCDCD"/>
-                    </ContentView >
-                  </ListView.Header>
                     <ListView.BackgroundColor>
                         <OnPlatform x:TypeArguments="Color"
                         iOS="#E0E0E0"/>
@@ -175,7 +170,7 @@
                                                     <Image Source="share.png" VerticalOptions="Center">
                                                         <Image.GestureRecognizers>
                                                             <TapGestureRecognizer
-                                                                     Tapped="OnSharePicTapped"  />
+                                                                     Tapped="Share"  />
                                                         </Image.GestureRecognizers>
                                                     </Image>
                                                 </ContentView>
@@ -184,7 +179,7 @@
                                                              VerticalTextAlignment="Center" Margin="0,-2,0,0">
                                                     <Label.GestureRecognizers>
                                                         <TapGestureRecognizer
-                                                             Tapped="OnShareTapped"  />
+                                                             Tapped="Share"  />
                                                     </Label.GestureRecognizers>
                                                 </Label>
 
@@ -192,7 +187,7 @@
                                                     <Image Source="{Binding CelebrateStatus}" Grid.Column="5" Grid.Row="0" x:Name="UpVoteImage" >
                                                         <Image.GestureRecognizers>
                                                             <TapGestureRecognizer
-                                                            Tapped="OnCelebratePicTapped"
+                                                            Tapped="OnCelebrateTapped"
                                                             NumberOfTapsRequired="1" />
                                                         </Image.GestureRecognizers>
                                                     </Image>
@@ -247,7 +242,12 @@
             </ContentView>
 
         </StackLayout>
+      <StackLayout VerticalOptions="End">
+        <ContentView>
+          <local:AdControlView BackgroundColor="#CDCDCD"/>
+        </ContentView >
 
+      </StackLayout>
     </StackLayout>
 
 </ContentPage>

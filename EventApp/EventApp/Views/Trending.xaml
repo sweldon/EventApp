@@ -5,10 +5,10 @@
              xmlns:local="clr-namespace:EventApp"  
              Title="{Binding Title}">
 
-    <StackLayout VerticalOptions="FillAndExpand" Spacing="0">
+    <StackLayout>
 
 
-        <StackLayout VerticalOptions="FillAndExpand" Padding="0" Spacing="0">
+        <StackLayout VerticalOptions="Start" Padding="0" Spacing="0">
             <BoxView HeightRequest=".5"
                    BackgroundColor="#DEDEDE"
                    HorizontalOptions="FillAndExpand" />
@@ -24,11 +24,7 @@
                   RefreshCommand="{Binding LoadTopHolidays}"
                   IsPullToRefreshEnabled="true"
                   CachingStrategy="RecycleElement">
-                    <ListView.Header>
-                        <ContentView>
-                            <local:AdControlView BackgroundColor="#CDCDCD"/>
-                        </ContentView >
-                    </ListView.Header>
+
                     <ListView.BackgroundColor>
                         <OnPlatform x:TypeArguments="Color"
                         iOS="#E0E0E0"/>
@@ -116,7 +112,12 @@
 
             </ContentView>
         </StackLayout>
-        <!--<local:AdControlView BackgroundColor="Red" />-->
+        <StackLayout VerticalOptions="End">
+            <ContentView>
+                <local:AdControlView BackgroundColor="#CDCDCD"/>
+            </ContentView >
+
+        </StackLayout>
 
     </StackLayout>
 

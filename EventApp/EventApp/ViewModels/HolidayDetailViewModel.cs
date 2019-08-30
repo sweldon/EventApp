@@ -19,7 +19,6 @@ namespace EventApp.ViewModels
         public List<CommentList> GroupedCommentList { get { return CommentList; } set { CommentList = value; base.OnPropertyChanged(); } }
         public Command LoadHolidayComments { get; set; }
         public string HolidayId { get; set; }
-
         public string currentUser
         {
             get { return Settings.CurrentUser; }
@@ -32,10 +31,13 @@ namespace EventApp.ViewModels
             }
         }
 
-        public HolidayDetailViewModel(string holidayId)
+        public HolidayDetailViewModel(string holidayId, Holiday holidayObject)
         {
 
+            // Coming in from a "Share" link
+            Holiday = holidayObject;
             HolidayId = holidayId;
+            
             GroupedCommentList = new List<CommentList>();
             LoadHolidayComments = new Command(async () => await ExecuteLoadCommentsCommand());
 
@@ -54,7 +56,6 @@ namespace EventApp.ViewModels
 
 
         }
-
 
         async Task ExecuteLoadCommentsCommand()
         {

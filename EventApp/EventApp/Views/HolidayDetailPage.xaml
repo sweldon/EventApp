@@ -6,11 +6,13 @@
 
              Title="{Binding Title}">
 
-             <StackLayout Spacing="0">
-                 
-                 
-                 
-            <StackLayout VerticalOptions="StartAndExpand" Padding="0" Spacing="0">
+             <StackLayout>
+        <!--<ContentView>
+            <local:AdControlView BackgroundColor="#CDCDCD"/>
+        </ContentView >-->
+
+
+        <StackLayout VerticalOptions="Start" Padding="0" Spacing="0">
 
 
 
@@ -19,7 +21,7 @@
 
 
             <ListView x:Name="HolidayDetailList"
-                     
+    
                       SeparatorVisibility="None"
                         ItemsSource="{Binding GroupedCommentList}"
  
@@ -37,10 +39,13 @@
 
                 <ListView.Header>
 
-
+                       
+      
+                 
 
                         <StackLayout Spacing="0" Orientation="Vertical" BackgroundColor="White">
 
+                            
                             <ContentView Padding="10">
 
                                 <Label x:Name="Description" FontSize="Small"/>
@@ -276,11 +281,6 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
 
-                    <ListView.Footer>
-                        <ContentView>
-                            <local:AdControlView BackgroundColor="#CDCDCD"/>
-                        </ContentView >
-                    </ListView.Footer>
 
             </ListView>
  
@@ -289,7 +289,11 @@
 
     </StackLayout>
 
-    <StackLayout VerticalOptions="End">
+
+        <StackLayout VerticalOptions="End">
+            <ContentView>
+            <local:AdControlView BackgroundColor="#CDCDCD"/>
+        </ContentView >
 
         </StackLayout>
     </StackLayout>

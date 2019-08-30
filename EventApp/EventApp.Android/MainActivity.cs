@@ -48,7 +48,7 @@ namespace EventApp.Droid
                     rootPage.Master = menuPage; // Menu
                     rootPage.Detail = NavigationPage; // Content
                     App.Current.MainPage = rootPage; // Set root to built master detail
-                    NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(data)));
+                    NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(data, null)));
                 });
 
             }

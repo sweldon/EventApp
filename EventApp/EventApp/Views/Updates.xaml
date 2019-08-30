@@ -2,20 +2,21 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.Updates"
+             xmlns:local="clr-namespace:EventApp"  
              >
     <ContentPage.Content>
 
-
-        <StackLayout VerticalOptions="FillAndExpand" Padding="0" Spacing="0">
-            <BoxView
+        <StackLayout>
+            <StackLayout VerticalOptions="FillAndExpand" Padding="0" Spacing="0">
+                <BoxView
                HeightRequest="1"
                    BackgroundColor="#EAEAEA"
                    HorizontalOptions="FillAndExpand" />
 
 
-            <ContentView BackgroundColor="#f5f5f5" Padding="0">
+                <ContentView BackgroundColor="#f5f5f5" Padding="0">
 
-                <ListView x:Name="UpdateList"
+                    <ListView x:Name="UpdateList"
                  IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                   SeparatorVisibility="None"
                   ItemsSource="{Binding Updates}"
@@ -23,45 +24,45 @@
                   RefreshCommand="{Binding LoadUpdates}"
                   IsPullToRefreshEnabled="true"
                   CachingStrategy="RecycleElement">
-                    
-                      <ListView.BackgroundColor>
-                        <OnPlatform x:TypeArguments="Color"
-                        iOS="#E0E0E0"/>
-                      </ListView.BackgroundColor>
-                    
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="White" Margin="0,5,0,0">
 
-                                    <StackLayout>
-                                        <BoxView
+                        <ListView.BackgroundColor>
+                            <OnPlatform x:TypeArguments="Color"
+                        iOS="#E0E0E0"/>
+                        </ListView.BackgroundColor>
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="White" Margin="0,5,0,0">
+
+                                        <StackLayout>
+                                            <BoxView
                                            HeightRequest="1"
                                                BackgroundColor="#DEDEDE"
                                                HorizontalOptions="FillAndExpand" />
 
-                                        <Grid HorizontalOptions="FillAndExpand">
-                                            
-                                            <Grid.Padding>
-                                            <OnPlatform x:TypeArguments="Thickness"
-                                            Android="5,5,5,0" iOS="8,10,8,0"/>
-                                            </Grid.Padding>
-                                            
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="5*" />
-                                                <ColumnDefinition Width="5*" />
-                                            </Grid.ColumnDefinitions>
+                                            <Grid HorizontalOptions="FillAndExpand">
 
-                                            <Label Text="{Binding Title}"
+                                                <Grid.Padding>
+                                                    <OnPlatform x:TypeArguments="Thickness"
+                                            Android="5,5,5,0" iOS="8,10,8,0"/>
+                                                </Grid.Padding>
+
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="5*" />
+                                                    <ColumnDefinition Width="5*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Label Text="{Binding Title}"
                                               FontSize="14"
                                               TextColor="#4c96e8"
                                               Grid.Row="0" Grid.Column="0"/>
 
-                                            <Label Text="{Binding TimeSince}"
+                                                <Label Text="{Binding TimeSince}"
                                                   FontSize="12"
                                                   Grid.Row="0"
                                                   Grid.Column="1"
@@ -69,31 +70,31 @@
                                                   Opacity=".8" />
 
 
-                                            <Label LineBreakMode="WordWrap" Grid.Row="1" Margin="0,-4,0,0">
-                                                <Label.FormattedText>
-                                                    <FormattedString>
-                                                        <Span FontSize="10" Text="posted by " TextColor="Gray" FontAttributes="Bold" />
-                                                        <Span FontSize="10" Text="{Binding Author}" TextColor="#4c96e8" />
-                                                    </FormattedString>
-                                                </Label.FormattedText>
-                                            </Label>
+                                                <Label LineBreakMode="WordWrap" Grid.Row="1" Margin="0,-4,0,0">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span FontSize="10" Text="posted by " TextColor="Gray" FontAttributes="Bold" />
+                                                            <Span FontSize="10" Text="{Binding Author}" TextColor="#4c96e8" />
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
 
-                                        </Grid>
-                                        
-                                        
-                                        <ContentView>
+                                            </Grid>
 
-                                            <ContentView.Padding>
-                                            <OnPlatform x:TypeArguments="Thickness"
+
+                                            <ContentView>
+
+                                                <ContentView.Padding>
+                                                    <OnPlatform x:TypeArguments="Thickness"
                                             Android="10,0,10,10" iOS="8,0,8,10"/>
-                                            </ContentView.Padding>
-                                            <Label Text="{Binding Content}" FontSize="14" />
-                                        </ContentView>
-                                        
-                                        
-                                       
+                                                </ContentView.Padding>
+                                                <Label Text="{Binding Content}" FontSize="14" />
+                                            </ContentView>
 
-                                        <BoxView
+
+
+
+                                            <BoxView
                                             HeightRequest="1"
                                             BackgroundColor="#DEDEDE"
                                             HorizontalOptions="FillAndExpand">
@@ -102,23 +103,30 @@
                                                     iOS="false"
                                                     Android="true"/>
                                                 </BoxView.IsVisible>
-                                        </BoxView>
+                                            </BoxView>
 
 
-                                    </StackLayout>
+                                        </StackLayout>
 
 
-                                </ContentView>
+                                    </ContentView>
 
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-
-
-                </ListView>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
 
 
-            </ContentView>
+                    </ListView>
+
+
+                </ContentView>
+            </StackLayout>
+            <StackLayout VerticalOptions="End">
+                <ContentView>
+                    <local:AdControlView BackgroundColor="#CDCDCD"/>
+                </ContentView >
+
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

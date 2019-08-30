@@ -34,7 +34,7 @@ namespace EventApp.Views
                 return;
             }
             var item = args.SelectedItem as Holiday;
-            await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id)));
+            await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id, item)));
             this.IsEnabled = true;
         }
 

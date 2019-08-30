@@ -20,6 +20,8 @@ namespace EventApp.Views
     public partial class HolidayDetailPage : ContentPage
     {
 
+
+
         public string isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
@@ -60,6 +62,8 @@ namespace EventApp.Views
         HolidayDetailViewModel viewModel;
 
         public Comment Comment { get; set; }
+
+
         public HolidayDetailPage(HolidayDetailViewModel viewModel)
         {
             InitializeComponent();
@@ -69,6 +73,7 @@ namespace EventApp.Views
             // Remove when reply button added
             HolidayDetailList.ItemSelected += OnCommentSelected;
 
+
             //HolidayDetailList.ItemTapped += (object sender, ItemTappedEventArgs e) =>
             //{
             //    // Attempt to disable highlighting
@@ -76,8 +81,6 @@ namespace EventApp.Views
 
 
             //};
-
-
 
         }
 
@@ -157,7 +160,6 @@ namespace EventApp.Views
             }
 
             var item = args.SelectedItem as Comment;
-            //await Navigation.PushAsync(new CommentPage(new CommentViewModel(item.Id, viewModel.Holiday.Id)));
 
         }
 
@@ -439,7 +441,10 @@ namespace EventApp.Views
                         await UpVoteImage.ScaleTo(1, 50);
                         await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "3");
 
-                    }
+
+                        Object[] values = { viewModel.Holiday.Name, false, newVotesInt.ToString() };
+                        MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
+                }
                     else
                     {
                         // Only allow if user hasnt already downvoted
@@ -452,7 +457,10 @@ namespace EventApp.Views
                             await UpVoteImage.ScaleTo(1, 50);
                             await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "1");
 
-                        }
+
+                        Object[] values = { viewModel.Holiday.Name, true, newVotesInt.ToString() };
+                            MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
+                    }
                         else
                         {
                             newVotesInt -= 2;
@@ -462,7 +470,11 @@ namespace EventApp.Views
                             await UpVoteImage.ScaleTo(1, 50);
                             await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "5");
 
-                        }
+    
+                            Object[] values = { viewModel.Holiday.Name, false, newVotesInt.ToString() };
+                            MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
+
+                    }
 
                     }
 

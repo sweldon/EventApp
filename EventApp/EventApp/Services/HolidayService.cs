@@ -70,21 +70,31 @@ namespace EventApp.Services
         {
 
             var values = new Dictionary<string, string>{
-                   { "id", id }
+                   { "id", id },
+                   { "user", currentUser }
                 };
 
             var content = new FormUrlEncodedContent(values);
             var response = await client.PostAsync(App.HolidailyHost + "/portal/get_holiday_by_id/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
-            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+            dynamic holiday = JsonConvert.DeserializeObject(responseString);
 
-            individualHoliday = new Holiday() { Id=id,
-                Name = responseJSON.name,
-                Description = responseJSON.description,
-                Votes = responseJSON.votes,
-                HolidayImage = responseJSON.image,
-                Date = responseJSON.date
+            string holidayDescription = holiday.description;
+            string HolidayDescriptionShort = holidayDescription.Length <= 90 ? holidayDescription : holidayDescription.Substring(0, 90) + "...";
+            individualHoliday = new Holiday() {
+                Id = holiday.id,
+                Name = holiday.name,
+                Description = holiday.description,
+                NumComments = holiday.num_comments,
+                TimeSince = holiday.time_since,
+                DescriptionShort = HolidayDescriptionShort,
+                HolidayImage = holiday.image,
+                ShowAd = false,
+                ShowHolidayContent = true,
+                Date = holiday.date,
+                Votes = holiday.votes,
+                CelebrateStatus = holiday.celebrate_status
             };
 
             return await Task.FromResult(individualHoliday);
