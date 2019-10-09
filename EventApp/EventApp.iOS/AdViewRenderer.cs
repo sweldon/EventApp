@@ -6,84 +6,67 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using EventApp;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 [assembly: ExportRenderer(typeof(AdControlView), typeof(AdViewRenderer))]
 namespace EventApp
 {
     public class AdViewRenderer : ViewRenderer<AdControlView, BannerView>
     {
+		protected override void OnElementChanged(ElementChangedEventArgs<AdControlView> e)
+		{
+			base.OnElementChanged(e);
+			if (Control == null)
+			{
+				SetNativeControl(CreateBannerView());				
+			}
+		}
+		
+		protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			base.OnElementPropertyChanged(sender, e);
 
-        string bannerId = "ca-app-pub-9382412071078825/1958380167";
-        BannerView adView;
-        BannerView CreateNativeAdControl()
-        {
-            if (adView != null)
-                return adView;
+			if (e.PropertyName == nameof(BannerView.AdUnitID))
+				Control.AdUnitID = Element.AdUnitId;
+		}
 
-
-            // Setup your BannerView, review AdSizeCons class for more Ad sizes. 
-            adView = new BannerView(size: AdSizeCons.SmartBannerPortrait,
+		private BannerView CreateBannerView()
+		{
+			var bannerView = new BannerView(size: AdSizeCons.SmartBannerPortrait,
                                            origin: new CGPoint(0, UIScreen.MainScreen.Bounds.Size.Height - AdSizeCons.Banner.Size.Height))
             {
-                AdUnitID = bannerId,
+                AdUnitID = Element.AdUnitId,
                 RootViewController = GetVisibleViewController()
             };
 
-            // Wire AdReceived event to know when the Ad is ready to be displayed
-            adView.AdReceived += (object sender, EventArgs e) =>
-            {
-                //ad has come in
-            };
+			//var bannerView = new BannerView(AdSizeCons.SmartBannerPortrait)
+			//{
+			//	AdUnitID = Element.AdUnitId,
+			//	RootViewController = GetVisibleViewController()
+			//};
 
+			bannerView.LoadRequest(GetRequest());
 
-            adView.LoadRequest(GetRequest());
-            return adView;
-        }
-
-        Request GetRequest()
-        {
-            var request = Request.GetDefaultRequest();
-            // Requests test ads on devices you specify. Your test device ID is printed to the console when
-            // an ad request is made. GADBannerView automatically returns test ads when running on a
-            // simulator. After you get your device ID, add it here
-            //request.TestDevices = new [] { Request.SimulatorId.ToString () };
-            return request;
-        }
-
-        /// 
-        /// Gets the visible view controller.
-        /// 
-        /// The visible view controller.
-        UIViewController GetVisibleViewController()
-        {
-            var rootController = UIApplication.SharedApplication.KeyWindow.RootViewController;
-
-            if (rootController.PresentedViewController == null)
-                return rootController;
-
-            if (rootController.PresentedViewController is UINavigationController)
-            {
-                return ((UINavigationController)rootController.PresentedViewController).VisibleViewController;
-            }
-
-            if (rootController.PresentedViewController is UITabBarController)
-            {
-                return ((UITabBarController)rootController.PresentedViewController).SelectedViewController;
-            }
-
-            return rootController.PresentedViewController;
-        }
-
-        protected override void OnElementChanged(ElementChangedEventArgs<AdControlView> e)
-        {
-            base.OnElementChanged(e);
-            if (Control == null)
-            {
-                CreateNativeAdControl();
-                SetNativeControl(adView);
-
-
-            }
-        }
-    }
+			Request GetRequest()
+			{
+				var request = Request.GetDefaultRequest();
+				return request;
+			}
+			
+			return bannerView;
+		}
+			
+		private UIViewController GetVisibleViewController()
+		{
+			var windows = UIApplication.SharedApplication.Windows;
+			foreach (var window in windows)
+			{
+				if (window.RootViewController != null)
+				{
+					return window.RootViewController;
+				}				
+			}
+			return null;
+		}
+	}
 }

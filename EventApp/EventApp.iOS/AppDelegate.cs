@@ -45,7 +45,7 @@ namespace EventApp.iOS
             rootPage.Detail = NavigationPage; // Content
             App.Current.MainPage = rootPage; // Set root to built master detail
             //System.Diagnostics.Debug.WriteLine("OPENING HOLIDAY " + data);
-            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
 
             return true;
         }

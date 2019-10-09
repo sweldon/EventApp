@@ -114,7 +114,7 @@
         </StackLayout>
         <StackLayout VerticalOptions="End">
             <ContentView>
-                <local:AdControlView BackgroundColor="#CDCDCD"/>
+                <local:AdControlView AdUnitId="ca-app-pub-9382412071078825/5601168120" BackgroundColor="#CDCDCD"/>
             </ContentView >
 
         </StackLayout>

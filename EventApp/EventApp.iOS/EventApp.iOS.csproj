@@ -180,6 +180,7 @@
     <BundleResource Include="Resources\default_profile.png" />
     <BundleResource Include="Resources\default_profile_inverted.png" />
     <BundleResource Include="Resources\pencil.png" />
+    <BundleResource Include="Resources\bell.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
