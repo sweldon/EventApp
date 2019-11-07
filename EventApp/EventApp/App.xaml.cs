@@ -151,7 +151,7 @@ namespace EventApp
             }
 
 
-            AppCenter.Start("android=7b2a6212-2685-461d-bc70-5e4f1fc387f8;ios=e6263b3a-9c49-4468-815c-3c72fef8032b;", typeof(Push), typeof(Analytics));
+            AppCenter.Start("android=a43f5f54-cb5f-4ad2-af75-762b151c5891;ios=e6263b3a-9c49-4468-815c-3c72fef8032b;", typeof(Push), typeof(Analytics));
             devicePushId = AppCenter.GetInstallIdAsync().Result.Value.ToString();
 
 
