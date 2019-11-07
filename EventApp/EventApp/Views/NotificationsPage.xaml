@@ -6,7 +6,7 @@
              >
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Name="NotificationToolbar" Order="Primary" Text="Back"  Clicked="GoBack" x:Name="BackBtn" />
+        <ToolbarItem Order="Primary" Text="Back"  Clicked="GoBack" x:Name="BackBtn" />
     </ContentPage.ToolbarItems>
 
 
@@ -123,7 +123,7 @@
             </StackLayout>
             <StackLayout VerticalOptions="End">
                 <ContentView>
-                    <local:AdControlView BackgroundColor="#CDCDCD"/>
+                    <local:AdControlView AdUnitId="ca-app-pub-9382412071078825/5304465283" BackgroundColor="#CDCDCD"/>
                 </ContentView >
 
             </StackLayout>
