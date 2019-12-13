@@ -15,6 +15,19 @@ namespace EventApp.Views
     {
         TrendingViewModel viewModel;
 
+        public bool isPremium
+        {
+            get { return Settings.IsPremium; }
+            set
+            {
+                if (Settings.IsPremium == value)
+                    return;
+                Settings.IsPremium = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public Trending()
         {
             InitializeComponent();
@@ -44,6 +57,7 @@ namespace EventApp.Views
 
             if (viewModel.TopHolidays.Count == 0)
                 viewModel.LoadTopHolidays.Execute(null);
+            AdBanner.IsVisible = !isPremium;
 
 
         }

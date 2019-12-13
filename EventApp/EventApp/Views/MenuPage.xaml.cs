@@ -53,6 +53,18 @@ namespace EventApp.Views
             }
         }
 
+        public bool isPremium
+        {
+            get { return Settings.IsPremium; }
+            set
+            {
+                if (Settings.IsPremium == value)
+                    return;
+                Settings.IsPremium = value;
+                OnPropertyChanged();
+            }
+        }
+
         public NavigationPage NavigationPage { get; private set; }
         public MenuPage()
         {
@@ -113,7 +125,14 @@ namespace EventApp.Views
             HeaderDivider.IsVisible = false;
             UserLabel.Text = "Hey there!";
             currentUser = null;
-            await RootPage.NavigateFromMenu(0);
+            isPremium = false;
+
+            var menuPage = new MenuPage(); // Build hamburger menu
+            NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
+            var rootPage = new RootPage(); // Root handles master detail navigation
+            rootPage.Master = menuPage; // Menu
+            rootPage.Detail = NavigationPage; // Content
+            Application.Current.MainPage = rootPage; // Set root to built master detail
 
         }
         protected override async void OnAppearing()
@@ -150,6 +169,10 @@ namespace EventApp.Views
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                 int points = responseJSON.Points;
                 UserPointsHeader.Text = points.ToString();
+                if (isPremium)
+                {
+                    isPremiumLabel.Text = "Premium";
+                }
 
             }
 

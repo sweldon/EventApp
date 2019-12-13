@@ -46,6 +46,18 @@ namespace EventApp.Views
             }
         }
 
+        public bool isPremium
+        {
+            get { return Settings.IsPremium; }
+            set
+            {
+                if (Settings.IsPremium == value)
+                    return;
+                Settings.IsPremium = value;
+                OnPropertyChanged();
+            }
+        }
+        public string showAds;
         public HolidaysPage()
         {
             InitializeComponent();
@@ -69,8 +81,8 @@ namespace EventApp.Views
                 if (e.Item == null) return;
                 ((ListView)sender).SelectedItem = null;
             };
-            //TodayLabel.Text = todayString + ", " + monthString + " " + dayNumber;
             viewModel.Title = todayString + ", " + monthString + " " + dayNumber;
+            
 
 
         }
@@ -112,7 +124,7 @@ namespace EventApp.Views
 
             if (viewModel.Holidays.Count == 0)
                 viewModel.LoadItemsCommand.Execute(null);
-
+            AdBanner.IsVisible = !isPremium;
         }
 
 

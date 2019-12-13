@@ -39,7 +39,23 @@ namespace EventApp
         private const string IsActiveKey = "is_active_key";
         private static readonly bool IsActiveDefault = false;
 
+        private const string IsPremiumKey = "is_premium_key";
+        private static readonly bool IsPremiumDefault = false;
+
         #endregion
+
+        public static bool IsPremium
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(IsPremiumKey, IsPremiumDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(IsPremiumKey, value);
+            }
+        }
+
 
         public static bool IsActive
         {

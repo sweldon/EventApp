@@ -49,6 +49,7 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
+                <Label IsVisible="{Binding isPremium}" x:Name="isPremiumLabel" TextColor="Green" FontSize="Medium" FontAttributes="Bold" />
             </StackLayout>
 
         </Grid>

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace EventApp
@@ -49,8 +50,33 @@ namespace EventApp
             }
         }
 
-        HttpClient client = new HttpClient();
+        public static HttpClient client = new HttpClient();
 
+        public bool isPremium
+        {
+            get { return Settings.IsPremium; }
+            set
+            {
+                if (Settings.IsPremium == value)
+                    return;
+                Settings.IsPremium = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        public static async Task<bool> CheckPremium(string userName)
+        {
+            var values = new Dictionary<string, string>{
+                   { "username", userName }
+            };
+            var content = new FormUrlEncodedContent(values);
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/is_premium/", content);
+            var responseString = await response.Content.ReadAsStringAsync();
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+            return responseJSON.is_premium;
+
+        }
 
         public string currentUser
         {
@@ -95,8 +121,7 @@ namespace EventApp
 
 
 
-                if (!AppCenter.Configured)
-            {
+            if (!AppCenter.Configured){
                 Push.PushNotificationReceived += (sender, e) =>
                 {
                     if (e.Message == null)
@@ -171,6 +196,13 @@ namespace EventApp
                 {
                     App.Current.MainPage = new NavigationPage(new LimboPage());
                 }
+
+                // Check Premium status
+                isPremium = await CheckPremium(currentUser);
+            }
+            else
+            {
+                isPremium = false;
             }
 
         }

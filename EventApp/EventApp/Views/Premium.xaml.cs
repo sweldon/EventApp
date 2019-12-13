@@ -45,6 +45,18 @@ namespace EventApp.Views
             }
         }
 
+        public bool isPremium
+        {
+            get { return Settings.IsPremium; }
+            set
+            {
+                if (Settings.IsPremium == value)
+                    return;
+                Settings.IsPremium = value;
+                OnPropertyChanged();
+            }
+        }
+
         public Premium()
         {
             InitializeComponent();
@@ -62,15 +74,30 @@ namespace EventApp.Views
             {
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             }
+            else if (isPremium)
+            {
+                await DisplayAlert("Thank you!", "You have already purchased premium", "Oh right!");
+                PurchaseButton.Text = "Purchase";
+                this.IsEnabled = true;
+            }
             else
             {
                 PurchaseButton.Text = "Loading...";
                 // await DisplayAlert("Soon!", "Premium isn't quite ready yet, but is coming soon. We will send you a notification when it is ready.", "I'll come back later!");
+                var billing = CrossInAppBilling.Current;
                 try
                 {
                     //var productId = "android.test.purchased";
                     var productId = "holidailypremium";
-                    var connected = await CrossInAppBilling.Current.ConnectAsync();
+                    
+                    var connected = await billing.ConnectAsync(ItemType.InAppPurchase);
+
+                    // Undo Test Purchase
+                    //var consumedItem = await billing.ConsumePurchaseAsync(productId, "inapp:com.divinity.holidailyapp:android.test.purchased");
+                    //if (consumedItem != null)
+                    //{
+                    //    await DisplayAlert("used", "consumed", "OK");
+                    //}
 
                     if (!connected)
                     {
@@ -81,8 +108,11 @@ namespace EventApp.Views
                         return;
                     }
 
+                    PurchaseButton.Text = "Purchase";
+                    this.IsEnabled = true;
+
                     //try to purchase item
-                    var purchase = await CrossInAppBilling.Current.PurchaseAsync(productId, ItemType.InAppPurchase, "apppayload");
+                    var purchase = await billing.PurchaseAsync(productId, ItemType.InAppPurchase, "apppayload");
                     if (purchase == null)
                     {
                         await DisplayAlert("Error!", "Something went wrong. You have not been charged for anything.", "Try again");
@@ -110,6 +140,7 @@ namespace EventApp.Views
                         bool success = responseJSON.success;
                         if (success)
                         {
+                            isPremium = true;
                             await DisplayAlert("Success!", "The transaction was successful. Thank you very much for your support", "You're welcome!");
                         }
                         else
@@ -120,20 +151,47 @@ namespace EventApp.Views
                     }
 
                 }
+                catch (InAppBillingPurchaseException purchaseEx)
+                {
+                    var message = string.Empty;
+                    switch (purchaseEx.PurchaseError)
+                    {
+                        case PurchaseError.AppStoreUnavailable:
+                            message = "Currently the app store seems to be unavailble. Try again later.";
+                            break;
+                        case PurchaseError.BillingUnavailable:
+                            message = "Billing seems to be unavailable, please try again later.";
+                            break;
+                        case PurchaseError.PaymentInvalid:
+                            message = "Payment seems to be invalid, please try again.";
+                            break;
+                        case PurchaseError.PaymentNotAllowed:
+                            message = "Payment does not seem to be enabled/allowed, please try again.";
+                            break;
+                    }
+
+                    //Decide if it is an error we care about
+                    if (string.IsNullOrWhiteSpace(message))
+                        return;
+                                PurchaseButton.Text = "Purchase";
+            this.IsEnabled = true;
+                    //Display message to user
+                }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex);
-                    // await DisplayAlert("Error!", ex.ToString(), "Try again");
+                    //Something else has gone wrong, log it
+                    PurchaseButton.Text = "Purchase";
+                    this.IsEnabled = true;
+                    Debug.WriteLine("Issue connecting: " + ex);
                 }
                 finally
                 {
-
-                    //Disconnect, it is okay if we never connected
-                    await CrossInAppBilling.Current.DisconnectAsync();
+                    PurchaseButton.Text = "Purchase";
+                    this.IsEnabled = true;
+                    await billing.DisconnectAsync();
                 }
             }
-            PurchaseButton.Text = "Purchase";
-            this.IsEnabled = true;
+
         }
 
         protected override async void OnAppearing()
