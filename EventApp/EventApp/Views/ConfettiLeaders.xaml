@@ -148,7 +148,7 @@
 
                 </ContentView>
             </StackLayout>
-      <StackLayout VerticalOptions="End">
+            <StackLayout VerticalOptions="End" x:Name="AdBanner">
         <ContentView>
           <local:AdControlView AdUnitId="ca-app-pub-9382412071078825/3775761196" BackgroundColor="#CDCDCD"/>
         </ContentView >

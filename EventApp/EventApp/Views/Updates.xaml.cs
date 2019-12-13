@@ -15,6 +15,18 @@ namespace EventApp.Views
     {
         UpdateViewModel viewModel;
 
+        public bool isPremium
+        {
+            get { return Settings.IsPremium; }
+            set
+            {
+                if (Settings.IsPremium == value)
+                    return;
+                Settings.IsPremium = value;
+                OnPropertyChanged();
+            }
+        }
+        
         public Updates()
         {
             InitializeComponent();
@@ -30,7 +42,7 @@ namespace EventApp.Views
 
             //if (viewModel.Notifications.Count == 0)
             viewModel.LoadUpdates.Execute(null);
-
+            AdBanner.IsVisible = !isPremium;
 
         }
 

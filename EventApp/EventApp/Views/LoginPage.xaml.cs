@@ -27,6 +27,18 @@ namespace EventApp.Views
             }
         }
 
+        public bool isPremium
+        {
+            get { return Settings.IsPremium; }
+            set
+            {
+                if (Settings.IsPremium == value)
+                    return;
+                Settings.IsPremium = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string devicePushId
         {
             get { return Settings.DevicePushId; }
@@ -96,6 +108,7 @@ namespace EventApp.Views
                     rootPage.Master = menuPage; 
                     rootPage.Detail = NavigationPage;
                     currentUser = userName;
+                    isPremium = await App.CheckPremium(currentUser);
                     await Navigation.PopModalAsync();
                 }
                 else

@@ -34,6 +34,18 @@ namespace EventApp.Views
             }
         }
 
+        public bool isPremium
+        {
+            get { return Settings.IsPremium; }
+            set
+            {
+                if (Settings.IsPremium == value)
+                    return;
+                Settings.IsPremium = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string currentUser
         {
             get { return Settings.CurrentUser; }
@@ -176,7 +188,7 @@ namespace EventApp.Views
 
             if (viewModel.GroupedCommentList.Count == 0)
                 viewModel.LoadHolidayComments.Execute(null);
-
+            AdBanner.IsVisible = !isPremium;
 
             viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
             HolidayImageSource.Source = viewModel.Holiday.HolidayImage;

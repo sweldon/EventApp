@@ -6,11 +6,7 @@
 
              Title="{Binding Title}">
 
-             <StackLayout>
-        <!--<ContentView>
-            <local:AdControlView BackgroundColor="#CDCDCD"/>
-        </ContentView >-->
-
+    <StackLayout>
 
         <StackLayout VerticalOptions="Start" Padding="0" Spacing="0">
 
@@ -38,10 +34,6 @@
                 </ListView.BackgroundColor>
 
                 <ListView.Header>
-
-                       
-      
-                 
 
                         <StackLayout Spacing="0" Orientation="Vertical" BackgroundColor="White">
 
@@ -290,7 +282,7 @@
     </StackLayout>
 
 
-        <StackLayout VerticalOptions="End">
+        <StackLayout VerticalOptions="End" x:Name="AdBanner">
             <ContentView>
             <local:AdControlView AdUnitId="ca-app-pub-9382412071078825/8862041693" BackgroundColor="#CDCDCD"/>
         </ContentView >

@@ -23,6 +23,18 @@ namespace EventApp.Views
         public Command LoadUsers { get; set; }
 
         bool IsBusy;
+        public bool isPremium
+        {
+            get { return Settings.IsPremium; }
+            set
+            {
+                if (Settings.IsPremium == value)
+                    return;
+                Settings.IsPremium = value;
+                OnPropertyChanged();
+            }
+        }
+        
 
         ConfettiLeaderViewModel viewModel;
 
@@ -41,6 +53,7 @@ namespace EventApp.Views
             base.OnAppearing();
 
             viewModel.LoadUsers.Execute(null);
+            AdBanner.IsVisible = !isPremium;
         }
 
         async void Selected(object sender, SelectedItemChangedEventArgs args)
