@@ -67,11 +67,11 @@
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
     <ConsolePause>false</ConsolePause>
-    <CodesignKey>iPhone Developer: steve weldon (6YYMRP66NZ)</CodesignKey>
+    <CodesignKey>Apple Distribution: steve weldon (MM2YZ6HQ76)</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchVerbosity>2</MtouchVerbosity>
     <MtouchVerbosity>2</MtouchVerbosity>
-    <CodesignProvision>VS: WildCard Development</CodesignProvision>
+    <CodesignProvision>DVNT Prod AppStore Profile</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
