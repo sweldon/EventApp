@@ -87,7 +87,7 @@ namespace EventApp.Views
 
         }
 
-        async void ImageToHoliday(object sender, SelectedItemChangedEventArgs args)
+        async void ImageToHoliday(object sender, EventArgs args)
         {
          
 

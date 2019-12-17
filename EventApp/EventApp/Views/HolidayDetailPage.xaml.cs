@@ -270,22 +270,29 @@ namespace EventApp.Views
 
         }
 
-        async void OnCommentPicTapped(object sender, EventArgs args)
+        async void AddComment(object sender, EventArgs args)
         {
+            
             this.IsEnabled = false;
-            if (isLoggedIn == "no")
+            int daysAgo = Time.ActiveHoliday(viewModel.Holiday.Date);
+            if(daysAgo < 8)
             {
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                if (isLoggedIn == "no")
+                {
+                    await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                }
+                else
+                {
+                    this.IsEnabled = false;
+                    await Navigation.PushModalAsync(new NavigationPage(new NewCommentPage(viewModel.Holiday)));
+                    this.IsEnabled = true;
+                }
             }
             else
             {
-                var labelSender = (Image)sender;
-                this.IsEnabled = false;
-                await Navigation.PushModalAsync(new NavigationPage(new NewCommentPage(viewModel.Holiday)));
-                this.IsEnabled = true;
+                await DisplayAlert("Sorry!", "We currently restrict new comments to holidays in the past week.", "OK");
             }
             this.IsEnabled = true;
-
 
         }
 

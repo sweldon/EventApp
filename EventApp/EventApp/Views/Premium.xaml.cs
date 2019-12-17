@@ -92,11 +92,14 @@ namespace EventApp.Views
                     
                     var connected = await billing.ConnectAsync(ItemType.InAppPurchase);
 
-                    // Undo Test Purchase
+                    //Undo Test Purchase
                     //var consumedItem = await billing.ConsumePurchaseAsync(productId, "inapp:com.divinity.holidailyapp:android.test.purchased");
                     //if (consumedItem != null)
                     //{
-                    //    await DisplayAlert("used", "consumed", "OK");
+                    //    await DisplayAlert("Premium Refunded", "Premium is undone", "OK");
+                    //    isPremium = false;
+                    //    this.IsEnabled = true;
+                    //    return;
                     //}
 
                     if (!connected)
