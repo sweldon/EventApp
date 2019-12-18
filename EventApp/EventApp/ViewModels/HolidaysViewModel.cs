@@ -25,8 +25,39 @@ namespace EventApp.ViewModels
             Holidays = new ObservableCollection<Holiday>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
+            MessagingCenter.Subscribe<HolidayDetailPage, Object[]>(this, "UpdateCelebrateStatus", (sender, data) => {
+                UpdateCelebrateStatus((string)data[0], (bool)data[1], (string)data[2]);
+            });
+
+
         }
 
+        public async void UpdateCelebrateStatus(string holiday, bool upvote, string newVotes)
+        {
+
+            foreach (Holiday h in Holidays)
+            {
+
+                if(h.Name == holiday)
+                {
+                    if (upvote)
+                    {
+                        h.CelebrateStatus = "celebrate_active.png";
+                        h.Votes = newVotes;
+                        Debug.WriteLine("UPVOTING " + h.Name + " to " + newVotes);
+                    }
+                    else
+                    {
+                        h.CelebrateStatus = "celebrate.png";
+                        h.Votes = newVotes;
+                        Debug.WriteLine("DOWNVOTING " + h.Name + " to " + newVotes);
+                    }
+                    
+
+                    Debug.WriteLine(h.Name + " VOTES SET TO " + h.Votes);
+                }
+            }
+        }
         async Task ExecuteLoadItemsCommand()
         {
             if (IsBusy)
@@ -103,10 +134,6 @@ namespace EventApp.ViewModels
                 //        });
                 //    }
                 //}
-
-
-
-
 
                 //Items.Heading = "Today";
                 //Items.HeadingImage = "today_icon.png";

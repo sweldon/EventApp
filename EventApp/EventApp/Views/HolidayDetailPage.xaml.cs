@@ -12,6 +12,9 @@ using System.Collections.Generic;
 using Xamarin.Essentials;
 using System.Net.Http;
 using Newtonsoft.Json;
+using Plugin.Share;
+using Plugin.Share.Abstractions;
+
 #if __IOS__
 using UIKit;
 #endif
@@ -19,6 +22,8 @@ namespace EventApp.Views
 {
     public partial class HolidayDetailPage : ContentPage
     {
+
+
 
         public string isLoggedIn
         {
@@ -28,6 +33,18 @@ namespace EventApp.Views
                 if (Settings.IsLoggedIn == value)
                     return;
                 Settings.IsLoggedIn = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool isPremium
+        {
+            get { return Settings.IsPremium; }
+            set
+            {
+                if (Settings.IsPremium == value)
+                    return;
+                Settings.IsPremium = value;
                 OnPropertyChanged();
             }
         }
@@ -60,6 +77,8 @@ namespace EventApp.Views
         HolidayDetailViewModel viewModel;
 
         public Comment Comment { get; set; }
+
+
         public HolidayDetailPage(HolidayDetailViewModel viewModel)
         {
             InitializeComponent();
@@ -69,6 +88,7 @@ namespace EventApp.Views
             // Remove when reply button added
             HolidayDetailList.ItemSelected += OnCommentSelected;
 
+
             //HolidayDetailList.ItemTapped += (object sender, ItemTappedEventArgs e) =>
             //{
             //    // Attempt to disable highlighting
@@ -76,8 +96,6 @@ namespace EventApp.Views
 
 
             //};
-
-
 
         }
 
@@ -157,7 +175,6 @@ namespace EventApp.Views
             }
 
             var item = args.SelectedItem as Comment;
-            //await Navigation.PushAsync(new CommentPage(new CommentViewModel(item.Id, viewModel.Holiday.Id)));
 
         }
 
@@ -174,7 +191,7 @@ namespace EventApp.Views
 
             if (viewModel.GroupedCommentList.Count == 0)
                 viewModel.LoadHolidayComments.Execute(null);
-
+            AdBanner.IsVisible = !isPremium;
 
             viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
             HolidayImageSource.Source = viewModel.Holiday.HolidayImage;
@@ -220,90 +237,55 @@ namespace EventApp.Views
 
         }
 
-        async void OnShareTapped(object sender, EventArgs args)
+        public void Share(object sender, EventArgs args)
         {
             this.IsEnabled = false;
 
-            var labelSender = (Label)sender;
-            this.IsEnabled = false;
+            var holiday = viewModel.Holiday;
 
-            var holidayName = viewModel.Holiday.Name;
-            var timeSince = viewModel.Holiday.Date;
-            string HolidayDescriptionShort = viewModel.Holiday.Description.Length <= 90 ? viewModel.Holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + viewModel.Holiday.Id : viewModel.Holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + viewModel.Holiday.Id;
-            this.IsEnabled = false;
-            string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
-            if (action == "Text Message")
+            var holidayName = holiday.Name;
+            var timeSince = holiday.Date;
+            var holidayLink = "https://holidailyapp.com/holiday?id=" + holiday.Id;
+            string preface = "It's " + holidayName + "! ";
+            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? preface + holiday.Description + "\nSee more! " : preface + holiday.Description.Substring(0, 90) + "...\nSee more! ";
+
+            if (!CrossShare.IsSupported)
+                return;
+
+            CrossShare.Current.Share(new ShareMessage
             {
-                try
-                {
-                    var messageContents = holidayName + "! (" + timeSince + ") " + HolidayDescriptionShort;
-                    var message = new SmsMessage(messageContents, "");
-                    await Sms.ComposeAsync(message);
-                }
-                catch (FeatureNotSupportedException ex)
-                {
-                    // Sms is not supported on this device.
-                }
-                catch (Exception ex)
-                {
-                    // Other error has occurred.
-                }
-            }
+                Title = holidayName,
+                Text = HolidayDescriptionShort,
+                Url = holidayLink
+            });
 
             this.IsEnabled = true;
 
-
-
         }
 
-        async void OnCommentPicTapped(object sender, EventArgs args)
+        async void AddComment(object sender, EventArgs args)
         {
+            
             this.IsEnabled = false;
-            if (isLoggedIn == "no")
+            int daysAgo = Time.ActiveHoliday(viewModel.Holiday.Date);
+            if(daysAgo < 8)
             {
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                if (isLoggedIn == "no")
+                {
+                    await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                }
+                else
+                {
+                    this.IsEnabled = false;
+                    await Navigation.PushModalAsync(new NavigationPage(new NewCommentPage(viewModel.Holiday)));
+                    this.IsEnabled = true;
+                }
             }
             else
             {
-                var labelSender = (Image)sender;
-                this.IsEnabled = false;
-                await Navigation.PushModalAsync(new NavigationPage(new NewCommentPage(viewModel.Holiday)));
-                this.IsEnabled = true;
+                await DisplayAlert("Sorry!", "We currently restrict new comments to holidays in the past week.", "OK");
             }
             this.IsEnabled = true;
-
-
-        }
-
-        async void OnSharePicTapped(object sender, EventArgs args)
-        {
-            this.IsEnabled = false;
-
-            var buttonSender = (Image)sender;
-            var holidayName = viewModel.Holiday.Name;
-            var timeSince = viewModel.Holiday.Date;
-            string HolidayDescriptionShort = viewModel.Holiday.Description.Length <= 90 ? viewModel.Holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + viewModel.Holiday.Id : viewModel.Holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + viewModel.Holiday.Id;
-            this.IsEnabled = false;
-            string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
-            if (action == "Text Message")
-            {
-                try
-                {
-                    var messageContents = holidayName + "! (" + timeSince + ") " + HolidayDescriptionShort;
-                    var message = new SmsMessage(messageContents, "");
-                    await Sms.ComposeAsync(message);
-                }
-                catch (FeatureNotSupportedException ex)
-                {
-                    // Sms is not supported on this device.
-                }
-                catch (Exception ex)
-                {
-                    // Other error has occurred.
-                }
-            }
-            this.IsEnabled = true;
-
 
         }
 
@@ -439,7 +421,10 @@ namespace EventApp.Views
                         await UpVoteImage.ScaleTo(1, 50);
                         await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "3");
 
-                    }
+
+                        Object[] values = { viewModel.Holiday.Name, false, newVotesInt.ToString() };
+                        MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
+                }
                     else
                     {
                         // Only allow if user hasnt already downvoted
@@ -452,7 +437,10 @@ namespace EventApp.Views
                             await UpVoteImage.ScaleTo(1, 50);
                             await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "1");
 
-                        }
+
+                        Object[] values = { viewModel.Holiday.Name, true, newVotesInt.ToString() };
+                            MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
+                    }
                         else
                         {
                             newVotesInt -= 2;
@@ -462,7 +450,11 @@ namespace EventApp.Views
                             await UpVoteImage.ScaleTo(1, 50);
                             await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "5");
 
-                        }
+    
+                            Object[] values = { viewModel.Holiday.Name, false, newVotesInt.ToString() };
+                            MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
+
+                    }
 
                     }
 

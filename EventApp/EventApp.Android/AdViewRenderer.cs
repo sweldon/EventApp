@@ -35,7 +35,8 @@ namespace EventApp
                 LayoutParams.WrapContent, LayoutParams.WrapContent);
 
             adView.LayoutParameters = adParams;
-    
+            int heightPixels = AdSize.SmartBanner.GetHeightInPixels(this.Context);
+            adView.SetMinimumHeight(heightPixels);
             adView.LoadAd(new AdRequest.Builder().Build());
             return adView;
         }

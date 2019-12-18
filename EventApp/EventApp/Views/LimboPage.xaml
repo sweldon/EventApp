@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EventApp.Views.LimboPage"
+             Title="You've been banned">
+
+    <ContentPage.Content>
+
+
+
+        <ContentView BackgroundColor="White" Padding="15" >
+            <StackLayout VerticalOptions="FillAndExpand">
+
+
+                <Label FontSize="Medium" TextColor="#4c96e8" HorizontalTextAlignment="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="The account " FontSize="Medium" />
+                            <Span x:Name="UserName" FontAttributes="Bold" FontSize="Medium" />
+                            <Span Text=" has been banned" FontSize="Medium" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+                <Button VerticalOptions="End" Text="Switch Accounts" Clicked="SwitchAccounts"
+                            BackgroundColor="#4c96e8"
+                            TextColor="White" />
+
+            </StackLayout>
+        </ContentView>
+
+    </ContentPage.Content>
+</ContentPage>

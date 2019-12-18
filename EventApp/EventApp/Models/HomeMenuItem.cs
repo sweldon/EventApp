@@ -13,7 +13,8 @@ namespace EventApp.Models
         Updates,
         Premium,
         Rewards,
-        AddHoliday
+        AddHoliday,
+        ConfettiLeaders
     }
     public class HomeMenuItem
     {

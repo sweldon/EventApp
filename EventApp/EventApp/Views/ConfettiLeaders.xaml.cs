@@ -8,13 +8,21 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using EventApp.Models;
 using System.Diagnostics;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Collections.ObjectModel;
+
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class Trending : ContentPage
+    public partial class ConfettiLeaders : ContentPage
     {
-        TrendingViewModel viewModel;
 
+        HttpClient client = new HttpClient();
+        public ObservableCollection<User> TopConfettiList { get; set; }
+        public Command LoadUsers { get; set; }
+
+        bool IsBusy;
         public bool isPremium
         {
             get { return Settings.IsPremium; }
@@ -26,41 +34,39 @@ namespace EventApp.Views
                 OnPropertyChanged();
             }
         }
+        
 
+        ConfettiLeaderViewModel viewModel;
 
-        public Trending()
+        public ConfettiLeaders()
         {
             InitializeComponent();
-            BindingContext = viewModel = new TrendingViewModel(); ;
-            Title = "Trending Holidays";
+            BindingContext = viewModel = new ConfettiLeaderViewModel();
+            Title = "Confetti Leaders";
+            ConfettiLeadersList.ItemSelected += Selected;
 
-            TopHolidayList.ItemSelected += OnItemSelected;
         }
 
 
-        async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
+        protected override async void OnAppearing()
         {
-            this.IsEnabled = false;
+            base.OnAppearing();
+
+            viewModel.LoadUsers.Execute(null);
+            AdBanner.IsVisible = !isPremium;
+        }
+
+        async void Selected(object sender, SelectedItemChangedEventArgs args)
+        {
             ((ListView)sender).SelectedItem = null;
             if (args.SelectedItem == null)
             {
                 return;
             }
-            var item = args.SelectedItem as Holiday;
-            await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id, item)));
-            this.IsEnabled = true;
-        }
-
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-
-            if (viewModel.TopHolidays.Count == 0)
-                viewModel.LoadTopHolidays.Execute(null);
-            AdBanner.IsVisible = !isPremium;
-
 
         }
+
+ 
 
     }
 }

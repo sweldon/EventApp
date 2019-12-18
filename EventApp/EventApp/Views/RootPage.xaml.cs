@@ -21,6 +21,14 @@ namespace EventApp.Views
 
         }
 
+        async void OpenNotifications(object sender, EventArgs e)
+        {
+            BellBtn.IsEnabled = false;
+            await Navigation.PushModalAsync(new NavigationPage(new NotificationsPage()));
+            Task.Delay(2000);
+            BellBtn.IsEnabled = true;
+        }
+
         public async Task NavigateFromMenu(int id)
         {
             if (!MenuPages.ContainsKey(id))
@@ -50,6 +58,9 @@ namespace EventApp.Views
                         break;
                     case (int)MenuItemType.AddHoliday:
                         MenuPages.Add(id, new NavigationPage(new AddHoliday()));
+                        break;
+                    case (int)MenuItemType.ConfettiLeaders:
+                        MenuPages.Add(id, new NavigationPage(new ConfettiLeaders()));
                         break;
                 }
             }

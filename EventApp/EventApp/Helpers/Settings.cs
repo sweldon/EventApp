@@ -22,7 +22,7 @@ namespace EventApp
         #region Setting Constants
 
         private const string AppInfoKey = "app_info_key";
-        private static readonly string AppInfoKeyDefault = "DVNT Applications - Alpha 0.6";
+        private static readonly string AppInfoKeyDefault = "DVNT Applications - Beta 0.1.10";
 
         private const string SettingsKey = "settings_key";
         private static readonly string SettingsDefault = "no";
@@ -39,7 +39,23 @@ namespace EventApp
         private const string IsActiveKey = "is_active_key";
         private static readonly bool IsActiveDefault = false;
 
+        private const string IsPremiumKey = "is_premium_key";
+        private static readonly bool IsPremiumDefault = false;
+
         #endregion
+
+        public static bool IsPremium
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(IsPremiumKey, IsPremiumDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(IsPremiumKey, value);
+            }
+        }
+
 
         public static bool IsActive
         {

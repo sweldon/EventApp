@@ -9,6 +9,10 @@ using EventApp.Models;
 using EventApp.ViewModels;
 using EventApp.Services;
 using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace EventApp
@@ -46,6 +50,58 @@ namespace EventApp
             }
         }
 
+        public static HttpClient client = new HttpClient();
+
+        public bool isPremium
+        {
+            get { return Settings.IsPremium; }
+            set
+            {
+                if (Settings.IsPremium == value)
+                    return;
+                Settings.IsPremium = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        public static async Task<bool> CheckPremium(string userName)
+        {
+            var values = new Dictionary<string, string>{
+                   { "username", userName }
+            };
+            var content = new FormUrlEncodedContent(values);
+            var response = await client.PostAsync(App.HolidailyHost + "/portal/is_premium/", content);
+            var responseString = await response.Content.ReadAsStringAsync();
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+            return responseJSON.is_premium;
+
+        }
+
+        public string currentUser
+        {
+            get { return Settings.CurrentUser; }
+            set
+            {
+                if (Settings.CurrentUser == value)
+                    return;
+                Settings.CurrentUser = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string isLoggedIn
+        {
+            get { return Settings.IsLoggedIn; }
+            set
+            {
+                if (Settings.IsLoggedIn == value)
+                    return;
+                Settings.IsLoggedIn = value;
+                OnPropertyChanged();
+            }
+        }
+
         public App()
         {
             InitializeComponent();
@@ -59,11 +115,13 @@ namespace EventApp
 
         }
 
-        protected override void OnStart()
+        protected override async void OnStart()
         {
-       
-            if (!AppCenter.Configured)
-            {
+
+
+
+
+            if (!AppCenter.Configured){
                 Push.PushNotificationReceived += (sender, e) =>
                 {
                     if (e.Message == null)
@@ -85,13 +143,13 @@ namespace EventApp
                             string commentId = e.CustomData["comment_id"];
                             string holidayId = e.CustomData["holiday_id"];
 
-                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
                             NavigationPage.PushAsync(new CommentPage(new CommentViewModel(commentId, holidayId)));
                         }
                         else if (e.CustomData.ContainsKey("holiday_id"))
                         {
                             string holidayId = e.CustomData["holiday_id"];
-                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
                         }
                     }
                     else
@@ -118,8 +176,34 @@ namespace EventApp
             }
 
 
-            AppCenter.Start("android=7b2a6212-2685-461d-bc70-5e4f1fc387f8;ios=e6263b3a-9c49-4468-815c-3c72fef8032b;", typeof(Push), typeof(Analytics));
+            AppCenter.Start("android=a43f5f54-cb5f-4ad2-af75-762b151c5891;ios=8fbf5b9b-1791-4ec5-bc9d-dead805d66a8;", typeof(Push), typeof(Analytics));
             devicePushId = AppCenter.GetInstallIdAsync().Result.Value.ToString();
+
+
+            if (isLoggedIn == "yes")
+            {
+                var values = new Dictionary<string, string>{
+                   { "username", currentUser },
+                };
+
+                var content = new FormUrlEncodedContent(values);
+                var response = await client.PostAsync(App.HolidailyHost + "/portal/verify_account/", content);
+                var responseString = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine(responseString);
+                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                bool active = responseJSON.active;
+                if (!active)
+                {
+                    App.Current.MainPage = new NavigationPage(new LimboPage());
+                }
+
+                // Check Premium status
+                isPremium = await CheckPremium(currentUser);
+            }
+            else
+            {
+                isPremium = false;
+            }
 
         }
 
@@ -135,7 +219,7 @@ namespace EventApp
                 rootPage.Master = menuPage; // Menu
                 rootPage.Detail = NavigationPage; // Content
                 MainPage = rootPage; // Set root to built master detail
-                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
                 //OpenComment = new Comment { Id = commentId, Content = content, UserName = commentUser, TimeSince = TimeAgo };
                 await NavigationPage.PushAsync(new CommentPage(new CommentViewModel(commentId, holidayId)));
             }
@@ -149,7 +233,7 @@ namespace EventApp
             var userAlert = await Application.Current.MainPage.DisplayAlert(title, "Want to see a random one?", "OK", "Close");
             if (userAlert)
             {
-                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
             }
         }
 

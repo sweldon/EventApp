@@ -2,12 +2,13 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.Trending"
+             xmlns:local="clr-namespace:EventApp"  
              Title="{Binding Title}">
 
-    <StackLayout VerticalOptions="FillAndExpand" Spacing="0">
+    <StackLayout>
 
 
-        <StackLayout VerticalOptions="FillAndExpand" Padding="0" Spacing="0">
+        <StackLayout VerticalOptions="Start" Padding="0" Spacing="0">
             <BoxView HeightRequest=".5"
                    BackgroundColor="#DEDEDE"
                    HorizontalOptions="FillAndExpand" />
@@ -23,8 +24,8 @@
                   RefreshCommand="{Binding LoadTopHolidays}"
                   IsPullToRefreshEnabled="true"
                   CachingStrategy="RecycleElement">
-                  
-                      <ListView.BackgroundColor>
+
+                    <ListView.BackgroundColor>
                         <OnPlatform x:TypeArguments="Color"
                         iOS="#E0E0E0"/>
                       </ListView.BackgroundColor>
@@ -111,7 +112,12 @@
 
             </ContentView>
         </StackLayout>
-        <!--<local:AdControlView BackgroundColor="Red" />-->
+        <StackLayout VerticalOptions="End" x:Name="AdBanner">
+            <ContentView>
+                <local:AdControlView AdUnitId="ca-app-pub-9382412071078825/5601168120" BackgroundColor="#CDCDCD"/>
+            </ContentView >
+
+        </StackLayout>
 
     </StackLayout>
 

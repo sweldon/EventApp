@@ -80,8 +80,8 @@ namespace EventApp.Views
 
                     if (status == 200)
                     {
-                        SendHolidayBtn.Text = "Holiday Pending...";
-                        await DisplayAlert("Success", "We received your Holiday! We will get back to you ASAP about it's release into the App. Thank you for your contribution to Holidaily!", "OK");
+                        SendHolidayBtn.Text = "Submission Pending...";
+                        await DisplayAlert("Success", "We received your Holiday! We will get back to you ASAP about its release into the App. Thank you for your contribution to Holidaily!", "OK");
                     }
                     else
                     {
@@ -95,10 +95,6 @@ namespace EventApp.Views
                     await DisplayAlert("Try Again", "We need you to put someting into all of the fields on this page.", "OK");
                 }
 
-
-
-                
-
             }
 
 
@@ -106,6 +102,10 @@ namespace EventApp.Views
 
         }
 
+        public async void PendingAlert(object sender, EventArgs e)
+        {
+            await DisplayAlert("Hold Up!", "We're currently checking out your most recently submitted holiday. Please check back soon!", "OK");
+        }
 
         protected override async void OnAppearing()
         {
@@ -127,12 +127,22 @@ namespace EventApp.Views
                 if (pending)
                 {
                     SendHolidayBtn.IsEnabled = false;
-                    SendHolidayBtn.Text = "Holiday Pending...";
+                    SendHolidayBtn.Text = "Submission Pending...";
+
+                    #if __IOS__
+                        SendHolidayBtn.IsVisible = false;
+                        PendingBtn.IsVisible = true;
+                    #endif
+
                 }
                 else
                 {
                     SendHolidayBtn.Text = "Send It";
                     SendHolidayBtn.IsEnabled = true;
+                    #if __IOS__
+                        SendHolidayBtn.IsVisible = true;
+                        PendingBtn.IsVisible = false;
+                    #endif
                 }
             }
 

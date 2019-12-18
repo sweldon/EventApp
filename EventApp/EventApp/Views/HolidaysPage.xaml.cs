@@ -11,6 +11,9 @@ using EventApp.Views;
 using EventApp.ViewModels;
 using System.Diagnostics;
 using Xamarin.Essentials;
+using Plugin.Share;
+using Plugin.Share.Abstractions;
+
 #if __IOS__
 using UIKit;
 #endif
@@ -46,6 +49,18 @@ namespace EventApp.Views
             }
         }
 
+        public bool isPremium
+        {
+            get { return Settings.IsPremium; }
+            set
+            {
+                if (Settings.IsPremium == value)
+                    return;
+                Settings.IsPremium = value;
+                OnPropertyChanged();
+            }
+        }
+        public string showAds;
         public HolidaysPage()
         {
             InitializeComponent();
@@ -69,39 +84,23 @@ namespace EventApp.Views
                 if (e.Item == null) return;
                 ((ListView)sender).SelectedItem = null;
             };
-            //TodayLabel.Text = todayString + ", " + monthString + " " + dayNumber;
             viewModel.Title = todayString + ", " + monthString + " " + dayNumber;
+            
 
-
-        }
-
-        async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
-        {
-
-            ((ListView)sender).SelectedItem = null;
-            if (args.SelectedItem == null)
-            {
-                return;
-            }
-            var item = args.SelectedItem as Holiday;
-            if (item.Id != "-1") // Ad
-            {
-                this.IsEnabled = false;
-                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id)));
-                this.IsEnabled = true;
-            }
 
         }
 
         async void ImageToHoliday(object sender, EventArgs args)
         {
+         
 
             var item = (sender as Image).BindingContext as Holiday;
+            var index = viewModel.Holidays.IndexOf(item);
             string holidayId = item.Id;
             if (holidayId != "-1") // Ad
             {
                 this.IsEnabled = false;
-                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, item)));
                 this.IsEnabled = true;
             }
         }
@@ -110,110 +109,27 @@ namespace EventApp.Views
         {
 
             var item = (sender as Label).BindingContext as Holiday;
+            var index = viewModel.Holidays.IndexOf(item);
             string holidayId = item.Id;
             if (holidayId != "-1") // Ad
             {
                 this.IsEnabled = false;
-                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, item)));
                 this.IsEnabled = true;
             }
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
 
 
             base.OnAppearing();
 
-            if (viewModel.GroupedHolidayList.Count == 0)
+            if (viewModel.Holidays.Count == 0)
                 viewModel.LoadItemsCommand.Execute(null);
-
-
-
-            // Manually open menu page on swipe only on main page
-            //(Application.Current.MainPage as RootPage).IsGestureEnabled = false;
-
+            AdBanner.IsVisible = !isPremium;
         }
 
-        async void OnCelebratePicTapped(object sender, EventArgs args)
-        {
-
-            #if __IOS__
-                var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
-                haptic.Prepare();
-                haptic.ImpactOccurred();
-                haptic.Dispose();
-            #endif
-
-            #if __ANDROID__
-                    var duration = TimeSpan.FromSeconds(.025);
-                    Vibration.Vibrate(duration);
-            #endif
-
-            this.IsEnabled = false;
-            var holiday = (sender as Image).BindingContext as Holiday;
-            var holidayId = holiday.Id;
-            var view = (VisualElement)sender;
-            var GridObject = (Grid)view.Parent;
-            var CelebrateLabel = (Label)GridObject.Children[5];
-            var votesInt = Int32.Parse(CelebrateLabel.Text.Split(null)[0]);
-            var newVotes = votesInt;
-            var CelebrateImage = (sender as Image);
-            
-            var UpVoteImageFile = CelebrateImage.Source as FileImageSource;
-            var UpVoteIcon = UpVoteImageFile.File;
-
-            if (isLoggedIn == "no")
-            {
-                this.IsEnabled = false;
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
-                this.IsEnabled = true;
-            }
-            else
-            {
-                if (UpVoteIcon == "celebrate_active.png")
-                {
-                    // Undo
-
-                    newVotes -= 1;
-                    CelebrateLabel.Text = newVotes.ToString() + " Celebrating!";
-                    CelebrateImage.Source = "celebrate.png";
-                    await CelebrateImage.ScaleTo(2, 50);
-                    await CelebrateImage.ScaleTo(1, 50);
-                    await viewModel.HolidayStore.VoteHoliday(holidayId, currentUser, "3");
-
-                }
-                else
-                {
-                    // Only allow if user hasnt already downvoted
-                    newVotes += 1;
-                    if (newVotes <= votesInt + 1 && newVotes >= votesInt - 1)
-                    {
-                        CelebrateLabel.Text = newVotes.ToString() + " Celebrating!";
-                        CelebrateImage.Source = "celebrate_active.png";
-                        await CelebrateImage.ScaleTo(2, 50);
-                        await CelebrateImage.ScaleTo(1, 50);
-                        await viewModel.HolidayStore.VoteHoliday(holidayId, currentUser, "1");
-
-                    }
-                    else
-                    {
-                        newVotes -= 2;
-                        CelebrateLabel.Text = newVotes.ToString() + " Celebrating!";
-                        CelebrateImage.Source = "celebrate.png";
-                        await CelebrateImage.ScaleTo(2, 50);
-                        await CelebrateImage.ScaleTo(1, 50);
-                        await viewModel.HolidayStore.VoteHoliday(holidayId, currentUser, "5");
-
-                    }
-
-                }
-
-
-            }
-
-            this.IsEnabled = true;
-        }
 
         async void OnCelebrateTapped(object sender, EventArgs args)
         {
@@ -231,15 +147,33 @@ namespace EventApp.Views
             #endif
 
             this.IsEnabled = false;
-            var holiday = (sender as Label).BindingContext as Holiday;
-            var holidayId = holiday.Id;
-            var votesInt = Int32.Parse((sender as Label).Text.Split(null)[0]);
-            var newVotes = votesInt;
+            
             var view = (VisualElement)sender;
             var GridObject = (Grid)view.Parent;
             var CelebrateImage = (Image)GridObject.Children[4];
             var UpVoteImageFile = CelebrateImage.Source as FileImageSource;
             var UpVoteIcon = UpVoteImageFile.File;
+            
+            var holidayId = "none";
+            var votesInt = -1;
+            var CelebrateLabel = (Label)GridObject.Children[5];
+            bool isLabel = false;
+            var holiday = new Holiday();
+            try
+            {
+                holiday = (sender as Label).BindingContext as Holiday;
+                votesInt = Int32.Parse((sender as Label).Text.Split(null)[0]);
+                holidayId = holiday.Id;
+                isLabel = true;
+            }
+            catch
+            {
+                holiday = (sender as Image).BindingContext as Holiday;
+                votesInt = Int32.Parse(CelebrateLabel.Text.Split(null)[0]);
+                holidayId = holiday.Id;
+            }
+
+            var newVotes = votesInt;
 
             if (isLoggedIn == "no")
             {
@@ -254,8 +188,17 @@ namespace EventApp.Views
                     // Undo
 
                     newVotes -= 1;
-                    (sender as Label).Text = newVotes.ToString() + " Celebrating!";
-                    CelebrateImage.Source = "celebrate.png";
+                    //if (isLabel)
+                    //{
+                    //    (sender as Label).Text = newVotes.ToString() + " Celebrating!";
+                    //}
+                    //else
+                    //{
+                    //    CelebrateLabel.Text = newVotes.ToString() + " Celebrating!";
+                    //}
+                    
+                    holiday.CelebrateStatus = "celebrate.png";
+                    holiday.Votes = newVotes.ToString();
                     await CelebrateImage.ScaleTo(2, 50);
                     await CelebrateImage.ScaleTo(1, 50);
                     await viewModel.HolidayStore.VoteHoliday(holidayId, currentUser, "3");
@@ -267,8 +210,16 @@ namespace EventApp.Views
                     newVotes += 1;
                     if (newVotes <= votesInt + 1 && newVotes >= votesInt - 1)
                     {
-                        (sender as Label).Text = newVotes.ToString() + " Celebrating!";
-                        CelebrateImage.Source = "celebrate_active.png";
+                        //if (isLabel)
+                        //{
+                        //    (sender as Label).Text = newVotes.ToString() + " Celebrating!";
+                        //}
+                        //else
+                        //{
+                        //    CelebrateLabel.Text = newVotes.ToString() + " Celebrating!";
+                        //}
+                        holiday.CelebrateStatus = "celebrate_active.png";
+                        holiday.Votes = newVotes.ToString();
                         await CelebrateImage.ScaleTo(2, 50);
                         await CelebrateImage.ScaleTo(1, 50);
                         await viewModel.HolidayStore.VoteHoliday(holidayId, currentUser, "1");
@@ -277,8 +228,16 @@ namespace EventApp.Views
                     else
                     {
                         newVotes -= 2;
-                        (sender as Label).Text = newVotes.ToString() + " Celebrating!";
-                        CelebrateImage.Source = "celebrate.png";
+                        //if (isLabel)
+                        //{
+                        //    (sender as Label).Text = newVotes.ToString() + " Celebrating!";
+                        //}
+                        //else
+                        //{
+                        //    CelebrateLabel.Text = newVotes.ToString() + " Celebrating!";
+                        //}
+                        holiday.CelebrateStatus = "celebrate.png";
+                        holiday.Votes = newVotes.ToString();
                         await CelebrateImage.ScaleTo(2, 50);
                         await CelebrateImage.ScaleTo(1, 50);
                         await viewModel.HolidayStore.VoteHoliday(holidayId, currentUser, "5");
@@ -292,68 +251,36 @@ namespace EventApp.Views
 
         }
 
-        async void OnShareTapped(object sender, EventArgs args)
+        public void Share(object sender, EventArgs args)
         {
             this.IsEnabled = false;
-            var holiday = (sender as Label).BindingContext as Holiday;
-            var holidayName = holiday.Name;
-            var timeSince = holiday.Date;
-            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id : holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id;
-            this.IsEnabled = false;
-            string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
-            if (action == "Text Message")
+            var holiday = new Holiday();
+            try
             {
-                try
-                {
-                    var messageContents = holidayName + "! (" + timeSince + ") " + HolidayDescriptionShort;
-                    var message = new SmsMessage(messageContents, "");
-                    await Sms.ComposeAsync(message);
-                }
-                catch (FeatureNotSupportedException ex)
-                {
-                    // Sms is not supported on this device.
-                }
-                catch (Exception ex)
-                {
-                    // Other error has occurred.
-                }
+                holiday = (sender as Label).BindingContext as Holiday;
+            }
+            catch
+            {
+                holiday = (sender as Image).BindingContext as Holiday;
             }
 
-            this.IsEnabled = true;
-
-
-
-        }
-
-        async void OnSharePicTapped(object sender, EventArgs args)
-        {
-            this.IsEnabled = false;
-
-            var holiday = (sender as Image).BindingContext as Holiday;
             var holidayName = holiday.Name;
             var timeSince = holiday.Date;
-            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id : holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id;
-            this.IsEnabled = false;
-            string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
-            if (action == "Text Message")
-            {
-                try
-                {
-                    var messageContents = holidayName + "! (" + timeSince + ") " + HolidayDescriptionShort;
-                    var message = new SmsMessage(messageContents, "");
-                    await Sms.ComposeAsync(message);
-                }
-                catch (FeatureNotSupportedException ex)
-                {
-                    // Sms is not supported on this device.
-                }
-                catch (Exception ex)
-                {
-                    // Other error has occurred.
-                }
-            }
-            this.IsEnabled = true;
+            var holidayLink = "https://holidailyapp.com/holiday?id=" + holiday.Id;
+            string preface = "It's " + holidayName + "! ";
+            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? preface + holiday.Description + "\nSee more! " : preface + holiday.Description.Substring(0, 90) + "...\nSee more! ";
 
+            if (!CrossShare.IsSupported)
+                return;
+
+            CrossShare.Current.Share(new ShareMessage
+            {
+                Title = holidayName,
+                Text = HolidayDescriptionShort,
+                Url = holidayLink
+            });
+
+            this.IsEnabled = true;
 
         }
 

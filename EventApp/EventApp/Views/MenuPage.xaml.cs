@@ -53,6 +53,18 @@ namespace EventApp.Views
             }
         }
 
+        public bool isPremium
+        {
+            get { return Settings.IsPremium; }
+            set
+            {
+                if (Settings.IsPremium == value)
+                    return;
+                Settings.IsPremium = value;
+                OnPropertyChanged();
+            }
+        }
+
         public NavigationPage NavigationPage { get; private set; }
         public MenuPage()
         {
@@ -60,14 +72,15 @@ namespace EventApp.Views
 
             menuItems = new List<HomeMenuItem>
             {
-                new HomeMenuItem {Id = MenuItemType.Search, Title="Search Holidays", MenuImage="search.png"},
-                new HomeMenuItem {Id = MenuItemType.Holidays, Title="Today's Holidays", MenuImage="today_icon.png"},
-                new HomeMenuItem {Id = MenuItemType.AddHoliday, Title="Add Holiday", MenuImage="pencil.png"},
-                new HomeMenuItem {Id = MenuItemType.Notifications, Title="Notifications", MenuImage="alarm.png"},
-                new HomeMenuItem {Id = MenuItemType.Trending, Title="Trending", MenuImage="trending.png"},
-                new HomeMenuItem {Id = MenuItemType.Updates, Title="Holidaily News", MenuImage="news.png"},
+                new HomeMenuItem {Id = MenuItemType.Holidays, Title="Home", MenuImage="today_icon.png"},
+                new HomeMenuItem {Id = MenuItemType.Search, Title="Search", MenuImage="search.png"},
+                new HomeMenuItem {Id = MenuItemType.AddHoliday, Title="Submit Holiday", MenuImage="pencil.png"},
+                //new HomeMenuItem {Id = MenuItemType.Notifications, Title="Notifications", MenuImage="alarm.png"},
+                new HomeMenuItem {Id = MenuItemType.ConfettiLeaders, Title="Confetti Leaders", MenuImage="party_popper_icon.png"},
+                new HomeMenuItem {Id = MenuItemType.Trending, Title="Popular", MenuImage="trending.png"},
+                new HomeMenuItem {Id = MenuItemType.Updates, Title="News", MenuImage="news.png"},
                 new HomeMenuItem {Id = MenuItemType.Premium, Title="Premium", MenuImage="premium.png"},
-                //new HomeMenuItem {Id = MenuItemType.Rewards, Title="Rewards", MenuImage="trophy.png"}
+                new HomeMenuItem {Id = MenuItemType.Rewards, Title="Rewards", MenuImage="trophy.png"}
             };
 
             ListViewMenu.ItemsSource = menuItems;
@@ -112,7 +125,14 @@ namespace EventApp.Views
             HeaderDivider.IsVisible = false;
             UserLabel.Text = "Hey there!";
             currentUser = null;
-            await RootPage.NavigateFromMenu(0);
+            isPremium = false;
+
+            var menuPage = new MenuPage(); // Build hamburger menu
+            NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
+            var rootPage = new RootPage(); // Root handles master detail navigation
+            rootPage.Master = menuPage; // Menu
+            rootPage.Detail = NavigationPage; // Content
+            Application.Current.MainPage = rootPage; // Set root to built master detail
 
         }
         protected override async void OnAppearing()
@@ -149,6 +169,10 @@ namespace EventApp.Views
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                 int points = responseJSON.Points;
                 UserPointsHeader.Text = points.ToString();
+                if (isPremium)
+                {
+                    isPremiumLabel.Text = "Premium";
+                }
 
             }
 

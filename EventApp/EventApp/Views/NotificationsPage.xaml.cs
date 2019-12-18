@@ -16,6 +16,19 @@ namespace EventApp.Views
         NotificationsViewModel viewModel;
         Comment comment;
 
+        public bool isPremium
+        {
+            get { return Settings.IsPremium; }
+            set
+            {
+                if (Settings.IsPremium == value)
+                    return;
+                Settings.IsPremium = value;
+                OnPropertyChanged();
+            }
+        }
+        
+
         public NotificationsPage()
         {
             InitializeComponent();
@@ -25,6 +38,13 @@ namespace EventApp.Views
             NotificationsList.ItemSelected += OnItemSelected;
         }
 
+        async void GoBack(object sender, EventArgs e)
+        {
+            BackBtn.IsEnabled = false;
+            await Navigation.PopModalAsync();
+            Task.Delay(2000);
+            BackBtn.IsEnabled = true;
+        }
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
@@ -61,8 +81,8 @@ namespace EventApp.Views
 
             //if (viewModel.Notifications.Count == 0)
             viewModel.LoadNotifications.Execute(null);
+            AdBanner.IsVisible = !isPremium;
 
-            
         }
 
     }

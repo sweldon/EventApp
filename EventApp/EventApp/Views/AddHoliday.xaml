@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.AddHoliday"
@@ -24,6 +24,10 @@
                 <Button VerticalOptions="End" Text="Send It" Clicked="SendHoliday" x:Name="SendHolidayBtn"
                             BackgroundColor="Green"
                             TextColor="White" />
+                
+                <Button VerticalOptions="End" Text="Submission Pending..." Clicked="PendingAlert" x:Name="PendingBtn" IsVisible="false"
+                            BackgroundColor="Green"
+                            TextColor="Black" />
 
             </StackLayout>
         </ContentView>

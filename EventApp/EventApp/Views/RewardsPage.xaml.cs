@@ -146,7 +146,7 @@ namespace EventApp.Views
             }
             else
             {
-                this.IsEnabled = false;
+                //this.IsEnabled = false;
                 WatchAdButton.Text = "Loading video...";
                 CrossMTAdmob.Current.ShowRewardedVideo();
         
