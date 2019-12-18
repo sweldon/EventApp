@@ -11,6 +11,9 @@ using EventApp.Views;
 using EventApp.ViewModels;
 using System.Diagnostics;
 using Xamarin.Essentials;
+using Plugin.Share;
+using Plugin.Share.Abstractions;
+
 #if __IOS__
 using UIKit;
 #endif
@@ -248,45 +251,36 @@ namespace EventApp.Views
 
         }
 
-        async void Share(object sender, EventArgs args)
+        public void Share(object sender, EventArgs args)
         {
             this.IsEnabled = false;
             var holiday = new Holiday();
             try
             {
-                 holiday = (sender as Label).BindingContext as Holiday;
+                holiday = (sender as Label).BindingContext as Holiday;
             }
             catch
             {
-                 holiday = (sender as Image).BindingContext as Holiday;
+                holiday = (sender as Image).BindingContext as Holiday;
             }
-            
+
             var holidayName = holiday.Name;
             var timeSince = holiday.Date;
-            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id : holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id;
-            this.IsEnabled = false;
-            string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
-            if (action == "Text Message")
+            var holidayLink = "https://holidailyapp.com/holiday?id=" + holiday.Id;
+            string preface = "It's " + holidayName + "! ";
+            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? preface + holiday.Description + "\nSee more! " : preface + holiday.Description.Substring(0, 90) + "...\nSee more! ";
+
+            if (!CrossShare.IsSupported)
+                return;
+
+            CrossShare.Current.Share(new ShareMessage
             {
-                try
-                {
-                    var messageContents = holidayName + "! (" + timeSince + ") " + HolidayDescriptionShort;
-                    var message = new SmsMessage(messageContents, "");
-                    await Sms.ComposeAsync(message);
-                }
-                catch (FeatureNotSupportedException ex)
-                {
-                    // Sms is not supported on this device.
-                }
-                catch (Exception ex)
-                {
-                    // Other error has occurred.
-                }
-            }
+                Title = holidayName,
+                Text = HolidayDescriptionShort,
+                Url = holidayLink
+            });
 
             this.IsEnabled = true;
-
-
 
         }
 

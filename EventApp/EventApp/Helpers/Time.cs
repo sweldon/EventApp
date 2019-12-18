@@ -16,7 +16,7 @@ namespace EventApp
         const int MONTH = 30 * DAY;
         public static int ActiveHoliday(string date)
         {
-            string year = "2019";
+            string year =  DateTime.Now.Year.ToString();
             string[] parts;
             Dictionary<string, string> stringToNumericMonth = new Dictionary<string, string>()
                                             {

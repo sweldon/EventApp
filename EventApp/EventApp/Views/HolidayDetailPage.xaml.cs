@@ -12,6 +12,9 @@ using System.Collections.Generic;
 using Xamarin.Essentials;
 using System.Net.Http;
 using Newtonsoft.Json;
+using Plugin.Share;
+using Plugin.Share.Abstractions;
+
 #if __IOS__
 using UIKit;
 #endif
@@ -234,39 +237,29 @@ namespace EventApp.Views
 
         }
 
-        async void OnShareTapped(object sender, EventArgs args)
+        public void Share(object sender, EventArgs args)
         {
             this.IsEnabled = false;
 
-            var labelSender = (Label)sender;
-            this.IsEnabled = false;
+            var holiday = viewModel.Holiday;
 
-            var holidayName = viewModel.Holiday.Name;
-            var timeSince = viewModel.Holiday.Date;
-            string HolidayDescriptionShort = viewModel.Holiday.Description.Length <= 90 ? viewModel.Holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + viewModel.Holiday.Id : viewModel.Holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + viewModel.Holiday.Id;
-            this.IsEnabled = false;
-            string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
-            if (action == "Text Message")
+            var holidayName = holiday.Name;
+            var timeSince = holiday.Date;
+            var holidayLink = "https://holidailyapp.com/holiday?id=" + holiday.Id;
+            string preface = "It's " + holidayName + "! ";
+            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? preface + holiday.Description + "\nSee more! " : preface + holiday.Description.Substring(0, 90) + "...\nSee more! ";
+
+            if (!CrossShare.IsSupported)
+                return;
+
+            CrossShare.Current.Share(new ShareMessage
             {
-                try
-                {
-                    var messageContents = holidayName + "! (" + timeSince + ") " + HolidayDescriptionShort;
-                    var message = new SmsMessage(messageContents, "");
-                    await Sms.ComposeAsync(message);
-                }
-                catch (FeatureNotSupportedException ex)
-                {
-                    // Sms is not supported on this device.
-                }
-                catch (Exception ex)
-                {
-                    // Other error has occurred.
-                }
-            }
+                Title = holidayName,
+                Text = HolidayDescriptionShort,
+                Url = holidayLink
+            });
 
             this.IsEnabled = true;
-
-
 
         }
 
@@ -293,38 +286,6 @@ namespace EventApp.Views
                 await DisplayAlert("Sorry!", "We currently restrict new comments to holidays in the past week.", "OK");
             }
             this.IsEnabled = true;
-
-        }
-
-        async void OnSharePicTapped(object sender, EventArgs args)
-        {
-            this.IsEnabled = false;
-
-            var buttonSender = (Image)sender;
-            var holidayName = viewModel.Holiday.Name;
-            var timeSince = viewModel.Holiday.Date;
-            string HolidayDescriptionShort = viewModel.Holiday.Description.Length <= 90 ? viewModel.Holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + viewModel.Holiday.Id : viewModel.Holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + viewModel.Holiday.Id;
-            this.IsEnabled = false;
-            string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
-            if (action == "Text Message")
-            {
-                try
-                {
-                    var messageContents = holidayName + "! (" + timeSince + ") " + HolidayDescriptionShort;
-                    var message = new SmsMessage(messageContents, "");
-                    await Sms.ComposeAsync(message);
-                }
-                catch (FeatureNotSupportedException ex)
-                {
-                    // Sms is not supported on this device.
-                }
-                catch (Exception ex)
-                {
-                    // Other error has occurred.
-                }
-            }
-            this.IsEnabled = true;
-
 
         }
 
