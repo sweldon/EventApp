@@ -34,11 +34,11 @@
 
         <ContentView x:Name="NameSearch"  IsVisible="True" Padding="10">
             <!--Can use TextChanged attr with SearchTextChanged function in the future if you want, I think this is cleaner for now -->
-            <Entry Completed="DaySearched" Placeholder="Type anything..." FontSize="12" x:Name="SearchValue" />
+            <Entry BackgroundColor="#FAFAFA" Completed="DaySearched" Placeholder="Type anything..." FontSize="12" x:Name="SearchValue" />
         </ContentView>
 
         <ContentView x:Name="DateSearch" IsVisible="False" Padding="10">
-            <DatePicker Date="{Binding SelectedDate}" x:Name="DateValue" DateSelected="SearchByDate"  />
+            <DatePicker BackgroundColor="#F5F5F5" Date="{Binding SelectedDate}" x:Name="DateValue" DateSelected="SearchByDate"  />
         </ContentView>
 
 
@@ -190,7 +190,7 @@
                                                     <Image Source="share.png" VerticalOptions="Center">
                                                         <Image.GestureRecognizers>
                                                             <TapGestureRecognizer
-                                                                     Tapped="OnSharePicTapped"  />
+                                                                     Tapped="Share"  />
                                                         </Image.GestureRecognizers>
                                                     </Image>
                                                 </ContentView>
@@ -199,7 +199,7 @@
                                                              VerticalTextAlignment="Center" Margin="0,-2,0,0">
                                                     <Label.GestureRecognizers>
                                                         <TapGestureRecognizer
-                                                             Tapped="OnShareTapped"  />
+                                                             Tapped="Share"  />
                                                     </Label.GestureRecognizers>
                                                 </Label>
 

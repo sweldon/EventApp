@@ -11,6 +11,8 @@ using EventApp.Views;
 using EventApp.ViewModels;
 using System.Diagnostics;
 using Xamarin.Essentials;
+using Plugin.Share;
+using Plugin.Share.Abstractions;
 
 namespace EventApp.Views
 {
@@ -85,16 +87,20 @@ namespace EventApp.Views
                     if (searchText.Length > 2)
                     {
                         // Do some searching
-                        SearchHolidayList.ItemsSource = await viewModel.HolidayStore.SearchHolidays(searchText);
+                        SearchHolidayList.ItemsSource =
+                            await viewModel.HolidayStore.SearchHolidays(searchText);
                     }
                     else
                     {
-                        DisplayAlert("Need more!", "Give us more to work with", "I'll type more");
+                        DisplayAlert("Need more!",
+                            "Give us more to work with", "I'll type more");
                     }
                 }
                 else
                 {
-                    DisplayAlert("Need more!", "We can't give you anything if you don't give us anything", "Obviously");
+                    DisplayAlert("Need more!",
+                        "We can't give you anything if you " +
+                        "don't give us anything", "Obviously");
                 }
             }
             catch (Exception ex)
@@ -114,7 +120,8 @@ namespace EventApp.Views
             }
         }
 
-        async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
+        async void OnItemSelected(object sender,
+            SelectedItemChangedEventArgs args)
         {
 
             ((ListView)sender).SelectedItem = null;
@@ -126,7 +133,8 @@ namespace EventApp.Views
             if (item.Id != "-1") // Ad
             {
                 this.IsEnabled = false;
-                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id, item)));
+                await Navigation.PushAsync(new HolidayDetailPage(new
+                    HolidayDetailViewModel(item.Id, item)));
                 this.IsEnabled = true;
             }
 
@@ -140,7 +148,8 @@ namespace EventApp.Views
             if (holidayId != "-1") // Ad
             {
                 this.IsEnabled = false;
-                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, item)));
+                await Navigation.PushAsync(new HolidayDetailPage(new
+                    HolidayDetailViewModel(holidayId, item)));
                 this.IsEnabled = true;
             }
         }
@@ -153,7 +162,8 @@ namespace EventApp.Views
             if (holidayId != "-1") // Ad
             {
                 this.IsEnabled = false;
-                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, item)));
+                await Navigation.PushAsync(new HolidayDetailPage(new
+                    HolidayDetailViewModel(holidayId, item)));
                 this.IsEnabled = true;
             }
         }
@@ -171,71 +181,39 @@ namespace EventApp.Views
 
         }
 
-        async void OnShareTapped(object sender, EventArgs args)
+        public void Share(object sender, EventArgs args)
         {
             this.IsEnabled = false;
-
-            var holiday = (sender as Label).BindingContext as Holiday;
-            this.IsEnabled = false;
-
-            var holidayName = holiday.Name;
-            var holidayDate = holiday.Date;
-            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id : holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id;
-            this.IsEnabled = false;
-            string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
-            if (action == "Text Message")
+            var holiday = new Holiday();
+            try
             {
-                try
-                {
-                    var messageContents = holidayName + "! (" + holidayDate + ") " + HolidayDescriptionShort;
-                    var message = new SmsMessage(messageContents, "");
-                    await Sms.ComposeAsync(message);
-                }
-                catch (FeatureNotSupportedException ex)
-                {
-                    // Sms is not supported on this device.
-                }
-                catch (Exception ex)
-                {
-                    // Other error has occurred.
-                }
+                holiday = (sender as Label).BindingContext as Holiday;
+            }
+            catch
+            {
+                holiday = (sender as Image).BindingContext as Holiday;
             }
 
-            this.IsEnabled = true;
-
-
-
-        }
-
-        async void OnSharePicTapped(object sender, EventArgs args)
-        {
-            this.IsEnabled = false;
-
-            var holiday = (sender as Image).BindingContext as Holiday;
             var holidayName = holiday.Name;
-            var holidayDate = holiday.Date;
-            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? holiday.Description + "\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id : holiday.Description.Substring(0, 90) + "...\nSee more! https://holidailyapp.com/holiday?id=" + holiday.Id;
-            this.IsEnabled = false;
-            string action = await DisplayActionSheet("How would you like to share?", "Cancel", null, "Text Message");
-            if (action == "Text Message")
-            {
-                try
-                {
-                    var messageContents = holidayName + "! (" + holidayDate + ") " + HolidayDescriptionShort;
-                    var message = new SmsMessage(messageContents, "");
-                    await Sms.ComposeAsync(message);
-                }
-                catch (FeatureNotSupportedException ex)
-                {
-                    // Sms is not supported on this device.
-                }
-                catch (Exception ex)
-                {
-                    // Other error has occurred.
-                }
-            }
-            this.IsEnabled = true;
+            var holidayLink = "https://holidailyapp.com/holiday?id=" +
+                holiday.Id;
+            string preface = "It's " + holidayName + "! ";
+            string HolidayDescriptionShort = holiday.Description.Length <= 90 ?
+                preface + holiday.Description + "\nSee more! " :
+                preface + holiday.Description.Substring(0, 90) +
+                "...\nSee more! ";
 
+            if (!CrossShare.IsSupported)
+                return;
+
+            CrossShare.Current.Share(new ShareMessage
+            {
+                Title = holidayName,
+                Text = HolidayDescriptionShort,
+                Url = holidayLink
+            });
+
+            this.IsEnabled = true;
 
         }
 
