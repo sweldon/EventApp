@@ -1,13 +1,8 @@
 ﻿using System;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
 using EventApp.Models;
 using EventApp.ViewModels;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Collections.Generic;
 using System.Net.Http;
 using Newtonsoft.Json;
@@ -18,8 +13,6 @@ namespace EventApp.Views
     public partial class CommentPage : ContentPage
     {
 
-
-        HttpClient client = new HttpClient();
         CommentViewModel viewModel;
         public Comment Comment { get; set; }
 
@@ -107,7 +100,7 @@ namespace EventApp.Views
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(App.HolidailyHost + "/portal/delete_comment/", content);
+                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/delete_comment/", content);
 
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
@@ -147,7 +140,7 @@ namespace EventApp.Views
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(App.HolidailyHost + "/portal/add_comment/", content);
+                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/add_comment/", content);
 
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);

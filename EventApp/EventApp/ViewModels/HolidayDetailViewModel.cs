@@ -1,13 +1,10 @@
 ﻿using System;
 using EventApp.Models;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using EventApp.Views;
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Net.Http;
 
 namespace EventApp.ViewModels
 {

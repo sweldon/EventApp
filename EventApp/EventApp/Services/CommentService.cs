@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using EventApp.Models;
 using Newtonsoft.Json;
@@ -11,40 +10,45 @@ using System.Collections.ObjectModel;
 namespace EventApp.Services
 {
 
+
+
     public class CommentService : CommentInterface<Comment>
     {
+
 
         ObservableCollection<ObservableCollection<Comment>> comments;
         Comment individualComment;
         ObservableCollection<Comment> commentGroup;
 
-        HttpClient client = new HttpClient();
         public string ShowReplyVal;
         public string ShowDeleteVal;
         public CommentService()
         {
 
-
         }
-
 
         public string currentUser
         {
             get { return Settings.CurrentUser; }
         }
 
+        public bool isLoggedIn
+        {
+            get { return Settings.IsLoggedIn; }
+        }
 
         public async Task<IEnumerable<IEnumerable<Comment>>> GetHolidayCommentsAsync(bool forceRefresh = false, string holidayId = null, string user = null)
         {
             comments = new ObservableCollection<ObservableCollection<Comment>>();
 
             var values = new Dictionary<string, string>{
-                   { "holiday_id", holidayId },
-                    { "user", currentUser }
-                };
+                   { "holiday", holidayId },
+            };
+            if (isLoggedIn)
+                values["username"] = currentUser;
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_comments/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/comments/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
@@ -112,7 +116,7 @@ namespace EventApp.Services
 
             var content = new FormUrlEncodedContent(values);
 
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/vote_comment/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/vote_comment/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
@@ -127,7 +131,7 @@ namespace EventApp.Services
                 };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_comment_by_id/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/get_comment_by_id/", content);
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
             dynamic commentJSON = responseJSON.comment;

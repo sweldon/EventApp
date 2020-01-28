@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using EventApp.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
-using System.Diagnostics;
 
 namespace EventApp.Services
 {
@@ -16,8 +13,6 @@ namespace EventApp.Services
         List<Notification> notifications;
         Holiday individualHoliday;
         Dictionary<string, string> holidayResult;
-
-        HttpClient client = new HttpClient();
 
         public string currentUser
         {
@@ -39,7 +34,7 @@ namespace EventApp.Services
 
             var content = new FormUrlEncodedContent(values);
 
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_user_notifications/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/get_user_notifications/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
@@ -63,7 +58,7 @@ namespace EventApp.Services
         {
             notifications = new List<Notification>();
             items = new List<Holiday>();
-            var response = await client.GetAsync(App.HolidailyHost + "/portal/get_updates/");
+            var response = await App.globalClient.GetAsync(App.HolidailyHost + "/portal/get_updates/");
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
             dynamic notifList = responseJSON.Notifications;

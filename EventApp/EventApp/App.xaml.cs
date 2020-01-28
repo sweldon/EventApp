@@ -7,7 +7,6 @@ using Microsoft.AppCenter.Push;
 using Microsoft.AppCenter.Analytics;
 using EventApp.Models;
 using EventApp.ViewModels;
-using EventApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -23,9 +22,13 @@ namespace EventApp
         public NavigationPage NavigationPage { get; private set; }
         public Holiday OpenHolidayPage { get; set; }
         public Comment OpenComment { get; set; }
-        public static string HolidailyHost = "https://holidailyapp.com";
+        //public static string HolidailyHost = "https://holidailyapp.com";
+        public static string HolidailyHost = "http://10.0.2.2:8000";
+        public static HttpClient globalClient = new HttpClient();
         // App-wide reusable instance for choosing random ads
         public static Random randomGenerator = new Random();
+        public static User GlobalUserObject = new User();
+
         public string devicePushId
         {
             get { return Settings.DevicePushId; }
@@ -50,8 +53,6 @@ namespace EventApp
             }
         }
 
-        public static HttpClient client = new HttpClient();
-
         public bool isPremium
         {
             get { return Settings.IsPremium; }
@@ -62,20 +63,6 @@ namespace EventApp
                 Settings.IsPremium = value;
                 OnPropertyChanged();
             }
-        }
-
-
-        public static async Task<bool> CheckPremium(string userName)
-        {
-            var values = new Dictionary<string, string>{
-                   { "username", userName }
-            };
-            var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/is_premium/", content);
-            var responseString = await response.Content.ReadAsStringAsync();
-            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-            return responseJSON.is_premium;
-
         }
 
         public string currentUser
@@ -90,7 +77,7 @@ namespace EventApp
             }
         }
 
-        public string isLoggedIn
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -180,25 +167,23 @@ namespace EventApp
             devicePushId = AppCenter.GetInstallIdAsync().Result.Value.ToString();
 
 
-            if (isLoggedIn == "yes")
+            if (isLoggedIn)
             {
                 var values = new Dictionary<string, string>{
                    { "username", currentUser },
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(App.HolidailyHost + "/portal/verify_account/", content);
+                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
                 var responseString = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(responseString);
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                bool active = responseJSON.active;
+                bool active = responseJSON.results.is_active;
+                bool isPremium = responseJSON.results.is_premium;
                 if (!active)
                 {
                     App.Current.MainPage = new NavigationPage(new LimboPage());
                 }
 
-                // Check Premium status
-                isPremium = await CheckPremium(currentUser);
             }
             else
             {

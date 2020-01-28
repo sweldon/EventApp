@@ -25,7 +25,7 @@ namespace EventApp.Views
     {
         HolidaysViewModel viewModel;
 
-        public string isLoggedIn
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -175,7 +175,7 @@ namespace EventApp.Views
 
             var newVotes = votesInt;
 
-            if (isLoggedIn == "no")
+            if (!isLoggedIn)
             {
                 this.IsEnabled = false;
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));

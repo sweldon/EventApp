@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EventApp.Models;
@@ -17,8 +16,6 @@ namespace EventApp.Services
         List<Notification> notifications;
         Holiday individualHoliday;
         Dictionary<string, string> holidayResult;
-
-        HttpClient client = new HttpClient();
 
         public HolidayService()
         {
@@ -56,7 +53,7 @@ namespace EventApp.Services
                 };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_holiday/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/get_holiday/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
@@ -71,15 +68,15 @@ namespace EventApp.Services
 
             var values = new Dictionary<string, string>{
                    { "id", id },
-                   { "user", currentUser }
+                   { "username", currentUser }
                 };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_holiday_by_id/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/holidays/"+id+"/", content);
             var responseString = await response.Content.ReadAsStringAsync();
-
+            // TODO: you're getting the data in "results" object not right away so somehow just get the json.results
             dynamic holiday = JsonConvert.DeserializeObject(responseString);
-
+            holiday = holiday.results;
             string holidayDescription = holiday.description;
             string HolidayDescriptionShort = holidayDescription.Length <= 90 ? holidayDescription : holidayDescription.Substring(0, 90) + "...";
             individualHoliday = new Holiday() {
@@ -94,7 +91,7 @@ namespace EventApp.Services
                 ShowHolidayContent = true,
                 Date = holiday.date,
                 Votes = holiday.votes,
-                CelebrateStatus = holiday.celebrate_status
+                CelebrateStatus = holiday.celebrating == true ? "celebrate_active.png" : "celebrate.png"
             };
 
             return await Task.FromResult(individualHoliday);
@@ -110,7 +107,7 @@ namespace EventApp.Services
                 };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/search_holidays/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/search_holidays/", content);
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
             dynamic holidayList = responseJSON.SearchResults;
@@ -139,33 +136,16 @@ namespace EventApp.Services
         {
             items = new List<Holiday>();
 
-            DateTime currentDate = DateTime.Today;
-            string dateString = currentDate.ToString("dd-MM-yyyy");
-            string dayNumber = dateString.Split('-')[0].TrimStart('0');
-            int monthNumber = Int32.Parse(dateString.Split('-')[1]);
-
-            List<string> months = new List<string>() {
-                "January","February","March","April","May","June","July",
-                "August", "September", "October", "November", "December"
-            };
-
-            string monthString = months[monthNumber - 1];
 
             var values = new Dictionary<string, string>{
-                   { "month", monthString },
-                   { "day", dayNumber },
-                   { "user", currentUser }
+                   { "username", currentUser }
                 };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_holidays/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/holidays/", content);
             var responseString = await response.Content.ReadAsStringAsync();
-
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-
-            dynamic holidayList = responseJSON.HolidayList;
-
-
+            dynamic holidayList = responseJSON.results;
 
             foreach (var holiday in holidayList)
             {
@@ -182,7 +162,7 @@ namespace EventApp.Services
                     ShowHolidayContent = true,
                     Date = holiday.date,
                     Votes = holiday.votes,
-                    CelebrateStatus = holiday.celebrate_status
+                    CelebrateStatus = holiday.celebrating == true ? "celebrate_active.png" : "celebrate.png"
                 });
             
             }
@@ -194,7 +174,7 @@ namespace EventApp.Services
         public async Task<IEnumerable<Holiday>> GetTopHolidays(bool forceRefresh = false)
         {
             items = new List<Holiday>();
-            var response = await client.GetAsync(App.HolidailyHost + "/portal/get_top_holidays/");
+            var response = await App.globalClient.GetAsync(App.HolidailyHost + "/portal/get_top_holidays/");
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
             dynamic holidayList = responseJSON.TopHolidayList;
@@ -219,7 +199,7 @@ namespace EventApp.Services
 
             var content = new FormUrlEncodedContent(values);
 
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/vote_holiday/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/vote_holiday/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
@@ -236,7 +216,7 @@ namespace EventApp.Services
 
             var content = new FormUrlEncodedContent(values);
 
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/check_user_votes/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/check_user_votes/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);

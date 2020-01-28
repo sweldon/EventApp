@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EventApp.ViewModels;
+﻿using EventApp.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using EventApp.Models;
-using System.Diagnostics;
-using System.Net.Http;
-using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 
 namespace EventApp.Views
@@ -18,7 +10,6 @@ namespace EventApp.Views
     public partial class ConfettiLeaders : ContentPage
     {
 
-        HttpClient client = new HttpClient();
         public ObservableCollection<User> TopConfettiList { get; set; }
         public Command LoadUsers { get; set; }
 

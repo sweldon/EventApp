@@ -17,7 +17,7 @@ namespace EventApp.Views
 
         List<HomeMenuItem> menuItems;
 
-        public string isLoggedIn
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -117,7 +117,7 @@ namespace EventApp.Views
         public async void LogoutUser(object sender, EventArgs e)
         {
 
-            isLoggedIn = "no";
+            isLoggedIn = false;
             LogoutButton.IsVisible = false;
             LoginButton.IsVisible = true;
             DefaultHeader.IsVisible = true;
@@ -137,8 +137,9 @@ namespace EventApp.Views
         }
         protected override async void OnAppearing()
         {
+
             AppInfoLabel.Text = appInfo;
-            if (isLoggedIn == "no")
+            if (!isLoggedIn)
             {
                 DefaultHeader.IsVisible = true;
                 ProfileHeader.IsVisible = false;
@@ -157,17 +158,16 @@ namespace EventApp.Views
                 UserLabel.Text = "Hey, " + currentUser + "!";
                 UserNameHeader.Text = currentUser;
 
-                // Update points
-                var values = new Dictionary<string, string>{
-                { "user", currentUser }
-                };
-
-                var content = new FormUrlEncodedContent(values);
-                HttpClient client = new HttpClient();
-                var response = await client.PostAsync(App.HolidailyHost + "/portal/get_user_rewards/", content);
-                var responseString = await response.Content.ReadAsStringAsync();
-                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                int points = responseJSON.Points;
+                //// Update points
+                //var values = new Dictionary<string, string>{
+                //{ "user", currentUser }
+                //};
+                //var content = new FormUrlEncodedContent(values);
+                //var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/get_user_rewards/", content);
+                //var responseString = await response.Content.ReadAsStringAsync();
+                //dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                //int points = responseJSON.Points;
+                string points = App.GlobalUserObject.Confetti;
                 UserPointsHeader.Text = points.ToString();
                 if (isPremium)
                 {

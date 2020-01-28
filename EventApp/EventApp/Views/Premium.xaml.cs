@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using System.Diagnostics;
@@ -15,8 +14,6 @@ namespace EventApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Premium : ContentPage
     {
-
-        HttpClient client = new HttpClient();
 
         public Holiday OpenedHoliday { get; set; }
         public string CommentTitle { get; set; }
@@ -33,7 +30,7 @@ namespace EventApp.Views
             }
         }
 
-        public string isLoggedIn
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -70,7 +67,7 @@ namespace EventApp.Views
 
             this.IsEnabled = false;
 
-            if (isLoggedIn == "no")
+            if (!isLoggedIn)
             {
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             }
@@ -137,7 +134,7 @@ namespace EventApp.Views
                         };
 
                         var content = new FormUrlEncodedContent(values);
-                        var response = await client.PostAsync(App.HolidailyHost + "/portal/make_premium/", content);
+                        var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/make_premium/", content);
                         var responseString = await response.Content.ReadAsStringAsync();
                         dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                         bool success = responseJSON.success;

@@ -1,15 +1,9 @@
 ﻿using System;
-
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
 using EventApp.Models;
 using EventApp.ViewModels;
 using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Collections.Generic;
-using Xamarin.Essentials;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Plugin.Share;
@@ -25,7 +19,7 @@ namespace EventApp.Views
 
 
 
-        public string isLoggedIn
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -103,7 +97,7 @@ namespace EventApp.Views
         async void OnDeleteTapped(object sender, EventArgs args)
         {
 
-            if (isLoggedIn == "no")
+            if (!isLoggedIn)
             {
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             }
@@ -128,8 +122,7 @@ namespace EventApp.Views
 
 
                         var content = new FormUrlEncodedContent(values);
-                        HttpClient client = new HttpClient();
-                        var response = await client.PostAsync(App.HolidailyHost + "/portal/delete_comment/", content);
+                        var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/delete_comment/", content);
 
                         var responseString = await response.Content.ReadAsStringAsync();
                         dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
@@ -155,7 +148,7 @@ namespace EventApp.Views
         async void OnReplyTapped(object sender, EventArgs args)
         {
 
-            if (isLoggedIn == "no")
+            if (!isLoggedIn)
             {
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             }
@@ -202,7 +195,7 @@ namespace EventApp.Views
             this.Title = viewModel.Holiday.Name;
             CurrentVotes.Text = viewModel.Holiday.Votes.ToString() + " Celebrating!";
 
-            if (isLoggedIn == "yes")
+            if (!isLoggedIn)
             {
                 string currentVote = await viewModel.HolidayStore.CheckUserVotes(viewModel.HolidayId, currentUser);
                 if (currentVote == "1" || currentVote == "4")
@@ -221,7 +214,7 @@ namespace EventApp.Views
         async void OnTapGestureRecognizerTapped(object sender, EventArgs args)
         {
             this.IsEnabled = false;
-            if (isLoggedIn == "no")
+            if (!isLoggedIn)
             {
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             }
@@ -270,7 +263,7 @@ namespace EventApp.Views
             int daysAgo = Time.ActiveHoliday(viewModel.Holiday.Date);
             if(daysAgo < 8)
             {
-                if (isLoggedIn == "no")
+                if (!isLoggedIn)
                 {
                     await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
                 }
@@ -312,7 +305,7 @@ namespace EventApp.Views
 //            var UpVoteImageFile = UpVoteImage.Source as FileImageSource;
 //            var UpVoteIcon = UpVoteImageFile.File;
 
-//            if (isLoggedIn == "no")
+//            if (!isLoggedIn)
 //            {
 //                this.IsEnabled = false;
 //                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
@@ -377,7 +370,7 @@ namespace EventApp.Views
 
             #if __ANDROID__
                                     var duration = TimeSpan.FromSeconds(.025);
-                                    Vibration.Vibrate(duration);
+                                    Xamarin.Essentials.Vibration.Vibrate(duration);
             #endif
 
             string VotesString = CurrentVotes.Text;
@@ -390,7 +383,7 @@ namespace EventApp.Views
             var UpVoteIcon = UpVoteImageFile.File;
 
 
-            if (isLoggedIn == "no")
+            if (!isLoggedIn)
             {
                 this.IsEnabled = false;
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
@@ -480,7 +473,7 @@ namespace EventApp.Views
 
 #if __ANDROID__
             var duration = TimeSpan.FromSeconds(.025);
-            Vibration.Vibrate(duration);
+            Xamarin.Essentials.Vibration.Vibrate(duration);
 #endif
 
             int CurrentVotes = item.Votes;
@@ -489,7 +482,7 @@ namespace EventApp.Views
             //var UpVoteImageFile = UpVoteImage.Source as FileImageSource;
             //var UpVoteIcon = UpVoteImageFile.File;
 
-            if (isLoggedIn == "no")
+            if (!isLoggedIn)
             {
                 this.IsEnabled = false;
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
@@ -564,12 +557,12 @@ namespace EventApp.Views
 
 #if __ANDROID__
             var duration = TimeSpan.FromSeconds(.025);
-            Vibration.Vibrate(duration);
+            Xamarin.Essentials.Vibration.Vibrate(duration);
 #endif
 
             int CurrentVotes = item.Votes;
 
-            if (isLoggedIn == "no")
+            if (!isLoggedIn)
             {
                 this.IsEnabled = false;
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));

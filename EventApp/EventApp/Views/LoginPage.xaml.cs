@@ -15,7 +15,7 @@ namespace EventApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {
-        public string isLoggedIn
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -63,8 +63,6 @@ namespace EventApp.Views
             }
         }
 
-        HttpClient client = new HttpClient();
-
         public NavigationPage NavigationPage { get; private set; }
         public LoginPage()
         {
@@ -74,7 +72,7 @@ namespace EventApp.Views
         public async void Recover(object sender, EventArgs e)
         {
             this.IsEnabled = false;
-            await Task.Run(() => Xamarin.Forms.Device.OpenUri(new Uri(App.HolidailyHost + "/recover")));
+            await Task.Run(() => Xamarin.Forms.Device.OpenUri(new Uri(App.HolidailyHost + "/portal/recover")));
             this.IsEnabled = true;
         }
             public async void LoginUser(object sender, EventArgs e)
@@ -93,27 +91,32 @@ namespace EventApp.Views
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(App.HolidailyHost + "/portal/login_mobile/", content); 
+                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/accounts/login/", content);
+                Debug.WriteLine(response);
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                int status = responseJSON.StatusCode;
-                string message = responseJSON.Message;
+
+                int status = responseJSON.status;
 
                 if (status == 200)
                 {
-                    isLoggedIn = "yes";
+                    isLoggedIn = true;
                     var menuPage = new MenuPage();
                     NavigationPage = new NavigationPage(new HolidaysPage());
                     var rootPage = new RootPage(); 
                     rootPage.Master = menuPage; 
                     rootPage.Detail = NavigationPage;
                     currentUser = userName;
-                    isPremium = await App.CheckPremium(currentUser);
+                    isPremium = responseJSON.results.is_premium;
+
+                    // Set some useful global user properties (maybe use this for username
+                    // ETC... instead of Settings plugin? Possible improvement.
+                    App.GlobalUserObject.Confetti = responseJSON.results.confetti;
                     await Navigation.PopModalAsync();
                 }
                 else
                 {
-                    await DisplayAlert("Error", message, "Okay");
+                    await DisplayAlert("Error", "Could not log you in. Please try again", "Okay");
                 }
             }
             else

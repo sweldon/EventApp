@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using MarcTron.Plugin;
-using System.Diagnostics;
-using EventApp.Services;
 using System.Net.Http;
 using Newtonsoft.Json;
 
@@ -17,7 +12,7 @@ namespace EventApp.Views
 	public partial class RewardsPage : ContentPage
 	{
 
-        public string isLoggedIn
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -80,8 +75,7 @@ namespace EventApp.Views
             };
 
             var content = new FormUrlEncodedContent(values);
-            HttpClient client = new HttpClient();
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_user_rewards/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/get_user_rewards/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
@@ -100,7 +94,7 @@ namespace EventApp.Views
                         CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/7152256279");
             #endif
 
-            if (isLoggedIn == "no")
+            if (!isLoggedIn)
             {
                 PointsLabel.Text = "Log in to get points!";
   
@@ -121,8 +115,7 @@ namespace EventApp.Views
                     };
 
             var content = new FormUrlEncodedContent(values);
-            HttpClient client = new HttpClient();
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/claim_reward/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/claim_reward/", content);
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
             int status = responseJSON.StatusCode;
@@ -140,7 +133,7 @@ namespace EventApp.Views
         public async void WatchAd(object sender, EventArgs e)
         {
 
-            if (isLoggedIn == "no")
+            if (!isLoggedIn)
             {
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             }

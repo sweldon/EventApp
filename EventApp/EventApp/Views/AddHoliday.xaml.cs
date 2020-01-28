@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using System.Diagnostics;
-using EventApp.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
 
@@ -13,8 +10,6 @@ namespace EventApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AddHoliday : ContentPage
     {
-
-        HttpClient client = new HttpClient();
 
 
         public string currentUser
@@ -29,7 +24,7 @@ namespace EventApp.Views
             }
         }
 
-        public string isLoggedIn
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -52,7 +47,7 @@ namespace EventApp.Views
         {
             this.IsEnabled = false;
 
-            if (isLoggedIn == "no")
+            if (!isLoggedIn)
             {
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
                 this.IsEnabled = true;
@@ -73,7 +68,7 @@ namespace EventApp.Views
                         };
 
                     var content = new FormUrlEncodedContent(values);
-                    var response = await client.PostAsync(App.HolidailyHost + "/portal/add_holiday_from_app/", content);
+                    var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/add_holiday_from_app/", content);
                     var responseString = await response.Content.ReadAsStringAsync();
                     dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                     int status = responseJSON.StatusCode;
@@ -112,14 +107,14 @@ namespace EventApp.Views
 
             base.OnAppearing();
 
-            if (isLoggedIn == "yes")
+            if (isLoggedIn)
             {
                 var values = new Dictionary<string, string>{
                    { "user", currentUser },
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(App.HolidailyHost + "/portal/check_user_holiday_pending/", content);
+                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/check_user_holiday_pending/", content);
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                 bool pending = responseJSON.pending;

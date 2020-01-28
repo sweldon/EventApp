@@ -31,7 +31,7 @@ namespace EventApp
         private static readonly string DevicePushIdDefault = "none";
 
         private const string IsLoggedInKey = "is_logged_in_key";
-        private static readonly string IsLoggedInDefault= "no";
+        private static readonly bool IsLoggedInDefault= false;
 
         private const string CurrentUserKey = "current_user_key";
         private static readonly string CurrentUserDefault = "none";
@@ -105,7 +105,7 @@ namespace EventApp
             }
         }
 
-        public static string IsLoggedIn
+        public static bool IsLoggedIn
         {
             get
             {
