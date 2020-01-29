@@ -6,6 +6,7 @@ using EventApp.ViewModels;
 using System.Collections.Generic;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace EventApp.Views
 {
@@ -132,20 +133,20 @@ namespace EventApp.Views
             else
             {
                 var values = new Dictionary<string, string>{
-                   { "holiday_id", viewModel.HolidayId },
-                   { "comment", ReplyCommentContent.Text },
-                   { "user", viewModel.currentUser},
-                   {"parent", viewModel.CommentId }
+                   { "holiday", viewModel.HolidayId },
+                   { "content", ReplyCommentContent.Text },
+                   { "username", currentUser},
+                   { "parent", viewModel.CommentId }
 
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/add_comment/", content);
-
+                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/comments/", content);
                 var responseString = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine(responseString);
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                int status = responseJSON.StatusCode;
-                string message = responseJSON.Message;
+                int status = responseJSON.status;
+                string message = responseJSON.message;
                 if (status == 200)
                 {
                     await Navigation.PopAsync();

@@ -84,8 +84,8 @@ namespace EventApp.Views
                 var billing = CrossInAppBilling.Current;
                 try
                 {
-                    //var productId = "android.test.purchased";
-                    var productId = "holidailypremium";
+                    var productId = "android.test.purchased";
+                    //var productId = "holidailypremium";
                     
                     var connected = await billing.ConnectAsync(ItemType.InAppPurchase);
 
@@ -125,7 +125,6 @@ namespace EventApp.Views
                         var token = purchase.PurchaseToken;
                         var state = purchase.State.ToString();
 
-
                         var values = new Dictionary<string, string>{
                            { "username", currentUser },
                            { "id", id },
@@ -134,11 +133,11 @@ namespace EventApp.Views
                         };
 
                         var content = new FormUrlEncodedContent(values);
-                        var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/make_premium/", content);
+                        var response = await App.globalClient.PostAsync(App.HolidailyHost + "/user/", content);
                         var responseString = await response.Content.ReadAsStringAsync();
                         dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                        bool success = responseJSON.success;
-                        if (success)
+                        int status = responseJSON.status;
+                        if (status == 200)
                         {
                             isPremium = true;
                             await DisplayAlert("Success!", "The transaction was successful. Thank you very much for your support", "You're welcome!");

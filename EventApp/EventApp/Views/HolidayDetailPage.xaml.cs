@@ -116,17 +116,17 @@ namespace EventApp.Views
                     {
 
                         var values = new Dictionary<string, string>{
-                   { "comment_id", item.Id },
-                   { "device_id", devicePushId }
-                    };
-
+                           { "delete", item.Id },
+                           { "device_id", devicePushId }
+                            };
 
                         var content = new FormUrlEncodedContent(values);
-                        var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/delete_comment/", content);
+                        var response = await App.globalClient.PostAsync(App.HolidailyHost + "/comments/", content);
 
                         var responseString = await response.Content.ReadAsStringAsync();
+                        Debug.WriteLine(responseString);
                         dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                        int status = responseJSON.status_code;
+                        int status = responseJSON.status;
                         string message = responseJSON.message;
                         if (status == 200)
                         {

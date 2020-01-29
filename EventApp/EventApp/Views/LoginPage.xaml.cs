@@ -106,7 +106,6 @@ namespace EventApp.Views
                 var content = new FormUrlEncodedContent(values);
                 var response = await App.globalClient.PostAsync(App.HolidailyHost + "/accounts/login/", content);
                 var responseString = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(responseString);
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                 int status = responseJSON.status;
 
@@ -117,7 +116,7 @@ namespace EventApp.Views
                     //App.GlobalUserObject.Confetti = responseJSON.results.confetti;
                     isLoggedIn = true;
                     currentUser = userName;
-                    isPremium = responseJSON.results.is_premium;
+                    isPremium = responseJSON.results.premium;
                     confettiCount = responseJSON.results.confetti;
 
                     var menuPage = new MenuPage(); // Build hamburger menu

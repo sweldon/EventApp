@@ -31,13 +31,18 @@ namespace EventApp.ViewModels
             try
             {
                 UserList.Clear();
-                var response = await App.globalClient.GetAsync(App.HolidailyHost + "/portal/get_confetti_leaders/");
+                var response = await App.globalClient.GetAsync(App.HolidailyHost + "/users/top");
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                dynamic userList = responseJSON.user_list;
+                dynamic userList = responseJSON.results;
                 foreach (var user in userList)
                 {
-                    UserList.Insert(0, new User() { UserName = user.username, Confetti = user.confetti, Submissions = user.submissions, Approved = user.approved, Comments = user.comments });
+                    UserList.Insert(0, new User() {
+                        UserName = user.username,
+                        Confetti = user.confetti,
+                        Submissions = user.holiday_submissions,
+                        Approved = user.approved_holidays,
+                        Comments = user.comments });
                 }
 
             }

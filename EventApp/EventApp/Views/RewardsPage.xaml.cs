@@ -71,17 +71,16 @@ namespace EventApp.Views
         public async void UpdateUserPoints()
         {
             var values = new Dictionary<string, string>{
-            { "user", currentUser }
+            { "username", currentUser }
             };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/get_user_rewards/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/user/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-
-            int points = responseJSON.Points;
-            PointsLabel.Text = "You have " + points.ToString() + " points!";
+            string points = responseJSON.results.ContainsKey("confetti") ? responseJSON.results.confetti.ToString() : "0";
+            PointsLabel.Text = "You have " + points + " points!";
         }
 
         protected async override void OnAppearing()

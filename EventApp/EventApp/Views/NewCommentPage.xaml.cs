@@ -50,19 +50,19 @@ namespace EventApp.Views
             }
             else {
                 var values = new Dictionary<string, string>{
-                   { "holiday_id", OpenedHoliday.Id },
-                   { "comment", CommentContent.Text },
-                   { "user", currentUser}
+                   { "holiday", OpenedHoliday.Id },
+                   { "content", CommentContent.Text },
+                   { "username", currentUser}
 
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/add_comment/", content);
+                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/comments/", content);
 
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                int status = responseJSON.StatusCode;
-                string message = responseJSON.Message;
+                int status = responseJSON.status;
+                string message = responseJSON.message;
 
                 if (status == 200)
                 {
