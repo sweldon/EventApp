@@ -70,15 +70,14 @@ namespace EventApp.Views
                         var values = new Dictionary<string, string>{
                        { "username", userName },
                        { "password", pass },
-                       { "device_id", devicePushId },
                         { "email", email }
                     };
 
                         var content = new FormUrlEncodedContent(values);
-                        var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/register/", content);
+                        var response = await App.globalClient.PostAsync(App.HolidailyHost + "/accounts/register/", content);
                         var responseString = await response.Content.ReadAsStringAsync();
                         dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                        int status = responseJSON.StatusCode;
+                        int status = responseJSON.status;
                         string message = responseJSON.Message;
 
                         if (status == 200)
