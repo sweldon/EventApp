@@ -190,7 +190,7 @@
                                                     <Image Source="share.png" VerticalOptions="Center">
                                                         <Image.GestureRecognizers>
                                                             <TapGestureRecognizer
-                                                                     Tapped="OnSharePicTapped"  />
+                                                                     Tapped="Share"  />
                                                         </Image.GestureRecognizers>
                                                     </Image>
                                                 </ContentView>
@@ -199,7 +199,7 @@
                                                              VerticalTextAlignment="Center" Margin="0,-2,0,0">
                                                     <Label.GestureRecognizers>
                                                         <TapGestureRecognizer
-                                                             Tapped="OnShareTapped"  />
+                                                             Tapped="Share"  />
                                                     </Label.GestureRecognizers>
                                                 </Label>
 

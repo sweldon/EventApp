@@ -201,7 +201,7 @@ namespace EventApp.Views
                     holiday.Votes = newVotes.ToString();
                     await CelebrateImage.ScaleTo(2, 50);
                     await CelebrateImage.ScaleTo(1, 50);
-                    await viewModel.HolidayStore.VoteHoliday(holidayId, currentUser, "3");
+                    await viewModel.HolidayStore.VoteHoliday(holidayId, "3");
 
                 }
                 else
@@ -222,7 +222,7 @@ namespace EventApp.Views
                         holiday.Votes = newVotes.ToString();
                         await CelebrateImage.ScaleTo(2, 50);
                         await CelebrateImage.ScaleTo(1, 50);
-                        await viewModel.HolidayStore.VoteHoliday(holidayId, currentUser, "1");
+                        await viewModel.HolidayStore.VoteHoliday(holidayId, "1");
 
                     }
                     else
@@ -240,7 +240,7 @@ namespace EventApp.Views
                         holiday.Votes = newVotes.ToString();
                         await CelebrateImage.ScaleTo(2, 50);
                         await CelebrateImage.ScaleTo(1, 50);
-                        await viewModel.HolidayStore.VoteHoliday(holidayId, currentUser, "5");
+                        await viewModel.HolidayStore.VoteHoliday(holidayId, "5");
 
                     }
 

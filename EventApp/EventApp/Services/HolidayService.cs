@@ -103,30 +103,34 @@ namespace EventApp.Services
             items = new List<Holiday>();
 
             var values = new Dictionary<string, string>{
-                   { "search_text", searchText },
+                   { "search", searchText },
                 };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/search_holidays/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/search/", content);
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-            dynamic holidayList = responseJSON.SearchResults;
+            dynamic holidayList = responseJSON.results;
             foreach (var holiday in holidayList)
             {
-               
                 string holidayDescription = holiday.description;
-                Debug.WriteLine(holidayDescription);
                 string HolidayDescriptionShort = holidayDescription.Length <= 90 ? holidayDescription : holidayDescription.Substring(0, 90) + "...";
-                items.Insert(0, new Holiday() { Id = holiday.id,
+                items.Insert(0, new Holiday()
+                {
+                    Id = holiday.id,
                     Name = holiday.name,
                     Description = holiday.description,
                     NumComments = holiday.num_comments,
                     TimeSince = holiday.time_since,
                     DescriptionShort = HolidayDescriptionShort,
-                    Votes = holiday.votes,
                     HolidayImage = holiday.image,
-                    Date = holiday.date
+                    ShowAd = false,
+                    ShowHolidayContent = true,
+                    Date = holiday.date,
+                    Votes = holiday.votes,
+                    CelebrateStatus = holiday.celebrating == true ? "celebrate_active.png" : "celebrate.png"
                 });
+
             }
 
             return await Task.FromResult(items);
@@ -188,42 +192,37 @@ namespace EventApp.Services
             return await Task.FromResult(items);
         }
 
-        public async Task VoteHoliday(string holidayId, string userName, string vote)
+        public async Task VoteHoliday(string holidayId, string vote)
         {
 
             var values = new Dictionary<string, string>{
-                   { "holiday_id", holidayId },
-                   { "user", userName },
+                   { "username", currentUser },
                    { "vote", vote }
                 };
 
             var content = new FormUrlEncodedContent(values);
-
-            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/vote_holiday/", content);
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/holidays/"+holidayId+"/", content);
 
         }
 
-        public async Task<string> CheckUserVotes(string holidayId, string userName)
-        {
+        //public async Task<string> CheckUserVotes(string holidayId, string userName)
+        //{
 
-            var values = new Dictionary<string, string>{
-                   { "holiday_id", holidayId },
-                   { "user", userName }
-                };
+        //    var values = new Dictionary<string, string>{
+        //           { "holiday_id", holidayId },
+        //           { "user", userName }
+        //        };
 
-            var content = new FormUrlEncodedContent(values);
+        //    var content = new FormUrlEncodedContent(values);
 
-            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/check_user_votes/", content);
-            var responseString = await response.Content.ReadAsStringAsync();
+        //    var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/check_user_votes/", content);
+        //    var responseString = await response.Content.ReadAsStringAsync();
 
-            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+        //    dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
 
-            return responseJSON.Choice;
+        //    return responseJSON.Choice;
 
-        }
+        //}
 
 
 

@@ -32,29 +32,26 @@ namespace EventApp.ViewModels
 
         }
 
+        // Key code responsible for maintaining celebration status
+        // Across pages. Very cool how it works, use this in the future.
         public async void UpdateCelebrateStatus(string holiday, bool upvote, string newVotes)
         {
 
             foreach (Holiday h in Holidays)
             {
 
-                if(h.Name == holiday)
+                if (h.Name == holiday)
                 {
                     if (upvote)
                     {
                         h.CelebrateStatus = "celebrate_active.png";
                         h.Votes = newVotes;
-                        Debug.WriteLine("UPVOTING " + h.Name + " to " + newVotes);
                     }
                     else
                     {
                         h.CelebrateStatus = "celebrate.png";
                         h.Votes = newVotes;
-                        Debug.WriteLine("DOWNVOTING " + h.Name + " to " + newVotes);
                     }
-                    
-
-                    Debug.WriteLine(h.Name + " VOTES SET TO " + h.Votes);
                 }
             }
         }

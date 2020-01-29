@@ -41,6 +41,18 @@ namespace EventApp.Views
             }
         }
 
+        public string confettiCount
+        {
+            get { return Settings.ConfettiCount; }
+            set
+            {
+                if (Settings.ConfettiCount == value)
+                    return;
+                Settings.ConfettiCount = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string appInfo
         {
             get { return Settings.AppInfo; }
@@ -112,6 +124,25 @@ namespace EventApp.Views
             await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             LoginButton.IsEnabled = true;
 
+            //LoginButton.IsEnabled = false;
+
+            //var modalPage = new NavigationPage(new LoginPage());
+            //modalPage.Disappearing += (sender2, e2) =>
+            //{
+            //    if (isLoggedIn)
+            //    {
+            //        var menuPage = new MenuPage(); // Build hamburger menu
+            //        NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
+            //        var rootPage = new RootPage(); // Root handles master detail navigation
+            //        rootPage.Master = menuPage; // Menu
+            //        rootPage.Detail = NavigationPage; // Content
+            //        Application.Current.MainPage = rootPage; // Set root to built master detail
+            //    }
+
+            //};
+            //await Navigation.PushModalAsync(modalPage);
+            //LoginButton.IsEnabled = true;
+
         }
 
         public async void LogoutUser(object sender, EventArgs e)
@@ -135,20 +166,10 @@ namespace EventApp.Views
             Application.Current.MainPage = rootPage; // Set root to built master detail
 
         }
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
-
             AppInfoLabel.Text = appInfo;
-            if (!isLoggedIn)
-            {
-                DefaultHeader.IsVisible = true;
-                ProfileHeader.IsVisible = false;
-                LogoutButton.IsVisible = false;
-                LoginButton.IsVisible = true;
-                HeaderDivider.IsVisible = false;
-                UserLabel.Text = "Hey there!";
-            }
-            else
+            if(isLoggedIn)
             {
                 DefaultHeader.IsVisible = false;
                 ProfileHeader.IsVisible = true;
@@ -157,23 +178,21 @@ namespace EventApp.Views
                 HeaderDivider.IsVisible = true;
                 UserLabel.Text = "Hey, " + currentUser + "!";
                 UserNameHeader.Text = currentUser;
-
-                //// Update points
-                //var values = new Dictionary<string, string>{
-                //{ "user", currentUser }
-                //};
-                //var content = new FormUrlEncodedContent(values);
-                //var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/get_user_rewards/", content);
-                //var responseString = await response.Content.ReadAsStringAsync();
-                //dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                //int points = responseJSON.Points;
-                string points = App.GlobalUserObject.Confetti;
-                UserPointsHeader.Text = points.ToString();
+                UserPointsHeader.Text = confettiCount;
                 if (isPremium)
                 {
                     isPremiumLabel.Text = "Premium";
                 }
 
+            }
+            else
+            {
+                DefaultHeader.IsVisible = true;
+                ProfileHeader.IsVisible = false;
+                LogoutButton.IsVisible = false;
+                LoginButton.IsVisible = true;
+                HeaderDivider.IsVisible = false;
+                UserLabel.Text = "Hey there!";
             }
 
         }

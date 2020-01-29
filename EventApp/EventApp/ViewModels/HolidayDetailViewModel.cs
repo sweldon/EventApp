@@ -52,6 +52,7 @@ namespace EventApp.ViewModels
             });
 
 
+
         }
 
         async Task ExecuteLoadCommentsCommand()

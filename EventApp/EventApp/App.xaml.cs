@@ -23,7 +23,7 @@ namespace EventApp
         public Holiday OpenHolidayPage { get; set; }
         public Comment OpenComment { get; set; }
         //public static string HolidailyHost = "https://holidailyapp.com";
-        public static string HolidailyHost = "http://10.0.2.2:8000";
+        public static string HolidailyHost = "http://localhost:8888";
         public static HttpClient globalClient = new HttpClient();
         // App-wide reusable instance for choosing random ads
         public static Random randomGenerator = new Random();
@@ -77,6 +77,18 @@ namespace EventApp
             }
         }
 
+        public string confettiCount
+        {
+            get { return Settings.ConfettiCount; }
+            set
+            {
+                if (Settings.ConfettiCount == value)
+                    return;
+                Settings.ConfettiCount = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
@@ -106,7 +118,7 @@ namespace EventApp
         {
 
 
-
+            
 
             if (!AppCenter.Configured){
                 Push.PushNotificationReceived += (sender, e) =>
@@ -169,20 +181,31 @@ namespace EventApp
 
             if (isLoggedIn)
             {
-                var values = new Dictionary<string, string>{
-                   { "username", currentUser },
-                };
-
-                var content = new FormUrlEncodedContent(values);
-                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
-                var responseString = await response.Content.ReadAsStringAsync();
-                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                bool active = responseJSON.results.is_active;
-                bool isPremium = responseJSON.results.is_premium;
-                if (!active)
+                try
                 {
-                    App.Current.MainPage = new NavigationPage(new LimboPage());
+                    var values = new Dictionary<string, string>{
+                        { "username", currentUser },
+                    };
+
+                    var content = new FormUrlEncodedContent(values);
+                    var response = await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                    bool active = responseJSON.results.is_active;
+                    bool isPremium = responseJSON.results.is_premium;
+                    GlobalUserObject.UserName = currentUser;
+                    GlobalUserObject.Confetti = confettiCount;
+                    if (!active)
+                    {
+                        App.Current.MainPage = new NavigationPage(new LimboPage());
+                    }
+
                 }
+                catch
+                {
+                    isPremium = false;
+                }
+
 
             }
             else

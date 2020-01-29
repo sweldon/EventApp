@@ -61,17 +61,17 @@ namespace EventApp.Views
                     var dateStr = selectedDate.ToString();
 
                     var values = new Dictionary<string, string>{
-                           { "user", currentUser },
-                           { "name", HolidayNameEntry.Text },
+                           { "username", currentUser },
+                           { "submission", HolidayNameEntry.Text },
                            { "description", HolidayDetailEntry.Text },
                            { "date", dateStr },
                         };
 
                     var content = new FormUrlEncodedContent(values);
-                    var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/add_holiday_from_app/", content);
+                    var response = await App.globalClient.PostAsync(App.HolidailyHost + "/submit/", content);
                     var responseString = await response.Content.ReadAsStringAsync();
                     dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                    int status = responseJSON.StatusCode;
+                    int status = responseJSON.status;
 
                     if (status == 200)
                     {
@@ -110,14 +110,14 @@ namespace EventApp.Views
             if (isLoggedIn)
             {
                 var values = new Dictionary<string, string>{
-                   { "user", currentUser },
+                   { "username", currentUser },
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/check_user_holiday_pending/", content);
+                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/pending/", content);
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                bool pending = responseJSON.pending;
+                bool pending = responseJSON.results;
 
                 if (pending)
                 {

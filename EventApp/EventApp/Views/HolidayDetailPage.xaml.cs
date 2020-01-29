@@ -195,20 +195,24 @@ namespace EventApp.Views
             this.Title = viewModel.Holiday.Name;
             CurrentVotes.Text = viewModel.Holiday.Votes.ToString() + " Celebrating!";
 
-            if (!isLoggedIn)
-            {
-                string currentVote = await viewModel.HolidayStore.CheckUserVotes(viewModel.HolidayId, currentUser);
-                if (currentVote == "1" || currentVote == "4")
-                {
-                    UpVoteImage.Source = "celebrate_active.png";
-                    //DownVoteImage.Source = "down.png";
-                }
-                else if (currentVote == "0" || currentVote == "5")
-                {
-                    //DownVoteImage.Source = "down_active.png";
-                    UpVoteImage.Source = "celebrate.png";
-                }
+            if (isLoggedIn) {
+                UpVoteImage.Source = viewModel.Holiday.CelebrateStatus;
             }
+
+            //if (!isLoggedIn)
+            //{
+            //    string currentVote = await viewModel.HolidayStore.CheckUserVotes(viewModel.HolidayId, currentUser);
+            //    if (currentVote == "1" || currentVote == "4")
+            //    {
+            //        UpVoteImage.Source = "celebrate_active.png";
+            //        //DownVoteImage.Source = "down.png";
+            //    }
+            //    else if (currentVote == "0" || currentVote == "5")
+            //    {
+            //        //DownVoteImage.Source = "down_active.png";
+            //        UpVoteImage.Source = "celebrate.png";
+            //    }
+            //}
         }
 
         async void OnTapGestureRecognizerTapped(object sender, EventArgs args)
@@ -412,7 +416,7 @@ namespace EventApp.Views
                         UpVoteImage.Source = "celebrate.png";
                         await UpVoteImage.ScaleTo(2, 50);
                         await UpVoteImage.ScaleTo(1, 50);
-                        await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "3");
+                        await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, "3");
 
 
                         Object[] values = { viewModel.Holiday.Name, false, newVotesInt.ToString() };
@@ -428,7 +432,7 @@ namespace EventApp.Views
                             UpVoteImage.Source = "celebrate_active.png";
                             await UpVoteImage.ScaleTo(2, 50);
                             await UpVoteImage.ScaleTo(1, 50);
-                            await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "1");
+                            await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, "1");
 
 
                         Object[] values = { viewModel.Holiday.Name, true, newVotesInt.ToString() };
@@ -441,7 +445,7 @@ namespace EventApp.Views
                             UpVoteImage.Source = "celebrate.png";
                             await UpVoteImage.ScaleTo(2, 50);
                             await UpVoteImage.ScaleTo(1, 50);
-                            await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "5");
+                            await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, "5");
 
     
                             Object[] values = { viewModel.Holiday.Name, false, newVotesInt.ToString() };
@@ -465,10 +469,10 @@ namespace EventApp.Views
             string commentId = item.Id;
 
 #if __IOS__
-                var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
-                haptic.Prepare();
-                haptic.ImpactOccurred();
-                haptic.Dispose();
+            var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
+            haptic.Prepare();
+            haptic.ImpactOccurred();
+            haptic.Dispose();
 #endif
 
 #if __ANDROID__
@@ -499,7 +503,7 @@ namespace EventApp.Views
                     //DownVoteImage.Source = "down_active.png";
                     item.UpVoteStatus = "up.png";
                     item.DownVoteStatus = "down_active.png";
-                    await viewModel.CommentStore.VoteComment(commentId, currentUser, "5");
+                    await viewModel.CommentStore.VoteComment(commentId, "5");
                 }
                 else
                 {
@@ -510,7 +514,7 @@ namespace EventApp.Views
                         //CurrentVotes.Text = newVotesInt.ToString();
                         //DownVoteImage.Source = "down.png";
                         item.DownVoteStatus = "down.png";
-                        await viewModel.CommentStore.VoteComment(commentId, currentUser, "2");
+                        await viewModel.CommentStore.VoteComment(commentId, "2");
                     }
                     else
                     {
@@ -522,7 +526,7 @@ namespace EventApp.Views
                             //CurrentVotes.Text = newVotesInt.ToString();
                             //DownVoteImage.Source = "down_active.png";
                             item.DownVoteStatus = "down_active.png";
-                            await viewModel.CommentStore.VoteComment(commentId, currentUser, "0");
+                            await viewModel.CommentStore.VoteComment(commentId, "0");
                         }
                         else
                         {
@@ -531,7 +535,7 @@ namespace EventApp.Views
                             //CurrentVotes.Text = newVotesInt.ToString();
                             //DownVoteImage.Source = "down.png";
                             item.DownVoteStatus = "down.png";
-                            await viewModel.CommentStore.VoteComment(commentId, currentUser, "4");
+                            await viewModel.CommentStore.VoteComment(commentId,"4");
                         }
                     }
                 }
@@ -548,17 +552,17 @@ namespace EventApp.Views
             var item = (sender as Image).BindingContext as Comment;
             string commentId = item.Id;
 
-#if __IOS__
-                var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
-                haptic.Prepare();
-                haptic.ImpactOccurred();
-                haptic.Dispose();
-#endif
+        #if __IOS__
+                        var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
+                        haptic.Prepare();
+                        haptic.ImpactOccurred();
+                        haptic.Dispose();
+        #endif
 
-#if __ANDROID__
-            var duration = TimeSpan.FromSeconds(.025);
-            Xamarin.Essentials.Vibration.Vibrate(duration);
-#endif
+        #if __ANDROID__
+                    var duration = TimeSpan.FromSeconds(.025);
+                    Xamarin.Essentials.Vibration.Vibrate(duration);
+        #endif
 
             int CurrentVotes = item.Votes;
 
@@ -580,7 +584,7 @@ namespace EventApp.Views
                     // UpVoteImage.Source = "up_active.png";
                     item.DownVoteStatus = "down.png";
                     item.UpVoteStatus = "up_active.png";
-                    await viewModel.CommentStore.VoteComment(commentId, currentUser, "4");
+                    await viewModel.CommentStore.VoteComment(commentId, "4");
                 }
                 else
                 {
@@ -592,7 +596,7 @@ namespace EventApp.Views
                         //CurrentVotes.Text = newVotesInt.ToString();
                         //UpVoteImage.Source = "up.png";
                         item.UpVoteStatus = "up.png";
-                        await viewModel.CommentStore.VoteComment(commentId, currentUser, "3");
+                        await viewModel.CommentStore.VoteComment(commentId, "3");
                     }
                     else
                     {
@@ -604,7 +608,7 @@ namespace EventApp.Views
                             //CurrentVotes.Text = newVotesInt.ToString();
                             //UpVoteImage.Source = "up_active.png";
                             item.UpVoteStatus = "up_active.png";
-                            await viewModel.CommentStore.VoteComment(commentId, currentUser, "1");
+                            await viewModel.CommentStore.VoteComment(commentId, "1");
                         }
                         else
                         {
@@ -613,7 +617,7 @@ namespace EventApp.Views
                             //CurrentVotes.Text = newVotesInt.ToString();
                             //UpVoteImage.Source = "up.png";
                             item.UpVoteStatus = "up.png";
-                            await viewModel.CommentStore.VoteComment(commentId, currentUser, "5");
+                            await viewModel.CommentStore.VoteComment(commentId, "5");
                         }
 
                     }
