@@ -1,16 +1,12 @@
 ﻿using System;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
 using EventApp.Models;
 using EventApp.ViewModels;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Collections.Generic;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace EventApp.Views
 {
@@ -18,8 +14,6 @@ namespace EventApp.Views
     public partial class CommentPage : ContentPage
     {
 
-
-        HttpClient client = new HttpClient();
         CommentViewModel viewModel;
         public Comment Comment { get; set; }
 
@@ -55,13 +49,6 @@ namespace EventApp.Views
 
         }
 
-
-        async void OnCommentSelected(object sender, SelectedItemChangedEventArgs args)
-        {
-            ((ListView)sender).SelectedItem = null;
-
-        }
-
         public CommentPage()
         {
             InitializeComponent();
@@ -75,9 +62,6 @@ namespace EventApp.Views
             ReplyCommentContent.Focus();
 
             viewModel.Comment = await viewModel.CommentStore.GetCommentById(viewModel.CommentId);
-
-            //Description.Text = viewModel.Holiday.Description;
-            //this.Title = viewModel.Holiday.Name;
             string UserNameValue = viewModel.Comment.UserName;
             Content.Text = viewModel.Comment.Content;
             TimeSince.Text = viewModel.Comment.TimeSince;
@@ -85,12 +69,6 @@ namespace EventApp.Views
             this.Title = viewModel.Comment.UserName + "'s Comment"; 
             int UserNameLength = UserNameValue.Length;
             ReplyCommentContent.Text = '@'+UserNameValue.PadRight(UserNameLength + 1, ' ');
-
-        }
-
-        async void OnTapGestureRecognizerTapped(object sender, EventArgs args)
-        {
-
 
         }
 
@@ -107,7 +85,7 @@ namespace EventApp.Views
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(App.HolidailyHost + "/portal/delete_comment/", content);
+                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/delete_comment/", content);
 
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
@@ -139,20 +117,20 @@ namespace EventApp.Views
             else
             {
                 var values = new Dictionary<string, string>{
-                   { "holiday_id", viewModel.HolidayId },
-                   { "comment", ReplyCommentContent.Text },
-                   { "user", viewModel.currentUser},
-                   {"parent", viewModel.CommentId }
+                   { "holiday", viewModel.HolidayId },
+                   { "content", ReplyCommentContent.Text },
+                   { "username", currentUser},
+                   { "parent", viewModel.CommentId }
 
                 };
 
                 var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(App.HolidailyHost + "/portal/add_comment/", content);
-
+                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/comments/", content);
                 var responseString = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine(responseString);
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                int status = responseJSON.StatusCode;
-                string message = responseJSON.Message;
+                int status = responseJSON.status;
+                string message = responseJSON.message;
                 if (status == 200)
                 {
                     await Navigation.PopAsync();

@@ -27,7 +27,7 @@ namespace EventApp.Views
             }
         }
 
-        public string isLoggedIn
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -52,7 +52,7 @@ namespace EventApp.Views
 
         public async void SwitchAccounts(object sender, EventArgs e)
         {
-            isLoggedIn = "no";
+            isLoggedIn = false;
             await DisplayAlert("Cool", "This account has been removed. Please relaunch the app.", "OK");
         }
 

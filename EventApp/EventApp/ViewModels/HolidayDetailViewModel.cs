@@ -1,13 +1,10 @@
 ﻿using System;
 using EventApp.Models;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using EventApp.Views;
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Net.Http;
 
 namespace EventApp.ViewModels
 {
@@ -16,7 +13,8 @@ namespace EventApp.ViewModels
 
         public Holiday Holiday { get; set; }
         private List<CommentList> CommentList;
-        public List<CommentList> GroupedCommentList { get { return CommentList; } set { CommentList = value; base.OnPropertyChanged(); } }
+        public List<CommentList> GroupedCommentList { get { return CommentList; }
+            set { CommentList = value; base.OnPropertyChanged(); } }
         public Command LoadHolidayComments { get; set; }
         public string HolidayId { get; set; }
         public string currentUser
@@ -55,6 +53,7 @@ namespace EventApp.ViewModels
             });
 
 
+
         }
 
         async Task ExecuteLoadCommentsCommand()
@@ -68,7 +67,8 @@ namespace EventApp.ViewModels
             {
                 GroupedCommentList = new List<CommentList>();
                 var allComments = new List<CommentList>();
-                var threads = await CommentStore.GetHolidayCommentsAsync(true, HolidayId, currentUser);
+                var threads = await CommentStore.GetHolidayCommentsAsync(
+                    true, HolidayId, currentUser);
 
                 foreach (var group in threads)
                 {

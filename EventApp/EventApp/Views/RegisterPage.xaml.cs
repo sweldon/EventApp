@@ -1,31 +1,17 @@
 ﻿using System;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Microsoft.AppCenter;
 
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class RegisterPage : ContentPage
     {
-        public string isLoggedIn
-        {
-            get { return Settings.IsLoggedIn; }
-            set
-            {
-                if (Settings.IsLoggedIn == value)
-                    return;
-                Settings.IsLoggedIn = value;
-                OnPropertyChanged();
-            }
-        }
 
         public string devicePushId
         {
@@ -38,20 +24,6 @@ namespace EventApp.Views
                 OnPropertyChanged();
             }
         }
-
-        public string currentUser
-        {
-            get { return Settings.CurrentUser; }
-            set
-            {
-                if (Settings.CurrentUser == value)
-                    return;
-                Settings.CurrentUser = value;
-                OnPropertyChanged();
-            }
-        }
-
-        HttpClient client = new HttpClient();
 
         public NavigationPage NavigationPage { get; private set; }
         public RegisterPage()
@@ -98,15 +70,14 @@ namespace EventApp.Views
                         var values = new Dictionary<string, string>{
                        { "username", userName },
                        { "password", pass },
-                       { "device_id", devicePushId },
                         { "email", email }
                     };
 
                         var content = new FormUrlEncodedContent(values);
-                        var response = await client.PostAsync(App.HolidailyHost + "/portal/register/", content);
+                        var response = await App.globalClient.PostAsync(App.HolidailyHost + "/accounts/register/", content);
                         var responseString = await response.Content.ReadAsStringAsync();
                         dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                        int status = responseJSON.StatusCode;
+                        int status = responseJSON.status;
                         string message = responseJSON.Message;
 
                         if (status == 200)

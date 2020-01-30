@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using EventApp.Models;
 using Newtonsoft.Json;
@@ -11,54 +10,56 @@ using System.Collections.ObjectModel;
 namespace EventApp.Services
 {
 
+
+
     public class CommentService : CommentInterface<Comment>
     {
+
 
         ObservableCollection<ObservableCollection<Comment>> comments;
         Comment individualComment;
         ObservableCollection<Comment> commentGroup;
 
-        HttpClient client = new HttpClient();
         public string ShowReplyVal;
         public string ShowDeleteVal;
         public CommentService()
         {
 
-
         }
-
 
         public string currentUser
         {
             get { return Settings.CurrentUser; }
         }
 
+        public bool isLoggedIn
+        {
+            get { return Settings.IsLoggedIn; }
+        }
 
         public async Task<IEnumerable<IEnumerable<Comment>>> GetHolidayCommentsAsync(bool forceRefresh = false, string holidayId = null, string user = null)
         {
             comments = new ObservableCollection<ObservableCollection<Comment>>();
 
             var values = new Dictionary<string, string>{
-                   { "holiday_id", holidayId },
-                    { "user", currentUser }
-                };
+                   { "holiday", holidayId },
+            };
+            if (isLoggedIn)
+                values["username"] = currentUser;
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_comments/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/comments/", content);
             var responseString = await response.Content.ReadAsStringAsync();
-
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-
-            dynamic commentList = responseJSON.CommentList;
-
+            
+            dynamic commentList = responseJSON.results;
+            
             foreach (var thread in commentList)
             {
                 commentGroup = new ObservableCollection<Comment>();
                 foreach (var comment in thread)
                 {
-                    string commentTimestamp = comment.timestamp;
-
-                    string TimeAgo = Time.GetRelativeTime(commentTimestamp);
+                    string TimeAgo = comment.time_since;
                     string commentUser = comment.user;
                     if (String.Equals(commentUser, currentUser, StringComparison.OrdinalIgnoreCase))
                     {
@@ -71,24 +72,27 @@ namespace EventApp.Services
                         ShowDeleteVal = "false";
                     }
 
-                    string padding = comment.padding;
-                    string[] paddingVals = padding.Split(',');
-                    Xamarin.Forms.Thickness paddingThickness = new Xamarin.Forms.Thickness(Convert.ToDouble(paddingVals[0]),
-                                                                                            Convert.ToDouble(paddingVals[1]),
-                                                                                            Convert.ToDouble(paddingVals[2]),
-                                                                                            Convert.ToDouble(paddingVals[3]));
+                    int padding = comment.depth;
+                    Xamarin.Forms.Thickness paddingThickness = new
+                        Xamarin.Forms.Thickness(Convert.ToDouble(
+                            padding), 10, 10, 10
+                            );
+
+                    string voteStatus = comment.vote_status;
+                    string UpVoteImage = Utils.GetUpVoteImage(voteStatus);
+                    string DownVoteImage = Utils.GetDownVoteImage(voteStatus);
                     commentGroup.Add(new Comment()
                     {
                         Id = comment.id,
                         Content = comment.content,
-                        HolidayId = comment.holiday_id,
+                        HolidayId = comment.holiday,
                         UserName = comment.user,
                         TimeSince = TimeAgo,
                         ShowReply = ShowReplyVal,
                         ShowDelete = ShowDeleteVal,
                         Votes = comment.votes,
-                        UpVoteStatus = comment.up_vote_status,
-                        DownVoteStatus = comment.down_vote_status,
+                        UpVoteStatus = UpVoteImage, 
+                        DownVoteStatus = DownVoteImage,
                         Parent = comment.parent,
                         ThreadPadding = paddingThickness
                     });
@@ -101,47 +105,40 @@ namespace EventApp.Services
             return await Task.FromResult(comments);
         }
 
-        public async Task VoteComment(string commentId, string userName, string vote)
+        public async Task VoteComment(string commentId, string vote)
         {
-
             var values = new Dictionary<string, string>{
                    { "comment", commentId },
-                   { "user", userName },
+                   { "username", currentUser },
                    { "vote", vote }
                 };
 
             var content = new FormUrlEncodedContent(values);
 
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/vote_comment/", content);
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+            await App.globalClient.PostAsync(App.HolidailyHost +
+                "/comments/" + commentId + "/", content);
 
         }
 
         public async Task<Comment> GetCommentById(string id)
         {
-            Debug.WriteLine(id);
             var values = new Dictionary<string, string>{
                    { "id", id }
                 };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_comment_by_id/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/comments/"+id+"/", content);
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-            dynamic commentJSON = responseJSON.comment;
-            string commentTimestamp = commentJSON.timestamp;
-            int statusCode = responseJSON.status_code;
+            dynamic commentJSON = responseJSON.results;
             
-            if(statusCode == 200)
-            {
-
-                string TimeAgo = Time.GetRelativeTime(commentTimestamp);
+            try
+            { 
+                string TimeAgo = commentJSON.time_since;
 
                 individualComment = new Comment() { Content = commentJSON.content, HolidayId = commentJSON.holiday_id, UserName = commentJSON.user, TimeSince = TimeAgo };
             }
-            else
+            catch
             {
                 individualComment = null;
             }

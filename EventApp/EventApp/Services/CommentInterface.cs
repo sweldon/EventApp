@@ -8,7 +8,7 @@ namespace EventApp.Services
     {
         Task<IEnumerable<IEnumerable<T>>> GetHolidayCommentsAsync(bool forceRefresh = false, string holidayId = null, string user = null);
         Task<T> GetCommentById(string id);
-        Task VoteComment(string commentId, string userName, string vote);
+        Task VoteComment(string commentId, string vote);
     }
 
 }

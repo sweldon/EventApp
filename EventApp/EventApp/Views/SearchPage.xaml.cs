@@ -40,7 +40,7 @@ namespace EventApp.Views
 
         }
 
-        async void ToggleSearchType(object sender, EventArgs args)
+        public void ToggleSearchType(object sender, EventArgs args)
         {
 
             var labelSender = (Label)sender;
@@ -92,20 +92,17 @@ namespace EventApp.Views
                     }
                     else
                     {
-                        DisplayAlert("Need more!",
-                            "Give us more to work with", "I'll type more");
+                        await DisplayAlert("Need more!", "Give us more to work with", "I'll type more");
                     }
                 }
                 else
                 {
-                    DisplayAlert("Need more!",
-                        "We can't give you anything if you " +
-                        "don't give us anything", "Obviously");
+                    await DisplayAlert("Need more!", "We can't give you anything if you don't give us anything", "Obviously");
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                // They searched something w/ weird chars, like emojis
+                await DisplayAlert("Huh", "That's a strange search, please try again", "OK");
             }
 
         
@@ -183,6 +180,7 @@ namespace EventApp.Views
 
         public void Share(object sender, EventArgs args)
         {
+            // TODO Consider making the share function a global util function.
             this.IsEnabled = false;
             var holiday = new Holiday();
             try
@@ -195,13 +193,11 @@ namespace EventApp.Views
             }
 
             var holidayName = holiday.Name;
-            var holidayLink = "https://holidailyapp.com/holiday?id=" +
-                holiday.Id;
+            var holidayLink = "https://holidailyapp.com/holiday?id=" + holiday.Id;
             string preface = "It's " + holidayName + "! ";
             string HolidayDescriptionShort = holiday.Description.Length <= 90 ?
-                preface + holiday.Description + "\nSee more! " :
-                preface + holiday.Description.Substring(0, 90) +
-                "...\nSee more! ";
+                preface + holiday.Description + "\nSee more! " : preface
+                + holiday.Description.Substring(0, 90) + "...\nSee more! ";
 
             if (!CrossShare.IsSupported)
                 return;

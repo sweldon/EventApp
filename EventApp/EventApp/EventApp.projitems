@@ -17,6 +17,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Time.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Utils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IKeyboardHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\CommentList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Comment.cs" />

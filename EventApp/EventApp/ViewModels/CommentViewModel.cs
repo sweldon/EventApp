@@ -14,10 +14,6 @@ namespace EventApp.ViewModels
         public Comment Comment { get; set; }
         public string HolidayId { get; set; }
         public string CommentId { get; set; }
-        //public string Content { get; set; }
-        //public string UserName { get; set; }
-        //public string TimeSince { get; set; }
-        //public string UserNameMention { get; set; }
         public string currentUser
         {
             get { return Settings.CurrentUser; }
@@ -35,12 +31,6 @@ namespace EventApp.ViewModels
 
             HolidayId = holidayId;
             CommentId = commentId;
-            //Content = comment.Content;
-            //UserName = comment.UserName;
-            //int UserNameLength = UserName.Length;
-            //UserNameMention = UserName.PadRight(UserNameLength + 1, ' ');
-            //TimeSince = comment.TimeSince;
-            //Title = "Mention";
 
         }
 

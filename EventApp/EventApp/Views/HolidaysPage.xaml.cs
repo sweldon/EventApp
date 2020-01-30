@@ -25,7 +25,7 @@ namespace EventApp.Views
     {
         HolidaysViewModel viewModel;
 
-        public string isLoggedIn
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -95,7 +95,6 @@ namespace EventApp.Views
          
 
             var item = (sender as Image).BindingContext as Holiday;
-            var index = viewModel.Holidays.IndexOf(item);
             string holidayId = item.Id;
             if (holidayId != "-1") // Ad
             {
@@ -109,7 +108,6 @@ namespace EventApp.Views
         {
 
             var item = (sender as Label).BindingContext as Holiday;
-            var index = viewModel.Holidays.IndexOf(item);
             string holidayId = item.Id;
             if (holidayId != "-1") // Ad
             {
@@ -119,7 +117,7 @@ namespace EventApp.Views
             }
         }
 
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
 
 
@@ -157,14 +155,12 @@ namespace EventApp.Views
             var holidayId = "none";
             var votesInt = -1;
             var CelebrateLabel = (Label)GridObject.Children[5];
-            bool isLabel = false;
             var holiday = new Holiday();
             try
             {
                 holiday = (sender as Label).BindingContext as Holiday;
                 votesInt = Int32.Parse((sender as Label).Text.Split(null)[0]);
                 holidayId = holiday.Id;
-                isLabel = true;
             }
             catch
             {
@@ -175,7 +171,7 @@ namespace EventApp.Views
 
             var newVotes = votesInt;
 
-            if (isLoggedIn == "no")
+            if (!isLoggedIn)
             {
                 this.IsEnabled = false;
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
@@ -186,22 +182,12 @@ namespace EventApp.Views
                 if (UpVoteIcon == "celebrate_active.png")
                 {
                     // Undo
-
                     newVotes -= 1;
-                    //if (isLabel)
-                    //{
-                    //    (sender as Label).Text = newVotes.ToString() + " Celebrating!";
-                    //}
-                    //else
-                    //{
-                    //    CelebrateLabel.Text = newVotes.ToString() + " Celebrating!";
-                    //}
-                    
                     holiday.CelebrateStatus = "celebrate.png";
                     holiday.Votes = newVotes.ToString();
                     await CelebrateImage.ScaleTo(2, 50);
                     await CelebrateImage.ScaleTo(1, 50);
-                    await viewModel.HolidayStore.VoteHoliday(holidayId, currentUser, "3");
+                    await viewModel.HolidayStore.VoteHoliday(holidayId, "3");
 
                 }
                 else
@@ -210,37 +196,21 @@ namespace EventApp.Views
                     newVotes += 1;
                     if (newVotes <= votesInt + 1 && newVotes >= votesInt - 1)
                     {
-                        //if (isLabel)
-                        //{
-                        //    (sender as Label).Text = newVotes.ToString() + " Celebrating!";
-                        //}
-                        //else
-                        //{
-                        //    CelebrateLabel.Text = newVotes.ToString() + " Celebrating!";
-                        //}
                         holiday.CelebrateStatus = "celebrate_active.png";
                         holiday.Votes = newVotes.ToString();
                         await CelebrateImage.ScaleTo(2, 50);
                         await CelebrateImage.ScaleTo(1, 50);
-                        await viewModel.HolidayStore.VoteHoliday(holidayId, currentUser, "1");
+                        await viewModel.HolidayStore.VoteHoliday(holidayId, "1");
 
                     }
                     else
                     {
                         newVotes -= 2;
-                        //if (isLabel)
-                        //{
-                        //    (sender as Label).Text = newVotes.ToString() + " Celebrating!";
-                        //}
-                        //else
-                        //{
-                        //    CelebrateLabel.Text = newVotes.ToString() + " Celebrating!";
-                        //}
                         holiday.CelebrateStatus = "celebrate.png";
                         holiday.Votes = newVotes.ToString();
                         await CelebrateImage.ScaleTo(2, 50);
                         await CelebrateImage.ScaleTo(1, 50);
-                        await viewModel.HolidayStore.VoteHoliday(holidayId, currentUser, "5");
+                        await viewModel.HolidayStore.VoteHoliday(holidayId, "5");
 
                     }
 
@@ -268,7 +238,9 @@ namespace EventApp.Views
             var timeSince = holiday.Date;
             var holidayLink = "https://holidailyapp.com/holiday?id=" + holiday.Id;
             string preface = "It's " + holidayName + "! ";
-            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? preface + holiday.Description + "\nSee more! " : preface + holiday.Description.Substring(0, 90) + "...\nSee more! ";
+            string HolidayDescriptionShort = holiday.Description.Length <= 90 ?
+                preface + holiday.Description + "\nSee more! " : preface
+                + holiday.Description.Substring(0, 90) + "...\nSee more! ";
 
             if (!CrossShare.IsSupported)
                 return;

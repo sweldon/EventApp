@@ -31,7 +31,7 @@ namespace EventApp
         private static readonly string DevicePushIdDefault = "none";
 
         private const string IsLoggedInKey = "is_logged_in_key";
-        private static readonly string IsLoggedInDefault= "no";
+        private static readonly bool IsLoggedInDefault = false;
 
         private const string CurrentUserKey = "current_user_key";
         private static readonly string CurrentUserDefault = "none";
@@ -41,6 +41,9 @@ namespace EventApp
 
         private const string IsPremiumKey = "is_premium_key";
         private static readonly bool IsPremiumDefault = false;
+
+        private const string ConfettiCountKey = "confetti_key";
+        private static readonly string ConfettiCountDefault = "none";
 
         #endregion
 
@@ -105,7 +108,7 @@ namespace EventApp
             }
         }
 
-        public static string IsLoggedIn
+        public static bool IsLoggedIn
         {
             get
             {
@@ -126,6 +129,18 @@ namespace EventApp
             set
             {
                 AppSettings.AddOrUpdateValue(CurrentUserKey, value);
+            }
+        }
+
+        public static string ConfettiCount
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(ConfettiCountKey, ConfettiCountDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(ConfettiCountKey, value);
             }
         }
 

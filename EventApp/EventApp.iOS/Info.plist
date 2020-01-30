@@ -76,6 +76,8 @@
 	<key>CFBundleShortVersionString</key>
 	<string>0.1.10</string>
 	<key>CFBundleVersion</key>
-	<string>32</string>
+	<string>0.1.8</string>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>
