@@ -87,7 +87,8 @@ namespace EventApp.Views
                     if (searchText.Length > 2)
                     {
                         // Do some searching
-                        SearchHolidayList.ItemsSource = await viewModel.HolidayStore.SearchHolidays(searchText);
+                        SearchHolidayList.ItemsSource =
+                            await viewModel.HolidayStore.SearchHolidays(searchText);
                     }
                     else
                     {
@@ -116,7 +117,8 @@ namespace EventApp.Views
             }
         }
 
-        async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
+        async void OnItemSelected(object sender,
+            SelectedItemChangedEventArgs args)
         {
 
             ((ListView)sender).SelectedItem = null;
@@ -128,7 +130,8 @@ namespace EventApp.Views
             if (item.Id != "-1") // Ad
             {
                 this.IsEnabled = false;
-                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id, item)));
+                await Navigation.PushAsync(new HolidayDetailPage(new
+                    HolidayDetailViewModel(item.Id, item)));
                 this.IsEnabled = true;
             }
 
@@ -142,7 +145,8 @@ namespace EventApp.Views
             if (holidayId != "-1") // Ad
             {
                 this.IsEnabled = false;
-                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, item)));
+                await Navigation.PushAsync(new HolidayDetailPage(new
+                    HolidayDetailViewModel(holidayId, item)));
                 this.IsEnabled = true;
             }
         }
@@ -155,7 +159,8 @@ namespace EventApp.Views
             if (holidayId != "-1") // Ad
             {
                 this.IsEnabled = false;
-                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, item)));
+                await Navigation.PushAsync(new HolidayDetailPage(new
+                    HolidayDetailViewModel(holidayId, item)));
                 this.IsEnabled = true;
             }
         }
@@ -188,7 +193,6 @@ namespace EventApp.Views
             }
 
             var holidayName = holiday.Name;
-
             var holidayLink = "https://holidailyapp.com/holiday?id=" + holiday.Id;
             string preface = "It's " + holidayName + "! ";
             string HolidayDescriptionShort = holiday.Description.Length <= 90 ?

@@ -27,7 +27,7 @@
         <StackLayout Spacing="20" Padding="15">
             <Label Text="{Binding CommentTitle}" FontSize="Medium" />
             <ContentView >
-                <Editor HeightRequest="100" Placeholder="Type your comment" x:Name="CommentContent" FontSize="Small" />
+                <Editor BackgroundColor="#FAFAFA" HeightRequest="100" Placeholder="Type your comment" x:Name="CommentContent" FontSize="Small" />
             </ContentView>
 
             <Button Text="Post" x:Name="SaveCommentButton"
