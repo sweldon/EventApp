@@ -13,7 +13,8 @@ namespace EventApp.ViewModels
 
         public Holiday Holiday { get; set; }
         private List<CommentList> CommentList;
-        public List<CommentList> GroupedCommentList { get { return CommentList; } set { CommentList = value; base.OnPropertyChanged(); } }
+        public List<CommentList> GroupedCommentList { get { return CommentList; }
+            set { CommentList = value; base.OnPropertyChanged(); } }
         public Command LoadHolidayComments { get; set; }
         public string HolidayId { get; set; }
         public string currentUser
@@ -66,7 +67,8 @@ namespace EventApp.ViewModels
             {
                 GroupedCommentList = new List<CommentList>();
                 var allComments = new List<CommentList>();
-                var threads = await CommentStore.GetHolidayCommentsAsync(true, HolidayId, currentUser);
+                var threads = await CommentStore.GetHolidayCommentsAsync(
+                    true, HolidayId, currentUser);
 
                 foreach (var group in threads)
                 {

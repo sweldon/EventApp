@@ -49,13 +49,6 @@ namespace EventApp.Views
 
         }
 
-
-        async void OnCommentSelected(object sender, SelectedItemChangedEventArgs args)
-        {
-            ((ListView)sender).SelectedItem = null;
-
-        }
-
         public CommentPage()
         {
             InitializeComponent();
@@ -69,9 +62,6 @@ namespace EventApp.Views
             ReplyCommentContent.Focus();
 
             viewModel.Comment = await viewModel.CommentStore.GetCommentById(viewModel.CommentId);
-
-            //Description.Text = viewModel.Holiday.Description;
-            //this.Title = viewModel.Holiday.Name;
             string UserNameValue = viewModel.Comment.UserName;
             Content.Text = viewModel.Comment.Content;
             TimeSince.Text = viewModel.Comment.TimeSince;
@@ -79,12 +69,6 @@ namespace EventApp.Views
             this.Title = viewModel.Comment.UserName + "'s Comment"; 
             int UserNameLength = UserNameValue.Length;
             ReplyCommentContent.Text = '@'+UserNameValue.PadRight(UserNameLength + 1, ' ');
-
-        }
-
-        async void OnTapGestureRecognizerTapped(object sender, EventArgs args)
-        {
-
 
         }
 

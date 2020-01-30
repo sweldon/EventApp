@@ -12,8 +12,6 @@ namespace EventApp.Views
 
         public ObservableCollection<User> TopConfettiList { get; set; }
         public Command LoadUsers { get; set; }
-
-        bool IsBusy;
         public bool isPremium
         {
             get { return Settings.IsPremium; }
@@ -26,7 +24,6 @@ namespace EventApp.Views
             }
         }
         
-
         ConfettiLeaderViewModel viewModel;
 
         public ConfettiLeaders()
@@ -34,30 +31,16 @@ namespace EventApp.Views
             InitializeComponent();
             BindingContext = viewModel = new ConfettiLeaderViewModel();
             Title = "Confetti Leaders";
-            ConfettiLeadersList.ItemSelected += Selected;
 
         }
 
-
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
 
             viewModel.LoadUsers.Execute(null);
             AdBanner.IsVisible = !isPremium;
-        }
-
-        async void Selected(object sender, SelectedItemChangedEventArgs args)
-        {
-            ((ListView)sender).SelectedItem = null;
-            if (args.SelectedItem == null)
-            {
-                return;
-            }
-
-        }
-
- 
+        } 
 
     }
 }

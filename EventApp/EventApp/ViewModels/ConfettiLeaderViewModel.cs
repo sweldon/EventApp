@@ -42,7 +42,7 @@ namespace EventApp.ViewModels
                         Confetti = user.confetti,
                         Submissions = user.holiday_submissions,
                         Approved = user.approved_holidays,
-                        Comments = user.comments });
+                        Comments = user.num_comments });
                 }
 
             }

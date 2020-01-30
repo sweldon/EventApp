@@ -42,7 +42,7 @@ namespace EventApp.Views
         {
             BackBtn.IsEnabled = false;
             await Navigation.PopModalAsync();
-            Task.Delay(2000);
+            await Task.Delay(2000);
             BackBtn.IsEnabled = true;
         }
 

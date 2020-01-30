@@ -40,7 +40,7 @@ namespace EventApp
                 string day = parts[1];
                 string dateString = year + "-" + stringToNumericMonth[month] + "-" + day.PadLeft(2, '0') + " 00:00:00";
                 var timeStampDatetime = DateTime.ParseExact(dateString, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-                string currentTimeZone = TimeZone.CurrentTimeZone.StandardName;
+                string currentTimeZone = TimeZoneInfo.Local.StandardName;
                 TimeZoneInfo localTimeZone = TimeZoneInfo.FindSystemTimeZoneById(currentTimeZone);
                 DateTime thisTime = DateTime.Now;
                 bool isDaylight = TimeZoneInfo.Local.IsDaylightSavingTime(thisTime);
@@ -62,7 +62,7 @@ namespace EventApp
 
             DateTime thisTime = DateTime.Now;
             bool isDaylight = TimeZoneInfo.Local.IsDaylightSavingTime(thisTime);
-            string currentTimeZone = TimeZone.CurrentTimeZone.StandardName;
+            string currentTimeZone = TimeZoneInfo.Local.StandardName;
             TimeZoneInfo localTimeZone = TimeZoneInfo.FindSystemTimeZoneById(currentTimeZone);
             var timeStampDatetime = DateTime.ParseExact(timeStampString, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
             DateTime timeStamp = TimeZoneInfo.ConvertTimeFromUtc(timeStampDatetime, localTimeZone);

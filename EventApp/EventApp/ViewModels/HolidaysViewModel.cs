@@ -17,7 +17,8 @@ namespace EventApp.ViewModels
 
         public Command LoadItemsCommand { get; set; }
         private List<HolidayList> HolidayList;
-        public List<HolidayList> GroupedHolidayList { get { return HolidayList; } set { HolidayList = value; base.OnPropertyChanged(); } }
+        public List<HolidayList> GroupedHolidayList { get { return HolidayList; }
+            set { HolidayList = value; base.OnPropertyChanged(); } }
         public ObservableCollection<Holiday> Holidays { get; set; }
         public HolidaysViewModel()
         {
@@ -25,7 +26,8 @@ namespace EventApp.ViewModels
             Holidays = new ObservableCollection<Holiday>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
-            MessagingCenter.Subscribe<HolidayDetailPage, Object[]>(this, "UpdateCelebrateStatus", (sender, data) => {
+            MessagingCenter.Subscribe<HolidayDetailPage, Object[]>(this,
+                "UpdateCelebrateStatus", (sender, data) => {
                 UpdateCelebrateStatus((string)data[0], (bool)data[1], (string)data[2]);
             });
 
@@ -34,7 +36,7 @@ namespace EventApp.ViewModels
 
         // Key code responsible for maintaining celebration status
         // Across pages. Very cool how it works, use this in the future.
-        public async void UpdateCelebrateStatus(string holiday, bool upvote, string newVotes)
+        public void UpdateCelebrateStatus(string holiday, bool upvote, string newVotes)
         {
 
             foreach (Holiday h in Holidays)
@@ -72,7 +74,7 @@ namespace EventApp.ViewModels
                 //GroupedHolidayList = new List<HolidayList>();
 
                 var holidays = await HolidayStore.GetHolidaysAsync(true);
-                var showAd = false;
+                //var showAd = false;
 
                 // Final Ad, bottom of stack
                 //Holidays.Insert(0, new Holiday()
@@ -81,7 +83,7 @@ namespace EventApp.ViewModels
                 //    ShowAd = true,
                 //    ShowHolidayContent = false,
                 //});
-                bool todayDone = false;
+                //bool todayDone = false;
                 foreach (var holiday in holidays)
                 {
 
@@ -92,7 +94,7 @@ namespace EventApp.ViewModels
                     }
                     else
                     {
-                        // Put at right after todays
+                        // Put ad right after todays
                         //if(holiday.TimeSince == "Today" && !todayDone)
                         //{
                         //    Holidays.Insert(0, new Holiday()
@@ -144,8 +146,6 @@ namespace EventApp.ViewModels
                 //{
                 //    Items
                 //};
-
-
 
                 //GroupedHolidayList = list;
             }

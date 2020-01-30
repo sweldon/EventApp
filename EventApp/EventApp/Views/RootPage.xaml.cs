@@ -25,7 +25,7 @@ namespace EventApp.Views
         {
             BellBtn.IsEnabled = false;
             await Navigation.PushModalAsync(new NavigationPage(new NotificationsPage()));
-            Task.Delay(2000);
+            await Task.Delay(2000);
             BellBtn.IsEnabled = true;
         }
 

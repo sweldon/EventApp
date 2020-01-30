@@ -59,7 +59,7 @@ namespace EventApp.Views
 
             CrossMTAdmob.Current.OnRewarded += (object sender, MTEventArgs e) => {
 
-                ClaimReward("video", "5");
+                ClaimReward("5");
                 WatchAdButton.Text = "Watch Another Ad for More Rewards!";
                 WatchAdButton.IsEnabled = true;
                 
@@ -83,7 +83,7 @@ namespace EventApp.Views
             PointsLabel.Text = "You have " + points + " points!";
         }
 
-        protected async override void OnAppearing()
+        protected override void OnAppearing()
         {
             #if __IOS__
                         CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/4201400125");
@@ -105,19 +105,18 @@ namespace EventApp.Views
             }
         }
 
-        public async void ClaimReward(string rewardType, string rewardAmount)
+        public async void ClaimReward(string rewardAmount)
         {
             var values = new Dictionary<string, string>{
-                        { "type", rewardType },
-                        { "user", currentUser },
-                        { "amount", rewardAmount }
+                        { "username", currentUser },
+                        { "reward", rewardAmount }
                     };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/claim_reward/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/user/", content);
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-            int status = responseJSON.StatusCode;
+            int status = responseJSON.status;
             string message = responseJSON.message;
             if (status == 200)
             {
@@ -138,10 +137,8 @@ namespace EventApp.Views
             }
             else
             {
-                //this.IsEnabled = false;
                 WatchAdButton.Text = "Loading video...";
                 CrossMTAdmob.Current.ShowRewardedVideo();
-        
             }
 
     

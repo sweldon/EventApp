@@ -80,17 +80,17 @@ namespace EventApp.Views
             else
             {
                 PurchaseButton.Text = "Loading...";
-                // await DisplayAlert("Soon!", "Premium isn't quite ready yet, but is coming soon. We will send you a notification when it is ready.", "I'll come back later!");
                 var billing = CrossInAppBilling.Current;
                 try
                 {
-                    var productId = "android.test.purchased";
-                    //var productId = "holidailypremium";
+                    //var productId = "android.test.purchased";
+                    var productId = "holidailypremium";
                     
                     var connected = await billing.ConnectAsync(ItemType.InAppPurchase);
 
                     //Undo Test Purchase
-                    //var consumedItem = await billing.ConsumePurchaseAsync(productId, "inapp:com.divinity.holidailyapp:android.test.purchased");
+                    //var consumedItem = await billing.ConsumePurchaseAsync(productId,
+                    //"inapp:com.divinity.holidailyapp:android.test.purchased");
                     //if (consumedItem != null)
                     //{
                     //    await DisplayAlert("Premium Refunded", "Premium is undone", "OK");
@@ -193,7 +193,7 @@ namespace EventApp.Views
 
         }
 
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
 
             base.OnAppearing();

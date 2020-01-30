@@ -31,16 +31,16 @@ namespace EventApp
         private static readonly string DevicePushIdDefault = "none";
 
         private const string IsLoggedInKey = "is_logged_in_key";
-        private static readonly bool IsLoggedInDefault;
+        private static readonly bool IsLoggedInDefault = false;
 
         private const string CurrentUserKey = "current_user_key";
         private static readonly string CurrentUserDefault = "none";
 
         private const string IsActiveKey = "is_active_key";
-        private static readonly bool IsActiveDefault;
+        private static readonly bool IsActiveDefault = false;
 
         private const string IsPremiumKey = "is_premium_key";
-        private static readonly bool IsPremiumDefault;
+        private static readonly bool IsPremiumDefault = false;
 
         private const string ConfettiCountKey = "confetti_key";
         private static readonly string ConfettiCountDefault = "none";

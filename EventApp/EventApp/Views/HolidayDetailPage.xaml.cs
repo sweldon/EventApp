@@ -76,21 +76,9 @@ namespace EventApp.Views
         public HolidayDetailPage(HolidayDetailViewModel viewModel)
         {
             InitializeComponent();
-
             BindingContext = this.viewModel = viewModel;
-
             // Remove when reply button added
             HolidayDetailList.ItemSelected += OnCommentSelected;
-
-
-            //HolidayDetailList.ItemTapped += (object sender, ItemTappedEventArgs e) =>
-            //{
-            //    // Attempt to disable highlighting
-            //    if (sender is ListView lv) lv.SelectedItem = null;
-
-
-            //};
-
         }
 
 
@@ -159,7 +147,7 @@ namespace EventApp.Views
             }
         }
 
-        async void OnCommentSelected(object sender, SelectedItemChangedEventArgs args)
+        public void OnCommentSelected(object sender, SelectedItemChangedEventArgs args)
         {
             ((ListView)sender).SelectedItem = null;
             if (args.SelectedItem == null)
@@ -167,7 +155,7 @@ namespace EventApp.Views
                 return;
             }
 
-            var item = args.SelectedItem as Comment;
+            //var item = args.SelectedItem as Comment;
 
         }
 
@@ -199,20 +187,6 @@ namespace EventApp.Views
                 UpVoteImage.Source = viewModel.Holiday.CelebrateStatus;
             }
 
-            //if (!isLoggedIn)
-            //{
-            //    string currentVote = await viewModel.HolidayStore.CheckUserVotes(viewModel.HolidayId, currentUser);
-            //    if (currentVote == "1" || currentVote == "4")
-            //    {
-            //        UpVoteImage.Source = "celebrate_active.png";
-            //        //DownVoteImage.Source = "down.png";
-            //    }
-            //    else if (currentVote == "0" || currentVote == "5")
-            //    {
-            //        //DownVoteImage.Source = "down_active.png";
-            //        UpVoteImage.Source = "celebrate.png";
-            //    }
-            //}
         }
 
         async void OnTapGestureRecognizerTapped(object sender, EventArgs args)
@@ -224,7 +198,6 @@ namespace EventApp.Views
             }
             else
             {
-                var labelSender = (Label)sender;
                 this.IsEnabled = false;
                 await Navigation.PushModalAsync(new NavigationPage(new NewCommentPage(viewModel.Holiday)));
                 this.IsEnabled = true;
@@ -244,7 +217,8 @@ namespace EventApp.Views
             var timeSince = holiday.Date;
             var holidayLink = "https://holidailyapp.com/holiday?id=" + holiday.Id;
             string preface = "It's " + holidayName + "! ";
-            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? preface + holiday.Description + "\nSee more! " : preface + holiday.Description.Substring(0, 90) + "...\nSee more! ";
+            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? preface + holiday.Description +
+                "\nSee more! " : preface + holiday.Description.Substring(0, 90) + "...\nSee more! ";
 
             if (!CrossShare.IsSupported)
                 return;
@@ -287,82 +261,6 @@ namespace EventApp.Views
         }
 
 
-//        async void DownVote(object sender, EventArgs args)
-//        {
-
-//#if __IOS__
-//                var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
-//                haptic.Prepare();
-//                haptic.ImpactOccurred();
-//                haptic.Dispose();
-//#endif
-
-//#if __ANDROID__
-//            var duration = TimeSpan.FromSeconds(.025);
-//            Vibration.Vibrate(duration);
-//#endif
-
-//            string newVotes = CurrentVotes.Text;
-//            int newVotesInt = Int32.Parse(newVotes);
-//            var DownVoteImageFile = DownVoteImage.Source as FileImageSource;
-//            var DownVoteIcon = DownVoteImageFile.File;
-//            var UpVoteImageFile = UpVoteImage.Source as FileImageSource;
-//            var UpVoteIcon = UpVoteImageFile.File;
-
-//            if (!isLoggedIn)
-//            {
-//                this.IsEnabled = false;
-//                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
-//                this.IsEnabled = true;
-//            }
-//            else
-//            {
-
-//                if (UpVoteIcon == "up_active.png")
-//                {
-//                    newVotesInt -= 2;
-//                    CurrentVotes.Text = newVotesInt.ToString();
-//                    UpVoteImage.Source = "up.png";
-//                    DownVoteImage.Source = "down_active.png";
-//                    await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "5");
-//                }
-//                else
-//                {
-//                    if (DownVoteIcon == "down_active.png")
-//                    {
-//                        // Undo
-//                        newVotesInt += 1;
-//                        CurrentVotes.Text = newVotesInt.ToString();
-//                        DownVoteImage.Source = "down.png";
-//                        await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "2");
-//                    }
-//                    else
-//                    {
-//                        // Only allow if user hasnt already downvoted
-//                        newVotesInt -= 1;
-//                        if (newVotesInt <= Int32.Parse(CurrentVotes.Text) + 1 && newVotesInt >= Int32.Parse(CurrentVotes.Text) - 1)
-//                        {
-//                            CurrentVotes.Text = newVotesInt.ToString();
-//                            DownVoteImage.Source = "down_active.png";
-//                            await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "0");
-//                        }
-//                        else
-//                        {
-//                            // Undo
-//                            newVotesInt += 2;
-//                            CurrentVotes.Text = newVotesInt.ToString();
-//                            DownVoteImage.Source = "down.png";
-//                            await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "4");
-//                        }
-//                    }
-//                }
-
-//            }
-
-
-
-//        }
-
         async void UpVote(object sender, EventArgs args)
         {
             #if __IOS__
@@ -379,10 +277,7 @@ namespace EventApp.Views
 
             string VotesString = CurrentVotes.Text;
             int votesInt = Int32.Parse(VotesString.Split(null)[0]);
-            //int newVotesInt = Int32.Parse(newVotes);
             int newVotesInt = Int32.Parse(VotesString.Split(null)[0]);
-            //var DownVoteImageFile = DownVoteImage.Source as FileImageSource;
-            //var DownVoteIcon = DownVoteImageFile.File;
             var UpVoteImageFile = UpVoteImage.Source as FileImageSource;
             var UpVoteIcon = UpVoteImageFile.File;
 
@@ -396,67 +291,54 @@ namespace EventApp.Views
             else
             {
 
-                //if (DownVoteIcon == "down_active.png")
-                //{
-                //    Debug.WriteLine("Down was active upvoting twice");
-                //    newVotesInt += 2;
-                //    CurrentVotes.Text = newVotesInt.ToString() + " Celebrating!";
-                //    //DownVoteImage.Source = "down.png";
-                //    UpVoteImage.Source = "celebrate_active.png";
-                //    await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, currentUser, "4");
-                //}
-                //else
-                //{
-                    if (UpVoteIcon == "celebrate_active.png")
-                    {
-                        // Undo
+                if (UpVoteIcon == "celebrate_active.png")
+                {
+                    // Undo
 
-                        newVotesInt -= 1;
+                    newVotesInt -= 1;
+                    CurrentVotes.Text = newVotesInt.ToString() + " Celebrating!";
+                    UpVoteImage.Source = "celebrate.png";
+                    await UpVoteImage.ScaleTo(2, 50);
+                    await UpVoteImage.ScaleTo(1, 50);
+                    await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, "3");
+
+
+                    Object[] values = { viewModel.Holiday.Name, false, newVotesInt.ToString() };
+                    MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
+                }
+                else
+                {
+                    // Only allow if user hasnt already downvoted
+                    newVotesInt += 1;
+                    if (newVotesInt <= votesInt + 1 && newVotesInt >= votesInt - 1)
+                    {
                         CurrentVotes.Text = newVotesInt.ToString() + " Celebrating!";
-                        UpVoteImage.Source = "celebrate.png";
+                        UpVoteImage.Source = "celebrate_active.png";
                         await UpVoteImage.ScaleTo(2, 50);
                         await UpVoteImage.ScaleTo(1, 50);
-                        await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, "3");
+                        await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, "1");
 
 
-                        Object[] values = { viewModel.Holiday.Name, false, newVotesInt.ToString() };
+                    Object[] values = { viewModel.Holiday.Name, true, newVotesInt.ToString() };
                         MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
                 }
-                    else
-                    {
-                        // Only allow if user hasnt already downvoted
-                        newVotesInt += 1;
-                        if (newVotesInt <= votesInt + 1 && newVotesInt >= votesInt - 1)
-                        {
-                            CurrentVotes.Text = newVotesInt.ToString() + " Celebrating!";
-                            UpVoteImage.Source = "celebrate_active.png";
-                            await UpVoteImage.ScaleTo(2, 50);
-                            await UpVoteImage.ScaleTo(1, 50);
-                            await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, "1");
-
-
-                        Object[] values = { viewModel.Holiday.Name, true, newVotesInt.ToString() };
-                            MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
-                    }
-                        else
-                        {
-                            newVotesInt -= 2;
-                            CurrentVotes.Text = newVotesInt.ToString() + " Celebrating!";
-                            UpVoteImage.Source = "celebrate.png";
-                            await UpVoteImage.ScaleTo(2, 50);
-                            await UpVoteImage.ScaleTo(1, 50);
-                            await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, "5");
+                else
+                {
+                    newVotesInt -= 2;
+                    CurrentVotes.Text = newVotesInt.ToString() + " Celebrating!";
+                    UpVoteImage.Source = "celebrate.png";
+                    await UpVoteImage.ScaleTo(2, 50);
+                    await UpVoteImage.ScaleTo(1, 50);
+                    await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, "5");
 
     
-                            Object[] values = { viewModel.Holiday.Name, false, newVotesInt.ToString() };
-                            MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
+                    Object[] values = { viewModel.Holiday.Name, false, newVotesInt.ToString() };
+                    MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
 
-                    }
+                }
 
-                    }
+            }
 
-
-               //}
             }
 
         }
@@ -481,10 +363,6 @@ namespace EventApp.Views
 #endif
 
             int CurrentVotes = item.Votes;
-            //var DownVoteImageFile = DownVoteImage.Source as FileImageSource;
-            //var DownVoteIcon = DownVoteImageFile.File;
-            //var UpVoteImageFile = UpVoteImage.Source as FileImageSource;
-            //var UpVoteIcon = UpVoteImageFile.File;
 
             if (!isLoggedIn)
             {
@@ -498,9 +376,6 @@ namespace EventApp.Views
                 if (item.UpVoteStatus == "up_active.png")
                 {
                     item.Votes -= 2;
-                    //CurrentVotes.Text = newVotesInt.ToString();
-                    //UpVoteImage.Source = "up.png";
-                    //DownVoteImage.Source = "down_active.png";
                     item.UpVoteStatus = "up.png";
                     item.DownVoteStatus = "down_active.png";
                     await viewModel.CommentStore.VoteComment(commentId, "5");
@@ -511,8 +386,6 @@ namespace EventApp.Views
                     {
                         // Undo
                         item.Votes += 1;
-                        //CurrentVotes.Text = newVotesInt.ToString();
-                        //DownVoteImage.Source = "down.png";
                         item.DownVoteStatus = "down.png";
                         await viewModel.CommentStore.VoteComment(commentId, "2");
                     }
@@ -523,8 +396,6 @@ namespace EventApp.Views
                         if (newVotes <= item.Votes + 1 && newVotes >= item.Votes - 1)
                         {
                             item.Votes -= 1;
-                            //CurrentVotes.Text = newVotesInt.ToString();
-                            //DownVoteImage.Source = "down_active.png";
                             item.DownVoteStatus = "down_active.png";
                             await viewModel.CommentStore.VoteComment(commentId, "0");
                         }
@@ -532,8 +403,6 @@ namespace EventApp.Views
                         {
                             // Undo
                             item.Votes += 2;
-                            //CurrentVotes.Text = newVotesInt.ToString();
-                            //DownVoteImage.Source = "down.png";
                             item.DownVoteStatus = "down.png";
                             await viewModel.CommentStore.VoteComment(commentId,"4");
                         }
@@ -579,9 +448,6 @@ namespace EventApp.Views
                 {
                     Debug.WriteLine("Down was active upvoting twice");
                     item.Votes += 2;
-                    //CurrentVotes.Text = newVotesInt.ToString();
-                    //DownVoteImage.Source = "down.png";
-                    // UpVoteImage.Source = "up_active.png";
                     item.DownVoteStatus = "down.png";
                     item.UpVoteStatus = "up_active.png";
                     await viewModel.CommentStore.VoteComment(commentId, "4");
@@ -593,8 +459,6 @@ namespace EventApp.Views
                         // Undo
 
                         item.Votes -= 1;
-                        //CurrentVotes.Text = newVotesInt.ToString();
-                        //UpVoteImage.Source = "up.png";
                         item.UpVoteStatus = "up.png";
                         await viewModel.CommentStore.VoteComment(commentId, "3");
                     }
@@ -605,8 +469,6 @@ namespace EventApp.Views
                         if (newVotes <= item.Votes + 1 && newVotes >= item.Votes - 1)
                         {
                             item.Votes += 1;
-                            //CurrentVotes.Text = newVotesInt.ToString();
-                            //UpVoteImage.Source = "up_active.png";
                             item.UpVoteStatus = "up_active.png";
                             await viewModel.CommentStore.VoteComment(commentId, "1");
                         }
@@ -614,8 +476,6 @@ namespace EventApp.Views
                         {
 
                             item.Votes -= 2;
-                            //CurrentVotes.Text = newVotesInt.ToString();
-                            //UpVoteImage.Source = "up.png";
                             item.UpVoteStatus = "up.png";
                             await viewModel.CommentStore.VoteComment(commentId, "5");
                         }

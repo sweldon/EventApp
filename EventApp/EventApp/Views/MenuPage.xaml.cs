@@ -87,7 +87,6 @@ namespace EventApp.Views
                 new HomeMenuItem {Id = MenuItemType.Holidays, Title="Home", MenuImage="today_icon.png"},
                 new HomeMenuItem {Id = MenuItemType.Search, Title="Search", MenuImage="search.png"},
                 new HomeMenuItem {Id = MenuItemType.AddHoliday, Title="Submit Holiday", MenuImage="pencil.png"},
-                //new HomeMenuItem {Id = MenuItemType.Notifications, Title="Notifications", MenuImage="alarm.png"},
                 new HomeMenuItem {Id = MenuItemType.ConfettiLeaders, Title="Confetti Leaders", MenuImage="party_popper_icon.png"},
                 new HomeMenuItem {Id = MenuItemType.Trending, Title="Popular", MenuImage="trending.png"},
                 new HomeMenuItem {Id = MenuItemType.Updates, Title="News", MenuImage="news.png"},
@@ -96,7 +95,6 @@ namespace EventApp.Views
             };
 
             ListViewMenu.ItemsSource = menuItems;
-            //ListViewMenu.SelectedItem = menuItems[0];
             ListViewMenu.ItemSelected += async (sender, e) =>
             {
                 if (e.SelectedItem == null)
@@ -104,18 +102,7 @@ namespace EventApp.Views
 
                 var id = (int)((HomeMenuItem)e.SelectedItem).Id;
                 await RootPage.NavigateFromMenu(id);
-            };
-
-           
-            //swipeContainer.Swipe += (sender, e) =>
-            //{
-            //    switch (e.Direction)
-            //    {
-            //        case SwipeDirection.Left:
-            //            (Application.Current.MainPage as MasterDetailPage).IsPresented = false;
-            //            break;
-            //    }
-            //};
+            }; 
 
         }
 
@@ -123,29 +110,9 @@ namespace EventApp.Views
             LoginButton.IsEnabled = false;
             await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             LoginButton.IsEnabled = true;
-
-            //LoginButton.IsEnabled = false;
-
-            //var modalPage = new NavigationPage(new LoginPage());
-            //modalPage.Disappearing += (sender2, e2) =>
-            //{
-            //    if (isLoggedIn)
-            //    {
-            //        var menuPage = new MenuPage(); // Build hamburger menu
-            //        NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
-            //        var rootPage = new RootPage(); // Root handles master detail navigation
-            //        rootPage.Master = menuPage; // Menu
-            //        rootPage.Detail = NavigationPage; // Content
-            //        Application.Current.MainPage = rootPage; // Set root to built master detail
-            //    }
-
-            //};
-            //await Navigation.PushModalAsync(modalPage);
-            //LoginButton.IsEnabled = true;
-
         }
 
-        public async void LogoutUser(object sender, EventArgs e)
+        public void LogoutUser(object sender, EventArgs e)
         {
 
             isLoggedIn = false;

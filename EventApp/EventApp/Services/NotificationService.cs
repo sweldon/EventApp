@@ -11,8 +11,6 @@ namespace EventApp.Services
 
         List<Holiday> items;
         List<Notification> notifications;
-        Holiday individualHoliday;
-        Dictionary<string, string> holidayResult;
 
         public string currentUser
         {

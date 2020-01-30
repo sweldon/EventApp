@@ -13,9 +13,7 @@ namespace EventApp.Services
     {
 
         List<Holiday> items;
-        List<Notification> notifications;
         Holiday individualHoliday;
-        Dictionary<string, string> holidayResult;
 
         public HolidayService()
         {
@@ -45,24 +43,6 @@ namespace EventApp.Services
         }
 
 
-        public async Task<Holiday> GetHolidayByName(string name)
-        {
-
-            var values = new Dictionary<string, string>{
-                   { "day_name", name }
-                };
-
-            var content = new FormUrlEncodedContent(values);
-            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/get_holiday/", content);
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-
-            individualHoliday = new Holiday() { Name=responseJSON.name,Description=responseJSON.description};
-  
-            return await Task.FromResult(individualHoliday);
-        }
-
         public async Task<Holiday> GetHolidayById(string id)
         {
 
@@ -74,7 +54,6 @@ namespace EventApp.Services
             var content = new FormUrlEncodedContent(values);
             var response = await App.globalClient.PostAsync(App.HolidailyHost + "/holidays/"+id+"/", content);
             var responseString = await response.Content.ReadAsStringAsync();
-            // TODO: you're getting the data in "results" object not right away so somehow just get the json.results
             dynamic holiday = JsonConvert.DeserializeObject(responseString);
             holiday = holiday.results;
             string holidayDescription = holiday.description;
@@ -219,27 +198,6 @@ namespace EventApp.Services
             var response = await App.globalClient.PostAsync(App.HolidailyHost + "/holidays/"+holidayId+"/", content);
 
         }
-
-        //public async Task<string> CheckUserVotes(string holidayId, string userName)
-        //{
-
-        //    var values = new Dictionary<string, string>{
-        //           { "holiday_id", holidayId },
-        //           { "user", userName }
-        //        };
-
-        //    var content = new FormUrlEncodedContent(values);
-
-        //    var response = await App.globalClient.PostAsync(App.HolidailyHost + "/portal/check_user_votes/", content);
-        //    var responseString = await response.Content.ReadAsStringAsync();
-
-        //    dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-
-        //    return responseJSON.Choice;
-
-        //}
-
-
 
     }
 }
