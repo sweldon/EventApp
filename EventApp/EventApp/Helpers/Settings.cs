@@ -22,7 +22,7 @@ namespace EventApp
         #region Setting Constants
 
         private const string AppInfoKey = "app_info_key";
-        private static readonly string AppInfoKeyDefault = "DVNT Applications - Beta 0.1.10";
+        private static readonly string AppInfoKeyDefault = "DVNT Applications - Beta 0.2";
 
         private const string SettingsKey = "settings_key";
         private static readonly string SettingsDefault = "no";
