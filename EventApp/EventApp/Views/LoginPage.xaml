@@ -21,7 +21,7 @@
     </ContentPage.BindingContext>
 
 
-
+    <ScrollView>
     <StackLayout>
         <StackLayout BackgroundColor="#4c96e8" HorizontalOptions="Fill">
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
@@ -68,4 +68,5 @@
             </StackLayout>
         </ContentView>
     </StackLayout>
+        </ScrollView>
 </ContentPage>

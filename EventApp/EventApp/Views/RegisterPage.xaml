@@ -15,7 +15,7 @@
         </ToolbarItem>
     </ContentPage.ToolbarItems>
 
-
+    <ScrollView>
     <StackLayout>
 
         <StackLayout BackgroundColor="#4c96e8" HorizontalOptions="Fill">
@@ -47,4 +47,5 @@
             </StackLayout>
         </ContentView>
     </StackLayout>
+        </ScrollView>
 </ContentPage>
