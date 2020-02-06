@@ -28,7 +28,6 @@ namespace EventApp
         public static HttpClient globalClient = new HttpClient();
         // App-wide reusable instance for choosing random ads
         public static Random randomGenerator = new Random();
-        public static User GlobalUserObject = new User();
 
         public string devicePushId
         {
@@ -194,8 +193,6 @@ namespace EventApp
                     dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                     bool active = responseJSON.results.is_active;
                     bool isPremium = responseJSON.results.is_premium;
-                    GlobalUserObject.UserName = currentUser;
-                    GlobalUserObject.Confetti = confettiCount;
                     if (!active)
                     {
                         App.Current.MainPage = new NavigationPage(new LimboPage());

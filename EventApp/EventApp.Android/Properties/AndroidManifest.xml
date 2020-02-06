@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.divinity.holidailyapp" android:installLocation="preferExternal" android:versionName="Beta-0.1.10" android:versionCode="32">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.divinity.holidailyapp" android:installLocation="preferExternal" android:versionName="Beta-0.2.5" android:versionCode="35">
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="com.android.vending.BILLING" />
-	<application android:label="Holidaily" android:icon="@drawable/Icon" android:usesCleartextTraffic="true"> <!-- TODO: DELETE THIS WHEN PUSHING -->
+	<application android:label="Holidaily" android:icon="@drawable/Icon" android:usesCleartextTraffic="true">
+		<!-- TODO: DELETE THIS WHEN PUSHING -->
 		<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-9382412071078825~2735085847" />
 		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 		<activity android:name="com.google.android.gms.ads.AdActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:theme="@android:style/Theme.Translucent" />

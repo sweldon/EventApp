@@ -14,48 +14,36 @@ namespace EventApp
         const int HOUR = 60 * MINUTE;
         const int DAY = 24 * HOUR;
         const int MONTH = 30 * DAY;
-        public static int ActiveHoliday(string date)
+        public static bool ActiveHoliday(string timeSince)
         {
-            string year =  DateTime.Now.Year.ToString();
-            string[] parts;
-            Dictionary<string, string> stringToNumericMonth = new Dictionary<string, string>()
-                                            {
-                                                {"Jan","01"},
-                                                {"Feb", "02"},
-                                                {"Mar","03"},
-                                                {"Apr","04"},
-                                                {"May","05"},
-                                                {"Jun","06"},
-                                                {"Jul","07"},
-                                                {"Aug","08"},
-                                                {"Sep","09"},
-                                                {"Oct","10"},
-                                                {"Nov","11"},
-                                                {"Dec","12"},
-                                            };
-            try
+            if (timeSince.Contains("from now"))
             {
-                parts = date.Split(". ");
-                string month = parts[0];
-                string day = parts[1];
-                string dateString = year + "-" + stringToNumericMonth[month] + "-" + day.PadLeft(2, '0') + " 00:00:00";
-                var timeStampDatetime = DateTime.ParseExact(dateString, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-                string currentTimeZone = TimeZoneInfo.Local.StandardName;
-                TimeZoneInfo localTimeZone = TimeZoneInfo.FindSystemTimeZoneById(currentTimeZone);
-                DateTime thisTime = DateTime.Now;
-                bool isDaylight = TimeZoneInfo.Local.IsDaylightSavingTime(thisTime);
-                DateTime timeStamp = TimeZoneInfo.ConvertTimeFromUtc(timeStampDatetime, localTimeZone);
-                if (isDaylight)
-                    timeStamp = timeStamp.AddHours(1);
-                DateTime currentDate = DateTime.Now;
-                var ts = new TimeSpan(currentDate.Ticks - timeStamp.Ticks);
-                int daysAgo = ts.Days;
-                return daysAgo;
+                return false;
             }
-            catch
+            else if(timeSince == "Today")
             {
-                return 0;
+                return true;
             }
+            else
+            {
+                if (timeSince.Contains("days ago"))
+                {
+                    int daysAgo = Int32.Parse(timeSince.Split(" days ago")[0]);
+                    if (daysAgo > 8)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
         }
         public static string GetRelativeTime(string timeStampString)
         {

@@ -104,6 +104,7 @@ namespace EventApp.Views
                     {
 
                         var values = new Dictionary<string, string>{
+                           { "username", currentUser },
                            { "delete", item.Id },
                            { "device_id", devicePushId }
                             };
@@ -215,7 +216,7 @@ namespace EventApp.Views
 
             var holidayName = holiday.Name;
             var timeSince = holiday.Date;
-            var holidayLink = "https://holidailyapp.com/holiday?id=" + holiday.Id;
+            var holidayLink = App.HolidailyHost + "/holiday?id=" + holiday.Id;
             string preface = "It's " + holidayName + "! ";
             string HolidayDescriptionShort = holiday.Description.Length <= 90 ? preface + holiday.Description +
                 "\nSee more! " : preface + holiday.Description.Substring(0, 90) + "...\nSee more! ";
@@ -238,8 +239,8 @@ namespace EventApp.Views
         {
             
             this.IsEnabled = false;
-            int daysAgo = Time.ActiveHoliday(viewModel.Holiday.Date);
-            if(daysAgo < 8)
+            bool allowed = Time.ActiveHoliday(viewModel.Holiday.TimeSince);
+            if (allowed)
             {
                 if (!isLoggedIn)
                 {
