@@ -64,12 +64,14 @@ namespace EventApp.Views
 
         async void MakePurchase(object sender, EventArgs e)
         {
-
             this.IsEnabled = false;
-
+            PurchaseButton.Text = "Connecting to AppStore...";
+            
             if (!isLoggedIn)
             {
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                PurchaseButton.Text = "Purchase";
+                this.IsEnabled = true;
             }
             else if (isPremium)
             {
@@ -79,7 +81,7 @@ namespace EventApp.Views
             }
             else
             {
-                PurchaseButton.Text = "Loading...";
+                PurchaseButton.Text = "Connected...";
                 var billing = CrossInAppBilling.Current;
                 try
                 {
@@ -108,15 +110,13 @@ namespace EventApp.Views
                         return;
                     }
 
-                    PurchaseButton.Text = "Purchase";
-                    this.IsEnabled = true;
-
                     //try to purchase item
                     var purchase = await billing.PurchaseAsync(productId, ItemType.InAppPurchase, "apppayload");
                     if (purchase == null)
                     {
                         await DisplayAlert("Error!", "Something went wrong. You have not been charged for anything.", "Try again");
-                        //Not purchased, alert the user
+                        PurchaseButton.Text = "Purchase";
+                        this.IsEnabled = true;
                     }
                     else
                     {
@@ -141,47 +141,26 @@ namespace EventApp.Views
                         {
                             isPremium = true;
                             await DisplayAlert("Success!", "The transaction was successful. Thank you very much for your support", "You're welcome!");
+                            PurchaseButton.Text = "Purchase";
+                            this.IsEnabled = true;
                         }
                         else
                         {
                             await DisplayAlert("Error!", "Something went wrong. If you do not see your premium rewards, please contact holidailyapp@gmail.com and we will resolve it ASAP.", "Try again");
+                            PurchaseButton.Text = "Purchase";
+                            this.IsEnabled = true;
                         }
                         
                     }
 
-                }
-                catch (InAppBillingPurchaseException purchaseEx)
-                {
-                    var message = string.Empty;
-                    switch (purchaseEx.PurchaseError)
-                    {
-                        case PurchaseError.AppStoreUnavailable:
-                            message = "Currently the app store seems to be unavailble. Try again later.";
-                            break;
-                        case PurchaseError.BillingUnavailable:
-                            message = "Billing seems to be unavailable, please try again later.";
-                            break;
-                        case PurchaseError.PaymentInvalid:
-                            message = "Payment seems to be invalid, please try again.";
-                            break;
-                        case PurchaseError.PaymentNotAllowed:
-                            message = "Payment does not seem to be enabled/allowed, please try again.";
-                            break;
-                    }
-
-                    //Decide if it is an error we care about
-                    if (string.IsNullOrWhiteSpace(message))
-                        return;
-                                PurchaseButton.Text = "Purchase";
-            this.IsEnabled = true;
-                    //Display message to user
                 }
                 catch (Exception ex)
                 {
                     //Something else has gone wrong, log it
                     PurchaseButton.Text = "Purchase";
                     this.IsEnabled = true;
-                    Debug.WriteLine("Issue connecting: " + ex);
+                    await DisplayAlert("Error!", "Unable to connect to the store, please try again later.", "OK");
+
                 }
                 finally
                 {

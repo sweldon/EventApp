@@ -43,7 +43,7 @@
             <StackLayout Orientation="Vertical" Padding="16,10,16,10" Spacing="10">
 
 
-                <Entry Placeholder="Username" FontSize="24" x:Name="NameEntry" />
+                <Entry Keyboard="Plain" Placeholder="Username" FontSize="24" x:Name="NameEntry" />
 
                 <Entry Placeholder="Password"  FontSize="24" IsPassword="True" x:Name="PassEntry" />
 
