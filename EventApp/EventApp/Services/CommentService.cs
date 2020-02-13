@@ -17,9 +17,9 @@ namespace EventApp.Services
 
 
         ObservableCollection<ObservableCollection<Comment>> comments;
+        ObservableCollection<CommentList> allCommentThreads;
         Comment individualComment;
-        ObservableCollection<Comment> commentGroup;
-        CommentList moreComments;
+        CommentList commentGroup;
         public string ShowReplyVal;
         public string ShowDeleteVal;
         public CommentService()
@@ -37,12 +37,10 @@ namespace EventApp.Services
             get { return Settings.IsLoggedIn; }
         }
 
-        public async Task<CommentList> GetMoreComments(string holidayId = null, string user = null, string page="1")
+        public async Task<ObservableCollection<CommentList>> GetMoreComments(string holidayId = null, string user = null, string page="1")
         {
 
-
-            moreComments = new CommentList();
-
+            allCommentThreads = new ObservableCollection<CommentList>();
             var values = new Dictionary<string, string>{
                    { "holiday", holidayId },
                    { "page", page },
@@ -59,7 +57,7 @@ namespace EventApp.Services
             
             foreach (var thread in commentList)
             {
-                
+                commentGroup = new CommentList();
                 foreach (var comment in thread)
                 {
                     string TimeAgo = comment.time_since;
@@ -84,7 +82,7 @@ namespace EventApp.Services
                     string voteStatus = comment.vote_status;
                     string UpVoteImage = Utils.GetUpVoteImage(voteStatus);
                     string DownVoteImage = Utils.GetDownVoteImage(voteStatus);
-                    moreComments.Add(new Comment()
+                    commentGroup.Add(new Comment()
                     {
                         Id = comment.id,
                         Content = comment.content,
@@ -100,8 +98,9 @@ namespace EventApp.Services
                         ThreadPadding = paddingThickness
                     });
                 }
+                allCommentThreads.Add(commentGroup);
             }
-          return await Task.FromResult(moreComments);
+          return await Task.FromResult(allCommentThreads);
     }
 
         public async Task<IEnumerable<IEnumerable<Comment>>> GetHolidayCommentsAsync(bool forceRefresh = false, string holidayId = null, string user = null)
@@ -123,7 +122,7 @@ namespace EventApp.Services
             
             foreach (var thread in commentList)
             {
-                commentGroup = new ObservableCollection<Comment>();
+                commentGroup = new CommentList();
                 foreach (var comment in thread)
                 {
                     string TimeAgo = comment.time_since;

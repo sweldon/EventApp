@@ -5,18 +5,22 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using EventApp.Views;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace EventApp.ViewModels
 {
     public class HolidayDetailViewModel : BaseViewModel
     {
-        //public bool isLoading;
+        public bool isLoading;
+        public int page = 1;
+        public bool allCommentsLoaded = false;
         public Holiday Holiday { get; set; }
-        private List<CommentList> CommentList;
-        public List<CommentList> GroupedCommentList { get { return CommentList; }
+        private ObservableCollection<CommentList> CommentList;
+        public ObservableCollection<CommentList> GroupedCommentList { get { return CommentList; }
             set { CommentList = value; base.OnPropertyChanged(); } }
         public Command LoadHolidayComments { get; set; }
-        //public Command GetMoreComments { get; set; }
+        public Command GetMoreComments { get; set; }
+        public ObservableCollection<CommentList> moreComments;
         public string HolidayId { get; set; }
         public string currentUser
         {
@@ -36,10 +40,10 @@ namespace EventApp.ViewModels
             // Coming in from a "Share" link
             Holiday = holidayObject;
             HolidayId = holidayId;
-            bool isLoading = false;
-            GroupedCommentList = new List<CommentList>();
+            GroupedCommentList = new ObservableCollection<CommentList>();
             LoadHolidayComments = new Command(async () => await ExecuteLoadCommentsCommand());
-            //GetMoreComments = new Command(async () => await LoadMoreComments());
+
+            GetMoreComments = new Command(async () => await LoadMoreComments());
 
             MessagingCenter.Subscribe<NewCommentPage>(this, "UpdateComments", (sender) => {
                 ExecuteLoadCommentsCommand();
@@ -58,31 +62,36 @@ namespace EventApp.ViewModels
 
         }
 
-        //async Task LoadMoreComments()
-        //{
-        //   isLoading = true;
-        //   List<CommentList> test = new List<CommentList>();
-        //    var testGroup = new CommentList();
-        //    testGroup.Add(new Comment()
-        //    {
-        //        Id = "999",
-        //        Content = "",
-        //        HolidayId = "1",
-        //        UserName = "test",
-        //        TimeSince = "test",
-        //        ShowReply = "test",
-        //        ShowDelete = "test",
-        //        Votes = 0,
-        //        UpVoteStatus = "up.png",
-        //        DownVoteStatus = "down",
-        //        Parent = "test",
-        //        ThreadPadding = new Thickness(Convert.ToDouble("10"), 10, 10, 10),
-        //    });
-        //    test.Add(testGroup);
-        //    GroupedCommentList = test;
-        //    isLoading = false;
-        //    //Debug.WriteLine("List size " + GroupedCommentList.Count);
-        //}
+        private async Task LoadMoreComments()
+        {
+            isLoading = true;
+            try
+            {
+                if (!allCommentsLoaded) {
+                    moreComments = await CommentStore.GetMoreComments(HolidayId, currentUser, page.ToString());
+
+                    if(moreComments.Count == 0)
+                    {
+                        allCommentsLoaded = true;
+                    }
+                    else
+                    {
+                        foreach(var thread in moreComments)
+                        {
+                            GroupedCommentList.Add(thread);
+                        }
+                        
+                        page += 1;
+                    }
+                }
+
+
+
+            }catch{
+                Debug.WriteLine("Throttled");
+            }
+            isLoading = false;
+        }
 
         async Task ExecuteLoadCommentsCommand()
         {
@@ -90,11 +99,10 @@ namespace EventApp.ViewModels
                 return;
 
             IsBusy = true;
-
             try
             {
-                GroupedCommentList = new List<CommentList>();
-                var allComments = new List<CommentList>();
+                GroupedCommentList = new ObservableCollection<CommentList>();
+                var allComments = new ObservableCollection<CommentList>();
                 var threads = await CommentStore.GetHolidayCommentsAsync(
                     true, HolidayId, currentUser);
 
