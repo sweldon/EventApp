@@ -8,7 +8,11 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using Plugin.Share;
 using Plugin.Share.Abstractions;
-
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Threading;
 #if __IOS__
 using UIKit;
 #endif
@@ -16,8 +20,6 @@ namespace EventApp.Views
 {
     public partial class HolidayDetailPage : ContentPage
     {
-
-
 
         public bool isLoggedIn
         {
@@ -79,7 +81,31 @@ namespace EventApp.Views
             BindingContext = this.viewModel = viewModel;
             // Remove when reply button added
             HolidayDetailList.ItemSelected += OnCommentSelected;
+            HolidayDetailList.ItemAppearing += (sender, e) =>
+            {
+                
+                if (viewModel.IsBusy || viewModel.GroupedCommentList.Count == 0)
+                {
+                    return;
+                }
+                LoadingCommentsDialog.IsVisible = true;
+                var group = e.Item as CommentList;
+                if (viewModel.GroupedCommentList.Last() == group)
+                {
+                    viewModel.GetMoreComments.Execute(null);
+                }
+                LoadingCommentsDialog.IsVisible = false;
+            };
+            
+
+            // TODO: just add comment to sublist dont refresh the whole thing
+            //MessagingCenter.Subscribe<HolidayDetailPage, Object[]>(this,
+            //"UpdateCelebrateStatus", (sender, data) => {
+            //    UpdateCelebrateStatus((string)data[0], (bool)data[1], (string)data[2]);
+            //});
+
         }
+
 
 
         async void OnDeleteTapped(object sender, EventArgs args)
@@ -96,8 +122,6 @@ namespace EventApp.Views
                 if (String.Equals(item.UserName, currentUser,
                        StringComparison.OrdinalIgnoreCase))
                 {
-
-
                     var deleteComment = await DisplayAlert("Delete Forever",
                     "Are you sure you want to delete this comment?", "Yes", "No");
                     if (deleteComment)
@@ -113,7 +137,6 @@ namespace EventApp.Views
                         var response = await App.globalClient.PostAsync(App.HolidailyHost + "/comments/", content);
 
                         var responseString = await response.Content.ReadAsStringAsync();
-                        Debug.WriteLine(responseString);
                         dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                         int status = responseJSON.status;
                         string message = responseJSON.message;
@@ -148,6 +171,18 @@ namespace EventApp.Views
             }
         }
 
+        //private void OnItemTapped(object sender, ItemTappedEventArgs e)
+        //{
+        //    var comment = e.Item as Comment;
+        //    var commentGroup = e.Group as CommentList;
+        //    var commentIndexInGroup = commentGroup.IndexOf(comment);
+        //    var entireList = (HolidayDetailList.ItemsSource as List<CommentList>).IndexOf(commentGroup);
+        //    var commentId = comment.Id;
+        //    Debug.WriteLine("Tapped comment id: " + commentId);
+        //    // if entireList entireList == page, load more
+
+        //}
+
         public void OnCommentSelected(object sender, SelectedItemChangedEventArgs args)
         {
             ((ListView)sender).SelectedItem = null;
@@ -155,9 +190,7 @@ namespace EventApp.Views
             {
                 return;
             }
-
             //var item = args.SelectedItem as Comment;
-
         }
 
         public HolidayDetailPage()

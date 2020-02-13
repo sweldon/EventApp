@@ -20,7 +20,7 @@ namespace EventApp
             {
                 return false;
             }
-            else if(timeSince == "Today")
+            else if(timeSince == "Today" || timeSince == "Yesterday")
             {
                 return true;
             }

@@ -272,7 +272,11 @@
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-
+                <ListView.Footer>
+                    <ContentView Padding="10">
+                        <Label HorizontalTextAlignment="Center" x:Name="LoadingCommentsDialog" Text="Loading..." IsVisible="false" />
+                    </ContentView>
+                </ListView.Footer>
 
             </ListView>
  
