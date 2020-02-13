@@ -12,7 +12,7 @@ namespace EventApp.ViewModels
     public class HolidayDetailViewModel : BaseViewModel
     {
         public bool isLoading;
-        public int page = 1;
+        public int page = 0;
         public bool allCommentsLoaded = false;
         public Holiday Holiday { get; set; }
         private ObservableCollection<CommentList> CommentList;
@@ -99,6 +99,8 @@ namespace EventApp.ViewModels
                 return;
 
             IsBusy = true;
+            page = 0;
+            allCommentsLoaded = false;
             try
             {
                 GroupedCommentList = new ObservableCollection<CommentList>();
