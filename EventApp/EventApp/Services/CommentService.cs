@@ -19,7 +19,7 @@ namespace EventApp.Services
         ObservableCollection<ObservableCollection<Comment>> comments;
         Comment individualComment;
         ObservableCollection<Comment> commentGroup;
-
+        CommentList moreComments;
         public string ShowReplyVal;
         public string ShowDeleteVal;
         public CommentService()
@@ -36,6 +36,73 @@ namespace EventApp.Services
         {
             get { return Settings.IsLoggedIn; }
         }
+
+        public async Task<CommentList> GetMoreComments(string holidayId = null, string user = null, string page="1")
+        {
+
+
+            moreComments = new CommentList();
+
+            var values = new Dictionary<string, string>{
+                   { "holiday", holidayId },
+                   { "page", page },
+            };
+            if (isLoggedIn)
+                values["username"] = currentUser;
+
+            var content = new FormUrlEncodedContent(values);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/comments/", content);
+            var responseString = await response.Content.ReadAsStringAsync();
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+
+            dynamic commentList = responseJSON.results;
+            
+            foreach (var thread in commentList)
+            {
+                
+                foreach (var comment in thread)
+                {
+                    string TimeAgo = comment.time_since;
+                    string commentUser = comment.user;
+                    if (String.Equals(commentUser, currentUser, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ShowReplyVal = "false";
+                        ShowDeleteVal = "true";
+                    }
+                    else
+                    {
+                        ShowReplyVal = "true";
+                        ShowDeleteVal = "false";
+                    }
+
+                    int padding = comment.depth;
+                    Xamarin.Forms.Thickness paddingThickness = new
+                        Xamarin.Forms.Thickness(Convert.ToDouble(
+                            padding), 10, 10, 10
+                            );
+
+                    string voteStatus = comment.vote_status;
+                    string UpVoteImage = Utils.GetUpVoteImage(voteStatus);
+                    string DownVoteImage = Utils.GetDownVoteImage(voteStatus);
+                    moreComments.Add(new Comment()
+                    {
+                        Id = comment.id,
+                        Content = comment.content,
+                        HolidayId = comment.holiday,
+                        UserName = comment.user,
+                        TimeSince = TimeAgo,
+                        ShowReply = ShowReplyVal,
+                        ShowDelete = ShowDeleteVal,
+                        Votes = comment.votes,
+                        UpVoteStatus = UpVoteImage,
+                        DownVoteStatus = DownVoteImage,
+                        Parent = comment.parent,
+                        ThreadPadding = paddingThickness
+                    });
+                }
+            }
+          return await Task.FromResult(moreComments);
+    }
 
         public async Task<IEnumerable<IEnumerable<Comment>>> GetHolidayCommentsAsync(bool forceRefresh = false, string holidayId = null, string user = null)
         {
