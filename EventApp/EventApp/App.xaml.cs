@@ -22,8 +22,8 @@ namespace EventApp
         public NavigationPage NavigationPage { get; private set; }
         public Holiday OpenHolidayPage { get; set; }
         public Comment OpenComment { get; set; }
-        //public static string HolidailyHost = "https://holidailyapp.com";
-        public static string HolidailyHost = "http://10.0.2.2:8000";
+        public static string HolidailyHost = "https://holidailyapp.com";
+        //public static string HolidailyHost = "http://10.0.2.2:8000";
         //public static string HolidailyHost = "http://localhost:8888";
         public static HttpClient globalClient = new HttpClient();
         // App-wide reusable instance for choosing random ads
