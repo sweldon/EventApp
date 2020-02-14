@@ -99,8 +99,7 @@ namespace EventApp.ViewModels
                 return;
 
             IsBusy = true;
-            page = 0;
-            allCommentsLoaded = false;
+            page = 1;
             try
             {
                 GroupedCommentList = new ObservableCollection<CommentList>();
