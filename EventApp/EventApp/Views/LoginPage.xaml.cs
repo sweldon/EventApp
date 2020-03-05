@@ -84,7 +84,9 @@ namespace EventApp.Views
         public async void Recover(object sender, EventArgs e)
         {
             this.IsEnabled = false;
-            await Task.Run(() => Xamarin.Forms.Device.OpenUri(new Uri(App.HolidailyHost + "/portal/recover")));
+                Xamarin.Forms.Device.BeginInvokeOnMainThread(() => {
+                    Xamarin.Forms.Device.OpenUri(new Uri(App.HolidailyHost + "/portal/recover"));
+                });
             this.IsEnabled = true;
         }
 
