@@ -145,7 +145,8 @@ namespace EventApp.Services
                     ShowHolidayContent = true,
                     Date = holiday.date,
                     Votes = holiday.votes,
-                    CelebrateStatus = holiday.celebrating == true ? "celebrate_active.png" : "celebrate.png"
+                    CelebrateStatus = holiday.celebrating == true ? "celebrate_active.png" : "celebrate.png",
+                    Blurb = holiday.blurb
                 });
             
             }
