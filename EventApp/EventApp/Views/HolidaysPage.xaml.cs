@@ -235,7 +235,6 @@ namespace EventApp.Views
             }
 
             var holidayName = holiday.Name;
-            var timeSince = holiday.Date;
             var holidayLink = App.HolidailyHost+"/holiday?id=" + holiday.Id;
             string preface = "It's " + holidayName + "! ";
             string HolidayDescriptionShort = holiday.Description.Length <= 90 ?

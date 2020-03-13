@@ -104,7 +104,7 @@
                                                     Android="10,0,10,0" iOS="14,0,14,5"/>
                                                 </ContentView.Padding>
 
-                                                <Label Text="{Binding DescriptionShort}"  Grid.Row="1" FontSize="14">
+                                                <Label Text="{Binding Blurb}"  Grid.Row="1" FontSize="14">
 
                                                     <Label.GestureRecognizers>
                                                         <TapGestureRecognizer
