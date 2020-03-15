@@ -52,7 +52,24 @@ namespace EventApp.Services
                 };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/holidays/"+id+"/", content);
+
+            int TotalNumberOfAttempts = 12;
+            int numberOfAttempts = 0;
+            dynamic response = null;
+            while (response == null)
+            {
+                try
+                {
+                    response = await App.globalClient.PostAsync(App.HolidailyHost + "/holidays/" + id + "/", content);
+                }
+                catch
+                {
+                    numberOfAttempts++;
+                    if (numberOfAttempts >= TotalNumberOfAttempts)
+                        throw;
+                    await Task.Delay(5000);
+                }
+            }
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic holiday = JsonConvert.DeserializeObject(responseString);
             holiday = holiday.results;
@@ -119,14 +136,30 @@ namespace EventApp.Services
         public async Task<IEnumerable<Holiday>> GetHolidaysAsync(bool forceRefresh = false)
         {
             items = new List<Holiday>();
-
-
             var values = new Dictionary<string, string>{
                    { "username", currentUser }
                 };
 
             var content = new FormUrlEncodedContent(values);
-            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/holidays/", content);
+            int TotalNumberOfAttempts = 12;
+            int numberOfAttempts = 0;
+            dynamic response = null;
+            while (response == null)
+            {
+                try
+                {
+                    response = await App.globalClient.PostAsync(App.HolidailyHost + "/holidays/", content);
+                }
+                catch
+                {
+                    numberOfAttempts++;
+                    if (numberOfAttempts >= TotalNumberOfAttempts)
+                        throw;
+                    await Task.Delay(5000);
+                }
+            }
+
+
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
             dynamic holidayList = responseJSON.results;

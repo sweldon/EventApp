@@ -128,7 +128,16 @@ namespace EventApp.Views
                     rootPage.Detail = NavigationPage; // Content
                     Application.Current.MainPage = rootPage; // Set root to built master detail
 
-                    await Navigation.PopModalAsync();
+                    try
+                    {
+                        await Navigation.PopModalAsync();
+                    }
+                    catch
+                    {
+                        // Don't have to pop modal, not logging in "in-line"
+                        await Navigation.PopAsync();
+                    }
+                    
                 }
                 else
                 {

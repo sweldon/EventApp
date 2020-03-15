@@ -37,7 +37,6 @@ namespace EventApp.iOS
 
         public override bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options)
         {
-            string holidayId = url.Query.Split("=")[1];
             var menuPage = new MenuPage(); // Build hamburger menu
             NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
             var rootPage = new RootPage(); // Root handles master detail navigation
@@ -45,7 +44,16 @@ namespace EventApp.iOS
             rootPage.Detail = NavigationPage; // Content
             App.Current.MainPage = rootPage; // Set root to built master detail
             //System.Diagnostics.Debug.WriteLine("OPENING HOLIDAY " + data);
-            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
+            if (url.Query.Contains("activated"))
+            {
+                NavigationPage.PushAsync(new LoginPage());
+            }
+            else
+            {
+                string holidayId = url.Query.Split("=")[1];
+                NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
+            }
+
 
             return true;
         }

@@ -85,8 +85,6 @@ namespace EventApp.Views
                 ((ListView)sender).SelectedItem = null;
             };
             viewModel.Title = todayString + ", " + monthString + " " + dayNumber;
-            
-
 
         }
 
@@ -117,7 +115,7 @@ namespace EventApp.Views
             }
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
 
 
@@ -126,6 +124,19 @@ namespace EventApp.Views
             if (viewModel.Holidays.Count == 0)
                 viewModel.LoadItemsCommand.Execute(null);
             AdBanner.IsVisible = !isPremium;
+
+            int numRetries = 0;
+            while(viewModel.Holidays.Count == 0)
+            {
+                numRetries++;
+                await LoadingIcon.ScaleTo(15, 100);
+                await LoadingIcon.ScaleTo(10, 100);
+                if (numRetries >= 15) {
+                    await DisplayAlert("Error", "Couldn't connect to Holidaily", "OK");
+                    return;
+                }
+                await Task.Delay(2000);
+            }
         }
 
 

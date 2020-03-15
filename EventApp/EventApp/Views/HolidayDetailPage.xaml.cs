@@ -203,11 +203,9 @@ namespace EventApp.Views
         {
             base.OnAppearing();
 
-
             if (viewModel.GroupedCommentList.Count == 0)
                 viewModel.LoadHolidayComments.Execute(null);
             AdBanner.IsVisible = !isPremium;
-
             viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
             HolidayImageSource.Source = viewModel.Holiday.HolidayImage;
             if (!string.IsNullOrEmpty(viewModel.Holiday.Description))
@@ -220,6 +218,8 @@ namespace EventApp.Views
             if (isLoggedIn) {
                 UpVoteImage.Source = viewModel.Holiday.CelebrateStatus;
             }
+
+            HolidayDetailList.IsVisible = true;
 
         }
 

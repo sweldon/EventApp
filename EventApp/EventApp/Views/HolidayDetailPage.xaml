@@ -6,27 +6,22 @@
 
              Title="{Binding Title}">
 
-    <StackLayout>
+    <StackLayout BackgroundColor="#E0E0E0">
 
         <StackLayout VerticalOptions="Start" Padding="0" Spacing="0">
 
-
-
-            <ContentView Padding="0">
-
-
+            <ContentView Padding="0" >
 
             <ListView x:Name="HolidayDetailList"
     
                       SeparatorVisibility="None"
                         ItemsSource="{Binding GroupedCommentList}"
- 
                         HasUnevenRows="true"
                         IsGroupingEnabled="true"
                         RefreshCommand="{Binding LoadHolidayComments}"
                         IsPullToRefreshEnabled="true"
+                        IsVisible="False"
                         IsRefreshing="{Binding IsBusy, Mode=OneWay}">
-
                 
                 <ListView.BackgroundColor>
                     <OnPlatform x:TypeArguments="Color"

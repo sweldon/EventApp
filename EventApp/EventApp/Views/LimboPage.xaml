@@ -22,7 +22,7 @@
                     </Label.FormattedText>
                 </Label>
 
-                <Button VerticalOptions="End" Text="Switch Accounts" Clicked="SwitchAccounts"
+                <Button VerticalOptions="End" Text="Okay" Clicked="SwitchAccounts"
                             BackgroundColor="#4c96e8"
                             TextColor="White" />
 

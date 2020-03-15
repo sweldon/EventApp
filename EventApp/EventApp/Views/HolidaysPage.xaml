@@ -7,38 +7,48 @@
               xmlns:local="clr-namespace:EventApp"  
              x:Name="BrowseItemsPage">
 
-    <StackLayout VerticalOptions="FillAndExpand" Spacing="0">
 
 
-        <!--<ContentView Padding="3">
-
-            <Label x:Name="TodayLabel"  BackgroundColor="White"
-                HorizontalTextAlignment="Center" 
-                FontSize="20" TextColor="#4c96e8"/>
- 
-             </ContentView>-->
-
-        <StackLayout VerticalOptions="Start" Padding="0" Spacing="0">
-            <BoxView HeightRequest=".5"
-                   BackgroundColor="#DEDEDE"
-                   HorizontalOptions="FillAndExpand" />
 
 
-            <ContentView BackgroundColor="#f5f5f5">
+    <StackLayout Spacing="0">
 
+        <ContentView  IsVisible="False" VerticalOptions="FillAndExpand" HeightRequest="1000" BackgroundColor="#FFFFFF">
+            <ContentView.Triggers>
+            <DataTrigger TargetType="ContentView"
+                Binding="{Binding Source={x:Reference ItemsListView}, Path=ItemsSource.Count}" 
+                Value="0">
+                <Setter Property="IsVisible" Value="True" />
+            </DataTrigger>
+            </ContentView.Triggers>
+            <Image WidthRequest="15" HeightRequest="15" VerticalOptions="Center"
+            Source="holidaily-banner-no-bg.png"
+            x:Name="LoadingIcon" />
+        </ContentView>
+
+        <StackLayout x:Name="MainFeed" VerticalOptions="Start" Padding="0" Spacing="0" >
+
+            <ContentView>
                 <ListView x:Name="ItemsListView"
-                 IsRefreshing="false" 
-                  SeparatorVisibility="None"
-                  ItemsSource="{Binding Holidays}"
-                  HasUnevenRows="true"
-                  RefreshCommand="{Binding LoadItemsCommand}"
-                  IsPullToRefreshEnabled="false"
-                   >
+                    IsRefreshing="false" 
+                    SeparatorVisibility="None"
+                    ItemsSource="{Binding Holidays}"
+                    HasUnevenRows="true"
+                    RefreshCommand="{Binding LoadItemsCommand}"
+                    IsPullToRefreshEnabled="false">
 
-                    <ListView.BackgroundColor>
-                        <OnPlatform x:TypeArguments="Color"
-                        iOS="#E0E0E0"/>
-                    </ListView.BackgroundColor>
+                <ListView.BackgroundColor>
+                    <OnPlatform x:TypeArguments="Color"
+                    iOS="#E0E0E0"/>
+                </ListView.BackgroundColor>
+
+                <ListView.Triggers>
+                <DataTrigger TargetType="ListView"
+                    Binding="{Binding Source={x:Reference ItemsListView}, Path=ItemsSource.Count}" 
+                    Value="0">
+                    <Setter Property="BackgroundColor" Value="#FFFFFF" />
+                </DataTrigger>
+                </ListView.Triggers>
 
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -233,21 +243,13 @@
                             <Label Text="" FontSize="5" />
                         </StackLayout >
                     </ListView.Footer>
-
-
-
                 </ListView>
-
-
             </ContentView>
-
         </StackLayout>
         <StackLayout VerticalOptions="End" x:Name="AdBanner">
         <ContentView >
           <local:AdControlView AdUnitId="ca-app-pub-9382412071078825/1958380167"/>
         </ContentView >
-
       </StackLayout>
     </StackLayout>
-
 </ContentPage>
