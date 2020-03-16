@@ -22,7 +22,7 @@
             </DataTrigger>
             </ContentView.Triggers>
             <Image WidthRequest="15" HeightRequest="15" VerticalOptions="Center"
-            Source="holidaily-banner-no-bg.png"
+            Source="holiday_banner_blue.png"
             x:Name="LoadingIcon" />
         </ContentView>
 
@@ -35,8 +35,9 @@
                     ItemsSource="{Binding Holidays}"
                     HasUnevenRows="true"
                     RefreshCommand="{Binding LoadItemsCommand}"
-                    IsPullToRefreshEnabled="false">
-
+                    IsPullToRefreshEnabled="false"
+                    BackgroundColor="#E0E0E0">
+                    
                 <ListView.BackgroundColor>
                     <OnPlatform x:TypeArguments="Color"
                     iOS="#E0E0E0"/>
@@ -53,7 +54,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="White">
+                                <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="#FFFFFF">
 
                                     <ContentView.Margin>
                                         <OnPlatform x:TypeArguments="Thickness"
