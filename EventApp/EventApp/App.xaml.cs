@@ -22,9 +22,18 @@ namespace EventApp
         public NavigationPage NavigationPage { get; private set; }
         public Holiday OpenHolidayPage { get; set; }
         public Comment OpenComment { get; set; }
-        public static string HolidailyHost = "https://holidailyapp.com";
-        //public static string HolidailyHost = "http://10.0.2.2:8000";
-        //public static string HolidailyHost = "http://localhost:8888";
+
+        #if DEBUG
+            #if __IOS__
+                public static string HolidailyHost = "http://localhost:8888";
+            #else
+                public static string HolidailyHost = "http://10.0.2.2:8000";
+            #endif
+        #else
+            public static string HolidailyHost = "https://holidailyapp.com";
+        #endif
+
+
         public static HttpClient globalClient = new HttpClient();
         // App-wide reusable instance for choosing random ads
         public static Random randomGenerator = new Random();
@@ -192,7 +201,8 @@ namespace EventApp
                     var responseString = await response.Content.ReadAsStringAsync();
                     dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                     bool active = responseJSON.results.is_active;
-                    bool isPremium = responseJSON.results.is_premium;
+                    isPremium = responseJSON.results.is_premium;
+                    confettiCount = responseJSON.results.confetti;
                     if (!active)
                     {
                         App.Current.MainPage = new NavigationPage(new LimboPage());

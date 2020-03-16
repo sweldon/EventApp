@@ -181,7 +181,7 @@
     <BundleResource Include="Resources\default_profile_inverted.png" />
     <BundleResource Include="Resources\pencil.png" />
     <BundleResource Include="Resources\bell.png" />
-    <BundleResource Include="Resources\holidaily-banner-no-bg.png" />
+    <BundleResource Include="Resources\holiday_banner_blue.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

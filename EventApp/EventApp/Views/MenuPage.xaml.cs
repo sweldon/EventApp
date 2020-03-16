@@ -145,21 +145,7 @@ namespace EventApp.Views
                 HeaderDivider.IsVisible = true;
                 UserLabel.Text = "Hey, " + currentUser + "!";
                 UserNameHeader.Text = currentUser;
-                var values = new Dictionary<string, string>{
-                   { "username", currentUser }
-                };
-                var content = new FormUrlEncodedContent(values);
-                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
-                var responseString = await response.Content.ReadAsStringAsync();
-                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                dynamic results = responseJSON.results;
-                var confettiCount = results.confetti;
                 UserPointsHeader.Text = confettiCount;
-                if (isPremium)
-                {
-                    isPremiumLabel.Text = "Premium";
-                }
-
             }
             else
             {
