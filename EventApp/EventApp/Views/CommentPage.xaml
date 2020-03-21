@@ -12,7 +12,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ContentView Padding="5" BackgroundColor="#D2D2D2">
+    <ScrollView Padding="5" BackgroundColor="#D2D2D2">
         <StackLayout>
 
             <Frame  HasShadow="False" CornerRadius="2" OutlineColor="#EAEAEA" Padding="10">
@@ -68,6 +68,6 @@
             </Frame>
 
         </StackLayout>
-    </ContentView>
+    </ScrollView>
 
 </ContentPage>
