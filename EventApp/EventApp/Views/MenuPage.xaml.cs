@@ -112,9 +112,19 @@ namespace EventApp.Views
             LoginButton.IsEnabled = true;
         }
 
-        public void LogoutUser(object sender, EventArgs e)
+        public async void LogoutUser(object sender, EventArgs e)
         {
 
+            // Disable notifications
+            var values = new Dictionary<string, string>{
+                        { "username", currentUser },
+                        { "logout", "true" }
+                    };
+            var content = new FormUrlEncodedContent(values);
+            await App.globalClient.PostAsync(App.HolidailyHost + "/user/", content);
+
+
+            // Reset labels and global settings
             isLoggedIn = false;
             LogoutButton.IsVisible = false;
             LoginButton.IsVisible = true;
