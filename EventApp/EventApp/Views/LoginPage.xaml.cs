@@ -92,64 +92,74 @@ namespace EventApp.Views
 
         public async void LoginUser(object sender, EventArgs e)
         {
-            this.IsEnabled = false;
-            LoginButton.Text = "Logging in...";
-            if (!string.IsNullOrEmpty(NameEntry.Text))
+            try
             {
-                string userName = NameEntry.Text.Trim();
-                string pass = PassEntry.Text;
+                this.IsEnabled = false;
+                LoginButton.Text = "Logging in...";
+                if (!string.IsNullOrEmpty(NameEntry.Text))
+                {
+                    string userName = NameEntry.Text.Trim();
+                    string pass = PassEntry.Text;
 
-                var values = new Dictionary<string, string>{
+                    var values = new Dictionary<string, string>{
                     { "username", userName },
                     { "password", pass },
                     { "device_id", devicePushId }
                 };
 
-                var content = new FormUrlEncodedContent(values);
-                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/accounts/login/", content);
-                var responseString = await response.Content.ReadAsStringAsync();
-                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                int status = responseJSON.status;
+                    var content = new FormUrlEncodedContent(values);
+                    var response = await App.globalClient.PostAsync(App.HolidailyHost + "/accounts/login/", content);
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                    int status = responseJSON.status;
 
-                if (status == 200)
-                {
-                    // Set some useful global user properties (maybe use this for username
-                    // ETC... instead of Settings plugin? Possible improvement.
-                    //App.GlobalUserObject.Confetti = responseJSON.results.confetti;
-                    isLoggedIn = true;
-                    currentUser = userName;
-                    isPremium = responseJSON.results.premium;
-                    confettiCount = responseJSON.results.confetti;
-
-                    var menuPage = new MenuPage(); // Build hamburger menu
-                    NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
-                    var rootPage = new RootPage(); // Root handles master detail navigation
-                    rootPage.Master = menuPage; // Menu
-                    rootPage.Detail = NavigationPage; // Content
-                    Application.Current.MainPage = rootPage; // Set root to built master detail
-
-                    try
+                    if (status == 200)
                     {
-                        await Navigation.PopModalAsync();
+                        // Set some useful global user properties (maybe use this for username
+                        // ETC... instead of Settings plugin? Possible improvement.
+                        //App.GlobalUserObject.Confetti = responseJSON.results.confetti;
+                        isLoggedIn = true;
+                        currentUser = userName;
+                        isPremium = responseJSON.results.premium;
+                        confettiCount = responseJSON.results.confetti;
+
+                        var menuPage = new MenuPage(); // Build hamburger menu
+                        NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
+                        var rootPage = new RootPage(); // Root handles master detail navigation
+                        rootPage.Master = menuPage; // Menu
+                        rootPage.Detail = NavigationPage; // Content
+                        Application.Current.MainPage = rootPage; // Set root to built master detail
+
+                        try
+                        {
+                            await Navigation.PopModalAsync();
+                        }
+                        catch
+                        {
+                            // Don't have to pop modal, not logging in "in-line"
+                            await Navigation.PopAsync();
+                        }
+
                     }
-                    catch
+                    else
                     {
-                        // Don't have to pop modal, not logging in "in-line"
-                        await Navigation.PopAsync();
+                        await DisplayAlert("Error", "Could not log you in. Please try again", "Okay");
                     }
-                    
                 }
                 else
                 {
-                    await DisplayAlert("Error", "Could not log you in. Please try again", "Okay");
+                    await DisplayAlert("Error", "Enter some text first!", "Alrighty");
                 }
+                LoginButton.Text = "Login";
+                this.IsEnabled = true;
             }
-            else
+            catch
             {
-                await DisplayAlert("Error", "Enter some text first!", "Alrighty");
+                await DisplayAlert("Error", "Couldn't connect to Holidaily", "OK");
+                LoginButton.Text = "Login";
+                this.IsEnabled = true;
             }
-            LoginButton.Text = "Login";
-            this.IsEnabled = true;
+            
         }
 
         protected override async void OnAppearing()

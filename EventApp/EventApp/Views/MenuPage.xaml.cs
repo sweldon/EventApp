@@ -115,32 +115,41 @@ namespace EventApp.Views
         public async void LogoutUser(object sender, EventArgs e)
         {
 
-            // Disable notifications
-            var values = new Dictionary<string, string>{
+            try
+            {
+
+                // Disable notifications
+                var values = new Dictionary<string, string>{
                         { "username", currentUser },
                         { "logout", "true" }
                     };
-            var content = new FormUrlEncodedContent(values);
-            await App.globalClient.PostAsync(App.HolidailyHost + "/user/", content);
+                var content = new FormUrlEncodedContent(values);
+                await App.globalClient.PostAsync(App.HolidailyHost + "/user/", content);
 
 
-            // Reset labels and global settings
-            isLoggedIn = false;
-            LogoutButton.IsVisible = false;
-            LoginButton.IsVisible = true;
-            DefaultHeader.IsVisible = true;
-            ProfileHeader.IsVisible = false;
-            HeaderDivider.IsVisible = false;
-            UserLabel.Text = "Hey there!";
-            currentUser = null;
-            isPremium = false;
+                // Reset labels and global settings
+                isLoggedIn = false;
+                LogoutButton.IsVisible = false;
+                LoginButton.IsVisible = true;
+                DefaultHeader.IsVisible = true;
+                ProfileHeader.IsVisible = false;
+                HeaderDivider.IsVisible = false;
+                UserLabel.Text = "Hey there!";
+                currentUser = null;
+                isPremium = false;
 
-            var menuPage = new MenuPage(); // Build hamburger menu
-            NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
-            var rootPage = new RootPage(); // Root handles master detail navigation
-            rootPage.Master = menuPage; // Menu
-            rootPage.Detail = NavigationPage; // Content
-            Application.Current.MainPage = rootPage; // Set root to built master detail
+                var menuPage = new MenuPage(); // Build hamburger menu
+                NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
+                var rootPage = new RootPage(); // Root handles master detail navigation
+                rootPage.Master = menuPage; // Menu
+                rootPage.Detail = NavigationPage; // Content
+                Application.Current.MainPage = rootPage; // Set root to built master detail
+
+            }
+            catch
+            {
+                await DisplayAlert("Error", "Couldn't connect to Holidaily", "OK");
+            }
 
         }
         protected override async void OnAppearing()
