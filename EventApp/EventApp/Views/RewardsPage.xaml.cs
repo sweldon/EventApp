@@ -70,17 +70,25 @@ namespace EventApp.Views
 
         public async void UpdateUserPoints()
         {
-            var values = new Dictionary<string, string>{
-            { "username", currentUser }
-            };
+            try
+            {
+                var values = new Dictionary<string, string>{
+                { "username", currentUser }
+                };
 
-            var content = new FormUrlEncodedContent(values);
-            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/user/", content);
-            var responseString = await response.Content.ReadAsStringAsync();
+                var content = new FormUrlEncodedContent(values);
+                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/user/", content);
+                var responseString = await response.Content.ReadAsStringAsync();
 
-            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-            string points = responseJSON.results.ContainsKey("confetti") ? responseJSON.results.confetti.ToString() : "0";
-            PointsLabel.Text = "You have " + points + " points!";
+                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                string points = responseJSON.results.ContainsKey("confetti") ? responseJSON.results.confetti.ToString() : "0";
+                PointsLabel.Text = "You have " + points + " points!";
+            }
+            catch
+            {
+                await DisplayAlert("Error", "Couldn't connect to Holidaily", "OK");
+            }
+
         }
 
         protected override void OnAppearing()

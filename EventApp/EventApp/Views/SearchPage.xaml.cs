@@ -72,7 +72,15 @@ namespace EventApp.Views
         {
             var searchedDate = DateValue.Date;
             var dateStr = searchedDate.ToString();
-            SearchHolidayList.ItemsSource = await viewModel.HolidayStore.SearchHolidays(dateStr);
+            try
+            {
+                SearchHolidayList.ItemsSource = await viewModel.HolidayStore.SearchHolidays(dateStr);
+            }
+            catch
+            {
+                await DisplayAlert("Error", "Couldn't connect to Holidaily", "OK");
+            }
+            
 
         }
 

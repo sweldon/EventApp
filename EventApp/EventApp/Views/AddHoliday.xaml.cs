@@ -109,36 +109,45 @@ namespace EventApp.Views
 
             if (isLoggedIn)
             {
-                var values = new Dictionary<string, string>{
-                   { "username", currentUser },
-                };
-
-                var content = new FormUrlEncodedContent(values);
-                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/pending/", content);
-                var responseString = await response.Content.ReadAsStringAsync();
-                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                bool pending = responseJSON.results;
-
-                if (pending)
+                try
                 {
-                    SendHolidayBtn.IsEnabled = false;
-                    SendHolidayBtn.Text = "Submission Pending...";
+                    var values = new Dictionary<string, string>{
+                        { "username", currentUser },
+                    };
 
-                    #if __IOS__
-                        SendHolidayBtn.IsVisible = false;
-                        PendingBtn.IsVisible = true;
-                    #endif
+                    var content = new FormUrlEncodedContent(values);
+                    var response = await App.globalClient.PostAsync(App.HolidailyHost + "/pending/", content);
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                    bool pending = responseJSON.results;
 
+                    if (pending)
+                    {
+                        SendHolidayBtn.IsEnabled = false;
+                        SendHolidayBtn.Text = "Submission Pending...";
+
+                        #if __IOS__
+                            SendHolidayBtn.IsVisible = false;
+                            PendingBtn.IsVisible = true;
+                        #endif
+
+                    }
+                    else
+                    {
+                        SendHolidayBtn.Text = "Send It";
+                        SendHolidayBtn.IsEnabled = true;
+
+                        #if __IOS__
+                            SendHolidayBtn.IsVisible = true;
+                            PendingBtn.IsVisible = false;
+                        #endif
+                    }
                 }
-                else
+                catch
                 {
-                    SendHolidayBtn.Text = "Send It";
-                    SendHolidayBtn.IsEnabled = true;
-                    #if __IOS__
-                        SendHolidayBtn.IsVisible = true;
-                        PendingBtn.IsVisible = false;
-                    #endif
+                    await DisplayAlert("Error", "Couldn't connect to Holidaily", "OK");
                 }
+
             }
 
         }
