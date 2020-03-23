@@ -33,15 +33,24 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="White" Margin="0,5,0,0">
+                                <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="White">
+
+                                   <ContentView.Margin>
+                                        <OnPlatform x:TypeArguments="Thickness"
+                                    Android="0,5,0,0" iOS="0,7,0,0"/>
+                                    </ContentView.Margin>
 
                                     <StackLayout>
                                         <BoxView
                                            HeightRequest=".5"
                                                BackgroundColor="#DEDEDE"
                                                HorizontalOptions="FillAndExpand" />
-                                        <StackLayout>
-                                            <Grid HorizontalOptions="FillAndExpand"  Padding="10,5,10,0">
+                                        <StackLayout >
+                                            <Grid HorizontalOptions="FillAndExpand">
+                                                                                              <Grid.Padding>
+                                                    <OnPlatform x:TypeArguments="Thickness"
+                                                Android="5,5,5,0" iOS="8,10,8,0"/>
+                                                </Grid.Padding>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
@@ -49,34 +58,36 @@
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-
-                                                <Label Text="{Binding TimeSince}"
-                                                    FontSize="14"
-                                                    FontAttributes="Bold" Grid.Row="0" Grid.Column="0" TextColor="Gray" Opacity=".5"/>
                                                 
                                                 <Label Text="{Binding Name}"
                                                     FontSize="14"
-                                                    FontAttributes="Bold" Grid.Row="0" Grid.Column="1" TextColor="#4c96e8" HorizontalTextAlignment="Start" />
+                                                    FontAttributes="Bold" Grid.Row="0" Grid.Column="0" TextColor="#4c96e8" HorizontalTextAlignment="Start" />
 
-                                                
-                                                <Label Text="{Binding Votes, StringFormat='+{0}'}"
+                                                <Label Text="{Binding TimeSince}"
+                                                    FontSize="14"
+                                                    FontAttributes="Bold" Grid.Row="0" Grid.Column="1" TextColor="Gray" Opacity=".5"/>
+
+                                                <Image Source="celebrate_active.png" Grid.Column="3" HorizontalOptions="End" x:Name="UpVoteImage" WidthRequest="16" />
+
+                                                <Label Text="{Binding Votes, StringFormat='{0}'}"
                                                     FontSize="14" 
                                                     Grid.Row="0"
-                                                    Grid.Column="2"
-                                                    HorizontalTextAlignment="End" 
-                                                    FontAttributes="Bold" 
-                                                    TextColor="#FF9912"/>
+                                                    Grid.Column="4"
+                                                    HorizontalTextAlignment="End"/>
 
                                             </Grid>
                                             <ContentView>
-                                                
-                                            <ContentView.Padding>
-                                            <OnPlatform x:TypeArguments="Thickness"
-                                            Android="10,0,10,10" iOS="10,0,10,10"/>
-                                            </ContentView.Padding>
-                                                
-                                                <Label Text="{Binding DescriptionShort}" FontSize="14" />
+                                                <ContentView.Padding>
+                                                    <OnPlatform x:TypeArguments="Thickness"
+                                                    Android="10,0,10,0" iOS="14,5,14,5"/>
+                                                </ContentView.Padding>
+                                                <Label Text="{Binding Blurb}" FontSize="14" />
+                                            </ContentView>
+                                            <ContentView Padding="0, 0, 0, 10">
+                                                   <Image HeightRequest="150" Source="{Binding HolidayImage}" Aspect="AspectFill" />
                                             </ContentView>
 
                                         </StackLayout>

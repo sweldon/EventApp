@@ -39,8 +39,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>CFBundleName</key>
-	<string>Holidaily</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>UIBackgroundModes</key>
@@ -74,10 +72,12 @@
 	<key>CFBundleIdentifier</key>
 	<string>eventapp.com</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.2.8</string>
+	<string>0.2.10</string>
 	<key>CFBundleVersion</key>
-	<string>0.2.8</string>
+	<string>0.2.10</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
+	<key>CFBundleName</key>
+	<string>Holidaily</string>
 </dict>
 </plist>

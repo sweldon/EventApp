@@ -74,14 +74,14 @@
                                             </BoxView.IsVisible>
                                         </BoxView>
 
-                                        <StackLayout>
+                                        <StackLayout Spacing="0">
                                             <Grid HorizontalOptions="FillAndExpand" IsVisible="{Binding ShowHolidayContent}">
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="*" />
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="70*" />
-                                                    <ColumnDefinition Width="30*" />
+                                                    <ColumnDefinition Width="8*" />
+                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
 
                                                 <Grid.Padding>
@@ -112,7 +112,7 @@
 
                                                 <ContentView.Padding>
                                                     <OnPlatform x:TypeArguments="Thickness"
-                                                    Android="10,0,10,0" iOS="14,0,14,5"/>
+                                                    Android="10,0,10,0" iOS="14,5,14,5"/>
                                                 </ContentView.Padding>
 
                                                 <Label Text="{Binding Blurb}"  Grid.Row="1" FontSize="14">
@@ -137,57 +137,70 @@
 
                                             </ContentView>
 
-                                            <Grid Padding="20, 0, 20, 0" HorizontalOptions="FillAndExpand"  IsVisible="{Binding ShowHolidayContent}">
+                                            <Grid Padding="10, 10, 10, 10" IsVisible="{Binding ShowHolidayContent}">
 
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="40*" />
+                                                   <RowDefinition/>
                                                 </Grid.RowDefinitions>
                                                 
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="16" />
-                                                    <ColumnDefinition Width="8*" />
-                                                    <ColumnDefinition Width="16" />
-                                                    <ColumnDefinition Width="8*" />
                                                     <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="18" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
 
                                                 <ContentView Grid.Column="0" Grid.Row="0">
-                                                    <Image Source="comment.png" VerticalOptions="Center" >
-
+                                                    <Image
+                                                        Source="comment.png"
+                                                        WidthRequest="16"
+                                                        VerticalOptions="Start">
                                                         <Image.GestureRecognizers>
-                                                            <TapGestureRecognizer
-                                                    Tapped="ImageToHoliday"  />
+                                                        <TapGestureRecognizer
+                                                            Tapped="ImageToHoliday"  />
                                                         </Image.GestureRecognizers>
                                                     </Image>
 
                                                 </ContentView>
 
-
-
-                                                <Label Grid.Column="1"  Grid.Row="0" Text="{Binding NumComments, StringFormat='({0})'}" FontSize="Small"
-                                                     VerticalTextAlignment="Center" Margin="0,-3,0,0" >
+                                                <Label
+                                                    Grid.Column="1"
+                                                    Grid.Row="0"
+                                                    Text="{Binding NumComments, StringFormat='{0}'}"
+                                                    FontSize="Small"
+                                                    VerticalTextAlignment="Start"
+                                                    Margin="0, -1, 0, 0"
+                                                    HorizontalOptions="Start">
                                                     <Label.GestureRecognizers>
                                                         <TapGestureRecognizer
-                                                Tapped="LabelToHoliday"  />
+                                                            Tapped="LabelToHoliday"  />
                                                     </Label.GestureRecognizers>
                                                 </Label>
 
+                                                <ContentView Grid.Column="3" Grid.Row="0" >
 
-
-                                                <ContentView Grid.Column="2" Grid.Row="0" >
-
-                                                    <Image Source="share.png" VerticalOptions="Center">
+                                                    <Image
+                                                        Source="share.png"
+                                                        WidthRequest="16"
+                                                        VerticalOptions="Center">
                                                         <Image.GestureRecognizers>
                                                             <TapGestureRecognizer
-                                                                     Tapped="Share"  />
+                                                               Tapped="Share"  />
                                                         </Image.GestureRecognizers>
                                                     </Image>
                                                 </ContentView>
 
-                                                <Label Grid.Column="3" Grid.Row="0" Text="Share" FontSize="Small"
-                                                             VerticalTextAlignment="Center" Margin="0,-2,0,0">
+                                                <Label
+                                                    Grid.Column="4"
+                                                    Grid.Row="0"
+                                                    Text="Share"
+                                                    FontSize="Small"
+                                                    Margin="0, -1, 0, 0" 
+                                                    VerticalTextAlignment="Center" >
                                                     <Label.GestureRecognizers>
                                                         <TapGestureRecognizer
                                                              Tapped="Share"  />
@@ -195,7 +208,12 @@
                                                 </Label>
 
                                  
-                                                    <Image Source="{Binding CelebrateStatus}" Grid.Column="5" Grid.Row="0" x:Name="UpVoteImage" >
+                                                    <Image
+                                                        Source="{Binding CelebrateStatus}"
+                                                        WidthRequest="16"
+                                                        Grid.Column="6"
+                                                        Grid.Row="0"
+                                                        x:Name="UpVoteImage" >
                                                         <Image.GestureRecognizers>
                                                             <TapGestureRecognizer
                                                             Tapped="OnCelebrateTapped"
@@ -203,16 +221,19 @@
                                                         </Image.GestureRecognizers>
                                                     </Image>
                                                 
-                                                    <Label Grid.Column="6" Grid.Row="0" Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small" 
-                                                           VerticalOptions="FillAndExpand"
-                                                           VerticalTextAlignment="Center" Margin="0,0,0,0" >
+                                                    <Label
+                                                        Grid.Column="7"
+                                                        Grid.Row="0"
+                                                        Text="{Binding Votes, StringFormat='{0} Celebrating!'}"
+                                                        FontSize="Small"
+                                                        Margin="0, -1, 0, 0" 
+                                                        VerticalOptions="FillAndExpand"
+                                                        VerticalTextAlignment="Center" >
                                                         <Label.GestureRecognizers>
                                                             <TapGestureRecognizer
                                                                 Tapped="OnCelebrateTapped"  />
                                                         </Label.GestureRecognizers>
                                                     </Label>
-                                       
-
                                             </Grid>
 
 

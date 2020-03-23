@@ -82,15 +82,19 @@ namespace EventApp.Services
                     string voteStatus = comment.vote_status;
                     string UpVoteImage = Utils.GetUpVoteImage(voteStatus);
                     string DownVoteImage = Utils.GetDownVoteImage(voteStatus);
+                    string author = comment.deleted == true ? "[deleted]" : comment.user;
+                    string commentContent = comment.deleted == true ? "[deleted]" : comment.content;
+                    string allowDelete = comment.deleted == true ? "false" : ShowDeleteVal;
+                    string allowReply = comment.deleted == true ? "false" : ShowReplyVal;
                     commentGroup.Add(new Comment()
                     {
                         Id = comment.id,
-                        Content = comment.content,
+                        Content = commentContent,
                         HolidayId = comment.holiday,
-                        UserName = comment.user,
+                        UserName = author,
                         TimeSince = TimeAgo,
-                        ShowReply = ShowReplyVal,
-                        ShowDelete = ShowDeleteVal,
+                        ShowReply = allowReply,
+                        ShowDelete = allowDelete,
                         Votes = comment.votes,
                         UpVoteStatus = UpVoteImage,
                         DownVoteStatus = DownVoteImage,
@@ -147,15 +151,19 @@ namespace EventApp.Services
                     string voteStatus = comment.vote_status;
                     string UpVoteImage = Utils.GetUpVoteImage(voteStatus);
                     string DownVoteImage = Utils.GetDownVoteImage(voteStatus);
+                    string author = comment.deleted == true ? "[deleted]" : comment.user;
+                    string commentContent = comment.deleted == true ? "[deleted]" : comment.content;
+                    string allowDelete = comment.deleted == true ? "false" : ShowDeleteVal;
+                    string allowReply = comment.deleted == true ? "false" : ShowReplyVal;
                     commentGroup.Add(new Comment()
                     {
                         Id = comment.id,
-                        Content = comment.content,
+                        Content = commentContent,
                         HolidayId = comment.holiday,
-                        UserName = comment.user,
+                        UserName = author,
                         TimeSince = TimeAgo,
-                        ShowReply = ShowReplyVal,
-                        ShowDelete = ShowDeleteVal,
+                        ShowReply = allowReply,
+                        ShowDelete = allowDelete,
                         Votes = comment.votes,
                         UpVoteStatus = UpVoteImage, 
                         DownVoteStatus = DownVoteImage,

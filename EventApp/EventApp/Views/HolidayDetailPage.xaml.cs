@@ -117,43 +117,52 @@ namespace EventApp.Views
             }
             else
             {
-                var item = (sender as Label).BindingContext as Comment;
-
-                if (String.Equals(item.UserName, currentUser,
-                       StringComparison.OrdinalIgnoreCase))
+                try
                 {
-                    var deleteComment = await DisplayAlert("Delete Forever",
-                    "Are you sure you want to delete this comment?", "Yes", "No");
-                    if (deleteComment)
+                    var item = (sender as Label).BindingContext as Comment;
+                    if (String.Equals(item.UserName, currentUser,
+                           StringComparison.OrdinalIgnoreCase))
                     {
+                        var deleteComment = await DisplayAlert("Delete Forever",
+                        "Are you sure you want to delete this comment?", "Yes", "No");
+                        if (deleteComment)
+                        {
 
-                        var values = new Dictionary<string, string>{
+                            var values = new Dictionary<string, string>{
                            { "username", currentUser },
                            { "delete", item.Id },
                            { "device_id", devicePushId }
                             };
 
-                        var content = new FormUrlEncodedContent(values);
-                        var response = await App.globalClient.PostAsync(App.HolidailyHost + "/comments/", content);
+                            var content = new FormUrlEncodedContent(values);
+                            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/comments/", content);
 
-                        var responseString = await response.Content.ReadAsStringAsync();
-                        dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                        int status = responseJSON.status;
-                        string message = responseJSON.message;
-                        if (status == 200)
-                        {
-                            MessagingCenter.Send(this, "UpdateComments");
-                            //await Navigation.PopAsync();
-                        }
-                        else
-                        {
-                            await DisplayAlert("Error", message, "OK");
+                            var responseString = await response.Content.ReadAsStringAsync();
+                            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                            int status = responseJSON.status;
+                            string message = responseJSON.message;
+                            if (status == 200)
+                            {
+                                item.UserName = "[deleted]";
+                                item.Content = "[deleted]";
+                                item.ShowReply = "False";
+                                item.ShowDelete = "False";
+                                //MessagingCenter.Send(this, "UpdateComments");
+                                //await Navigation.PopAsync();
+                            }
+                            else
+                            {
+                                await DisplayAlert("Error", message, "OK");
+                            }
+
                         }
 
                     }
-
                 }
-
+                catch
+                {
+                    await DisplayAlert("Error", "Please try that again", "OK");
+                }
             }
         }
 
@@ -297,6 +306,7 @@ namespace EventApp.Views
 
         async void UpVote(object sender, EventArgs args)
         {
+            this.IsEnabled = false;
             #if __IOS__
                             var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
                             haptic.Prepare();
@@ -374,27 +384,29 @@ namespace EventApp.Views
             }
 
             }
+            this.IsEnabled = true;
 
         }
 
 
         async void DownVoteComment(object sender, EventArgs args)
         {
+            this.IsEnabled = false;
             //var voteStatus = (sender as Image).Source;
             var item = (sender as Image).BindingContext as Comment;
             string commentId = item.Id;
 
-#if __IOS__
-            var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
-            haptic.Prepare();
-            haptic.ImpactOccurred();
-            haptic.Dispose();
-#endif
+            #if __IOS__
+                        var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
+                        haptic.Prepare();
+                        haptic.ImpactOccurred();
+                        haptic.Dispose();
+            #endif
 
-#if __ANDROID__
-            var duration = TimeSpan.FromSeconds(.025);
-            Xamarin.Essentials.Vibration.Vibrate(duration);
-#endif
+            #if __ANDROID__
+                        var duration = TimeSpan.FromSeconds(.025);
+                        Xamarin.Essentials.Vibration.Vibrate(duration);
+            #endif
 
             int CurrentVotes = item.Votes;
 
@@ -444,28 +456,28 @@ namespace EventApp.Views
                 }
 
             }
-
+            this.IsEnabled = true;
 
 
         }
 
         async void UpVoteComment(object sender, EventArgs args)
         {
-
+            this.IsEnabled = false;
             var item = (sender as Image).BindingContext as Comment;
             string commentId = item.Id;
 
-        #if __IOS__
-                        var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
-                        haptic.Prepare();
-                        haptic.ImpactOccurred();
-                        haptic.Dispose();
-        #endif
+            #if __IOS__
+                            var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
+                            haptic.Prepare();
+                            haptic.ImpactOccurred();
+                            haptic.Dispose();
+            #endif
 
-        #if __ANDROID__
-                    var duration = TimeSpan.FromSeconds(.025);
-                    Xamarin.Essentials.Vibration.Vibrate(duration);
-        #endif
+            #if __ANDROID__
+                        var duration = TimeSpan.FromSeconds(.025);
+                        Xamarin.Essentials.Vibration.Vibrate(duration);
+            #endif
 
             int CurrentVotes = item.Votes;
 
@@ -519,6 +531,7 @@ namespace EventApp.Views
 
                 }
             }
+            this.IsEnabled = true;
 
         }
 

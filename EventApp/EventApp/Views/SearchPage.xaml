@@ -7,16 +7,16 @@
 
     <StackLayout VerticalOptions="FillAndExpand" Spacing="0">
 
-        <ContentView>
-            <StackLayout Orientation="Horizontal" Padding="40,10,40,10">
-                <Label x:Name="SearchByNameText" Text="Search by Name" TextColor="#4c96e8" HorizontalOptions="StartAndExpand">
+        <ContentView Padding="10">
+            <StackLayout Orientation="Horizontal">
+                <Label x:Name="SearchByNameText" Text="Search by Name" TextColor="#4c96e8" HorizontalOptions="CenterAndExpand">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer
                           Tapped="ToggleSearchType"  />
                     </Label.GestureRecognizers>
                 </Label>
 
-                <Label x:Name="SearchByDateText" Text="Search by Date" TextColor="Gray" HorizontalOptions="EndAndExpand">
+                <Label x:Name="SearchByDateText" Text="Search by Date" TextColor="Gray" HorizontalOptions="CenterAndExpand">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer
                           Tapped="ToggleSearchType"  />
@@ -90,11 +90,11 @@
                                         <StackLayout>
                                             <Grid HorizontalOptions="FillAndExpand">
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="*" />
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="70*" />
-                                                    <ColumnDefinition Width="30*" />
+                                                    <ColumnDefinition Width="8*" />
+                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
 
                                                 <Grid.Padding>
@@ -152,18 +152,18 @@
 
                                             <Grid Padding="10" HorizontalOptions="FillAndExpand">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="16" />
-                                                    <ColumnDefinition Width="15*" />
-                                                    <ColumnDefinition Width="16" />
                                                     <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="10*" />
-                                                    <ColumnDefinition Width="16" />
                                                     <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="16" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
 
                                                 <ContentView Grid.Column="0">
-                                                    <Image Source="comment.png" VerticalOptions="Center" >
+                                                    <Image Source="comment.png" VerticalOptions="Center" WidthRequest="16" >
 
                                                         <Image.GestureRecognizers>
                                                             <TapGestureRecognizer
@@ -185,9 +185,9 @@
 
 
 
-                                                <ContentView Grid.Column="2" >
+                                                <ContentView Grid.Column="3" >
 
-                                                    <Image Source="share.png" VerticalOptions="Center">
+                                                    <Image Source="share.png" VerticalOptions="Center" WidthRequest="16" >
                                                         <Image.GestureRecognizers>
                                                             <TapGestureRecognizer
                                                                      Tapped="Share"  />
@@ -195,7 +195,7 @@
                                                     </Image>
                                                 </ContentView>
 
-                                                <Label Grid.Column="3" Text="Share" FontSize="12"
+                                                <Label Grid.Column="4" Text="Share" FontSize="12"
                                                              VerticalTextAlignment="Center" Margin="0,-2,0,0">
                                                     <Label.GestureRecognizers>
                                                         <TapGestureRecognizer
@@ -203,11 +203,9 @@
                                                     </Label.GestureRecognizers>
                                                 </Label>
 
-                                                <Image Source="celebrate_active.png" Grid.Column="5"  x:Name="UpVoteImage" />
+                                                <Image Source="celebrate_active.png" Grid.Column="6"  x:Name="UpVoteImage" WidthRequest="16" />
 
-
-
-                                                <Label Grid.Column="6"  Grid.Row="0" Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small"
+                                                <Label Grid.Column="7"  Grid.Row="0" Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small"
                                                      VerticalTextAlignment="Center" Margin="0,-2,0,0" >
           
                                                 </Label>

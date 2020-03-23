@@ -57,31 +57,39 @@ namespace EventApp.Views
 
                 if ( (!string.IsNullOrEmpty(HolidayDetailEntry.Text)) && (!string.IsNullOrEmpty(HolidayNameEntry.Text)))
                 {
-                    var selectedDate = HolidayDateEntry.Date;
-                    var dateStr = selectedDate.ToString();
+                    try
+                    {
+                        var selectedDate = HolidayDateEntry.Date;
+                        var dateStr = selectedDate.ToString();
 
-                    var values = new Dictionary<string, string>{
+                        var values = new Dictionary<string, string>{
                            { "username", currentUser },
                            { "submission", HolidayNameEntry.Text },
                            { "description", HolidayDetailEntry.Text },
                            { "date", dateStr },
                         };
 
-                    var content = new FormUrlEncodedContent(values);
-                    var response = await App.globalClient.PostAsync(App.HolidailyHost + "/submit/", content);
-                    var responseString = await response.Content.ReadAsStringAsync();
-                    dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                    int status = responseJSON.status;
+                        var content = new FormUrlEncodedContent(values);
+                        var response = await App.globalClient.PostAsync(App.HolidailyHost + "/submit/", content);
+                        var responseString = await response.Content.ReadAsStringAsync();
+                        dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                        int status = responseJSON.status;
 
-                    if (status == 200)
-                    {
-                        SendHolidayBtn.Text = "Submission Pending...";
-                        await DisplayAlert("Success", "We received your Holiday! We will get back to you ASAP about its release into the App. Thank you for your contribution to Holidaily!", "OK");
+                        if (status == 200)
+                        {
+                            SendHolidayBtn.Text = "Submission Pending...";
+                            await DisplayAlert("Success", "We received your Holiday! We will get back to you ASAP about its release into the App. Thank you for your contribution to Holidaily!", "OK");
+                        }
+                        else
+                        {
+                            this.IsEnabled = true;
+                            await DisplayAlert("Error", "Something went wrong, please try again", "OK");
+                        }
                     }
-                    else
+                    catch
                     {
+                        await DisplayAlert("Error", "Something went wrong. Please try again.", "OK");
                         this.IsEnabled = true;
-                        await DisplayAlert("Error", "Something went wrong, please try again", "OK");
                     }
                 }
                 else

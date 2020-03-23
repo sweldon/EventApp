@@ -41,24 +41,26 @@
                             <ContentView>
                             <Image x:Name="HolidayImageSource" HeightRequest="150" Aspect="AspectFill" />
                         </ContentView>
-                        <Grid Padding="20, 0, 20, 0" HorizontalOptions="FillAndExpand" >
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="50*" />
-                            </Grid.RowDefinitions>
+                        <Grid Padding="10, 0, 10, 0" >
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="16" />
-                                <ColumnDefinition Width="12*" />
-                                <ColumnDefinition Width="16" />
-                                <ColumnDefinition Width="8*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="18" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="40*" />
+                                                </Grid.RowDefinitions>
+                                                
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
 
                             <ContentView Grid.Column="0" Grid.Row="0">
                                 
-                                <Image Source="comment.png" VerticalOptions="Center" >
+                                <Image Source="comment.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16" >
 
                                     <Image.GestureRecognizers>
                                         <TapGestureRecognizer
@@ -70,8 +72,9 @@
 
 
 
-                            <Label Grid.Column="1" Grid.Row="0" Text="Comment" FontSize="Small"
-                         VerticalTextAlignment="Center" Margin="0,-2,0,0">
+                            <Label Grid.Column="1" Grid.Row="0" Text="Comment" FontSize="Micro"
+                         VerticalTextAlignment="Center" HorizontalOptions="Start" Margin="0,-2,0,0">
+
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer
                           Tapped="AddComment"  />
@@ -80,9 +83,9 @@
 
 
 
-                            <ContentView Grid.Column="2" Grid.Row="0" >
+                            <ContentView Grid.Column="3" Grid.Row="0" >
 
-                                <Image Source="share.png" VerticalOptions="Center">
+                                <Image Source="share.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16">
                                     <Image.GestureRecognizers>
                                         <TapGestureRecognizer
                                     Tapped="Share"  />
@@ -90,15 +93,20 @@
                                 </Image>
                             </ContentView>
 
-                            <Label Grid.Column="3" Grid.Row="0" Text="Share" FontSize="Small"
-                            VerticalTextAlignment="Center" Margin="0,-2,0,0">
+                            <Label Grid.Column="4" Grid.Row="0" Text="Share" FontSize="Micro"
+                            VerticalTextAlignment="Center" HorizontalOptions="Start" Margin="0,-2,0,0">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer
                             Tapped="Share"  />
                                 </Label.GestureRecognizers>
                             </Label>
 
-                            <Image Source="celebrate.png" Grid.Column="5" Grid.Row="0"  x:Name="UpVoteImage">
+                            <Image Source="celebrate.png"
+                                   WidthRequest="16"
+                                   Grid.Column="6"
+                                   Grid.Row="0"
+                                   x:Name="UpVoteImage"
+                                   HorizontalOptions="Start">
                                 <Image.GestureRecognizers>
                                     <TapGestureRecognizer
                                   Tapped="UpVote" 
@@ -108,8 +116,8 @@
 
 
 
-                            <Label Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small" HorizontalTextAlignment="End" Grid.Column="6" Grid.Row="0"
-                                    VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" Margin="0,0,0,0"  x:Name="CurrentVotes">
+                            <Label Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Micro" HorizontalTextAlignment="Start" Grid.Column="7" Grid.Row="0" LineBreakMode="NoWrap"
+                                     VerticalTextAlignment="Center" x:Name="CurrentVotes">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="UpVote"  />
                                 </Label.GestureRecognizers>
@@ -187,6 +195,7 @@
                                             FontSize="12"
                                             FontAttributes="Bold"
                                             TextColor="#4c96e8"
+                                            LineBreakMode="TailTruncation"
                                             Grid.Row="0" Grid.Column="0" />
 
                                         <Label Text="{Binding TimeSince}"

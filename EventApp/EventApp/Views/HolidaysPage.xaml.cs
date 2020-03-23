@@ -142,7 +142,7 @@ namespace EventApp.Views
 
         async void OnCelebrateTapped(object sender, EventArgs args)
         {
-
+            this.IsEnabled = false;
             #if __IOS__
                 var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
                 haptic.Prepare();
@@ -154,8 +154,6 @@ namespace EventApp.Views
                 var duration = TimeSpan.FromSeconds(.025);
                 Vibration.Vibrate(duration);
             #endif
-
-            this.IsEnabled = false;
             
             var view = (VisualElement)sender;
             var GridObject = (Grid)view.Parent;
