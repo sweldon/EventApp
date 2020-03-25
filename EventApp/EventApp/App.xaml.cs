@@ -194,6 +194,7 @@ namespace EventApp
                 {
                     var values = new Dictionary<string, string>{
                         { "username", currentUser },
+                        { "device_id", devicePushId },
                     };
 
                     var content = new FormUrlEncodedContent(values);
@@ -211,6 +212,9 @@ namespace EventApp
                 }
                 catch
                 {
+                    // Reset labels and global settings
+                    isLoggedIn = false;
+                    currentUser = null;
                     isPremium = false;
                 }
 
