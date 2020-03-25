@@ -68,6 +68,37 @@ namespace EventApp.Models
             }
         }
 
+        private double opacity;
+        [DefaultValue(.5)]
+        public double ElementOpacity
+        {
+            get { return opacity; }
+            set
+            {
+                if (opacity == value)
+                {
+                    return;
+                }
+                opacity = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool enabled;
+        [DefaultValue(true)]
+        public bool Enabled
+        {
+            get { return enabled; }
+            set
+            {
+                if (enabled == value)
+                {
+                    return;
+                }
+                enabled = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string HolidayId { get; set; }
         public string TimeSince { get; set; }

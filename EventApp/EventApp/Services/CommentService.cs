@@ -86,6 +86,9 @@ namespace EventApp.Services
                     string commentContent = comment.deleted == true ? "[deleted]" : comment.content;
                     string allowDelete = comment.deleted == true ? "false" : ShowDeleteVal;
                     string allowReply = comment.deleted == true ? "false" : ShowReplyVal;
+                    double opacity = comment.deleted == true ? .2 : .5;
+                    bool isEnabled = comment.deleted == true ? false : true;
+
                     commentGroup.Add(new Comment()
                     {
                         Id = comment.id,
@@ -99,7 +102,9 @@ namespace EventApp.Services
                         UpVoteStatus = UpVoteImage,
                         DownVoteStatus = DownVoteImage,
                         Parent = comment.parent,
-                        ThreadPadding = paddingThickness
+                        ThreadPadding = paddingThickness,
+                        ElementOpacity = opacity,
+                        Enabled = isEnabled
                     });
                 }
                 allCommentThreads.Add(commentGroup);
@@ -155,6 +160,8 @@ namespace EventApp.Services
                     string commentContent = comment.deleted == true ? "[deleted]" : comment.content;
                     string allowDelete = comment.deleted == true ? "false" : ShowDeleteVal;
                     string allowReply = comment.deleted == true ? "false" : ShowReplyVal;
+                    double opacity = comment.deleted == true ? .2 : .5;
+                    bool isEnabled = comment.deleted == true ? false : true;
                     commentGroup.Add(new Comment()
                     {
                         Id = comment.id,
@@ -168,7 +175,9 @@ namespace EventApp.Services
                         UpVoteStatus = UpVoteImage, 
                         DownVoteStatus = DownVoteImage,
                         Parent = comment.parent,
-                        ThreadPadding = paddingThickness
+                        ThreadPadding = paddingThickness,
+                        ElementOpacity = opacity,
+                        Enabled = isEnabled
                     });
                 }
 

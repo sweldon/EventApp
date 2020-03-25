@@ -81,6 +81,8 @@ namespace EventApp.Views
             BindingContext = this.viewModel = viewModel;
             // Remove when reply button added
             HolidayDetailList.ItemSelected += OnCommentSelected;
+
+            // Infinite scrolling for comments
             HolidayDetailList.ItemAppearing += (sender, e) =>
             {
                 
@@ -147,6 +149,10 @@ namespace EventApp.Views
                                 item.Content = "[deleted]";
                                 item.ShowReply = "False";
                                 item.ShowDelete = "False";
+
+                                // Disable voting
+                                item.Enabled = false;
+                                item.ElementOpacity = .2;
                                 //MessagingCenter.Send(this, "UpdateComments");
                                 //await Navigation.PopAsync();
                             }
@@ -215,21 +221,30 @@ namespace EventApp.Views
             if (viewModel.GroupedCommentList.Count == 0)
                 viewModel.LoadHolidayComments.Execute(null);
             AdBanner.IsVisible = !isPremium;
-            viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
-            HolidayImageSource.Source = viewModel.Holiday.HolidayImage;
-            if (!string.IsNullOrEmpty(viewModel.Holiday.Description))
-                Description.Text = viewModel.Holiday.Description;
-            else
-                Description.Text = "This holiday has no information yet!";
-            this.Title = viewModel.Holiday.Name;
-            CurrentVotes.Text = viewModel.Holiday.Votes.ToString() + " Celebrating!";
+            try
+            {
+                viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
+                HolidayImageSource.Source = viewModel.Holiday.HolidayImage;
+                if (!string.IsNullOrEmpty(viewModel.Holiday.Description))
+                    Description.Text = viewModel.Holiday.Description;
+                else
+                    Description.Text = "This holiday has no information yet!";
+                this.Title = viewModel.Holiday.Name;
+                CurrentVotes.Text = viewModel.Holiday.Votes.ToString() + " Celebrating!";
 
-            if (isLoggedIn) {
-                UpVoteImage.Source = viewModel.Holiday.CelebrateStatus;
+                if (isLoggedIn)
+                {
+                    UpVoteImage.Source = viewModel.Holiday.CelebrateStatus;
+                }
+
+                HolidayDetailList.IsVisible = true;
             }
-
-            HolidayDetailList.IsVisible = true;
-
+            catch
+            {
+                await DisplayAlert("Error", "We couldn't fetch the data for this holiday", "OK");
+                await Navigation.PopAsync();
+            }
+           
         }
 
         async void OnTapGestureRecognizerTapped(object sender, EventArgs args)

@@ -245,7 +245,11 @@
                                             </Label.GestureRecognizers>
                                         </Label>
 
-                                        <Image Source="{Binding DownVoteStatus}" Grid.Column="3" Opacity=".5" x:Name="DownVoteImageComment">
+                                        <Image Source="{Binding DownVoteStatus}"
+                                               Grid.Column="3"
+                                               Opacity="{Binding ElementOpacity}"
+                                               x:Name="DownVoteImageComment"
+                                               IsEnabled="{Binding Enabled}">
                                             <Image.GestureRecognizers>
                                                 <TapGestureRecognizer
                                                     Tapped="DownVoteComment"
@@ -257,7 +261,11 @@
                                                            VerticalTextAlignment="Center" Margin="0,-2,0,0"  x:Name="CurrentVotesComment">
                                         </Label>
 
-                                        <Image Source="{Binding UpVoteStatus}" Grid.Column="5"  Opacity=".5" x:Name="UpVoteImageComment">
+                                        <Image Source="{Binding UpVoteStatus}"
+                                               Grid.Column="5"
+                                               Opacity="{Binding ElementOpacity}"
+                                               x:Name="UpVoteImageComment"
+                                               IsEnabled="{Binding Enabled}">
                                             <Image.GestureRecognizers>
                                                 <TapGestureRecognizer
                                                     Tapped="UpVoteComment"
