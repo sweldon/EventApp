@@ -112,8 +112,9 @@
 
                                                 <ContentView.Padding>
                                                     <OnPlatform x:TypeArguments="Thickness"
-                                                    Android="10,0,10,0" iOS="14,5,14,5"/>
+                                                    Android="10,0,10,5" iOS="14,5,14,5"/>
                                                 </ContentView.Padding>
+                          
 
                                                 <Label Text="{Binding Blurb}"  Grid.Row="1" FontSize="14">
 
@@ -156,7 +157,7 @@
 
                                                 <ContentView Grid.Column="0" Grid.Row="0">
                                                     <Image
-                                                        Source="comment.png"
+                                                        Source="Comment_Main_Icon.png"
                                                         WidthRequest="16"
                                                         VerticalOptions="Start">
                                                         <Image.GestureRecognizers>
@@ -171,6 +172,7 @@
                                                     Grid.Column="1"
                                                     Grid.Row="0"
                                                     Text="{Binding NumComments, StringFormat='{0}'}"
+                                                    TextColor="#808080"
                                                     FontSize="Small"
                                                     VerticalTextAlignment="Start"
                                                     Margin="0, -1, 0, 0"
@@ -184,7 +186,7 @@
                                                 <ContentView Grid.Column="3" Grid.Row="0" >
 
                                                     <Image
-                                                        Source="share.png"
+                                                        Source="Share_Main_Icon.png"
                                                         WidthRequest="16"
                                                         VerticalOptions="Center">
                                                         <Image.GestureRecognizers>
@@ -198,6 +200,7 @@
                                                     Grid.Column="4"
                                                     Grid.Row="0"
                                                     Text="Share"
+                                                    TextColor="#808080"
                                                     FontSize="Small"
                                                     Margin="0, -1, 0, 0" 
                                                     VerticalTextAlignment="Center" >
@@ -225,6 +228,7 @@
                                                         Grid.Column="7"
                                                         Grid.Row="0"
                                                         Text="{Binding Votes, StringFormat='{0} Celebrating!'}"
+                                                        TextColor="#808080"
                                                         FontSize="Small"
                                                         Margin="0, -1, 0, 0" 
                                                         VerticalOptions="FillAndExpand"

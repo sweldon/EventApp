@@ -84,14 +84,14 @@ namespace EventApp.Views
 
             menuItems = new List<HomeMenuItem>
             {
-                new HomeMenuItem {Id = MenuItemType.Holidays, Title="Home", MenuImage="today_icon.png"},
-                new HomeMenuItem {Id = MenuItemType.Search, Title="Search", MenuImage="search.png"},
-                new HomeMenuItem {Id = MenuItemType.AddHoliday, Title="Submit Holiday", MenuImage="pencil.png"},
-                new HomeMenuItem {Id = MenuItemType.ConfettiLeaders, Title="Confetti Leaders", MenuImage="party_popper_icon.png"},
-                new HomeMenuItem {Id = MenuItemType.Trending, Title="Popular", MenuImage="trending.png"},
-                new HomeMenuItem {Id = MenuItemType.Updates, Title="News", MenuImage="news.png"},
-                new HomeMenuItem {Id = MenuItemType.Premium, Title="Premium", MenuImage="premium.png"},
-                new HomeMenuItem {Id = MenuItemType.Rewards, Title="Rewards", MenuImage="trophy.png"}
+                new HomeMenuItem {Id = MenuItemType.Holidays, Title="Home", MenuImage="Home_Menu_Icon.png"},
+                new HomeMenuItem {Id = MenuItemType.Search, Title="Search", MenuImage="Search_Menu_Icon.png"},
+                new HomeMenuItem {Id = MenuItemType.AddHoliday, Title="Submit Holiday", MenuImage="Submit_Menu_Icon.png"},
+                new HomeMenuItem {Id = MenuItemType.ConfettiLeaders, Title="Confetti Leaders", MenuImage="Holiday_Menu_Icon.png"},
+                new HomeMenuItem {Id = MenuItemType.Trending, Title="Popular", MenuImage="Popular_Menu_Icon.png"},
+                new HomeMenuItem {Id = MenuItemType.Updates, Title="News", MenuImage="News_Menu_Icon.png"},
+                new HomeMenuItem {Id = MenuItemType.Premium, Title="Premium", MenuImage="Premium_Menu_Icon.png"},
+                new HomeMenuItem {Id = MenuItemType.Rewards, Title="Rewards", MenuImage="Rewards_Menu_Icon.png"}
             };
 
             ListViewMenu.ItemsSource = menuItems;
@@ -133,7 +133,7 @@ namespace EventApp.Views
                 LoginButton.IsVisible = true;
                 DefaultHeader.IsVisible = true;
                 ProfileHeader.IsVisible = false;
-                HeaderDivider.IsVisible = false;
+                //HeaderDivider.IsVisible = false;
                 UserLabel.Text = "Hey there!";
                 currentUser = null;
                 isPremium = false;
@@ -161,7 +161,7 @@ namespace EventApp.Views
                 ProfileHeader.IsVisible = true;
                 LogoutButton.IsVisible = true;
                 LoginButton.IsVisible = false;
-                HeaderDivider.IsVisible = true;
+                //HeaderDivider.IsVisible = true;
                 UserLabel.Text = "Hey, " + currentUser + "!";
                 UserNameHeader.Text = currentUser;
                 UserPointsHeader.Text = confettiCount;
@@ -172,7 +172,7 @@ namespace EventApp.Views
                 ProfileHeader.IsVisible = false;
                 LogoutButton.IsVisible = false;
                 LoginButton.IsVisible = true;
-                HeaderDivider.IsVisible = false;
+                //HeaderDivider.IsVisible = false;
                 UserLabel.Text = "Hey there!";
             }
 
