@@ -112,7 +112,7 @@
 
                                                 <ContentView.Padding>
                                                     <OnPlatform x:TypeArguments="Thickness"
-                                                    Android="10,0,10,0" iOS="14,5,14,5"/>
+                                                    Android="10,5,10,5" iOS="14,5,14,5"/>
                                                 </ContentView.Padding>
 
                                                 <Label Text="{Binding Blurb}"  Grid.Row="1" FontSize="14">
@@ -137,7 +137,14 @@
 
                                             </ContentView>
 
-                                            <Grid Padding="10, 10, 10, 10" IsVisible="{Binding ShowHolidayContent}">
+                                            <Grid IsVisible="{Binding ShowHolidayContent}">
+
+                                                <Grid.Padding>
+                                                    <OnPlatform 
+                                                        x:TypeArguments="Thickness"
+                                                        Android="10,10,10,5"
+                                                        iOS="10,10,10,10"/>
+                                                </Grid.Padding>
 
                                                 <Grid.RowDefinitions>
                                                    <RowDefinition/>
@@ -173,8 +180,14 @@
                                                     Text="{Binding NumComments, StringFormat='{0}'}"
                                                     FontSize="Small"
                                                     VerticalTextAlignment="Start"
-                                                    Margin="0, -1, 0, 0"
                                                     HorizontalOptions="Start">
+
+
+                                                    <ContentView.Margin>
+                                                        <OnPlatform x:TypeArguments="Thickness"
+                                                        Android="0,-2,0,0" iOS="0,-1,0,0"/>
+                                                    </ContentView.Margin>
+
                                                     <Label.GestureRecognizers>
                                                         <TapGestureRecognizer
                                                             Tapped="LabelToHoliday"  />
