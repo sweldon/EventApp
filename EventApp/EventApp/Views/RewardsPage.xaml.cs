@@ -5,6 +5,7 @@ using Xamarin.Forms.Xaml;
 using MarcTron.Plugin;
 using System.Net.Http;
 using Newtonsoft.Json;
+using MarcTron.Plugin.CustomEventArgs;
 
 namespace EventApp.Views
 {
