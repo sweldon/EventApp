@@ -59,8 +59,8 @@
                                                 </Grid.ColumnDefinitions>
 
                             <ContentView Grid.Column="0" Grid.Row="0">
-                                
-                                <Image Source="comment.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16" >
+
+                                    <Image Source="Comment_Main_Icon.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16" >
 
                                     <Image.GestureRecognizers>
                                         <TapGestureRecognizer
@@ -72,7 +72,7 @@
 
 
 
-                            <Label Grid.Column="1" Grid.Row="0" Text="Comment" FontSize="Micro"
+                                <Label Grid.Column="1" Grid.Row="0" Text="Comment" FontSize="Small" TextColor="#808080"
                          VerticalTextAlignment="Center" HorizontalOptions="Start" Margin="0,-2,0,0">
 
                                 <Label.GestureRecognizers>
@@ -85,7 +85,7 @@
 
                             <ContentView Grid.Column="3" Grid.Row="0" >
 
-                                <Image Source="share.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16">
+                                    <Image Source="Share_Main_Icon.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16">
                                     <Image.GestureRecognizers>
                                         <TapGestureRecognizer
                                     Tapped="Share"  />
@@ -93,7 +93,7 @@
                                 </Image>
                             </ContentView>
 
-                            <Label Grid.Column="4" Grid.Row="0" Text="Share" FontSize="Micro"
+                                <Label Grid.Column="4" Grid.Row="0" Text="Share" FontSize="Small" TextColor="#808080"
                             VerticalTextAlignment="Center" HorizontalOptions="Start" Margin="0,-2,0,0">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer
@@ -116,8 +116,8 @@
 
 
 
-                            <Label Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Micro" HorizontalTextAlignment="Start" Grid.Column="7" Grid.Row="0" LineBreakMode="NoWrap"
-                                     VerticalTextAlignment="Center" x:Name="CurrentVotes">
+                                <Label Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small" HorizontalTextAlignment="Start" Grid.Column="7" Grid.Row="0" LineBreakMode="NoWrap"
+                                     TextColor="#808080" VerticalTextAlignment="Center" x:Name="CurrentVotes">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="UpVote"  />
                                 </Label.GestureRecognizers>
@@ -221,15 +221,15 @@
                                         </Grid.ColumnDefinitions>
 
                                         <ContentView IsVisible="{Binding ShowReply}" Grid.Column="1" HorizontalOptions="End">
-                                            <Image Opacity=".5" Source="reply.png" VerticalOptions="Center"/>
+                                                <Image Source="reply.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16"/>
                                         </ContentView>
 
 
                                         <ContentView  IsVisible="{Binding ShowDelete}" Grid.Column="1" HorizontalOptions="End">
-                                            <Image  Opacity=".5" Source="delete.png" VerticalOptions="Center"/>
+                                                <Image Source="delete.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16"/>
                                         </ContentView>
 
-                                        <Label IsVisible="{Binding ShowReply}" Grid.Column="2" Text="Reply" FontSize="Small"
+                                            <Label IsVisible="{Binding ShowReply}" Grid.Column="2" Text="Reply" FontSize="Small" TextColor="#808080"
                                                        VerticalTextAlignment="Center" Margin="0,-2,8,0">
                                             <Label.GestureRecognizers>
                                                 <TapGestureRecognizer
@@ -237,7 +237,7 @@
                                             </Label.GestureRecognizers>
                                         </Label>
 
-                                        <Label IsVisible="{Binding ShowDelete}" Grid.Column="2" Text="Delete" FontSize="Small"
+                                            <Label IsVisible="{Binding ShowDelete}" Grid.Column="2" Text="Delete" FontSize="Small" TextColor="#808080"
                                                        VerticalTextAlignment="Center" Margin="0,-2,8,0">
                                             <Label.GestureRecognizers>
                                                 <TapGestureRecognizer
@@ -257,7 +257,7 @@
                                             </Image.GestureRecognizers>
                                         </Image>
 
-                                        <Label Text="{Binding Votes}" FontSize="Small" Grid.Column="4"
+                                            <Label Text="{Binding Votes}" FontSize="Small" Grid.Column="4" TextColor="#808080"
                                                            VerticalTextAlignment="Center" Margin="0,-2,0,0"  x:Name="CurrentVotesComment">
                                         </Label>
 

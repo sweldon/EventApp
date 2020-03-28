@@ -2,117 +2,132 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.MenuPage"
-            xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
-            BackgroundColor="#FFFFFF"
-              Title="Menu">
-
+             xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             BackgroundColor="#FFFFFF"
+             Title="Menu">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height=".25*" />
+            <RowDefinition Height=".6*" />
+            <RowDefinition Height=".15*" />
         </Grid.RowDefinitions>
-
-        <Grid x:Name="ProfileHeader" IsVisible="False">
-
+        <Grid x:Name="ProfileHeader" 
+              IsVisible="False">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-        
-            <StackLayout BackgroundColor="#FFFFFF" Grid.Column="0">
-  
-            <StackLayout.Padding>
-            <OnPlatform x:TypeArguments="Thickness"
-            Android="30,30,5,30" iOS="30,60,5,30"/>
-            </StackLayout.Padding>
-                
+            <StackLayout BackgroundColor="#FFFFFF" 
+                         Grid.Column="0">
+                <StackLayout.Padding>
+                    <OnPlatform x:TypeArguments="Thickness"
+                                Android="30,30,5,15" iOS="30,60,5,15"/>
+                </StackLayout.Padding>
                 <ContentView HorizontalOptions="Start">
-                    <controls:CircleImage Source="default_profile_inverted.png" WidthRequest="80" HeightRequest="80" Aspect="AspectFill" VerticalOptions="Start" HorizontalOptions="CenterAndExpand" />
+                    <controls:CircleImage Source="default_profile_inverted.png" 
+                                          WidthRequest="80" 
+                                          HeightRequest="80" 
+                                          Aspect="AspectFill" 
+                                          VerticalOptions="Start" 
+                                          HorizontalOptions="CenterAndExpand" />
                 </ContentView>
-                
             </StackLayout>
-
-            <StackLayout Grid.Column="1" BackgroundColor="#FFFFFF">
-                
-            <StackLayout.Padding>
-            <OnPlatform x:TypeArguments="Thickness"
-            Android="5, 30, 0, 0" iOS="5, 65, 0, 0"/>
-            </StackLayout.Padding>
-                
-                <Label x:Name="UserNameHeader" TextColor="Gray" FontSize="Medium" FontAttributes="Bold" />
+            <StackLayout Grid.Column="1" 
+                         BackgroundColor="#FFFFFF">
+                <StackLayout.Padding>
+                    <OnPlatform x:TypeArguments="Thickness"
+                                Android="5, 30, 0, 0" iOS="5, 65, 0, 0"/>
+                </StackLayout.Padding>
+                <Label x:Name="UserNameHeader" 
+                       TextColor="Black" 
+                       FontSize="Medium" 
+                       FontAttributes="Bold" />
                 <Label>
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span Text="Confetti: " FontSize="Medium" />
-                            <Span x:Name="UserPointsHeader" FontAttributes="Bold" FontSize="Medium" />
+                            <Span Text="Confetti: " 
+                                  TextColor="Black" 
+                                  FontSize="Medium" />
+                            <Span x:Name="UserPointsHeader" 
+                                  TextColor="Black" 
+                                  FontAttributes="Bold" 
+                                  FontSize="Medium" />
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <Label IsVisible="{Binding isPremium}" x:Name="isPremiumLabel" TextColor="Green" FontSize="Medium" FontAttributes="Bold" />
+                <Label IsVisible="{Binding isPremium}" 
+                       x:Name="isPremiumLabel" 
+                       TextColor="White" 
+                       FontSize="Medium" 
+                       FontAttributes="Bold" />
             </StackLayout>
-
         </Grid>
-
-        <StackLayout x:Name="DefaultHeader" IsVisible="True">
-
-            <StackLayout BackgroundColor="#4c96e8" Padding="30">
-
+        <StackLayout x:Name="DefaultHeader" 
+                     IsVisible="True">
+            <StackLayout BackgroundColor="White" 
+                         Padding="0"
+                         Grid.Row="0">
                 <ContentView>
-                    <Image WidthRequest="100" HeightRequest="124" Source="Icon_Text.png"   />
+                    <Image Source="holidaily_banner_Inverse.png"   />
                 </ContentView>
-
             </StackLayout>
-
-
         </StackLayout>
-
-        <BoxView HeightRequest=".5"
-                   BackgroundColor="#D3D3D3"
-                   HorizontalOptions="FillAndExpand" Grid.Row="1" x:Name="HeaderDivider" />
-        <StackLayout Grid.Row="2">
-            <StackLayout Orientation="Vertical" Padding="16,10,16,10">
-                <ListView x:Name="ListViewMenu"
-                    SeparatorVisibility="None"
-                    BackgroundColor="#FFFFFF"
-                    HasUnevenRows="True">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-
-                                    <Grid Padding="10" HorizontalOptions="FillAndExpand">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition />
-                                            <ColumnDefinition Width="9*" />
-                                        </Grid.ColumnDefinitions>
-            
-                                        <ContentView Grid.Column="0">
-                                            <Image Source="{Binding MenuImage}" VerticalOptions="Center" WidthRequest="20" HeightRequest="20"/>
-                                        </ContentView>
-
-                                        <Label Text="{Binding Title}" Grid.Column="1" FontSize="18" />
-                                    </Grid>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-
-                    <Label x:Name="UserLabel" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="#4c96e8" FontSize="14" />
-
-                    <Button Text="Logout" x:Name="LogoutButton"
+        <StackLayout Grid.Row="1"
+                     Orientation="Vertical" 
+                     Padding="16,5,16,5"
+                     BackgroundColor="White" >
+            <ListView x:Name="ListViewMenu"
+                      SeparatorVisibility="None"
+                      BackgroundColor="#FFFFFF"
+                      HasUnevenRows="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="5" 
+                                  HorizontalOptions="FillAndExpand">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="9*" />
+                                </Grid.ColumnDefinitions>
+                                <ContentView Grid.Column="0">
+                                    <Image Source="{Binding MenuImage}" 
+                                           VerticalOptions="Center" 
+                                           WidthRequest="30" 
+                                           HeightRequest="30"/>
+                                </ContentView>
+                                <Label Text="{Binding Title}" 
+                                       Grid.Column="1" 
+                                       VerticalOptions="Center" 
+                                       TextColor="Black" 
+                                       FontSize="Medium" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+        <StackLayout Grid.Row="2"
+                     Orientation="Vertical" 
+                     Padding="16,5,16,5"
+                     BackgroundColor="White">
+                <Label x:Name="UserLabel" 
+                       HorizontalTextAlignment="Center" 
+                       FontAttributes="Bold" 
+                       TextColor="#4c96e8" 
+                       FontSize="Small" />
+                <Button Text="Logout" 
+                        x:Name="LogoutButton"
                         Clicked="LogoutUser"
                         BackgroundColor="#4c96e8"
                         TextColor="White" />
-
-                <Button  Text="Login" x:Name="LoginButton"
-                        Clicked="PromptLogin"
-                        BackgroundColor="#4c96e8"
-                        TextColor="White" />
-
-                <Label x:Name="AppInfoLabel"
-                       HorizontalTextAlignment="Center" FontSize="8" />
-            </StackLayout>
+                <Button  Text="Login" 
+                         x:Name="LoginButton"
+                         Clicked="PromptLogin"
+                         BackgroundColor="#4c96e8"
+                         TextColor="White" />
+            <Label x:Name="AppInfoLabel"
+                       HorizontalTextAlignment="Center" 
+                       FontSize="Micro" />
         </StackLayout>
     </Grid>
-
 </ContentPage>

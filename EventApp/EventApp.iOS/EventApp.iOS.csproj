@@ -113,9 +113,6 @@
     </ImageAsset>
     <BundleResource Include="Resources\holidaily_logo_white.png" />
     <BundleResource Include="Resources\down_active.png" />
-    <BundleResource Include="Resources\down.png" />
-    <BundleResource Include="Resources\trending.png" />
-    <BundleResource Include="Resources\up_active.png" />
     <BundleResource Include="Resources\up.png" />
     <BundleResource Include="Resources\user.png" />
     <BundleResource Include="Resources\reply.png" />
@@ -152,11 +149,7 @@
     <BundleResource Include="Resources\icon_splash_large.png" />
     <BundleResource Include="Resources\icon_splash_new.png" />
     <BundleResource Include="Resources\holidaily-logo-1-transparent.png" />
-    <BundleResource Include="Resources\share.png" />
     <BundleResource Include="Resources\Icon_Text.png" />
-    <BundleResource Include="Resources\search.png" />
-    <BundleResource Include="Resources\news.png" />
-    <BundleResource Include="Resources\premium.png" />
     <BundleResource Include="Resources\premiumbanner.png" />
     <BundleResource Include="Resources\Icon.png" />
     <BundleResource Include="Resources\celebrate_active.png" />
@@ -176,11 +169,8 @@
     <BundleResource Include="Resources\premiumbanner_text.png" />
     <BundleResource Include="Resources\rewards.png" />
     <BundleResource Include="Resources\star.png" />
-    <BundleResource Include="Resources\trophy.png" />
     <BundleResource Include="Resources\default_profile.png" />
     <BundleResource Include="Resources\default_profile_inverted.png" />
-    <BundleResource Include="Resources\pencil.png" />
-    <BundleResource Include="Resources\bell.png" />
     <BundleResource Include="Resources\holiday_banner_blue.png" />
   </ItemGroup>
   <ItemGroup>
@@ -245,31 +235,16 @@
     <EmbeddedResource Include="Resources\holidaily_logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\comment.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Assets.xcassets\logo_splash_screen.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\tomorrow_icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\today_icon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <BundleResource Include="Resources\past_icon.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\down.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\down_active.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\trending.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\up.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\user.png" />
@@ -282,7 +257,40 @@
     <ITunesArtwork Include="iTunesArtwork%402x" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\party_popper_icon.png" />
+    <BundleResource Include="Resources\holidaily_banner_Inverse.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Home_Menu_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Search_Menu_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Submit_Menu_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Holiday_Menu_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Popular_Menu_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\News_Menu_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Premium_Menu_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Rewards_Menu_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Comment_Main_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Share_Main_Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Notification_Main_Icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\EventApp\EventApp.projitems" Label="Shared" />
