@@ -89,9 +89,9 @@ namespace EventApp.Views
                 new HomeMenuItem {Id = MenuItemType.AddHoliday, Title="Submit Holiday", MenuImage="Submit_Menu_Icon.png"},
                 new HomeMenuItem {Id = MenuItemType.ConfettiLeaders, Title="Confetti Leaders", MenuImage="Holiday_Menu_Icon.png"},
                 new HomeMenuItem {Id = MenuItemType.Trending, Title="Popular", MenuImage="Popular_Menu_Icon.png"},
-                new HomeMenuItem {Id = MenuItemType.Updates, Title="News", MenuImage="News_Menu_Icon.png"},
-                new HomeMenuItem {Id = MenuItemType.Premium, Title="Premium", MenuImage="Premium_Menu_Icon.png"},
-                new HomeMenuItem {Id = MenuItemType.Rewards, Title="Rewards", MenuImage="Rewards_Menu_Icon.png"}
+                //new HomeMenuItem {Id = MenuItemType.Updates, Title="News", MenuImage="News_Menu_Icon.png"},
+                //new HomeMenuItem {Id = MenuItemType.Premium, Title="Premium", MenuImage="Premium_Menu_Icon.png"},
+                //new HomeMenuItem {Id = MenuItemType.Rewards, Title="Rewards", MenuImage="Rewards_Menu_Icon.png"}
             };
 
             ListViewMenu.ItemsSource = menuItems;
@@ -157,22 +157,24 @@ namespace EventApp.Views
             AppInfoLabel.Text = appInfo;
             if(isLoggedIn)
             {
+                HeaderBackground.BackgroundColor = Color.FromHex("FFFFFF");
                 DefaultHeader.IsVisible = false;
                 ProfileHeader.IsVisible = true;
                 LogoutButton.IsVisible = true;
                 LoginButton.IsVisible = false;
-                //HeaderDivider.IsVisible = true;
+                HeaderDivider.IsVisible = true;
                 UserLabel.Text = "Hey, " + currentUser + "!";
                 UserNameHeader.Text = currentUser;
                 UserPointsHeader.Text = confettiCount;
             }
             else
             {
+                HeaderBackground.BackgroundColor = Color.FromHex("4c96e8");
                 DefaultHeader.IsVisible = true;
                 ProfileHeader.IsVisible = false;
                 LogoutButton.IsVisible = false;
                 LoginButton.IsVisible = true;
-                //HeaderDivider.IsVisible = false;
+                HeaderDivider.IsVisible = false;
                 UserLabel.Text = "Hey there!";
             }
 

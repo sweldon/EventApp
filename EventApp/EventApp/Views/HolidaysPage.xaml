@@ -185,10 +185,10 @@
                                                     HorizontalOptions="Start">
 
 
-                                                    <ContentView.Margin>
+                                                    <Label.Margin>
                                                         <OnPlatform x:TypeArguments="Thickness"
                                                         Android="0,-2,0,0" iOS="0,-1,0,0"/>
-                                                    </ContentView.Margin>
+                                                    </Label.Margin>
 
                                                     <Label.GestureRecognizers>
                                                         <TapGestureRecognizer
@@ -215,7 +215,6 @@
                                                     Text="Share"
                                                     TextColor="#808080"
                                                     FontSize="Small"
-                                                    Margin="0, -1, 0, 0" 
                                                     VerticalTextAlignment="Center" >
                                                     <Label.GestureRecognizers>
                                                         <TapGestureRecognizer
