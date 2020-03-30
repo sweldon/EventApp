@@ -41,18 +41,15 @@
                                     </ContentView.Margin>
 
                                     <StackLayout>
-                                        <BoxView
-                                           HeightRequest=".5"
-                                               BackgroundColor="#DEDEDE"
-                                               HorizontalOptions="FillAndExpand" />
+   
                                         <StackLayout >
                                             <Grid HorizontalOptions="FillAndExpand">
                                            <Grid.Padding>
                                                     <OnPlatform x:TypeArguments="Thickness"
-                                                Android="10,5,5,0" iOS="8,10,8,0"/>
+                                                Android="10,10,10,0" iOS="12,12,12,0"/>
                                                 </Grid.Padding>
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="*" />
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
@@ -101,7 +98,7 @@
                                             <ContentView>
                                                 <ContentView.Padding>
                                                     <OnPlatform x:TypeArguments="Thickness"
-                                                    Android="10,0,10,0" iOS="14,5,14,5"/>
+                                                    Android="10,0,10,0" iOS="12,0,12,0"/>
                                                 </ContentView.Padding>
                                                 <Label Text="{Binding Blurb}" FontSize="14" />
                                             </ContentView>
