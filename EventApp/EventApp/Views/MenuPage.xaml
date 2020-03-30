@@ -64,7 +64,7 @@
                             <ColumnDefinition Width="33*"/>
                         </Grid.ColumnDefinitions>
 
-                     <Label IsVisible="{Binding isPremium}"
+                        <Label IsVisible="{Binding isPremium}"
                             Grid.Column="0"
                             x:Name="isPremiumLabel" 
                             TextColor="#4c96e8"
@@ -72,19 +72,16 @@
                             FontSize="Medium" 
                             FontAttributes="Bold" />
 
-                        <Frame BorderColor="#4c96e8" Padding="0"
-                                Grid.Column="0"
-                                CornerRadius="10"
-                                x:Name="PremiumFrame" IsVisible="False"
-                                HasShadow="False">
-                            <Button Text="Go Premium"
-                                Padding="0"
+                        <Button Text="Go Premium"
+                                CornerRadius="5"
+                                BorderColor="#4c96e8"
+                                BorderWidth="1"
                                 FontSize="Small"
                                 x:Name="goPremiumButton"
                                 Clicked="OpenPremium"
                                 BackgroundColor="#FFFFFF"
                                 TextColor="#4c96e8" />
-                        </Frame>
+                     
                     </Grid>
 
                 </StackLayout>

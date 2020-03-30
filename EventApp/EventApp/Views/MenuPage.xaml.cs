@@ -144,7 +144,7 @@ namespace EventApp.Views
                 UserLabel.Text = "Hey there!";
                 currentUser = null;
                 isPremium = false;
-                PremiumFrame.IsVisible = true;
+               // PremiumFrame.IsVisible = true;
                 goPremiumButton.IsVisible = true;
 
                 var menuPage = new MenuPage(); // Build hamburger menu
@@ -175,7 +175,7 @@ namespace EventApp.Views
                 UserLabel.Text = "Hey, " + currentUser + "!";
                 UserNameHeader.Text = currentUser;
                 UserPointsHeader.Text = confettiCount;
-                PremiumFrame.IsVisible = !isPremium;
+               // PremiumFrame.IsVisible = !isPremium;
                 goPremiumButton.IsVisible = !isPremium;
             }
             else
@@ -187,7 +187,7 @@ namespace EventApp.Views
                 LoginButton.IsVisible = true;
                 HeaderDivider.IsVisible = false;
                 UserLabel.Text = "Hey there!";
-                PremiumFrame.IsVisible = false;
+               // PremiumFrame.IsVisible = false;
                 goPremiumButton.IsVisible = false;
             }
 
