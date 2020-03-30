@@ -47,9 +47,9 @@
                                                HorizontalOptions="FillAndExpand" />
                                         <StackLayout >
                                             <Grid HorizontalOptions="FillAndExpand">
-                                                                                              <Grid.Padding>
+                                           <Grid.Padding>
                                                     <OnPlatform x:TypeArguments="Thickness"
-                                                Android="5,5,5,0" iOS="8,10,8,0"/>
+                                                Android="10,5,5,0" iOS="8,10,8,0"/>
                                                 </Grid.Padding>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
@@ -62,7 +62,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 
                                                 <Label Text="{Binding Name}"
-                                                    FontSize="Medium"
+                                                    FontSize="15"
                                                     FontAttributes="Bold"
                                                     Grid.Row="0"
                                                     Grid.Column="0"
@@ -76,14 +76,14 @@
                                                        HorizontalOptions="End"
                                                        x:Name="UpVoteImage"
                                                        WidthRequest="20"
-                                                       VerticalOptions="Start"
+                                             
                                                        />
 
                                                 <Label Text="{Binding Votes, StringFormat='{0}'}"
                                                     FontSize="Medium"
                                                     Grid.Row="0"
                                                     Grid.Column="2"
-                                                    VerticalOptions="Start"
+                       
                                                     HorizontalTextAlignment="End"/>
 
 

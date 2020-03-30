@@ -68,6 +68,13 @@ namespace EventApp.Views
 
         }
 
+        async void CancelRewards(object sender, EventArgs e)
+        {
+            this.IsEnabled = false;
+            await Navigation.PopModalAsync();
+            this.IsEnabled = true;
+        }
+
         public async void UpdateUserPoints()
         {
             try
