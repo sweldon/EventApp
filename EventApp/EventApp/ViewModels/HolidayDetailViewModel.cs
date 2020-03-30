@@ -21,6 +21,7 @@ namespace EventApp.ViewModels
         public Command LoadHolidayComments { get; set; }
         public Command GetMoreComments { get; set; }
         public ObservableCollection<CommentList> moreComments;
+        public string CommentLink { get; set; }
         public string HolidayId { get; set; }
         public string currentUser
         {
@@ -34,12 +35,16 @@ namespace EventApp.ViewModels
             }
         }
 
-        public HolidayDetailViewModel(string holidayId, Holiday holidayObject)
+        public HolidayDetailViewModel(string holidayId,
+            Holiday holidayObject = null,
+            string commentLink = null
+            )
         {
 
             // Coming in from a "Share" link
             Holiday = holidayObject;
             HolidayId = holidayId;
+            CommentLink = commentLink;
             GroupedCommentList = new ObservableCollection<CommentList>();
             LoadHolidayComments = new Command(async () => await ExecuteLoadCommentsCommand());
 
@@ -76,8 +81,21 @@ namespace EventApp.ViewModels
                     }
                     else
                     {
+
                         foreach(var thread in moreComments)
                         {
+                            // Set comment background
+                            foreach (var comment in thread)
+                            {
+                                if (CommentLink != null && comment.Id == CommentLink)
+                                {
+                                    comment.BackgroundColor = Color.FromHex("F0F8FF");
+                                }
+                                else
+                                {
+                                    comment.BackgroundColor = Color.FromHex("FFFFFF");
+                                }
+                            }
                             GroupedCommentList.Add(thread);
                         }
                         
@@ -112,6 +130,14 @@ namespace EventApp.ViewModels
                     var commentList = new CommentList();
                     foreach (var comment in group)
                     {
+                        if (CommentLink != null && comment.Id == CommentLink)
+                        {
+                            comment.BackgroundColor = Color.FromHex("F0F8FF");
+                        }
+                        else
+                        {
+                            comment.BackgroundColor = Color.FromHex("FFFFFF");
+                        }
                         commentList.Add(comment);
                     }
                     allComments.Insert(0, commentList);

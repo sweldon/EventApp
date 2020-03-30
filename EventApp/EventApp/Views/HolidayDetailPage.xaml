@@ -178,7 +178,7 @@
                     <DataTemplate>
                         <ViewCell >
 
-                            <ContentView HorizontalOptions="FillAndExpand" Padding="{Binding ThreadPadding}" BackgroundColor="White">
+                            <ContentView HorizontalOptions="FillAndExpand" Padding="{Binding ThreadPadding}" BackgroundColor="{Binding BackgroundColor}">
 
                                 <StackLayout >
 

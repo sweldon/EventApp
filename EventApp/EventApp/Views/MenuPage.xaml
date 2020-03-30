@@ -56,12 +56,36 @@
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
-                    <Label IsVisible="{Binding isPremium}" 
-                           x:Name="isPremiumLabel" 
-                           TextColor="White" 
-                           FontSize="Medium" 
-                           FontAttributes="Bold" />
 
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="66*" />
+                            <ColumnDefinition Width="33*"/>
+                        </Grid.ColumnDefinitions>
+
+                     <Label IsVisible="{Binding isPremium}"
+                            Grid.Column="0"
+                            x:Name="isPremiumLabel" 
+                            TextColor="#4c96e8"
+                            Text="Premium"
+                            FontSize="Medium" 
+                            FontAttributes="Bold" />
+
+                        <Frame BorderColor="#4c96e8" Padding="0"
+                                Grid.Column="0"
+                                CornerRadius="10"
+                                x:Name="PremiumFrame" IsVisible="False"
+                                HasShadow="False">
+                            <Button Text="Go Premium"
+                                Padding="0"
+                                FontSize="Small"
+                                x:Name="goPremiumButton"
+                                Clicked="OpenPremium"
+                                BackgroundColor="#FFFFFF"
+                                TextColor="#4c96e8" />
+                        </Frame>
+                    </Grid>
 
                 </StackLayout>
             </Grid>
@@ -74,7 +98,7 @@
        
 
         <!--Menu List-->
-        <StackLayout Grid.Row="1">
+        <StackLayout Grid.Row="1" Spacing="0">
 
         <BoxView HeightRequest=".5"
             BackgroundColor="#D3D3D3"
@@ -97,8 +121,8 @@
                                 <ContentView Grid.Column="0">
                                     <Image Source="{Binding MenuImage}" 
                                            VerticalOptions="Center" 
-                                           WidthRequest="32" 
-                                           HeightRequest="32"/>
+                                           WidthRequest="24" 
+                                           HeightRequest="24"/>
                                 </ContentView>
                                 <Label Text="{Binding Title}" 
                                        Grid.Column="1" 
@@ -109,9 +133,23 @@
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
+
+                <!--<ListView.Footer>
+                <StackLayout Spacing="0">
+                <BoxView HeightRequest=".5"
+                BackgroundColor="#D3D3D3"
+                HorizontalOptions="FillAndExpand"
+                />
+                </StackLayout >
+                </ListView.Footer>-->
             </ListView>
+
+            <BoxView HeightRequest=".5"
+            BackgroundColor="#D3D3D3"
+            HorizontalOptions="FillAndExpand" />
                  
         </StackLayout>
+
 
         <!--Login/Logout-->
         <StackLayout Grid.Row="2"

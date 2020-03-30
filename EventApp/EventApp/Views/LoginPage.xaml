@@ -6,14 +6,8 @@
              Title="{Binding Title}">
     
     
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Back" Clicked="CancelLogin">
-            <ToolbarItem.Icon>
-                <OnPlatform x:TypeArguments="FileImageSource">
-                    <On Platform="UWP" Value="cancel.png"/>
-                </OnPlatform>
-            </ToolbarItem.Icon>
-        </ToolbarItem>
+     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Back" Clicked="CancelLogin" />
     </ContentPage.ToolbarItems>
     
     <ContentPage.BindingContext>

@@ -238,13 +238,22 @@ namespace EventApp.Views
                 }
 
                 HolidayDetailList.IsVisible = true;
+
+                if (viewModel.CommentLink != null)
+                {
+                    // TODO scroll to comment linked
+                    //HolidayDetailList.ScrollTo(viewModel.CommentLink, ScrollToPosition.MakeVisible, true);
+                    //Debug.WriteLine($"Index of comment {viewModel.GroupedCommentList.IndexOf(viewModel.CommentLink)}");
+                }
+
             }
             catch
             {
                 await DisplayAlert("Error", "We couldn't fetch the data for this holiday", "OK");
                 await Navigation.PopAsync();
             }
-           
+
+
         }
 
         async void OnTapGestureRecognizerTapped(object sender, EventArgs args)

@@ -61,6 +61,12 @@ namespace EventApp.Views
             BindingContext = this;
         }
 
+        async void CancelPremium(object sender, EventArgs e)
+        {
+            this.IsEnabled = false;
+            await Navigation.PopModalAsync();
+            this.IsEnabled = true;
+        }
 
         async void MakePurchase(object sender, EventArgs e)
         {

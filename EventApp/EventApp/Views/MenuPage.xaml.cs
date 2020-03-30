@@ -112,6 +112,13 @@ namespace EventApp.Views
             LoginButton.IsEnabled = true;
         }
 
+        public async void OpenPremium(object sender, EventArgs e)
+        {
+            goPremiumButton.IsEnabled = false;
+            await Navigation.PushModalAsync(new NavigationPage(new Premium()));
+            goPremiumButton.IsEnabled = true;
+        }
+
         public async void LogoutUser(object sender, EventArgs e)
         {
 
@@ -137,6 +144,8 @@ namespace EventApp.Views
                 UserLabel.Text = "Hey there!";
                 currentUser = null;
                 isPremium = false;
+                PremiumFrame.IsVisible = true;
+                goPremiumButton.IsVisible = true;
 
                 var menuPage = new MenuPage(); // Build hamburger menu
                 NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
@@ -166,6 +175,8 @@ namespace EventApp.Views
                 UserLabel.Text = "Hey, " + currentUser + "!";
                 UserNameHeader.Text = currentUser;
                 UserPointsHeader.Text = confettiCount;
+                PremiumFrame.IsVisible = !isPremium;
+                goPremiumButton.IsVisible = !isPremium;
             }
             else
             {
@@ -176,6 +187,8 @@ namespace EventApp.Views
                 LoginButton.IsVisible = true;
                 HeaderDivider.IsVisible = false;
                 UserLabel.Text = "Hey there!";
+                PremiumFrame.IsVisible = false;
+                goPremiumButton.IsVisible = false;
             }
 
         }

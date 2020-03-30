@@ -30,7 +30,7 @@ namespace EventApp.Views
         {
             InitializeComponent();
             BindingContext = viewModel = new ConfettiLeaderViewModel();
-            Title = "Confetti Leaders";
+            Title = "Top 20 Confetti Leaders";
 
         }
 

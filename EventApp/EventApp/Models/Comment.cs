@@ -103,8 +103,23 @@ namespace EventApp.Models
         public string HolidayId { get; set; }
         public string TimeSince { get; set; }
         public Thickness ThreadPadding { get; set; }
-
         public string Parent { get; set; }
+
+        private Color bg;
+        public Color BackgroundColor
+        {
+            get { return bg; }
+            set
+            {
+                if (bg == value)
+                {
+                    return;
+                }
+                bg = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         private string upvote;
         public string UpVoteStatus

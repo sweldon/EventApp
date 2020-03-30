@@ -219,7 +219,12 @@ namespace EventApp.Services
             { 
                 string TimeAgo = commentJSON.time_since;
 
-                individualComment = new Comment() { Content = commentJSON.content, HolidayId = commentJSON.holiday_id, UserName = commentJSON.user, TimeSince = TimeAgo };
+                individualComment = new Comment() {
+                    Id = commentJSON.id,
+                    Content = commentJSON.content,
+                    HolidayId = commentJSON.holiday_id,
+                    UserName = commentJSON.user,
+                    TimeSince = TimeAgo };
             }
             catch
             {

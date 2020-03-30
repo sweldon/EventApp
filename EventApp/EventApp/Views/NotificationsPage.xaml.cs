@@ -33,7 +33,7 @@ namespace EventApp.Views
         {
             InitializeComponent();
             BindingContext = viewModel = new NotificationsViewModel(); ;
-            Title = "Your Recent Activity";
+            Title = "Notifications";
     
             NotificationsList.ItemSelected += OnItemSelected;
         }
@@ -52,26 +52,30 @@ namespace EventApp.Views
             ((ListView)sender).SelectedItem = null;
             if (args.SelectedItem == null)
             {
+                this.IsEnabled = true;
                 return;
             }
             var notif = args.SelectedItem as Notification;
 
-            if(notif.Type == "Comment")
+            if (notif.Type == "Comment")
             {
-                comment = await viewModel.CommentStore.GetCommentById(notif.Id);
-                if(comment == null)
+                try
                 {
-                    await DisplayAlert("Uh oh!", "The author has deleted this comment", "Fine");
+                    //await Navigation.PushAsync(new CommentPage(new CommentViewModel(notif.Id, comment.HolidayId)));
+                    comment = await viewModel.CommentStore.GetCommentById(notif.Id);
+                    Holiday holiday = await viewModel.HolidayStore.GetHolidayById(comment.HolidayId);
+                    await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(comment.HolidayId, holiday, notif.Id)));
+                    this.IsEnabled = true;
                 }
-                else
+                catch
                 {
-                    await Navigation.PushAsync(new CommentPage(new CommentViewModel(notif.Id, comment.HolidayId)));
+                    await DisplayAlert("Uh oh!", "We could no longer find that comment.", "Fine");
+                    this.IsEnabled = true;
                 }
+
                 
             }
             this.IsEnabled = true;
-
-
 
         }
 
@@ -79,8 +83,8 @@ namespace EventApp.Views
         {
             base.OnAppearing();
 
-            //if (viewModel.Notifications.Count == 0)
-            viewModel.LoadNotifications.Execute(null);
+            if (viewModel.Notifications.Count == 0)
+                viewModel.LoadNotifications.Execute(null);
             AdBanner.IsVisible = !isPremium;
 
         }
