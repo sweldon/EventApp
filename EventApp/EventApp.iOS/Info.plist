@@ -72,9 +72,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>eventapp.com</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.2.13</string>
+	<string>0.2.14</string>
 	<key>CFBundleVersion</key>
-	<string>0.2.13</string>
+	<string>0.2.14</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
 	<key>CFBundleName</key>

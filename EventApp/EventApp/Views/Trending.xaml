@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.Trending"
-             xmlns:local="clr-namespace:EventApp"  
+             xmlns:local="clr-namespace:EventApp"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              Title="{Binding Title}">
 
     <StackLayout>
@@ -103,7 +104,17 @@
                                                 <Label Text="{Binding Blurb}" FontSize="14" />
                                             </ContentView>
                                             <ContentView Padding="0, 0, 0, 10">
-                                                   <Image HeightRequest="150" Source="{Binding HolidayImage}" Aspect="AspectFill" />
+                                                
+                                                <ffimageloading:CachedImage 
+                                                    Source="{Binding HolidayImage}"
+                                                    Aspect="AspectFill"
+                                                    RetryCount= "3"
+                                                    RetryDelay= "600"
+                                                    HeightRequest="150"
+                                                    LoadingPlaceholder="Loading_Image.gif"
+                                                />
+
+                   
                                             </ContentView>
 
                                         </StackLayout>
