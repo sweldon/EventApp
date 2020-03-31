@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.SearchPage"
               Title="{Binding Title}"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
               xmlns:local="clr-namespace:EventApp"  >
 
     <StackLayout VerticalOptions="FillAndExpand" Spacing="0">
@@ -139,14 +140,20 @@
                                             </ContentView>
 
                                             <ContentView HeightRequest="150" >
+                                                <ContentView.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                Tapped="ImageToHoliday"  />
+                                                </ContentView.GestureRecognizers>
 
+                                                <ffimageloading:CachedImage
+                                                Source="{Binding HolidayImage}"
+                                                Aspect="AspectFill"
+                                                RetryCount= "3"
+                                                RetryDelay= "600"
+                                                HeightRequest="150"
+                                                LoadingPlaceholder="Loading_Image.gif"
+                                                />
 
-                                                <Image HeightRequest="150" Source="{Binding HolidayImage}" Aspect="AspectFill" >
-                                                    <Image.GestureRecognizers>
-                                                        <TapGestureRecognizer
-                                                        Tapped="ImageToHoliday"  />
-                                                    </Image.GestureRecognizers>
-                                                </Image>
 
                                             </ContentView>
 

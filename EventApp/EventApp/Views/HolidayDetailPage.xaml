@@ -39,11 +39,9 @@
                         </ContentView>
 
                         <ContentView>
-                                <!--TODO add error and loading image-->
                             <ffimageloading:CachedImage
                                 x:Name="HolidayImageSource"
                                 Aspect="AspectFill"
-                                CacheDuration= "0"
                                 RetryCount= "3"
                                 RetryDelay= "600"
                                 HeightRequest="150"

@@ -134,13 +134,9 @@
                                                     </ContentView.GestureRecognizers>
 
 
-                                                <!--TODO add error and loading image-->
-                                                <!--LoadingPlaceholder= "LoaderImage
-                                                ErrorPlaceholder= "ErrorImage-->
                                                 <ffimageloading:CachedImage 
                                                     Source="{Binding HolidayImage}"
                                                     Aspect="AspectFill"
-                                                    CacheDuration= "0"
                                                     RetryCount= "3"
                                                     RetryDelay= "600"
                                                     LoadingPlaceholder="Loading_Image.gif"
