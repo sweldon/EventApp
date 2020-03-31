@@ -10,7 +10,6 @@
 
     
     <ContentPage.ToolbarItems>
-        <ToolbarItem Name="ProfileToolbar" Icon="Gift.png" Clicked="OpenRewards" x:Name="RewardsBtn" />
         <ToolbarItem Name="ProfileToolbar" Icon="Notification_Main_Icon.png" Clicked="OpenNotifications" x:Name="BellBtn" />
     </ContentPage.ToolbarItems>
 

@@ -17,6 +17,7 @@ namespace EventApp.Models
         public bool ShowHolidayContent { get; set; }
         public bool ShowAd { get; set; }
         public string Date { get; set; }
+        public bool Active { get; set; }
 
         public string votes;
         public string Votes

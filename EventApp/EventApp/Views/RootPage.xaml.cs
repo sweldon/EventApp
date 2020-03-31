@@ -29,14 +29,6 @@ namespace EventApp.Views
             BellBtn.IsEnabled = true;
         }
 
-        async void OpenRewards(object sender, EventArgs e)
-        {
-            RewardsBtn.IsEnabled = false;
-            await Navigation.PushModalAsync(new NavigationPage(new RewardsPage()));
-            await Task.Delay(2000);
-            RewardsBtn.IsEnabled = true;
-        }
-
         public async Task NavigateFromMenu(int id)
         {
             if (!MenuPages.ContainsKey(id))

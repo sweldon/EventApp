@@ -84,8 +84,7 @@ namespace EventApp.Views
                 if (e.Item == null) return;
                 ((ListView)sender).SelectedItem = null;
             };
-            viewModel.Title = todayString + ", " + monthString + " " + dayNumber;
-
+            viewModel.Title = monthString + " " + dayNumber;
         }
 
         async void ImageToHoliday(object sender, EventArgs args)
