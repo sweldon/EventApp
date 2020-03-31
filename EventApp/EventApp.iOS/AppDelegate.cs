@@ -30,6 +30,7 @@ namespace EventApp.iOS
             global::Xamarin.Forms.Forms.Init();
             ImageCircleRenderer.Init();
             MobileAds.Configure("ca-app-pub-9382412071078825~2829867889");
+            FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

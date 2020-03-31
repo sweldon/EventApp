@@ -92,7 +92,7 @@ namespace EventApp.Views
         {
          
 
-            var item = (sender as Image).BindingContext as Holiday;
+            var item = (sender as ContentView).BindingContext as Holiday;
             string holidayId = item.Id;
             if (holidayId != "-1") // Ad
             {
