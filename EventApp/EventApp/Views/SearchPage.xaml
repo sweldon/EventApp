@@ -213,7 +213,7 @@
                                                 <Image Source="celebrate_active.png" Grid.Column="6"  x:Name="UpVoteImage" WidthRequest="16" />
 
                                                 <Label Grid.Column="7"  Grid.Row="0" Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small"
-                                                     VerticalTextAlignment="Center" Margin="0,-2,0,0" >
+                                                     VerticalTextAlignment="Center" Margin="0,-1,0,0" >
           
                                                 </Label>
 
