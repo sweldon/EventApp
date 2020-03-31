@@ -163,7 +163,7 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <ContentView Grid.Column="0">
-                                                    <Image Source="comment.png" VerticalOptions="Center" WidthRequest="16" >
+                                                    <Image Source="Comment_Main_Icon.png" VerticalOptions="Center" WidthRequest="16" >
 
                                                         <Image.GestureRecognizers>
                                                             <TapGestureRecognizer
@@ -187,7 +187,7 @@
 
                                                 <ContentView Grid.Column="3" >
 
-                                                    <Image Source="share.png" VerticalOptions="Center" WidthRequest="16" >
+                                                    <Image Source="Share_Main_Icon.png" VerticalOptions="Center" WidthRequest="16" >
                                                         <Image.GestureRecognizers>
                                                             <TapGestureRecognizer
                                                                      Tapped="Share"  />
@@ -196,7 +196,7 @@
                                                 </ContentView>
 
                                                 <Label Grid.Column="4" Text="Share" FontSize="12"
-                                                             VerticalTextAlignment="Center" Margin="0,-2,0,0">
+                                                             VerticalTextAlignment="Center">
                                                     <Label.GestureRecognizers>
                                                         <TapGestureRecognizer
                                                              Tapped="Share"  />

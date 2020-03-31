@@ -47,24 +47,25 @@
                                 RetryCount= "3"
                                 RetryDelay= "600"
                                 HeightRequest="150"
+                                LoadingPlaceholder="Loading_Image.gif"
                             />
                         </ContentView>
                         <Grid Padding="10, 0, 10, 0" >
 
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="40*" />
-                                                </Grid.RowDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40*" />
+                            </Grid.RowDefinitions>
                                                 
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
                             <ContentView Grid.Column="0" Grid.Row="0">
 
@@ -185,7 +186,7 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell >
-
+                           
                             <ContentView HorizontalOptions="FillAndExpand" Padding="{Binding ThreadPadding}" BackgroundColor="{Binding BackgroundColor}">
 
                                 <StackLayout >

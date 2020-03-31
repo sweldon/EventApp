@@ -23,16 +23,16 @@ namespace EventApp
         public Holiday OpenHolidayPage { get; set; }
         public Comment OpenComment { get; set; }
 
-        #if DEBUG
-            #if __IOS__
-                public static string HolidailyHost = "http://localhost:8888";
-            #else
-                public static string HolidailyHost = "http://10.0.2.2:8000";
-            #endif
-        #else
-            public static string HolidailyHost = "https://holidailyapp.com";
-        #endif
-
+//        #if DEBUG
+//            #if __IOS__
+//                public static string HolidailyHost = "http://localhost:8888";
+//#else
+//                public static string HolidailyHost = "http://10.0.2.2:8000";
+//#endif
+//#else
+//            public static string HolidailyHost = "https://holidailyapp.com";
+//#endif
+        public static string HolidailyHost = "https://holidailyapp.com";
 
         public static HttpClient globalClient = new HttpClient();
         // App-wide reusable instance for choosing random ads

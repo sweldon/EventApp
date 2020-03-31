@@ -61,7 +61,10 @@ namespace EventApp.Views
 
             CrossMTAdmob.Current.OnRewarded += (object sender, MTEventArgs e) => {
 
-                ClaimReward("5");
+                if (isLoggedIn)
+                {
+                    ClaimReward("5");
+                }
                 WatchAdButton.Text = "Watch Another Ad for More Rewards!";
                 WatchAdButton.IsEnabled = true;
                 
@@ -148,17 +151,8 @@ namespace EventApp.Views
         public async void WatchAd(object sender, EventArgs e)
         {
 
-            if (!isLoggedIn)
-            {
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
-            }
-            else
-            {
-                WatchAdButton.Text = "Loading video...";
-                CrossMTAdmob.Current.ShowRewardedVideo();
-            }
-
-    
+            WatchAdButton.Text = "Loading video...";
+            CrossMTAdmob.Current.ShowRewardedVideo();
         }
 
 

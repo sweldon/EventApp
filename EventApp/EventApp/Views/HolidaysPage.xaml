@@ -143,7 +143,7 @@
                                                     CacheDuration= "0"
                                                     RetryCount= "3"
                                                     RetryDelay= "600"
-                                                    HeightRequest="150"
+                                                    LoadingPlaceholder="Loading_Image.gif"
                                                 />
 
 

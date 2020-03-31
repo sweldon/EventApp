@@ -173,6 +173,7 @@
     <BundleResource Include="Resources\default_profile_inverted.png" />
     <BundleResource Include="Resources\holiday_banner_blue.png" />
     <BundleResource Include="Resources\Gift.png" />
+    <BundleResource Include="Resources\Loading_Image.gif" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
