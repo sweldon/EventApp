@@ -91,7 +91,8 @@ namespace EventApp.Views
                 new HomeMenuItem {Id = MenuItemType.Trending, Title="Popular", MenuImage="Popular_Menu_Icon.png"},
                 //new HomeMenuItem {Id = MenuItemType.Updates, Title="News", MenuImage="News_Menu_Icon.png"},
                 //new HomeMenuItem {Id = MenuItemType.Premium, Title="Premium", MenuImage="Premium_Menu_Icon.png"},
-                new HomeMenuItem {Id = MenuItemType.Rewards, Title="Get Confetti", MenuImage="Gift.png"}
+                new HomeMenuItem {Id = MenuItemType.Rewards, Title="Get Confetti", MenuImage="Gift.png"},
+                new HomeMenuItem {Id = MenuItemType.About, Title="About Holidaily", MenuImage="News_Menu_Icon.png"}
             };
 
             ListViewMenu.ItemsSource = menuItems;

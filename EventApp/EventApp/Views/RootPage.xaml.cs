@@ -62,6 +62,9 @@ namespace EventApp.Views
                     case (int)MenuItemType.ConfettiLeaders:
                         MenuPages.Add(id, new NavigationPage(new ConfettiLeaders()));
                         break;
+                    case (int)MenuItemType.About:
+                        MenuPages.Add(id, new NavigationPage(new About()));
+                        break;
                 }
             }
 

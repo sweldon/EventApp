@@ -5,9 +5,10 @@ using Xamarin.Forms.Xaml;
 using MarcTron.Plugin;
 using System.Net.Http;
 using Newtonsoft.Json;
-# if __IOS__
 using MarcTron.Plugin.CustomEventArgs;
-# endif
+#if __IOS__
+using MarcTron.Plugin.CustomEventArgs;
+#endif
 namespace EventApp.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]

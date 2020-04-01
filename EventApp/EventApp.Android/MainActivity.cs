@@ -37,6 +37,9 @@ namespace EventApp.Droid
             // In-app purchase
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
 
+            // FFImageLoading
+            FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
+
             var data = Intent?.Data?.GetQueryParameter("id");
             if (!string.IsNullOrEmpty(data))
             {
