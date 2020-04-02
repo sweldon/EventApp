@@ -52,7 +52,6 @@ namespace EventApp.Views
             ((ListView)sender).SelectedItem = null;
             if (args.SelectedItem == null)
             {
-                this.IsEnabled = true;
                 return;
             }
             var notif = args.SelectedItem as Notification;
@@ -65,18 +64,14 @@ namespace EventApp.Views
                     comment = await viewModel.CommentStore.GetCommentById(notif.Id);
                     Holiday holiday = await viewModel.HolidayStore.GetHolidayById(comment.HolidayId);
                     await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(comment.HolidayId, holiday, notif.Id)));
-                    this.IsEnabled = true;
                 }
                 catch
                 {
                     await DisplayAlert("Uh oh!", "We could no longer find that comment.", "Fine");
                     this.IsEnabled = true;
                 }
-
-                
             }
             this.IsEnabled = true;
-
         }
 
         protected override void OnAppearing()
