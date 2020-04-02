@@ -32,7 +32,6 @@ namespace EventApp.Views
             InitializeComponent();
             BindingContext = viewModel = new UpdateViewModel();
             Title = "Holidaily News";
-            UpdateList.ItemSelected += Selected;
         }
 
 
@@ -43,16 +42,6 @@ namespace EventApp.Views
             //if (viewModel.Notifications.Count == 0)
             viewModel.LoadUpdates.Execute(null);
             AdBanner.IsVisible = !isPremium;
-
-        }
-
-        async void Selected(object sender, SelectedItemChangedEventArgs args)
-        {
-            ((ListView)sender).SelectedItem = null;
-            if (args.SelectedItem == null)
-            {
-                return;
-            }
 
         }
 

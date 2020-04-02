@@ -1,4 +1,6 @@
 ﻿using System;
+using Xamarin.Forms;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -27,7 +29,7 @@ namespace EventApp.Views
             }
         }
 
-        public string isLoggedIn
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -39,6 +41,19 @@ namespace EventApp.Views
             }
         }
 
+        public bool isPremium
+        {
+            get { return Settings.IsPremium; }
+            set
+            {
+                if (Settings.IsPremium == value)
+                    return;
+                Settings.IsPremium = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public NavigationPage NavigationPage { get; private set; }
         public LimboPage()
         {
             InitializeComponent();
@@ -52,8 +67,20 @@ namespace EventApp.Views
 
         public async void SwitchAccounts(object sender, EventArgs e)
         {
-            isLoggedIn = "no";
-            await DisplayAlert("Cool", "This account has been removed. Please relaunch the app.", "OK");
+            var menuPage = new MenuPage(); // Build hamburger menu
+            NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
+            var rootPage = new RootPage(); // Root handles master detail navigation
+            rootPage.Master = menuPage; // Menu
+            rootPage.Detail = NavigationPage; // Content
+            Application.Current.MainPage = rootPage; // Set root to built master detail
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            isLoggedIn = false;
+            currentUser = null;
+            isPremium = false;
         }
 
 

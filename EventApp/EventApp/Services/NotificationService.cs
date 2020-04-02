@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using EventApp.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
-using System.Diagnostics;
 
 namespace EventApp.Services
 {
@@ -14,10 +11,6 @@ namespace EventApp.Services
 
         List<Holiday> items;
         List<Notification> notifications;
-        Holiday individualHoliday;
-        Dictionary<string, string> holidayResult;
-
-        HttpClient client = new HttpClient();
 
         public string currentUser
         {
@@ -34,26 +27,24 @@ namespace EventApp.Services
         {
             notifications = new List<Notification>();
             var values = new Dictionary<string, string>{
-                   { "user", currentUser },
+                   { "username", currentUser },
                 };
 
             var content = new FormUrlEncodedContent(values);
 
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_user_notifications/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/notifications/", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-            dynamic notifList = responseJSON.Notifications;
+            dynamic notifList = responseJSON.results;
             foreach (var n in notifList)
             {
-                string type = n.type;
-                string id = n.id;
-                bool read = n.read;
-                string commentContent = n.content;
-                string notifTimestamp = n.timestamp;
-                string TimeAgo = Time.GetRelativeTime(notifTimestamp);
-
-                notifications.Insert(0, new Notification() { Id = id, Type = type, Read = read, Content = commentContent, TimeSince = TimeAgo });
+                notifications.Insert(0, new Notification() {
+                    Id = n.notification_id,
+                    Type = n.notification_type,
+                    Read = n.read,
+                    Content = n.content,
+                    TimeSince = n.time_since });
             }
 
             return await Task.FromResult(notifications);
@@ -63,24 +54,20 @@ namespace EventApp.Services
         {
             notifications = new List<Notification>();
             items = new List<Holiday>();
-            var response = await client.GetAsync(App.HolidailyHost + "/portal/get_updates/");
+            var response = await App.globalClient.GetAsync(App.HolidailyHost + "/news");
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-            dynamic notifList = responseJSON.Notifications;
+            dynamic notifList = responseJSON.results;
 
             foreach (var n in notifList)
             {
-                string updateContent = n.content;
-                string notifTimestamp = n.timestamp;
-                string TimeAgo = Time.GetRelativeTime(notifTimestamp);
                 notifications.Insert(0, new Notification() {
                     Title = n.title,
-                    Content = updateContent,
-                    TimeSince = TimeAgo,
+                    Content = n.content,
+                    TimeSince = n.time_since,
                     Author = n.author
                 });
             }
-
             return await Task.FromResult(notifications);
         }
 

@@ -7,7 +7,6 @@ using Microsoft.AppCenter.Push;
 using Microsoft.AppCenter.Analytics;
 using EventApp.Models;
 using EventApp.ViewModels;
-using EventApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -23,9 +22,21 @@ namespace EventApp
         public NavigationPage NavigationPage { get; private set; }
         public Holiday OpenHolidayPage { get; set; }
         public Comment OpenComment { get; set; }
-        public static string HolidailyHost = "https://holidailyapp.com";
+
+        #if DEBUG
+            #if __IOS__
+                    public static string HolidailyHost = "http://localhost:8888";
+            #else
+                    public static string HolidailyHost = "http://10.0.2.2:8000";
+            #endif
+        #else
+            public static string HolidailyHost = "https://holidailyapp.com";
+        #endif
+
+        public static HttpClient globalClient = new HttpClient();
         // App-wide reusable instance for choosing random ads
         public static Random randomGenerator = new Random();
+
         public string devicePushId
         {
             get { return Settings.DevicePushId; }
@@ -50,8 +61,6 @@ namespace EventApp
             }
         }
 
-        public static HttpClient client = new HttpClient();
-
         public bool isPremium
         {
             get { return Settings.IsPremium; }
@@ -62,20 +71,6 @@ namespace EventApp
                 Settings.IsPremium = value;
                 OnPropertyChanged();
             }
-        }
-
-
-        public static async Task<bool> CheckPremium(string userName)
-        {
-            var values = new Dictionary<string, string>{
-                   { "username", userName }
-            };
-            var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/is_premium/", content);
-            var responseString = await response.Content.ReadAsStringAsync();
-            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-            return responseJSON.is_premium;
-
         }
 
         public string currentUser
@@ -90,7 +85,19 @@ namespace EventApp
             }
         }
 
-        public string isLoggedIn
+        public string confettiCount
+        {
+            get { return Settings.ConfettiCount; }
+            set
+            {
+                if (Settings.ConfettiCount == value)
+                    return;
+                Settings.ConfettiCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -119,7 +126,7 @@ namespace EventApp
         {
 
 
-
+            
 
             if (!AppCenter.Configured){
                 Push.PushNotificationReceived += (sender, e) =>
@@ -143,13 +150,15 @@ namespace EventApp
                             string commentId = e.CustomData["comment_id"];
                             string holidayId = e.CustomData["holiday_id"];
 
-                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
-                            NavigationPage.PushAsync(new CommentPage(new CommentViewModel(commentId, holidayId)));
+                            //NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
+                            //NavigationPage.PushAsync(new CommentPage(new CommentViewModel(commentId, holidayId)));
+
+                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null, commentId)));
                         }
                         else if (e.CustomData.ContainsKey("holiday_id"))
                         {
                             string holidayId = e.CustomData["holiday_id"];
-                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
+                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
                         }
                     }
                     else
@@ -180,25 +189,37 @@ namespace EventApp
             devicePushId = AppCenter.GetInstallIdAsync().Result.Value.ToString();
 
 
-            if (isLoggedIn == "yes")
+            if (isLoggedIn)
             {
-                var values = new Dictionary<string, string>{
-                   { "username", currentUser },
-                };
-
-                var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(App.HolidailyHost + "/portal/verify_account/", content);
-                var responseString = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(responseString);
-                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                bool active = responseJSON.active;
-                if (!active)
+                try
                 {
-                    App.Current.MainPage = new NavigationPage(new LimboPage());
+                    var values = new Dictionary<string, string>{
+                        { "username", currentUser },
+                        { "device_id", devicePushId },
+                    };
+
+                    var content = new FormUrlEncodedContent(values);
+                    var response = await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                    bool active = responseJSON.results.is_active;
+                    isPremium = responseJSON.results.is_premium;
+                    confettiCount = responseJSON.results.confetti;
+                    if (!active)
+                    {
+                        App.Current.MainPage = new NavigationPage(new LimboPage());
+                    }
+
+                }
+                catch
+                {
+                    // Reset labels and global settings
+                    isLoggedIn = false;
+                    currentUser = null;
+                    isPremium = false;
                 }
 
-                // Check Premium status
-                isPremium = await CheckPremium(currentUser);
+
             }
             else
             {
@@ -209,7 +230,6 @@ namespace EventApp
 
         async void AlertUser(string commentId, string holidayId, string commentUser)
         {
-
             var title = commentUser + " mentioned you!";   
             var userAlert = await Application.Current.MainPage.DisplayAlert(title, "", "Go to Comment", "Close");
             if (userAlert) {
@@ -219,9 +239,10 @@ namespace EventApp
                 rootPage.Master = menuPage; // Menu
                 rootPage.Detail = NavigationPage; // Content
                 MainPage = rootPage; // Set root to built master detail
-                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
-                //OpenComment = new Comment { Id = commentId, Content = content, UserName = commentUser, TimeSince = TimeAgo };
-                await NavigationPage.PushAsync(new CommentPage(new CommentViewModel(commentId, holidayId)));
+                //await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
+                ////OpenComment = new Comment { Id = commentId, Content = content, UserName = commentUser, TimeSince = TimeAgo };
+                //await NavigationPage.PushAsync(new CommentPage(new CommentViewModel(commentId, holidayId)));
+                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null, commentId)));
             }
 
         }
@@ -233,7 +254,7 @@ namespace EventApp
             var userAlert = await Application.Current.MainPage.DisplayAlert(title, "Want to see a random one?", "OK", "Close");
             if (userAlert)
             {
-                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
+                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
             }
         }
 

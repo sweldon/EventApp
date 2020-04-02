@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using MarcTron.Plugin;
-using System.Diagnostics;
-using EventApp.Services;
 using System.Net.Http;
 using Newtonsoft.Json;
-
+using MarcTron.Plugin.CustomEventArgs;
+#if __IOS__
+using MarcTron.Plugin.CustomEventArgs;
+#endif
 namespace EventApp.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class RewardsPage : ContentPage
 	{
 
-        public string isLoggedIn
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -64,7 +62,10 @@ namespace EventApp.Views
 
             CrossMTAdmob.Current.OnRewarded += (object sender, MTEventArgs e) => {
 
-                ClaimReward("video", "5");
+                if (isLoggedIn)
+                {
+                    ClaimReward("5");
+                }
                 WatchAdButton.Text = "Watch Another Ad for More Rewards!";
                 WatchAdButton.IsEnabled = true;
                 
@@ -75,22 +76,28 @@ namespace EventApp.Views
 
         public async void UpdateUserPoints()
         {
-            var values = new Dictionary<string, string>{
-            { "user", currentUser }
-            };
+            try
+            {
+                var values = new Dictionary<string, string>{
+                { "username", currentUser }
+                };
 
-            var content = new FormUrlEncodedContent(values);
-            HttpClient client = new HttpClient();
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/get_user_rewards/", content);
-            var responseString = await response.Content.ReadAsStringAsync();
+                var content = new FormUrlEncodedContent(values);
+                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/user/", content);
+                var responseString = await response.Content.ReadAsStringAsync();
 
-            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                string points = responseJSON.results.ContainsKey("confetti") ? responseJSON.results.confetti.ToString() : "0";
+                PointsLabel.Text = "You have " + points + " points!";
+            }
+            catch
+            {
+                await DisplayAlert("Error", "Couldn't connect to Holidaily", "OK");
+            }
 
-            int points = responseJSON.Points;
-            PointsLabel.Text = "You have " + points.ToString() + " points!";
         }
 
-        protected async override void OnAppearing()
+        protected override void OnAppearing()
         {
             #if __IOS__
                         CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/4201400125");
@@ -100,7 +107,7 @@ namespace EventApp.Views
                         CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/7152256279");
             #endif
 
-            if (isLoggedIn == "no")
+            if (!isLoggedIn)
             {
                 PointsLabel.Text = "Log in to get points!";
   
@@ -112,20 +119,18 @@ namespace EventApp.Views
             }
         }
 
-        public async void ClaimReward(string rewardType, string rewardAmount)
+        public async void ClaimReward(string rewardAmount)
         {
             var values = new Dictionary<string, string>{
-                        { "type", rewardType },
-                        { "user", currentUser },
-                        { "amount", rewardAmount }
+                        { "username", currentUser },
+                        { "reward", rewardAmount }
                     };
 
             var content = new FormUrlEncodedContent(values);
-            HttpClient client = new HttpClient();
-            var response = await client.PostAsync(App.HolidailyHost + "/portal/claim_reward/", content);
+            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/user/", content);
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-            int status = responseJSON.StatusCode;
+            int status = responseJSON.status;
             string message = responseJSON.message;
             if (status == 200)
             {
@@ -140,19 +145,8 @@ namespace EventApp.Views
         public async void WatchAd(object sender, EventArgs e)
         {
 
-            if (isLoggedIn == "no")
-            {
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
-            }
-            else
-            {
-                //this.IsEnabled = false;
-                WatchAdButton.Text = "Loading video...";
-                CrossMTAdmob.Current.ShowRewardedVideo();
-        
-            }
-
-    
+            WatchAdButton.Text = "Loading video...";
+            CrossMTAdmob.Current.ShowRewardedVideo();
         }
 
 

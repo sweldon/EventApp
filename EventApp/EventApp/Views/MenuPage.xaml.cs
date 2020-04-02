@@ -17,7 +17,7 @@ namespace EventApp.Views
 
         List<HomeMenuItem> menuItems;
 
-        public string isLoggedIn
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -37,6 +37,18 @@ namespace EventApp.Views
                 if (Settings.CurrentUser == value)
                     return;
                 Settings.CurrentUser = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string confettiCount
+        {
+            get { return Settings.ConfettiCount; }
+            set
+            {
+                if (Settings.ConfettiCount == value)
+                    return;
+                Settings.ConfettiCount = value;
                 OnPropertyChanged();
             }
         }
@@ -72,19 +84,18 @@ namespace EventApp.Views
 
             menuItems = new List<HomeMenuItem>
             {
-                new HomeMenuItem {Id = MenuItemType.Holidays, Title="Home", MenuImage="today_icon.png"},
-                new HomeMenuItem {Id = MenuItemType.Search, Title="Search", MenuImage="search.png"},
-                new HomeMenuItem {Id = MenuItemType.AddHoliday, Title="Submit Holiday", MenuImage="pencil.png"},
-                //new HomeMenuItem {Id = MenuItemType.Notifications, Title="Notifications", MenuImage="alarm.png"},
-                new HomeMenuItem {Id = MenuItemType.ConfettiLeaders, Title="Confetti Leaders", MenuImage="party_popper_icon.png"},
-                new HomeMenuItem {Id = MenuItemType.Trending, Title="Popular", MenuImage="trending.png"},
-                new HomeMenuItem {Id = MenuItemType.Updates, Title="News", MenuImage="news.png"},
-                new HomeMenuItem {Id = MenuItemType.Premium, Title="Premium", MenuImage="premium.png"},
-                new HomeMenuItem {Id = MenuItemType.Rewards, Title="Rewards", MenuImage="trophy.png"}
+                new HomeMenuItem {Id = MenuItemType.Holidays, Title="Home", MenuImage="Home_Menu_Icon.png"},
+                new HomeMenuItem {Id = MenuItemType.Search, Title="Search", MenuImage="Search_Menu_Icon.png"},
+                new HomeMenuItem {Id = MenuItemType.AddHoliday, Title="Submit Holiday", MenuImage="Submit_Menu_Icon.png"},
+                new HomeMenuItem {Id = MenuItemType.ConfettiLeaders, Title="Confetti Leaders", MenuImage="Holiday_Menu_Icon.png"},
+                new HomeMenuItem {Id = MenuItemType.Trending, Title="Popular", MenuImage="Popular_Menu_Icon.png"},
+                //new HomeMenuItem {Id = MenuItemType.Updates, Title="News", MenuImage="News_Menu_Icon.png"},
+                //new HomeMenuItem {Id = MenuItemType.Premium, Title="Premium", MenuImage="Premium_Menu_Icon.png"},
+                new HomeMenuItem {Id = MenuItemType.Rewards, Title="Get Confetti", MenuImage="Gift.png"},
+                new HomeMenuItem {Id = MenuItemType.About, Title="About Holidaily", MenuImage="News_Menu_Icon.png"}
             };
 
             ListViewMenu.ItemsSource = menuItems;
-            //ListViewMenu.SelectedItem = menuItems[0];
             ListViewMenu.ItemSelected += async (sender, e) =>
             {
                 if (e.SelectedItem == null)
@@ -92,18 +103,7 @@ namespace EventApp.Views
 
                 var id = (int)((HomeMenuItem)e.SelectedItem).Id;
                 await RootPage.NavigateFromMenu(id);
-            };
-
-           
-            //swipeContainer.Swipe += (sender, e) =>
-            //{
-            //    switch (e.Direction)
-            //    {
-            //        case SwipeDirection.Left:
-            //            (Application.Current.MainPage as MasterDetailPage).IsPresented = false;
-            //            break;
-            //    }
-            //};
+            }; 
 
         }
 
@@ -111,44 +111,63 @@ namespace EventApp.Views
             LoginButton.IsEnabled = false;
             await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             LoginButton.IsEnabled = true;
+        }
 
+        public async void OpenPremium(object sender, EventArgs e)
+        {
+            goPremiumButton.IsEnabled = false;
+            await Navigation.PushModalAsync(new NavigationPage(new Premium()));
+            goPremiumButton.IsEnabled = true;
         }
 
         public async void LogoutUser(object sender, EventArgs e)
         {
 
-            isLoggedIn = "no";
-            LogoutButton.IsVisible = false;
-            LoginButton.IsVisible = true;
-            DefaultHeader.IsVisible = true;
-            ProfileHeader.IsVisible = false;
-            HeaderDivider.IsVisible = false;
-            UserLabel.Text = "Hey there!";
-            currentUser = null;
-            isPremium = false;
+            try
+            {
 
-            var menuPage = new MenuPage(); // Build hamburger menu
-            NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
-            var rootPage = new RootPage(); // Root handles master detail navigation
-            rootPage.Master = menuPage; // Menu
-            rootPage.Detail = NavigationPage; // Content
-            Application.Current.MainPage = rootPage; // Set root to built master detail
+                // Disable notifications
+                var values = new Dictionary<string, string>{
+                        { "username", currentUser },
+                        { "logout", "true" }
+                    };
+                var content = new FormUrlEncodedContent(values);
+                await App.globalClient.PostAsync(App.HolidailyHost + "/user/", content);
+
+
+                // Reset labels and global settings
+                isLoggedIn = false;
+                LogoutButton.IsVisible = false;
+                LoginButton.IsVisible = true;
+                DefaultHeader.IsVisible = true;
+                ProfileHeader.IsVisible = false;
+                //HeaderDivider.IsVisible = false;
+                UserLabel.Text = "Hey there!";
+                currentUser = null;
+                isPremium = false;
+               // PremiumFrame.IsVisible = true;
+                goPremiumButton.IsVisible = true;
+
+                var menuPage = new MenuPage(); // Build hamburger menu
+                NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
+                var rootPage = new RootPage(); // Root handles master detail navigation
+                rootPage.Master = menuPage; // Menu
+                rootPage.Detail = NavigationPage; // Content
+                Application.Current.MainPage = rootPage; // Set root to built master detail
+
+            }
+            catch
+            {
+                await DisplayAlert("Error", "Couldn't connect to Holidaily", "OK");
+            }
 
         }
         protected override async void OnAppearing()
         {
             AppInfoLabel.Text = appInfo;
-            if (isLoggedIn == "no")
+            if(isLoggedIn)
             {
-                DefaultHeader.IsVisible = true;
-                ProfileHeader.IsVisible = false;
-                LogoutButton.IsVisible = false;
-                LoginButton.IsVisible = true;
-                HeaderDivider.IsVisible = false;
-                UserLabel.Text = "Hey there!";
-            }
-            else
-            {
+                HeaderBackground.BackgroundColor = Color.FromHex("FFFFFF");
                 DefaultHeader.IsVisible = false;
                 ProfileHeader.IsVisible = true;
                 LogoutButton.IsVisible = true;
@@ -156,24 +175,21 @@ namespace EventApp.Views
                 HeaderDivider.IsVisible = true;
                 UserLabel.Text = "Hey, " + currentUser + "!";
                 UserNameHeader.Text = currentUser;
-
-                // Update points
-                var values = new Dictionary<string, string>{
-                { "user", currentUser }
-                };
-
-                var content = new FormUrlEncodedContent(values);
-                HttpClient client = new HttpClient();
-                var response = await client.PostAsync(App.HolidailyHost + "/portal/get_user_rewards/", content);
-                var responseString = await response.Content.ReadAsStringAsync();
-                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                int points = responseJSON.Points;
-                UserPointsHeader.Text = points.ToString();
-                if (isPremium)
-                {
-                    isPremiumLabel.Text = "Premium";
-                }
-
+                UserPointsHeader.Text = confettiCount;
+               // PremiumFrame.IsVisible = !isPremium;
+                goPremiumButton.IsVisible = !isPremium;
+            }
+            else
+            {
+                HeaderBackground.BackgroundColor = Color.FromHex("4c96e8");
+                DefaultHeader.IsVisible = true;
+                ProfileHeader.IsVisible = false;
+                LogoutButton.IsVisible = false;
+                LoginButton.IsVisible = true;
+                HeaderDivider.IsVisible = false;
+                UserLabel.Text = "Hey there!";
+               // PremiumFrame.IsVisible = false;
+                goPremiumButton.IsVisible = false;
             }
 
         }

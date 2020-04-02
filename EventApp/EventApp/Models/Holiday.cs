@@ -9,7 +9,7 @@ namespace EventApp.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        
+        public string Blurb { get; set; }
         public int NumComments { get; set; }
         public string TimeSince { get; set; }
         public string DescriptionShort { get; set; }
@@ -17,6 +17,7 @@ namespace EventApp.Models
         public bool ShowHolidayContent { get; set; }
         public bool ShowAd { get; set; }
         public string Date { get; set; }
+        public bool Active { get; set; }
 
         public string votes;
         public string Votes

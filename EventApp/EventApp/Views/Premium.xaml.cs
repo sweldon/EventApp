@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using System.Diagnostics;
@@ -15,8 +14,6 @@ namespace EventApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Premium : ContentPage
     {
-
-        HttpClient client = new HttpClient();
 
         public Holiday OpenedHoliday { get; set; }
         public string CommentTitle { get; set; }
@@ -33,7 +30,7 @@ namespace EventApp.Views
             }
         }
 
-        public string isLoggedIn
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -64,15 +61,23 @@ namespace EventApp.Views
             BindingContext = this;
         }
 
+        async void CancelPremium(object sender, EventArgs e)
+        {
+            this.IsEnabled = false;
+            await Navigation.PopModalAsync();
+            this.IsEnabled = true;
+        }
 
         async void MakePurchase(object sender, EventArgs e)
         {
-
             this.IsEnabled = false;
-
-            if (isLoggedIn == "no")
+            PurchaseButton.Text = "Connecting to AppStore...";
+            
+            if (!isLoggedIn)
             {
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                PurchaseButton.Text = "Purchase";
+                this.IsEnabled = true;
             }
             else if (isPremium)
             {
@@ -82,8 +87,7 @@ namespace EventApp.Views
             }
             else
             {
-                PurchaseButton.Text = "Loading...";
-                // await DisplayAlert("Soon!", "Premium isn't quite ready yet, but is coming soon. We will send you a notification when it is ready.", "I'll come back later!");
+                PurchaseButton.Text = "Connected...";
                 var billing = CrossInAppBilling.Current;
                 try
                 {
@@ -93,7 +97,8 @@ namespace EventApp.Views
                     var connected = await billing.ConnectAsync(ItemType.InAppPurchase);
 
                     //Undo Test Purchase
-                    //var consumedItem = await billing.ConsumePurchaseAsync(productId, "inapp:com.divinity.holidailyapp:android.test.purchased");
+                    //var consumedItem = await billing.ConsumePurchaseAsync(productId,
+                    //"inapp:com.divinity.holidailyapp:android.test.purchased");
                     //if (consumedItem != null)
                     //{
                     //    await DisplayAlert("Premium Refunded", "Premium is undone", "OK");
@@ -111,15 +116,13 @@ namespace EventApp.Views
                         return;
                     }
 
-                    PurchaseButton.Text = "Purchase";
-                    this.IsEnabled = true;
-
                     //try to purchase item
                     var purchase = await billing.PurchaseAsync(productId, ItemType.InAppPurchase, "apppayload");
                     if (purchase == null)
                     {
                         await DisplayAlert("Error!", "Something went wrong. You have not been charged for anything.", "Try again");
-                        //Not purchased, alert the user
+                        PurchaseButton.Text = "Purchase";
+                        this.IsEnabled = true;
                     }
                     else
                     {
@@ -127,7 +130,6 @@ namespace EventApp.Views
                         var id = purchase.Id;
                         var token = purchase.PurchaseToken;
                         var state = purchase.State.ToString();
-
 
                         var values = new Dictionary<string, string>{
                            { "username", currentUser },
@@ -137,55 +139,34 @@ namespace EventApp.Views
                         };
 
                         var content = new FormUrlEncodedContent(values);
-                        var response = await client.PostAsync(App.HolidailyHost + "/portal/make_premium/", content);
+                        var response = await App.globalClient.PostAsync(App.HolidailyHost + "/user/", content);
                         var responseString = await response.Content.ReadAsStringAsync();
                         dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                        bool success = responseJSON.success;
-                        if (success)
+                        int status = responseJSON.status;
+                        if (status == 200)
                         {
                             isPremium = true;
                             await DisplayAlert("Success!", "The transaction was successful. Thank you very much for your support", "You're welcome!");
+                            PurchaseButton.Text = "Purchase";
+                            this.IsEnabled = true;
                         }
                         else
                         {
                             await DisplayAlert("Error!", "Something went wrong. If you do not see your premium rewards, please contact holidailyapp@gmail.com and we will resolve it ASAP.", "Try again");
+                            PurchaseButton.Text = "Purchase";
+                            this.IsEnabled = true;
                         }
                         
                     }
 
-                }
-                catch (InAppBillingPurchaseException purchaseEx)
-                {
-                    var message = string.Empty;
-                    switch (purchaseEx.PurchaseError)
-                    {
-                        case PurchaseError.AppStoreUnavailable:
-                            message = "Currently the app store seems to be unavailble. Try again later.";
-                            break;
-                        case PurchaseError.BillingUnavailable:
-                            message = "Billing seems to be unavailable, please try again later.";
-                            break;
-                        case PurchaseError.PaymentInvalid:
-                            message = "Payment seems to be invalid, please try again.";
-                            break;
-                        case PurchaseError.PaymentNotAllowed:
-                            message = "Payment does not seem to be enabled/allowed, please try again.";
-                            break;
-                    }
-
-                    //Decide if it is an error we care about
-                    if (string.IsNullOrWhiteSpace(message))
-                        return;
-                                PurchaseButton.Text = "Purchase";
-            this.IsEnabled = true;
-                    //Display message to user
                 }
                 catch (Exception ex)
                 {
                     //Something else has gone wrong, log it
                     PurchaseButton.Text = "Purchase";
                     this.IsEnabled = true;
-                    Debug.WriteLine("Issue connecting: " + ex);
+                    await DisplayAlert("Error!", "Unable to connect to the store, please try again later.", "OK");
+
                 }
                 finally
                 {
@@ -197,7 +178,7 @@ namespace EventApp.Views
 
         }
 
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
 
             base.OnAppearing();

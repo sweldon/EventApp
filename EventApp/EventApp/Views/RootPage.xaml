@@ -10,7 +10,7 @@
 
     
     <ContentPage.ToolbarItems>
-        <ToolbarItem Name="ProfileToolbar" Order="Primary" Icon="bell.png" Text="Item 1" Priority="0" Clicked="OpenNotifications" x:Name="BellBtn" />
+        <ToolbarItem Name="ProfileToolbar" Icon="Notification_Main_Icon.png" Clicked="OpenNotifications" x:Name="BellBtn" />
     </ContentPage.ToolbarItems>
 
     <MasterDetailPage.Detail>

@@ -32,7 +32,7 @@ namespace EventApp.Views
         {
             InitializeComponent();
             BindingContext = viewModel = new TrendingViewModel(); ;
-            Title = "Trending Holidays";
+            Title = "Popular Holidays";
 
             TopHolidayList.ItemSelected += OnItemSelected;
         }

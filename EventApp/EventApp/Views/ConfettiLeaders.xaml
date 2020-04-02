@@ -36,7 +36,12 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="White" Margin="0,5,0,0">
+                                    <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="White">
+
+                                    <ContentView.Margin>
+                                        <OnPlatform x:TypeArguments="Thickness"
+                                    Android="0,5,0,0" iOS="0,7,0,0"/>
+                                    </ContentView.Margin>
 
                                         <StackLayout>
                                             <BoxView
@@ -53,15 +58,14 @@
                                             <Grid HorizontalOptions="FillAndExpand" >
 
                                                 <Grid.Padding>
-                                                    <OnPlatform x:TypeArguments="Thickness"
-                                            Android="5,5,5,0" iOS="5,5,5,5"/>
+                                                 <OnPlatform x:TypeArguments="Thickness"
+                                                        Android="5,5,5,0" iOS="5,5,5,5"/>
                                                 </Grid.Padding>
 
 
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
 
 
@@ -74,27 +78,38 @@
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="Auto" />
                                                         <RowDefinition Height="Auto" />
-                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="*" />
                                                     </Grid.RowDefinitions>
                                                     <ContentView VerticalOptions="Center" Grid.Row="0">
                                                         <Label Text="{Binding UserName}"
-                                                  FontSize="20"
-                                                  TextColor="#4c96e8"
-                                                />
+                                                          FontSize="20"
+                                                          TextColor="#4c96e8" />
 
                                                     </ContentView>
 
-                                                    <Label LineBreakMode="WordWrap"  Grid.Row="1" FontSize="12">
+                                                    <Label
+                                                       TextColor="#4c96e8" 
+                                                       FontSize="Small"
+                                                       Grid.Row="1" >
                                                         <Label.FormattedText>
                                                             <FormattedString>
-                                                                <Span  Text="{Binding Comments}" TextColor="#4c96e8" FontAttributes="Bold"/>
-                                                                <Span  Text=" comments" TextColor="Gray"  />
+                                                                <Span Text="{Binding Confetti}" TextColor="#4c96e8" FontAttributes="Bold"/>
+                                                                <Span Text=" confetti" TextColor="Gray"  />
+                                                            </FormattedString>
+                                                        </Label.FormattedText>
+                                                    </Label>
+
+                                                    <Label LineBreakMode="WordWrap"  Grid.Row="2" FontSize="Small">
+                                                        <Label.FormattedText>
+                                                            <FormattedString>
+                                                                <Span Text="{Binding Comments}" TextColor="#4c96e8" FontAttributes="Bold"/>
+                                                                <Span Text=" comments" TextColor="Gray"  />
 
                                                             </FormattedString>
                                                         </Label.FormattedText>
                                                     </Label>
 
-                                                    <Label LineBreakMode="WordWrap" Grid.Row="2" FontSize="12">
+                                                    <Label LineBreakMode="WordWrap" Grid.Row="3" FontSize="Small">
                                                         <Label.FormattedText>
                                                             <FormattedString>
                                                                 <!--<Span Text="{Binding Submissions}" TextColor="#4c96e8" FontAttributes="Bold"/>
@@ -107,15 +122,6 @@
 
                                                 </Grid>
 
-                                                <Label Text="{Binding Confetti}"
-                                                    Margin="0,0,20,0"
-                                                    TextColor="#4c96e8" 
-                                                   FontAttributes="Bold"
-                                                   HorizontalTextAlignment="End" 
-                                                   HorizontalOptions="EndAndExpand"
-                                                   VerticalTextAlignment="Center"
-                                                   FontSize="Large"
-                                                  Grid.Column="2" />
 
                                             </Grid>
 

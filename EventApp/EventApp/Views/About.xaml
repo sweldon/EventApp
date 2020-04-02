@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EventApp.Views.About">
+    <ContentPage.Content>
+        <StackLayout>
+            <Image Source="holiday_banner_blue.png"
+                HorizontalOptions="CenterAndExpand" />
+            <Label Text="Follow us on Facebook, Twitter, and Instagram!"
+                HorizontalTextAlignment="Center"
+                HorizontalOptions="CenterAndExpand" />
+            <Label Text="Contact the developer at Holidailyapp@gmail.com"
+                HorizontalTextAlignment="Center"
+                HorizontalOptions="CenterAndExpand" />
+            <Label Text="Holidaily and the Holidaily Party Popper logo are trademarks of DVNT Applications"
+                HorizontalTextAlignment="Center"
+                HorizontalOptions="CenterAndExpand" />
+            <Label Text="Icons made by Kiranshastry from www.flaticon.com"
+                HorizontalTextAlignment="Center"
+                HorizontalOptions="CenterAndExpand" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

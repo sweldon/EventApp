@@ -22,7 +22,7 @@ namespace EventApp
         #region Setting Constants
 
         private const string AppInfoKey = "app_info_key";
-        private static readonly string AppInfoKeyDefault = "DVNT Applications - Beta 0.1.10";
+        private static readonly string AppInfoKeyDefault = "DVNT Applications - Beta 0.2.16";
 
         private const string SettingsKey = "settings_key";
         private static readonly string SettingsDefault = "no";
@@ -31,7 +31,7 @@ namespace EventApp
         private static readonly string DevicePushIdDefault = "none";
 
         private const string IsLoggedInKey = "is_logged_in_key";
-        private static readonly string IsLoggedInDefault= "no";
+        private static readonly bool IsLoggedInDefault = false;
 
         private const string CurrentUserKey = "current_user_key";
         private static readonly string CurrentUserDefault = "none";
@@ -41,6 +41,9 @@ namespace EventApp
 
         private const string IsPremiumKey = "is_premium_key";
         private static readonly bool IsPremiumDefault = false;
+
+        private const string ConfettiCountKey = "confetti_key";
+        private static readonly string ConfettiCountDefault = "none";
 
         #endregion
 
@@ -105,11 +108,18 @@ namespace EventApp
             }
         }
 
-        public static string IsLoggedIn
+        public static bool IsLoggedIn
         {
             get
             {
-                return AppSettings.GetValueOrDefault(IsLoggedInKey, IsLoggedInDefault);
+                try
+                {
+                    return AppSettings.GetValueOrDefault(IsLoggedInKey, IsLoggedInDefault);
+                }
+                catch{
+                    return false;
+                }
+                
             }
             set
             {
@@ -126,6 +136,18 @@ namespace EventApp
             set
             {
                 AppSettings.AddOrUpdateValue(CurrentUserKey, value);
+            }
+        }
+
+        public static string ConfettiCount
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(ConfettiCountKey, ConfettiCountDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(ConfettiCountKey, value);
             }
         }
 

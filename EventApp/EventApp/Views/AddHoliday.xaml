@@ -7,15 +7,15 @@
     <ContentPage.Content>
 
 
-        
-        <ContentView BackgroundColor="#FFFFFF" Padding="15" >
+        <ScrollView BackgroundColor="#FFFFFF" Padding="15" >
+     
             <StackLayout VerticalOptions="FillAndExpand">
 
                 <Label FontSize="Medium" Text="If you know a holiday that we don't have, tell us and we'll send you confetti! If we add your holiday, we will show your username with it in the app for all to see." />
 
 
-                <Entry Placeholder="Holiday Name" FontSize="Medium" x:Name="HolidayNameEntry" />
-                <DatePicker x:Name="HolidayDateEntry"  />
+                <Entry BackgroundColor="#F5F5F5" Placeholder="Holiday Name" FontSize="Medium" x:Name="HolidayNameEntry" />
+                <DatePicker BackgroundColor="#F5F5F5" x:Name="HolidayDateEntry"  />
 
                 <Label FontSize="Medium" Text="Provide some details below about the holiday, or what you would like to appear in the description if we add it to the app" />
 
@@ -30,7 +30,7 @@
                             TextColor="Black" />
 
             </StackLayout>
-        </ContentView>
-    
+       
+    </ScrollView>
     </ContentPage.Content>
 </ContentPage>

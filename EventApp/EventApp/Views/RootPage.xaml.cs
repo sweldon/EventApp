@@ -25,7 +25,7 @@ namespace EventApp.Views
         {
             BellBtn.IsEnabled = false;
             await Navigation.PushModalAsync(new NavigationPage(new NotificationsPage()));
-            Task.Delay(2000);
+            await Task.Delay(2000);
             BellBtn.IsEnabled = true;
         }
 
@@ -61,6 +61,9 @@ namespace EventApp.Views
                         break;
                     case (int)MenuItemType.ConfettiLeaders:
                         MenuPages.Add(id, new NavigationPage(new ConfettiLeaders()));
+                        break;
+                    case (int)MenuItemType.About:
+                        MenuPages.Add(id, new NavigationPage(new About()));
                         break;
                 }
             }

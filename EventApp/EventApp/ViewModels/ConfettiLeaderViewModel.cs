@@ -4,16 +4,12 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using EventApp.Views;
-using System.Collections.Generic;
 using Newtonsoft.Json;
-using System.Net.Http;
 
 namespace EventApp.ViewModels
 {
     public class ConfettiLeaderViewModel : BaseViewModel
     {
-        HttpClient client = new HttpClient();
         public ObservableCollection<User> UserList { get; set; }
         public Command LoadUsers { get; set; }
 
@@ -35,13 +31,18 @@ namespace EventApp.ViewModels
             try
             {
                 UserList.Clear();
-                var response = await client.GetAsync(App.HolidailyHost + "/portal/get_confetti_leaders/");
+                var response = await App.globalClient.GetAsync(App.HolidailyHost + "/users/top");
                 var responseString = await response.Content.ReadAsStringAsync();
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                dynamic userList = responseJSON.user_list;
+                dynamic userList = responseJSON.results;
                 foreach (var user in userList)
                 {
-                    UserList.Insert(0, new User() { UserName = user.username, Confetti = user.confetti, Submissions = user.submissions, Approved = user.approved, Comments = user.comments });
+                    UserList.Insert(0, new User() {
+                        UserName = user.username,
+                        Confetti = user.confetti,
+                        Submissions = user.holiday_submissions,
+                        Approved = user.approved_holidays,
+                        Comments = user.num_comments });
                 }
 
             }

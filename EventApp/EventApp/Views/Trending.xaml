@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.Trending"
-             xmlns:local="clr-namespace:EventApp"  
+             xmlns:local="clr-namespace:EventApp"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              Title="{Binding Title}">
 
     <StackLayout>
@@ -33,50 +34,87 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="White" Margin="0,5,0,0">
+                                <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="White">
+
+                                   <ContentView.Margin>
+                                        <OnPlatform x:TypeArguments="Thickness"
+                                    Android="0,5,0,0" iOS="0,7,0,0"/>
+                                    </ContentView.Margin>
 
                                     <StackLayout>
-                                        <BoxView
-                                           HeightRequest=".5"
-                                               BackgroundColor="#DEDEDE"
-                                               HorizontalOptions="FillAndExpand" />
-                                        <StackLayout>
-                                            <Grid HorizontalOptions="FillAndExpand"  Padding="10,5,10,0">
+   
+                                        <StackLayout >
+                                            <Grid HorizontalOptions="FillAndExpand">
+                                           <Grid.Padding>
+                                                    <OnPlatform x:TypeArguments="Thickness"
+                                                Android="10,10,10,0" iOS="12,12,12,0"/>
+                                                </Grid.Padding>
                                                 <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*" />
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="8*" />                                    
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
-
-                                                <Label Text="{Binding TimeSince}"
-                                                    FontSize="14"
-                                                    FontAttributes="Bold" Grid.Row="0" Grid.Column="0" TextColor="Gray" Opacity=".5"/>
                                                 
                                                 <Label Text="{Binding Name}"
-                                                    FontSize="14"
-                                                    FontAttributes="Bold" Grid.Row="0" Grid.Column="1" TextColor="#4c96e8" HorizontalTextAlignment="Start" />
+                                                    FontSize="15"
+                                                    FontAttributes="Bold"
+                                                    Grid.Row="0"
+                                                    Grid.Column="0"
+                                                    TextColor="#4c96e8"
+                                                    HorizontalTextAlignment="Start" />
 
-                                                
-                                                <Label Text="{Binding Votes, StringFormat='+{0}'}"
-                                                    FontSize="14" 
+
+
+                                                <Image Source="celebrate_active.png"
+                                                       Grid.Column="1"
+                                                       HorizontalOptions="End"
+                                                       x:Name="UpVoteImage"
+                                                       WidthRequest="20"
+                                             
+                                                       />
+
+                                                <Label Text="{Binding Votes, StringFormat='{0}'}"
+                                                    FontSize="Medium"
                                                     Grid.Row="0"
                                                     Grid.Column="2"
-                                                    HorizontalTextAlignment="End" 
-                                                    FontAttributes="Bold" 
-                                                    TextColor="#FF9912"/>
+                       
+                                                    HorizontalTextAlignment="End"/>
+
+
+                                                <Label Text="{Binding TimeSince}"
+                                                    FontSize="Small"
+                                                    FontAttributes="Bold"
+                                                    Grid.Row="1"
+                                                    Grid.Column="0"
+                                                    TextColor="Gray"
+                                                    Opacity=".5"
+                                                    VerticalOptions="Start"
+                                                    />
 
                                             </Grid>
                                             <ContentView>
+                                                <ContentView.Padding>
+                                                    <OnPlatform x:TypeArguments="Thickness"
+                                                    Android="10,0,10,0" iOS="12,0,12,0"/>
+                                                </ContentView.Padding>
+                                                <Label Text="{Binding Blurb}" FontSize="14" />
+                                            </ContentView>
+                                            <ContentView Padding="0, 0, 0, 10">
                                                 
-                                            <ContentView.Padding>
-                                            <OnPlatform x:TypeArguments="Thickness"
-                                            Android="10,0,10,10" iOS="10,0,10,10"/>
-                                            </ContentView.Padding>
-                                                
-                                                <Label Text="{Binding DescriptionShort}" FontSize="14" />
+                                                <ffimageloading:CachedImage 
+                                                    Source="{Binding HolidayImage}"
+                                                    Aspect="AspectFill"
+                                                    RetryCount= "3"
+                                                    RetryDelay= "600"
+                                                    HeightRequest="150"
+                                                    LoadingPlaceholder="Loading_Image.gif"
+                                                />
+
+                   
                                             </ContentView>
 
                                         </StackLayout>

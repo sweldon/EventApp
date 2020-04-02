@@ -15,7 +15,7 @@ namespace EventApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {
-        public string isLoggedIn
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -63,7 +63,17 @@ namespace EventApp.Views
             }
         }
 
-        HttpClient client = new HttpClient();
+        public string confettiCount
+        {
+            get { return Settings.ConfettiCount; }
+            set
+            {
+                if (Settings.ConfettiCount == value)
+                    return;
+                Settings.ConfettiCount = value;
+                OnPropertyChanged();
+            }
+        }
 
         public NavigationPage NavigationPage { get; private set; }
         public LoginPage()
@@ -74,54 +84,82 @@ namespace EventApp.Views
         public async void Recover(object sender, EventArgs e)
         {
             this.IsEnabled = false;
-            await Task.Run(() => Xamarin.Forms.Device.OpenUri(new Uri(App.HolidailyHost + "/recover")));
+                Xamarin.Forms.Device.BeginInvokeOnMainThread(() => {
+                    Xamarin.Forms.Device.OpenUri(new Uri(App.HolidailyHost + "/portal/recover"));
+                });
             this.IsEnabled = true;
         }
-            public async void LoginUser(object sender, EventArgs e)
+
+        public async void LoginUser(object sender, EventArgs e)
         {
-            this.IsEnabled = false;
-            LoginButton.Text = "Logging in...";
-            if (!string.IsNullOrEmpty(NameEntry.Text))
+            try
             {
-                string userName = NameEntry.Text.Trim();
-                string pass = PassEntry.Text;
-                Debug.WriteLine(userName);
-                var values = new Dictionary<string, string>{
+                this.IsEnabled = false;
+                LoginButton.Text = "Logging in...";
+                if (!string.IsNullOrEmpty(NameEntry.Text))
+                {
+                    string userName = NameEntry.Text.Trim();
+                    string pass = PassEntry.Text;
+
+                    var values = new Dictionary<string, string>{
                     { "username", userName },
                     { "password", pass },
                     { "device_id", devicePushId }
                 };
 
-                var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(App.HolidailyHost + "/portal/login_mobile/", content); 
-                var responseString = await response.Content.ReadAsStringAsync();
-                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                int status = responseJSON.StatusCode;
-                string message = responseJSON.Message;
+                    var content = new FormUrlEncodedContent(values);
+                    var response = await App.globalClient.PostAsync(App.HolidailyHost + "/accounts/login/", content);
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                    int status = responseJSON.status;
 
-                if (status == 200)
-                {
-                    isLoggedIn = "yes";
-                    var menuPage = new MenuPage();
-                    NavigationPage = new NavigationPage(new HolidaysPage());
-                    var rootPage = new RootPage(); 
-                    rootPage.Master = menuPage; 
-                    rootPage.Detail = NavigationPage;
-                    currentUser = userName;
-                    isPremium = await App.CheckPremium(currentUser);
-                    await Navigation.PopModalAsync();
+                    if (status == 200)
+                    {
+                        // Set some useful global user properties (maybe use this for username
+                        // ETC... instead of Settings plugin? Possible improvement.
+                        //App.GlobalUserObject.Confetti = responseJSON.results.confetti;
+                        isLoggedIn = true;
+                        currentUser = userName;
+                        isPremium = responseJSON.results.premium;
+                        confettiCount = responseJSON.results.confetti;
+
+                        var menuPage = new MenuPage(); // Build hamburger menu
+                        NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
+                        var rootPage = new RootPage(); // Root handles master detail navigation
+                        rootPage.Master = menuPage; // Menu
+                        rootPage.Detail = NavigationPage; // Content
+                        Application.Current.MainPage = rootPage; // Set root to built master detail
+
+                        try
+                        {
+                            await Navigation.PopModalAsync();
+                        }
+                        catch
+                        {
+                            // Don't have to pop modal, not logging in "in-line"
+                            await Navigation.PopAsync();
+                        }
+
+                    }
+                    else
+                    {
+                        await DisplayAlert("Error", "Could not log you in. Please try again", "Okay");
+                    }
                 }
                 else
                 {
-                    await DisplayAlert("Error", message, "Okay");
+                    await DisplayAlert("Error", "Enter some text first!", "Alrighty");
                 }
+                LoginButton.Text = "Login";
+                this.IsEnabled = true;
             }
-            else
+            catch
             {
-                await DisplayAlert("Error", "Enter some text first!", "Alrighty");
+                await DisplayAlert("Error", "Couldn't connect to Holidaily", "OK");
+                LoginButton.Text = "Login";
+                this.IsEnabled = true;
             }
-            LoginButton.Text = "Login";
-            this.IsEnabled = true;
+            
         }
 
         protected override async void OnAppearing()

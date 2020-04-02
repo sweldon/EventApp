@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using System.Diagnostics;
-using EventApp.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
 
@@ -13,8 +10,6 @@ namespace EventApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AddHoliday : ContentPage
     {
-
-        HttpClient client = new HttpClient();
 
 
         public string currentUser
@@ -29,7 +24,7 @@ namespace EventApp.Views
             }
         }
 
-        public string isLoggedIn
+        public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
             set
@@ -52,7 +47,7 @@ namespace EventApp.Views
         {
             this.IsEnabled = false;
 
-            if (isLoggedIn == "no")
+            if (!isLoggedIn)
             {
                 await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
                 this.IsEnabled = true;
@@ -62,31 +57,39 @@ namespace EventApp.Views
 
                 if ( (!string.IsNullOrEmpty(HolidayDetailEntry.Text)) && (!string.IsNullOrEmpty(HolidayNameEntry.Text)))
                 {
-                    var selectedDate = HolidayDateEntry.Date;
-                    var dateStr = selectedDate.ToString();
+                    try
+                    {
+                        var selectedDate = HolidayDateEntry.Date;
+                        var dateStr = selectedDate.ToString();
 
-                    var values = new Dictionary<string, string>{
-                           { "user", currentUser },
-                           { "name", HolidayNameEntry.Text },
+                        var values = new Dictionary<string, string>{
+                           { "username", currentUser },
+                           { "submission", HolidayNameEntry.Text },
                            { "description", HolidayDetailEntry.Text },
                            { "date", dateStr },
                         };
 
-                    var content = new FormUrlEncodedContent(values);
-                    var response = await client.PostAsync(App.HolidailyHost + "/portal/add_holiday_from_app/", content);
-                    var responseString = await response.Content.ReadAsStringAsync();
-                    dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                    int status = responseJSON.StatusCode;
+                        var content = new FormUrlEncodedContent(values);
+                        var response = await App.globalClient.PostAsync(App.HolidailyHost + "/submit/", content);
+                        var responseString = await response.Content.ReadAsStringAsync();
+                        dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                        int status = responseJSON.status;
 
-                    if (status == 200)
-                    {
-                        SendHolidayBtn.Text = "Submission Pending...";
-                        await DisplayAlert("Success", "We received your Holiday! We will get back to you ASAP about its release into the App. Thank you for your contribution to Holidaily!", "OK");
+                        if (status == 200)
+                        {
+                            SendHolidayBtn.Text = "Submission Pending...";
+                            await DisplayAlert("Success", "We received your Holiday! We will get back to you ASAP about its release into the App. Thank you for your contribution to Holidaily!", "OK");
+                        }
+                        else
+                        {
+                            this.IsEnabled = true;
+                            await DisplayAlert("Error", "Something went wrong, please try again", "OK");
+                        }
                     }
-                    else
+                    catch
                     {
+                        await DisplayAlert("Error", "Something went wrong. Please try again.", "OK");
                         this.IsEnabled = true;
-                        await DisplayAlert("Error", "Something went wrong, please try again", "OK");
                     }
                 }
                 else
@@ -112,38 +115,47 @@ namespace EventApp.Views
 
             base.OnAppearing();
 
-            if (isLoggedIn == "yes")
+            if (isLoggedIn)
             {
-                var values = new Dictionary<string, string>{
-                   { "user", currentUser },
-                };
-
-                var content = new FormUrlEncodedContent(values);
-                var response = await client.PostAsync(App.HolidailyHost + "/portal/check_user_holiday_pending/", content);
-                var responseString = await response.Content.ReadAsStringAsync();
-                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                bool pending = responseJSON.pending;
-
-                if (pending)
+                try
                 {
-                    SendHolidayBtn.IsEnabled = false;
-                    SendHolidayBtn.Text = "Submission Pending...";
+                    var values = new Dictionary<string, string>{
+                        { "username", currentUser },
+                    };
 
-                    #if __IOS__
-                        SendHolidayBtn.IsVisible = false;
-                        PendingBtn.IsVisible = true;
-                    #endif
+                    var content = new FormUrlEncodedContent(values);
+                    var response = await App.globalClient.PostAsync(App.HolidailyHost + "/pending/", content);
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                    bool pending = responseJSON.results;
 
+                    if (pending)
+                    {
+                        SendHolidayBtn.IsEnabled = false;
+                        SendHolidayBtn.Text = "Submission Pending...";
+
+                        #if __IOS__
+                            SendHolidayBtn.IsVisible = false;
+                            PendingBtn.IsVisible = true;
+                        #endif
+
+                    }
+                    else
+                    {
+                        SendHolidayBtn.Text = "Send It";
+                        SendHolidayBtn.IsEnabled = true;
+
+                        #if __IOS__
+                            SendHolidayBtn.IsVisible = true;
+                            PendingBtn.IsVisible = false;
+                        #endif
+                    }
                 }
-                else
+                catch
                 {
-                    SendHolidayBtn.Text = "Send It";
-                    SendHolidayBtn.IsEnabled = true;
-                    #if __IOS__
-                        SendHolidayBtn.IsVisible = true;
-                        PendingBtn.IsVisible = false;
-                    #endif
+                    await DisplayAlert("Error", "Couldn't connect to Holidaily", "OK");
                 }
+
             }
 
         }

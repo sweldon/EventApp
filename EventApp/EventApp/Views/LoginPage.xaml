@@ -6,14 +6,8 @@
              Title="{Binding Title}">
     
     
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Back" Clicked="CancelLogin">
-            <ToolbarItem.Icon>
-                <OnPlatform x:TypeArguments="FileImageSource">
-                    <On Platform="UWP" Value="cancel.png"/>
-                </OnPlatform>
-            </ToolbarItem.Icon>
-        </ToolbarItem>
+     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Back" Clicked="CancelLogin" />
     </ContentPage.ToolbarItems>
     
     <ContentPage.BindingContext>
@@ -21,7 +15,7 @@
     </ContentPage.BindingContext>
 
 
-
+    <ScrollView>
     <StackLayout>
         <StackLayout BackgroundColor="#4c96e8" HorizontalOptions="Fill">
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
@@ -43,7 +37,7 @@
             <StackLayout Orientation="Vertical" Padding="16,10,16,10" Spacing="10">
 
 
-                <Entry Placeholder="Username" FontSize="24" x:Name="NameEntry" />
+                <Entry Keyboard="Plain" Placeholder="Username" FontSize="24" x:Name="NameEntry" />
 
                 <Entry Placeholder="Password"  FontSize="24" IsPassword="True" x:Name="PassEntry" />
 
@@ -68,4 +62,5 @@
             </StackLayout>
         </ContentView>
     </StackLayout>
+        </ScrollView>
 </ContentPage>

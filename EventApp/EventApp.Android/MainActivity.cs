@@ -37,6 +37,9 @@ namespace EventApp.Droid
             // In-app purchase
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
 
+            // FFImageLoading
+            FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
+
             var data = Intent?.Data?.GetQueryParameter("id");
             if (!string.IsNullOrEmpty(data))
             {
@@ -48,7 +51,15 @@ namespace EventApp.Droid
                     rootPage.Master = menuPage; // Menu
                     rootPage.Detail = NavigationPage; // Content
                     App.Current.MainPage = rootPage; // Set root to built master detail
-                    NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(data, null)));
+                    if (data.Contains("activated"))
+                    {
+                        NavigationPage.PushAsync(new LoginPage());
+                    }
+                    else
+                    {
+                        NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(data, null)));
+                    }
+                    
                 });
 
             }
