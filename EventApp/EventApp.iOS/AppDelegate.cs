@@ -50,8 +50,15 @@ namespace EventApp.iOS
             }
             else
             {
-                string holidayId = url.Query.Split("=")[1];
-                NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
+                try
+                {
+                    string holidayId = url.Query.Split("=")[1];
+                    NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                }
+                catch
+                {
+                }
+
             }
 
 
