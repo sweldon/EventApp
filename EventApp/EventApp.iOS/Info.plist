@@ -42,7 +42,6 @@
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>bluetooth-central</string>
 		<string>remote-notification</string>
 	</array>
 	<key>XSLaunchImageAssets</key>
@@ -75,8 +74,8 @@
 	<key>CFBundleName</key>
 	<string>Holidaily</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.0.0</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>2</string>
 </dict>
 </plist>
