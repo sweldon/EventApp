@@ -8,6 +8,8 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using Plugin.InAppBilling;
 using Plugin.InAppBilling.Abstractions;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace EventApp.Views
 {
@@ -177,6 +179,58 @@ namespace EventApp.Views
             }
 
         }
+
+        public async void RestorePurchases(object sender, EventArgs e)
+        {
+            RestoreButton.Text = "Processing...";
+            var productId = "holidailypremium";
+            var billing = CrossInAppBilling.Current;
+            try
+            {
+                var connected = await billing.ConnectAsync(ItemType.InAppPurchase);
+
+                if (!connected)
+                {
+                    //Couldn't connect
+                }
+
+                //check purchases
+                var purchases = await billing.GetPurchasesAsync(ItemType.InAppPurchase);
+
+                //check for null just incase
+                if (purchases?.Any(p => p.ProductId == productId) ?? false)
+                {
+                    await DisplayAlert("Success!", "Your purchases have been " +
+                        "successfully restored", "Thanks!");
+                }
+                else
+                {
+                    //no purchases found
+                    await DisplayAlert("No Purchases Found", "No purchases associated with " +
+                        "your account were found on the AppStore.", "OK");
+                }
+                RestoreButton.Text = "Restore Purchases";
+            }
+            catch (InAppBillingPurchaseException purchaseEx)
+            {
+                //Billing Exception handle this based on the type
+                await DisplayAlert("Error", "Could not complete your restoration " +
+                    "request at this time, please try again", "OK");
+                RestoreButton.Text = "Restore Purchases";
+            }
+            catch (Exception ex)
+            {
+                //Something has gone wrong
+                RestoreButton.Text = "Restore Purchases";
+            }
+            finally
+            {
+                await billing.DisconnectAsync();
+                RestoreButton.Text = "Restore Purchases";
+            }
+
+        }
+
 
         protected override void OnAppearing()
         {

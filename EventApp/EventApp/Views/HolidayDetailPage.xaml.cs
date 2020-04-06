@@ -115,7 +115,7 @@ namespace EventApp.Views
 
             if (!isLoggedIn)
             {
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                App.promptLogin(Navigation);
             }
             else
             {
@@ -177,7 +177,7 @@ namespace EventApp.Views
 
             if (!isLoggedIn)
             {
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                App.promptLogin(Navigation);
             }
             else
             {
@@ -261,7 +261,7 @@ namespace EventApp.Views
             this.IsEnabled = false;
             if (!isLoggedIn)
             {
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                App.promptLogin(Navigation);
             }
             else
             {
@@ -310,7 +310,7 @@ namespace EventApp.Views
             {
                 if (!isLoggedIn)
                 {
-                    await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                    App.promptLogin(Navigation);
                 }
                 else
                 {
@@ -353,7 +353,7 @@ namespace EventApp.Views
             if (!isLoggedIn)
             {
                 this.IsEnabled = false;
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                App.promptLogin(Navigation);
                 this.IsEnabled = true;
             }
             else
@@ -437,7 +437,7 @@ namespace EventApp.Views
             if (!isLoggedIn)
             {
                 this.IsEnabled = false;
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                App.promptLogin(Navigation);
                 this.IsEnabled = true;
             }
             else
@@ -508,7 +508,7 @@ namespace EventApp.Views
             if (!isLoggedIn)
             {
                 this.IsEnabled = false;
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                App.promptLogin(Navigation);
                 this.IsEnabled = true;
             }
             else

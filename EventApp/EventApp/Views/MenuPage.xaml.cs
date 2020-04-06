@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace EventApp.Views
 {
@@ -109,13 +110,14 @@ namespace EventApp.Views
 
         public async void PromptLogin(object sender, EventArgs e) {
             LoginButton.IsEnabled = false;
-            await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+            App.promptLogin(Navigation);
             LoginButton.IsEnabled = true;
         }
 
         public async void OpenPremium(object sender, EventArgs e)
         {
             goPremiumButton.IsEnabled = false;
+            App.popModalIfActive(Navigation);
             await Navigation.PushModalAsync(new NavigationPage(new Premium()));
             goPremiumButton.IsEnabled = true;
         }

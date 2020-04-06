@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using System.Linq;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace EventApp
@@ -36,6 +37,37 @@ namespace EventApp
         public static HttpClient globalClient = new HttpClient();
         // App-wide reusable instance for choosing random ads
         public static Random randomGenerator = new Random();
+
+
+        public static async void popModalIfActive(INavigation nav)
+        {
+            #if __IOS__
+                var isModalShowing = Application.Current.MainPage?.Navigation?.ModalStack?.LastOrDefault();
+                if (isModalShowing != null)
+                {
+                    Debug.WriteLine($"Modal closed using swipe, popping before re-opening");
+                    await nav.PopModalAsync();
+                }
+            #endif
+        }
+
+        public static async void promptLogin(INavigation nav)
+        {
+            popModalIfActive(nav);
+            await nav.PushModalAsync(new NavigationPage(new LoginPage()));
+        }
+
+        public bool eulaAccepted
+        {
+            get { return Settings.EulaAccepted; }
+            set
+            {
+                if (Settings.EulaAccepted == value)
+                    return;
+                Settings.EulaAccepted = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string devicePushId
         {
@@ -124,9 +156,6 @@ namespace EventApp
 
         protected override async void OnStart()
         {
-
-
-            
 
             if (!AppCenter.Configured){
                 Push.PushNotificationReceived += (sender, e) =>
@@ -226,6 +255,18 @@ namespace EventApp
                 isPremium = false;
             }
 
+            // EULA
+            if (!eulaAccepted)
+            {
+                await Application.Current.MainPage.DisplayAlert("Welcome!",
+                    "Welcome to Holidaily! You will only see this message once. " +
+                    "Please view our End User License Agreement before proceeding.",
+                    "View");
+                App.Current.MainPage = new NavigationPage(new Eula());
+
+            }
+
+                
         }
 
         async void AlertUser(string commentId, string holidayId, string commentUser)

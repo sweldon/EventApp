@@ -49,7 +49,7 @@ namespace EventApp.Views
 
             if (!isLoggedIn)
             {
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                App.promptLogin(Navigation);
                 this.IsEnabled = true;
             }
             else
