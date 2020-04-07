@@ -104,7 +104,25 @@ namespace EventApp.Views
 
                 var id = (int)((HomeMenuItem)e.SelectedItem).Id;
                 await RootPage.NavigateFromMenu(id);
-            }; 
+            };
+
+
+            MessagingCenter.Subscribe<LoginPage, bool>(this,
+                "UpdateMenu", (sender, data) => {
+                    if (isLoggedIn)
+                    {
+                        HeaderBackground.BackgroundColor = Color.FromHex("FFFFFF");
+                        DefaultHeader.IsVisible = false;
+                        ProfileHeader.IsVisible = true;
+                        LogoutButton.IsVisible = true;
+                        LoginButton.IsVisible = false;
+                        HeaderDivider.IsVisible = true;
+                        UserLabel.Text = "Hey, " + currentUser + "!";
+                        UserNameHeader.Text = currentUser;
+                        UserPointsHeader.Text = confettiCount;
+                        goPremiumButton.IsVisible = !isPremium;
+                    }
+            });
 
         }
 

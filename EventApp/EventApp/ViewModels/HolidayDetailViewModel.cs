@@ -63,6 +63,11 @@ namespace EventApp.ViewModels
 
             });
 
+            MessagingCenter.Subscribe<LoginPage>(this, "UpdateComments", (sender) => {
+                ExecuteLoadCommentsCommand();
+
+            });
+
 
 
         }

@@ -186,6 +186,42 @@ namespace EventApp.Views
             }
         }
 
+        async void Report(object sender, EventArgs args)
+        {
+            if (!isLoggedIn)
+            {
+                App.promptLogin(Navigation);
+            }
+            else
+            {
+                var comment = (sender as Label).BindingContext as Comment;
+                var confirm = await DisplayAlert("Report Comment", $"Are you sure " +
+                    $"you'd like to report this comment by {comment.UserName}?", "Yes", "No");
+                if (confirm)
+                {
+                    comment.ShowReport = false;
+                    bool block = false;
+                    var confirmBlock = await DisplayAlert("Reported", $"Thank you for " +
+                        $"making Holidaily a safer place. Would you like to block " +
+                        $"future content from {comment.UserName}?", "Yes", "No");
+                    if (confirmBlock)
+                    {
+                        await DisplayAlert($"{comment.UserName} blocked",
+                            $"{comment.UserName} has been blocked", "OK");
+                        comment.Content = "[blocked]";
+                        comment.UserName = "[blocked]";
+                        block = true;
+                    }
+                    else
+                    {
+                        comment.Content = "[reported]";
+                        comment.UserName = "[reported]";
+                    }
+                    await viewModel.CommentStore.ReportComment(comment.Id, block.ToString());
+                }
+            }
+        }
+
         //private void OnItemTapped(object sender, ItemTappedEventArgs e)
         //{
         //    var comment = e.Item as Comment;

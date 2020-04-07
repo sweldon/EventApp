@@ -16,5 +16,10 @@ namespace EventApp.Views
 		{
 			InitializeComponent ();
 		}
-	}
+
+        async void ViewEula(object sender, EventArgs e)
+        {
+			await Navigation.PushAsync(new Eula());
+		}
+    }
 }

@@ -12,6 +12,7 @@ namespace EventApp.Services
         Task<ObservableCollection<CommentList>> GetMoreComments(string holidayId = null, string user = null, string page="1");
         Task<T> GetCommentById(string id);
         Task VoteComment(string commentId, string vote);
+        Task ReportComment(string commentId, string block);
     }
 
 }

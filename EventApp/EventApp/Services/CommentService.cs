@@ -82,12 +82,46 @@ namespace EventApp.Services
                     string voteStatus = comment.vote_status;
                     string UpVoteImage = Utils.GetUpVoteImage(voteStatus);
                     string DownVoteImage = Utils.GetDownVoteImage(voteStatus);
-                    string author = comment.deleted == true ? "[deleted]" : comment.user;
-                    string commentContent = comment.deleted == true ? "[deleted]" : comment.content;
                     string allowDelete = comment.deleted == true ? "false" : ShowDeleteVal;
                     string allowReply = comment.deleted == true ? "false" : ShowReplyVal;
                     double opacity = comment.deleted == true ? .2 : .5;
                     bool isEnabled = comment.deleted == true ? false : true;
+                    bool showReport = true;
+
+                    // If already blocked, reported or it's their own, don't allow another report
+                    if (comment.blocked == true || comment.reported == true || (String.Equals(commentUser, currentUser, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        showReport = false;
+                    }
+
+                    // Deleted, blocked, or reported
+                    string author = comment.user;
+                    if (comment.deleted == true)
+                    {
+                        author = "[deleted]";
+                    }
+                    else if (comment.blocked == true)
+                    {
+                        author = "[blocked]";
+                    }
+                    else if (comment.reported == true)
+                    {
+                        author = "[reported]";
+                    }
+
+                    string commentContent = comment.content;
+                    if (comment.deleted == true)
+                    {
+                        commentContent = "[deleted]";
+                    }
+                    else if (comment.blocked == true)
+                    {
+                        commentContent = "[blocked]";
+                    }
+                    else if (comment.reported == true)
+                    {
+                        commentContent = "[reported]";
+                    }
 
                     commentGroup.Add(new Comment()
                     {
@@ -104,7 +138,8 @@ namespace EventApp.Services
                         Parent = comment.parent,
                         ThreadPadding = paddingThickness,
                         ElementOpacity = opacity,
-                        Enabled = isEnabled
+                        Enabled = isEnabled,
+                        ShowReport = showReport
                     });
                 }
                 allCommentThreads.Add(commentGroup);
@@ -156,12 +191,46 @@ namespace EventApp.Services
                     string voteStatus = comment.vote_status;
                     string UpVoteImage = Utils.GetUpVoteImage(voteStatus);
                     string DownVoteImage = Utils.GetDownVoteImage(voteStatus);
-                    string author = comment.deleted == true ? "[deleted]" : comment.user;
-                    string commentContent = comment.deleted == true ? "[deleted]" : comment.content;
                     string allowDelete = comment.deleted == true ? "false" : ShowDeleteVal;
                     string allowReply = comment.deleted == true ? "false" : ShowReplyVal;
                     double opacity = comment.deleted == true ? .2 : .5;
                     bool isEnabled = comment.deleted == true ? false : true;
+                    bool showReport = true;
+
+                    // If already blocked, reported or it's their own, don't allow another report
+                    if(comment.blocked == true || comment.reported == true || (String.Equals(commentUser, currentUser, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        showReport = false;
+                    }
+                    
+                    // Deleted, blocked, or reported
+                    string author = comment.user;
+                    if (comment.deleted == true)
+                    {
+                        author = "[deleted]";
+                    }else if (comment.blocked == true)
+                    {
+                        author = "[blocked]";
+                    }
+                    else if (comment.reported == true)
+                    {
+                        author = "[reported]";
+                    }
+
+                    string commentContent = comment.content;
+                    if (comment.deleted == true)
+                    {
+                        commentContent = "[deleted]";
+                    }
+                    else if (comment.blocked == true)
+                    {
+                        commentContent = "[blocked]";
+                    }
+                    else if (comment.reported == true)
+                    {
+                        commentContent = "[reported]";
+                    }
+
                     commentGroup.Add(new Comment()
                     {
                         Id = comment.id,
@@ -177,14 +246,16 @@ namespace EventApp.Services
                         Parent = comment.parent,
                         ThreadPadding = paddingThickness,
                         ElementOpacity = opacity,
-                        Enabled = isEnabled
+                        Enabled = isEnabled,
+                        ShowReport = showReport
+
                     });
                 }
 
                 comments.Insert(0, commentGroup);
 
             }
-
+            Debug.WriteLine(comments);
             return await Task.FromResult(comments);
         }
 
@@ -201,6 +272,19 @@ namespace EventApp.Services
             await App.globalClient.PostAsync(App.HolidailyHost +
                 "/comments/" + commentId + "/", content);
 
+        }
+
+        public async Task ReportComment(string commentId, string block)
+        {
+            var values = new Dictionary<string, string>{
+                   { "comment", commentId },
+                   { "username", currentUser },
+                   { "report", "true" },
+                   { "block", block },
+                };
+            var content = new FormUrlEncodedContent(values);
+            await App.globalClient.PostAsync(App.HolidailyHost +
+                "/comments/" + commentId + "/", content);
         }
 
         public async Task<Comment> GetCommentById(string id)

@@ -217,9 +217,12 @@
                                     <Label Text="{Binding Content}" FontSize="12" />
 
 
-                                    <Grid Padding="10" HorizontalOptions="FillAndExpand">
+                                    <Grid Padding="5" HorizontalOptions="FillAndExpand">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="16" />
+                                            <ColumnDefinition Width="Auto" />
+                                            
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="16" />
@@ -227,25 +230,37 @@
                                             <ColumnDefinition Width="16" />
                                         </Grid.ColumnDefinitions>
 
-                                        <ContentView IsVisible="{Binding ShowReply}" Grid.Column="1" HorizontalOptions="End">
+                                        <ContentView IsVisible="{Binding ShowReport}" Grid.Column="1" HorizontalOptions="Start">
+                                                <Image Source="Flag.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="14"/>
+                                        </ContentView>
+
+                                        <Label IsVisible="{Binding ShowReport}" Grid.Column="2" Text="Report" FontSize="Small" TextColor="#808080"
+                                        VerticalTextAlignment="Center" Margin="0,-2,8,0">
+                                            <Label.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                            Tapped="Report"  />
+                                            </Label.GestureRecognizers>
+                                        </Label>
+
+                                        <ContentView IsVisible="{Binding ShowReply}" Grid.Column="3" HorizontalOptions="End">
                                                 <Image Source="reply.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16"/>
                                         </ContentView>
 
 
-                                        <ContentView  IsVisible="{Binding ShowDelete}" Grid.Column="1" HorizontalOptions="End">
+                                        <ContentView  IsVisible="{Binding ShowDelete}" Grid.Column="3" HorizontalOptions="End">
                                                 <Image Source="delete.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16"/>
                                         </ContentView>
 
-                                            <Label IsVisible="{Binding ShowReply}" Grid.Column="2" Text="Reply" FontSize="Small" TextColor="#808080"
-                                                       VerticalTextAlignment="Center" Margin="0,-2,8,0">
+                                            <Label IsVisible="{Binding ShowReply}" Grid.Column="4" Text="Reply" FontSize="Small" TextColor="#808080"
+                                                       VerticalTextAlignment="Center" Margin="0,0,8,0">
                                             <Label.GestureRecognizers>
                                                 <TapGestureRecognizer
                                                             Tapped="OnReplyTapped"  />
                                             </Label.GestureRecognizers>
                                         </Label>
 
-                                            <Label IsVisible="{Binding ShowDelete}" Grid.Column="2" Text="Delete" FontSize="Small" TextColor="#808080"
-                                                       VerticalTextAlignment="Center" Margin="0,-2,8,0">
+                                            <Label IsVisible="{Binding ShowDelete}" Grid.Column="4" Text="Delete" FontSize="Small" TextColor="#808080"
+                                                       VerticalTextAlignment="Center" Margin="0,0,8,0">
                                             <Label.GestureRecognizers>
                                                 <TapGestureRecognizer
                                                             Tapped="OnDeleteTapped"  />
@@ -253,7 +268,7 @@
                                         </Label>
 
                                         <Image Source="{Binding DownVoteStatus}"
-                                               Grid.Column="3"
+                                               Grid.Column="5"
                                                Opacity="{Binding ElementOpacity}"
                                                x:Name="DownVoteImageComment"
                                                IsEnabled="{Binding Enabled}">
@@ -264,12 +279,12 @@
                                             </Image.GestureRecognizers>
                                         </Image>
 
-                                            <Label Text="{Binding Votes}" FontSize="Small" Grid.Column="4" TextColor="#808080"
+                                            <Label Text="{Binding Votes}" FontSize="Small" Grid.Column="6" TextColor="#808080"
                                                            VerticalTextAlignment="Center" Margin="0,-2,0,0"  x:Name="CurrentVotesComment">
                                         </Label>
 
                                         <Image Source="{Binding UpVoteStatus}"
-                                               Grid.Column="5"
+                                               Grid.Column="7"
                                                Opacity="{Binding ElementOpacity}"
                                                x:Name="UpVoteImageComment"
                                                IsEnabled="{Binding Enabled}">
