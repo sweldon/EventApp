@@ -552,7 +552,6 @@ namespace EventApp.Views
 
                 if (item.DownVoteStatus == "down_active.png")
                 {
-                    Debug.WriteLine("Down was active upvoting twice");
                     item.Votes += 2;
                     item.DownVoteStatus = "down.png";
                     item.UpVoteStatus = "up_active.png";

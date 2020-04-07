@@ -255,7 +255,6 @@ namespace EventApp.Services
                 comments.Insert(0, commentGroup);
 
             }
-            Debug.WriteLine(comments);
             return await Task.FromResult(comments);
         }
 
