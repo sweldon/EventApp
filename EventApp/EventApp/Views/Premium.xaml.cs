@@ -207,8 +207,8 @@ namespace EventApp.Views
                 else
                 {
                     //no purchases found
-                    await DisplayAlert("No Purchases Found", "No purchases associated with " +
-                        "your account were found on the AppStore.", "OK");
+                    await DisplayAlert("No Restoration Needed", "Your AppleID is " +
+                        "synced with your purchases. You're all set!", "OK");
                 }
                 RestoreButton.Text = "Restore Purchases";
             }
