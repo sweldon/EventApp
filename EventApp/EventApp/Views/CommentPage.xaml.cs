@@ -127,7 +127,6 @@ namespace EventApp.Views
                 var content = new FormUrlEncodedContent(values);
                 var response = await App.globalClient.PostAsync(App.HolidailyHost + "/comments/", content);
                 var responseString = await response.Content.ReadAsStringAsync();
-                Debug.WriteLine(responseString);
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                 int status = responseJSON.status;
                 string message = responseJSON.message;

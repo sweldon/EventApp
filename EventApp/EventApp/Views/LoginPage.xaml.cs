@@ -130,9 +130,10 @@ namespace EventApp.Views
                         //rootPage.Detail = NavigationPage; // Content
                         //Application.Current.MainPage = rootPage; // Set root to built master detail
 
-                        // Try using messaging center to update hamburger
                         MessagingCenter.Send(this, "UpdateMenu", true);
                         MessagingCenter.Send(this, "UpdateComments");
+                        MessagingCenter.Send(this, "UpdateHoliday");
+                        MessagingCenter.Send(this, "UpdateHolidayFeed");
                         try
                         {
                             await Navigation.PopModalAsync();

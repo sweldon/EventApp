@@ -98,7 +98,7 @@ namespace EventApp.Views
                 }
                 LoadingCommentsDialog.IsVisible = false;
             };
-            
+
 
             // TODO: just add comment to sublist dont refresh the whole thing
             //MessagingCenter.Subscribe<HolidayDetailPage, Object[]>(this,
@@ -106,8 +106,19 @@ namespace EventApp.Views
             //    UpdateCelebrateStatus((string)data[0], (bool)data[1], (string)data[2]);
             //});
 
+
         }
 
+        async Task UpdateHoliday()
+        {
+            viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
+            // Update celebrate status on detail page
+            UpVoteImage.Source = viewModel.Holiday.CelebrateStatus.Contains("active") ? "celebrate_active.png" : "celebrate.png";
+            // Update statuses in feed off screen
+            bool upvote = viewModel.Holiday.CelebrateStatus.Contains("active") ? true : false;
+            Object[] values = { viewModel.Holiday.Name, upvote, viewModel.Holiday.Votes };
+            MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
+        }
 
 
         async void OnDeleteTapped(object sender, EventArgs args)
@@ -253,7 +264,6 @@ namespace EventApp.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-
             if (viewModel.GroupedCommentList.Count == 0)
                 viewModel.LoadHolidayComments.Execute(null);
             AdBanner.IsVisible = !isPremium;
@@ -288,8 +298,36 @@ namespace EventApp.Views
                 await DisplayAlert("Error", "We couldn't fetch the data for this holiday", "OK");
                 await Navigation.PopAsync();
             }
+            
+            MessagingCenter.Subscribe<LoginPage>(this, "UpdateHoliday", (sender) =>
+            {
+                UpdateHoliday();
+            });
 
+            MessagingCenter.Subscribe<NewCommentPage>(this, "UpdateComments", (sender) => {
+                viewModel.ExecuteLoadCommentsCommand();
+            });
 
+            // Reply Page
+            MessagingCenter.Unsubscribe<CommentPage>(this, "UpdateComments");
+
+            MessagingCenter.Subscribe<LoginPage>(this, "UpdateComments", (sender) => {
+                viewModel.ExecuteLoadCommentsCommand();
+            });
+
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateHoliday");
+            MessagingCenter.Unsubscribe<NewCommentPage>(this, "UpdateComments");
+            MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateComments");
+
+            // Reply Page
+            MessagingCenter.Subscribe<CommentPage>(this, "UpdateComments", (sender) => {
+                viewModel.ExecuteLoadCommentsCommand();
+            });
         }
 
         async void OnTapGestureRecognizerTapped(object sender, EventArgs args)

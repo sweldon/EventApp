@@ -50,26 +50,6 @@ namespace EventApp.ViewModels
 
             GetMoreComments = new Command(async () => await LoadMoreComments());
 
-            MessagingCenter.Subscribe<NewCommentPage>(this, "UpdateComments", (sender) => {
-                ExecuteLoadCommentsCommand();
-            });
-
-            MessagingCenter.Subscribe<CommentPage>(this, "UpdateComments", (sender) => {
-                ExecuteLoadCommentsCommand();
-            });
-
-            MessagingCenter.Subscribe<HolidayDetailPage>(this, "UpdateComments", (sender) => {
-                ExecuteLoadCommentsCommand();
-
-            });
-
-            MessagingCenter.Subscribe<LoginPage>(this, "UpdateComments", (sender) => {
-                ExecuteLoadCommentsCommand();
-
-            });
-
-
-
         }
 
         private async Task LoadMoreComments()
@@ -116,7 +96,7 @@ namespace EventApp.ViewModels
             isLoading = false;
         }
 
-        async Task ExecuteLoadCommentsCommand()
+        public async Task ExecuteLoadCommentsCommand()
         {
             if (IsBusy)
                 return;

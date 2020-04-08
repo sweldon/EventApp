@@ -119,7 +119,8 @@ namespace EventApp.Views
                     }
 
                     //try to purchase item
-                    var purchase = await billing.PurchaseAsync(productId, ItemType.InAppPurchase, "apppayload");
+                    var verify = DependencyService.Get<IInAppBillingVerifyPurchase>();
+                    var purchase = await billing.PurchaseAsync(productId, ItemType.InAppPurchase, "apppayload", verify);
                     if (purchase == null)
                     {
                         await DisplayAlert("Error!", "Something went wrong. You have not been charged for anything.", "Try again");
