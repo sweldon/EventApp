@@ -7,7 +7,6 @@ using EventApp.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Plugin.InAppBilling;
-using Plugin.InAppBilling.Abstractions;
 using System.Threading.Tasks;
 using System.Linq;
 
