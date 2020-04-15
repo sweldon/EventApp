@@ -64,13 +64,19 @@
                             <ColumnDefinition Width="33*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label IsVisible="{Binding isPremium}"
-                            Grid.Column="0"
-                            x:Name="isPremiumLabel" 
-                            TextColor="#4c96e8"
-                            Text="Premium"
-                            FontSize="Medium" 
-                            FontAttributes="Bold" />
+
+                        <Button
+                                IsVisible="{Binding isPremium}"
+                                Text="Premium User"
+                                CornerRadius="5"
+                                BorderColor="#4c96e8"
+                                BorderWidth="1"
+                                FontSize="Small"
+                                x:Name="isPremiumLabel"
+                                Clicked="OpenPremium"
+                                FontAttributes="Bold"
+                                BackgroundColor="#FFFFFF"
+                                TextColor="#4c96e8" />
 
                         <Button Text="Go Premium"
                                 CornerRadius="5"

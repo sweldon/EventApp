@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace EventApp.Views
 {
@@ -103,19 +104,19 @@ namespace EventApp.Views
 
                 var id = (int)((HomeMenuItem)e.SelectedItem).Id;
                 await RootPage.NavigateFromMenu(id);
-            }; 
-
+            };
         }
 
         public async void PromptLogin(object sender, EventArgs e) {
             LoginButton.IsEnabled = false;
-            await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+            App.promptLogin(Navigation);
             LoginButton.IsEnabled = true;
         }
 
         public async void OpenPremium(object sender, EventArgs e)
         {
             goPremiumButton.IsEnabled = false;
+            App.popModalIfActive(Navigation);
             await Navigation.PushModalAsync(new NavigationPage(new Premium()));
             goPremiumButton.IsEnabled = true;
         }
@@ -136,6 +137,7 @@ namespace EventApp.Views
 
 
                 // Reset labels and global settings
+                HeaderBackground.BackgroundColor = Color.FromHex("4c96e8");
                 isLoggedIn = false;
                 LogoutButton.IsVisible = false;
                 LoginButton.IsVisible = true;
@@ -148,12 +150,13 @@ namespace EventApp.Views
                // PremiumFrame.IsVisible = true;
                 goPremiumButton.IsVisible = true;
 
-                var menuPage = new MenuPage(); // Build hamburger menu
-                NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
-                var rootPage = new RootPage(); // Root handles master detail navigation
-                rootPage.Master = menuPage; // Menu
-                rootPage.Detail = NavigationPage; // Content
-                Application.Current.MainPage = rootPage; // Set root to built master detail
+                //var menuPage = new MenuPage(); // Build hamburger menu
+                //NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
+                //var rootPage = new RootPage(); // Root handles master detail navigation
+                //rootPage.Master = menuPage; // Menu
+                //rootPage.Detail = NavigationPage; // Content
+                //Application.Current.MainPage = rootPage; // Set root to built master detail
+                MessagingCenter.Send(this, "UpdateHolidayFeed");
 
             }
             catch
@@ -191,6 +194,29 @@ namespace EventApp.Views
                // PremiumFrame.IsVisible = false;
                 goPremiumButton.IsVisible = false;
             }
+            
+            MessagingCenter.Subscribe<LoginPage, bool>(this,
+                "UpdateMenu", (sender, data) => {
+                    if (isLoggedIn)
+                    {
+                        HeaderBackground.BackgroundColor = Color.FromHex("FFFFFF");
+                        DefaultHeader.IsVisible = false;
+                        ProfileHeader.IsVisible = true;
+                        LogoutButton.IsVisible = true;
+                        LoginButton.IsVisible = false;
+                        HeaderDivider.IsVisible = true;
+                        UserLabel.Text = "Hey, " + currentUser + "!";
+                        UserNameHeader.Text = currentUser;
+                        UserPointsHeader.Text = confettiCount;
+                        goPremiumButton.IsVisible = !isPremium;
+                    }
+                });
+
+        }
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            MessagingCenter.Unsubscribe<LoginPage, bool>(this, "UpdateMenu");
 
         }
 

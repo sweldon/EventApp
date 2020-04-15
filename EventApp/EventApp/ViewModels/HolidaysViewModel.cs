@@ -26,19 +26,13 @@ namespace EventApp.ViewModels
             Holidays = new ObservableCollection<Holiday>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
-            MessagingCenter.Subscribe<HolidayDetailPage, Object[]>(this,
-                "UpdateCelebrateStatus", (sender, data) => {
-                UpdateCelebrateStatus((string)data[0], (bool)data[1], (string)data[2]);
-            });
-
-
         }
 
         // Key code responsible for maintaining celebration status
         // Across pages. Very cool how it works, use this in the future.
         public void UpdateCelebrateStatus(string holiday, bool upvote, string newVotes)
         {
-
+            Debug.WriteLine($"Updating celebrate status of {holiday} to {upvote}");
             foreach (Holiday h in Holidays)
             {
 
@@ -57,7 +51,7 @@ namespace EventApp.ViewModels
                 }
             }
         }
-        async Task ExecuteLoadItemsCommand()
+        public async Task ExecuteLoadItemsCommand()
         {
             if (IsBusy)
                 return;

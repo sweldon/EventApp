@@ -27,15 +27,16 @@ namespace EventApp.Views
                 OnPropertyChanged();
             }
         }
-        
+
+        public bool NotificationLock;
 
         public NotificationsPage()
         {
             InitializeComponent();
             BindingContext = viewModel = new NotificationsViewModel(); ;
             Title = "Notifications";
-    
             NotificationsList.ItemSelected += OnItemSelected;
+            NotificationLock = false;
         }
 
         async void GoBack(object sender, EventArgs e)
@@ -48,35 +49,31 @@ namespace EventApp.Views
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
-            this.IsEnabled = false;
+            
             ((ListView)sender).SelectedItem = null;
             if (args.SelectedItem == null)
             {
-                this.IsEnabled = true;
                 return;
             }
             var notif = args.SelectedItem as Notification;
 
-            if (notif.Type == "Comment")
+            if (notif.Type == "Comment" && !NotificationLock)
             {
+                NotificationLock = true;
                 try
                 {
                     //await Navigation.PushAsync(new CommentPage(new CommentViewModel(notif.Id, comment.HolidayId)));
                     comment = await viewModel.CommentStore.GetCommentById(notif.Id);
                     Holiday holiday = await viewModel.HolidayStore.GetHolidayById(comment.HolidayId);
                     await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(comment.HolidayId, holiday, notif.Id)));
-                    this.IsEnabled = true;
                 }
                 catch
                 {
                     await DisplayAlert("Uh oh!", "We could no longer find that comment.", "Fine");
-                    this.IsEnabled = true;
                 }
-
-                
+                await Task.Delay(2000);
+                NotificationLock = false;
             }
-            this.IsEnabled = true;
-
         }
 
         protected override void OnAppearing()

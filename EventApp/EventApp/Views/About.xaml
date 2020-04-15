@@ -15,9 +15,14 @@
             <Label Text="Holidaily and the Holidaily Party Popper logo are trademarks of DVNT Applications"
                 HorizontalTextAlignment="Center"
                 HorizontalOptions="CenterAndExpand" />
-            <Label Text="Icons made by Kiranshastry from www.flaticon.com"
+            <Label Text="Icons made by Kiranshastry and Roundicons from www.flaticon.com"
                 HorizontalTextAlignment="Center"
                 HorizontalOptions="CenterAndExpand" />
+            <Button Text="View EULA"
+                Clicked="ViewEula"
+                BackgroundColor="#4c96e8"
+                TextColor="White"
+                Margin="0,10,0,0" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

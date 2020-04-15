@@ -128,49 +128,65 @@ namespace EventApp.Views
         async void OnItemSelected(object sender,
             SelectedItemChangedEventArgs args)
         {
-
+            this.IsEnabled = false;
             ((ListView)sender).SelectedItem = null;
             if (args.SelectedItem == null)
             {
                 return;
             }
             var item = args.SelectedItem as Holiday;
-            if (item.Id != "-1") // Ad
+            if (!item.Active)
             {
-                this.IsEnabled = false;
-                await Navigation.PushAsync(new HolidayDetailPage(new
-                    HolidayDetailViewModel(item.Id, item)));
-                this.IsEnabled = true;
+                await DisplayAlert("Holiday Inactive", "This holiday is currently not ready " +
+                        "for viewing. We like to keep a close eye on our holidays " +
+                        "and keep them up to date, so sometimes they are removed " +
+                        "from the active queue. Try again later!", "OK");
             }
-
+            else
+            {
+                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id, item)));
+            }
+            this.IsEnabled = true;
         }
 
         async void ImageToHoliday(object sender, EventArgs args)
         {
-
+            this.IsEnabled = false;
             var item = (sender as ContentView).BindingContext as Holiday;
-            string holidayId = item.Id;
-            if (holidayId != "-1") // Ad
+            if (!item.Active)
             {
-                this.IsEnabled = false;
-                await Navigation.PushAsync(new HolidayDetailPage(new
-                    HolidayDetailViewModel(holidayId, item)));
-                this.IsEnabled = true;
+                await DisplayAlert("Holiday Inactive", "This holiday is currently not ready " +
+                        "for viewing. We like to keep a close eye on our holidays " +
+                        "and keep them up to date, so sometimes they are removed " +
+                        "from the active queue. Try again later!", "OK");
             }
+            else
+            {
+                string holidayId = item.Id;
+                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, item)));
+            }
+            this.IsEnabled = true;
         }
 
         async void LabelToHoliday(object sender, EventArgs args)
         {
-
+            this.IsEnabled = false;
             var item = (sender as Label).BindingContext as Holiday;
-            string holidayId = item.Id;
-            if (holidayId != "-1") // Ad
+            if (!item.Active)
             {
-                this.IsEnabled = false;
+                await DisplayAlert("Holiday Inactive", "This holiday is currently not ready " +
+                        "for viewing. We like to keep a close eye on our holidays " +
+                        "and keep them up to date, so sometimes they are removed " +
+                        "from the active queue. Try again later!", "OK");
+            }
+            else
+            {
+                string holidayId = item.Id;
+
                 await Navigation.PushAsync(new HolidayDetailPage(new
                     HolidayDetailViewModel(holidayId, item)));
-                this.IsEnabled = true;
             }
+            this.IsEnabled = true;
         }
 
         protected override async void OnAppearing()
@@ -181,9 +197,6 @@ namespace EventApp.Views
                 await Task.Delay(100);
                 SearchValue.Focus();
             }
-
-
-
         }
 
         public void Share(object sender, EventArgs args)

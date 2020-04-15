@@ -123,13 +123,17 @@ namespace EventApp.Views
                         isPremium = responseJSON.results.premium;
                         confettiCount = responseJSON.results.confetti;
 
-                        var menuPage = new MenuPage(); // Build hamburger menu
-                        NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
-                        var rootPage = new RootPage(); // Root handles master detail navigation
-                        rootPage.Master = menuPage; // Menu
-                        rootPage.Detail = NavigationPage; // Content
-                        Application.Current.MainPage = rootPage; // Set root to built master detail
+                        //var menuPage = new MenuPage(); // Build hamburger menu
+                        //NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
+                        //var rootPage = new RootPage(); // Root handles master detail navigation
+                        //rootPage.Master = menuPage; // Menu
+                        //rootPage.Detail = NavigationPage; // Content
+                        //Application.Current.MainPage = rootPage; // Set root to built master detail
 
+                        MessagingCenter.Send(this, "UpdateMenu", true);
+                        MessagingCenter.Send(this, "UpdateComments");
+                        MessagingCenter.Send(this, "UpdateHoliday");
+                        MessagingCenter.Send(this, "UpdateHolidayFeed");
                         try
                         {
                             await Navigation.PopModalAsync();

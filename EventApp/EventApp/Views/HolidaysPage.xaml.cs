@@ -116,9 +116,20 @@ namespace EventApp.Views
 
         protected override async void OnAppearing()
         {
-
-
             base.OnAppearing();
+
+            MessagingCenter.Unsubscribe<HolidayDetailPage, Object[]>(this, "UpdateCelebrateStatus");
+            // When logging in from menu we need to refresh the feed statuses
+            MessagingCenter.Subscribe<LoginPage>(this, "UpdateHolidayFeed", (sender) => {
+                Debug.WriteLine("Refreshing all holidays");
+                viewModel.ExecuteLoadItemsCommand();
+            });
+
+            MessagingCenter.Subscribe<MenuPage>(this, "UpdateHolidayFeed", (sender) => {
+                Debug.WriteLine("Refreshing all holidays");
+                viewModel.ExecuteLoadItemsCommand();
+            });
+
 
             if (viewModel.Holidays.Count == 0)
                 viewModel.LoadItemsCommand.Execute(null);
@@ -136,7 +147,22 @@ namespace EventApp.Views
                 }
                 await Task.Delay(2000);
             }
+
         }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateHolidayFeed");
+            MessagingCenter.Unsubscribe<MenuPage>(this, "UpdateHolidayFeed");
+            MessagingCenter.Subscribe<HolidayDetailPage, Object[]>(this,
+            "UpdateCelebrateStatus", (sender, data) => {
+                viewModel.UpdateCelebrateStatus((string)data[0], (bool)data[1], (string)data[2]);
+            });
+        }
+
+
+
 
 
         async void OnCelebrateTapped(object sender, EventArgs args)
@@ -182,7 +208,7 @@ namespace EventApp.Views
             if (!isLoggedIn)
             {
                 this.IsEnabled = false;
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                App.promptLogin(Navigation);
                 this.IsEnabled = true;
             }
             else

@@ -22,7 +22,7 @@ namespace EventApp
         #region Setting Constants
 
         private const string AppInfoKey = "app_info_key";
-        private static readonly string AppInfoKeyDefault = "DVNT Applications - Beta 0.2.16";
+        private static readonly string AppInfoKeyDefault = "Holidaily™ - Version 1.0";
 
         private const string SettingsKey = "settings_key";
         private static readonly string SettingsDefault = "no";
@@ -45,7 +45,22 @@ namespace EventApp
         private const string ConfettiCountKey = "confetti_key";
         private static readonly string ConfettiCountDefault = "none";
 
+        private const string EulaKey = "eula_key";
+        private static readonly bool EulaDefault = false;
+
         #endregion
+
+        public static bool EulaAccepted
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(EulaKey, EulaDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(EulaKey, value);
+            }
+        }
 
         public static bool IsPremium
         {

@@ -45,6 +45,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SearchViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TrendingViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\NotificationsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Eula.xaml.cs">
+      <DependentUpon>Eula.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\AddHoliday.xaml.cs">
       <DependentUpon>AddHoliday.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -163,6 +167,9 @@
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\AddHoliday.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\Eula.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\LimboPage.xaml">
