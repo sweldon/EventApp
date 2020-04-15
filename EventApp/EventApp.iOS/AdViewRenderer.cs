@@ -7,6 +7,7 @@ using Xamarin.Forms.Platform.iOS;
 using EventApp;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 
 [assembly: ExportRenderer(typeof(AdControlView), typeof(AdViewRenderer))]
 namespace EventApp
@@ -18,7 +19,12 @@ namespace EventApp
 			base.OnElementChanged(e);
 			if (Control == null)
 			{
-				SetNativeControl(CreateBannerView());				
+                try {
+					SetNativeControl(CreateBannerView());
+                }
+                catch{
+					Debug.WriteLine("Ad not ready yet");
+				}			
 			}
 		}
 		
@@ -32,18 +38,13 @@ namespace EventApp
 
 		private BannerView CreateBannerView()
 		{
+
 			var bannerView = new BannerView(size: AdSizeCons.SmartBannerPortrait,
                                            origin: new CGPoint(0, UIScreen.MainScreen.Bounds.Size.Height - AdSizeCons.Banner.Size.Height))
             {
                 AdUnitID = Element.AdUnitId,
                 RootViewController = GetVisibleViewController()
             };
-
-			//var bannerView = new BannerView(AdSizeCons.SmartBannerPortrait)
-			//{
-			//	AdUnitID = Element.AdUnitId,
-			//	RootViewController = GetVisibleViewController()
-			//};
 
 			bannerView.LoadRequest(GetRequest());
 

@@ -38,6 +38,22 @@ namespace EventApp.Models
             }
         }
 
+        private bool showReport;
+        [DefaultValue(true)]
+        public bool ShowReport
+        {
+            get { return showReport; }
+            set
+            {
+                if (showReport == value)
+                {
+                    return;
+                }
+                showReport = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string showreply;
         public string ShowReply
         {
@@ -69,7 +85,7 @@ namespace EventApp.Models
         }
 
         private double opacity;
-        [DefaultValue(.5)]
+        [DefaultValue(1)]
         public double ElementOpacity
         {
             get { return opacity; }

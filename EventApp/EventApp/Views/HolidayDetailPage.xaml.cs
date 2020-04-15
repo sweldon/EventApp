@@ -98,7 +98,7 @@ namespace EventApp.Views
                 }
                 LoadingCommentsDialog.IsVisible = false;
             };
-            
+
 
             // TODO: just add comment to sublist dont refresh the whole thing
             //MessagingCenter.Subscribe<HolidayDetailPage, Object[]>(this,
@@ -106,8 +106,19 @@ namespace EventApp.Views
             //    UpdateCelebrateStatus((string)data[0], (bool)data[1], (string)data[2]);
             //});
 
+
         }
 
+        async Task UpdateHoliday()
+        {
+            viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
+            // Update celebrate status on detail page
+            UpVoteImage.Source = viewModel.Holiday.CelebrateStatus.Contains("active") ? "celebrate_active.png" : "celebrate.png";
+            // Update statuses in feed off screen
+            bool upvote = viewModel.Holiday.CelebrateStatus.Contains("active") ? true : false;
+            Object[] values = { viewModel.Holiday.Name, upvote, viewModel.Holiday.Votes };
+            MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
+        }
 
 
         async void OnDeleteTapped(object sender, EventArgs args)
@@ -115,7 +126,7 @@ namespace EventApp.Views
 
             if (!isLoggedIn)
             {
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                App.promptLogin(Navigation);
             }
             else
             {
@@ -177,12 +188,48 @@ namespace EventApp.Views
 
             if (!isLoggedIn)
             {
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                App.promptLogin(Navigation);
             }
             else
             {
                 var item = (sender as Label).BindingContext as Comment;
                 await Navigation.PushAsync(new CommentPage(new CommentViewModel(item.Id, viewModel.Holiday.Id)));
+            }
+        }
+
+        async void Report(object sender, EventArgs args)
+        {
+            if (!isLoggedIn)
+            {
+                App.promptLogin(Navigation);
+            }
+            else
+            {
+                var comment = (sender as Label).BindingContext as Comment;
+                var confirm = await DisplayAlert("Report Comment", $"Are you sure " +
+                    $"you'd like to report this comment by {comment.UserName}?", "Yes", "No");
+                if (confirm)
+                {
+                    comment.ShowReport = false;
+                    bool block = false;
+                    var confirmBlock = await DisplayAlert("Reported", $"Thank you for " +
+                        $"making Holidaily a safer place. Would you like to block " +
+                        $"future content from {comment.UserName}?", "Yes", "No");
+                    if (confirmBlock)
+                    {
+                        await DisplayAlert($"{comment.UserName} blocked",
+                            $"{comment.UserName} has been blocked", "OK");
+                        comment.Content = "[blocked]";
+                        comment.UserName = "[blocked]";
+                        block = true;
+                    }
+                    else
+                    {
+                        comment.Content = "[reported]";
+                        comment.UserName = "[reported]";
+                    }
+                    await viewModel.CommentStore.ReportComment(comment.Id, block.ToString());
+                }
             }
         }
 
@@ -217,7 +264,6 @@ namespace EventApp.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-
             if (viewModel.GroupedCommentList.Count == 0)
                 viewModel.LoadHolidayComments.Execute(null);
             AdBanner.IsVisible = !isPremium;
@@ -252,8 +298,36 @@ namespace EventApp.Views
                 await DisplayAlert("Error", "We couldn't fetch the data for this holiday", "OK");
                 await Navigation.PopAsync();
             }
+            
+            MessagingCenter.Subscribe<LoginPage>(this, "UpdateHoliday", (sender) =>
+            {
+                UpdateHoliday();
+            });
 
+            MessagingCenter.Subscribe<NewCommentPage>(this, "UpdateComments", (sender) => {
+                viewModel.ExecuteLoadCommentsCommand();
+            });
 
+            // Reply Page
+            MessagingCenter.Unsubscribe<CommentPage>(this, "UpdateComments");
+
+            MessagingCenter.Subscribe<LoginPage>(this, "UpdateComments", (sender) => {
+                viewModel.ExecuteLoadCommentsCommand();
+            });
+
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateHoliday");
+            MessagingCenter.Unsubscribe<NewCommentPage>(this, "UpdateComments");
+            MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateComments");
+
+            // Reply Page
+            MessagingCenter.Subscribe<CommentPage>(this, "UpdateComments", (sender) => {
+                viewModel.ExecuteLoadCommentsCommand();
+            });
         }
 
         async void OnTapGestureRecognizerTapped(object sender, EventArgs args)
@@ -261,7 +335,7 @@ namespace EventApp.Views
             this.IsEnabled = false;
             if (!isLoggedIn)
             {
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                App.promptLogin(Navigation);
             }
             else
             {
@@ -310,7 +384,7 @@ namespace EventApp.Views
             {
                 if (!isLoggedIn)
                 {
-                    await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                    App.promptLogin(Navigation);
                 }
                 else
                 {
@@ -353,7 +427,7 @@ namespace EventApp.Views
             if (!isLoggedIn)
             {
                 this.IsEnabled = false;
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                App.promptLogin(Navigation);
                 this.IsEnabled = true;
             }
             else
@@ -437,7 +511,7 @@ namespace EventApp.Views
             if (!isLoggedIn)
             {
                 this.IsEnabled = false;
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                App.promptLogin(Navigation);
                 this.IsEnabled = true;
             }
             else
@@ -508,7 +582,7 @@ namespace EventApp.Views
             if (!isLoggedIn)
             {
                 this.IsEnabled = false;
-                await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+                App.promptLogin(Navigation);
                 this.IsEnabled = true;
             }
             else
@@ -516,7 +590,6 @@ namespace EventApp.Views
 
                 if (item.DownVoteStatus == "down_active.png")
                 {
-                    Debug.WriteLine("Down was active upvoting twice");
                     item.Votes += 2;
                     item.DownVoteStatus = "down.png";
                     item.UpVoteStatus = "up_active.png";
