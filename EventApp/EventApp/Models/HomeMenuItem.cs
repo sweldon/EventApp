@@ -7,7 +7,6 @@ namespace EventApp.Models
     public enum MenuItemType
     {
         Holidays,
-        Trending,
         Notifications,
         Search,
         Updates,

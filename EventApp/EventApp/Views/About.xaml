@@ -3,26 +3,55 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.About">
     <ContentPage.Content>
-        <StackLayout>
-            <Image Source="holiday_banner_blue.png"
-                HorizontalOptions="CenterAndExpand" />
-            <Label Text="Follow us on Facebook, Twitter, and Instagram!"
-                HorizontalTextAlignment="Center"
-                HorizontalOptions="CenterAndExpand" />
-            <Label Text="Contact the developer at Holidailyapp@gmail.com"
-                HorizontalTextAlignment="Center"
-                HorizontalOptions="CenterAndExpand" />
-            <Label Text="Holidaily and the Holidaily Party Popper logo are trademarks of DVNT Applications"
-                HorizontalTextAlignment="Center"
-                HorizontalOptions="CenterAndExpand" />
-            <Label Text="Icons made by Kiranshastry and Roundicons from www.flaticon.com"
-                HorizontalTextAlignment="Center"
-                HorizontalOptions="CenterAndExpand" />
-            <Button Text="View EULA"
-                Clicked="ViewEula"
-                BackgroundColor="#4c96e8"
-                TextColor="White"
-                Margin="0,10,0,0" />
-        </StackLayout>
+        <ScrollView>
+            <StackLayout>
+                <Image Source="holiday_banner_blue.png"
+                    HorizontalOptions="CenterAndExpand" />
+                <Button Text="Please Rate Us!"
+                    Clicked="OpenStore"
+                    CornerRadius="0"
+                    BackgroundColor="#3F9E4D"
+                    TextColor="White"
+                    Margin="0,10,0,0" />
+                <Button Text="Instagram"
+                    CornerRadius="0"
+                    Clicked="OpenInstagram"
+                    BackgroundColor="#BC2A8D"
+                    TextColor="White"
+                    Margin="0,10,0,0" />
+                <Button Text="Facebook"
+                    CornerRadius="0"
+                    Clicked="OpenFacebook"
+                    BackgroundColor="#4367B2"
+                    TextColor="White"
+                    Margin="0,10,0,0" />
+                <Button Text="Twitter"
+                    Clicked="OpenTwitter"
+                    CornerRadius="0"
+                    BackgroundColor="#56ACEE"
+                    TextColor="White"
+                    Margin="0,10,0,0" />
+                <Button Text="End User License Agreement"
+                    Clicked="ViewEula"
+                    CornerRadius="0"
+                    BackgroundColor="#4c96e8"
+                    TextColor="White"
+                    Margin="0,10,0,0" />
+                <StackLayout Spacing="15" Padding="15">
+                    <Label Text="Contact the developer at Holidailyapp@gmail.com"
+                    HorizontalTextAlignment="Center"
+                    HorizontalOptions="CenterAndExpand" />
+        
+                    <Label Text="Holidaily and the Holidaily Party Popper logo are trademarks of Crater Applications"
+                    HorizontalTextAlignment="Center"
+                    HorizontalOptions="CenterAndExpand" />
+             
+                    <Label Text="Icons made by Kiranshastry and Roundicons from www.flaticon.com"
+                    HorizontalTextAlignment="Center"
+                    HorizontalOptions="CenterAndExpand" />
+               </StackLayout>
+               
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

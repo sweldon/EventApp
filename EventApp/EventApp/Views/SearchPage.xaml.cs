@@ -13,6 +13,7 @@ using System.Diagnostics;
 using Xamarin.Essentials;
 using Plugin.Share;
 using Plugin.Share.Abstractions;
+using System.Collections.ObjectModel;
 
 namespace EventApp.Views
 {
@@ -24,68 +25,83 @@ namespace EventApp.Views
         public SearchPage()
         {
             InitializeComponent();
-
             BindingContext = viewModel = new SearchViewModel();
-
             SearchHolidayList.ItemTapped += (object sender, ItemTappedEventArgs e) => {
                 if (e.Item == null) return;
                 ((ListView)sender).SelectedItem = null;
             };
-
-            viewModel.Title = "Search a Holiday";
-
+            viewModel.Title = "Find Holidays";
             DateTime SelectedDate = viewModel.SelectedDate;
-
-
-
+            TopHolidayList.ItemSelected += OnPopularSelected;
         }
 
-        public void ToggleSearchType(object sender, EventArgs args)
+        public void ToggleFindType(object sender, EventArgs args)
         {
 
-            var labelSender = (Label)sender;
+            var contentViewSender = (ContentView)sender;
+            var labelSender = (Label)contentViewSender.Children[0];
             var searchType = labelSender.Text;
-            if(searchType=="Search by Name")
+            if (searchType == "Search Holidays")
             {
-                NameSearch.IsVisible = true;
-                DateSearch.IsVisible = false;
-                SearchByNameText.TextColor = Color.FromHex("4c96e8");
-                SearchByDateText.TextColor = Color.Gray;
-                SearchValue.Focus();
+                SearchWrapper.IsVisible = true;
+                PopularWrapper.IsVisible = false;
+                SearchSelected.IsVisible = true;
+                PopularSelected.IsVisible = false;
+                SearchHolidays.TextColor = Color.FromHex("4c96e8");
+                PopularHolidays.TextColor = Color.Gray;
             }
             else
             {
-                NameSearch.IsVisible = false;
-                DateSearch.IsVisible = true;
-                SearchByNameText.TextColor = Color.Gray;
-                SearchByDateText.TextColor = Color.FromHex("4c96e8");
-                DateValue.Focus();
-                #if __ANDROID__
-                DependencyService.Get<IKeyboardHelper>().HideKeyboard();
-                #endif
+                if (viewModel.TopHolidays.Count == 0)
+                    viewModel.LoadTopHolidays.Execute(null);
+                PopularWrapper.IsVisible = true;
+                SearchWrapper.IsVisible = false;
+                PopularSelected.IsVisible = true;
+                SearchSelected.IsVisible = false;
+                SearchHolidays.TextColor = Color.Gray;
+                PopularHolidays.TextColor = Color.FromHex("4c96e8");
             }
+        }
 
 
+        async void OnPopularSelected(object sender, SelectedItemChangedEventArgs args)
+        {
+            this.IsEnabled = false;
+            ((ListView)sender).SelectedItem = null;
+            if (args.SelectedItem == null)
+            {
+                return;
+            }
+            var item = args.SelectedItem as Holiday;
+            await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(item.Id, item)));
+            this.IsEnabled = true;
         }
 
         public async void SearchByDate(object sender, DateChangedEventArgs args)
         {
+            
+            SearchPlaceholder.IsVisible = false;
+            NoResultsBox.IsVisible = false;
             var searchedDate = DateValue.Date;
             var dateStr = searchedDate.ToString();
             try
             {
-                SearchHolidayList.ItemsSource = await viewModel.HolidayStore.SearchHolidays(dateStr);
+                IEnumerable<Holiday> SearchResults = await viewModel.HolidayStore.SearchHolidays(dateStr);
+                SearchHolidayList.ItemsSource = SearchResults;
+                NoResultsBox.IsVisible = SearchResults.Count() > 0 ? false : true;
+                SearchHolidayList.BackgroundColor = SearchResults.Count() > 0 ? Color.FromHex("E0E0E0") : Color.FromHex("FFFFFF");
             }
             catch
             {
                 await DisplayAlert("Error", "Couldn't connect to Holidaily", "OK");
             }
-            
 
         }
 
         public async void DaySearched(object sender, EventArgs e)
         {
+            
+            SearchPlaceholder.IsVisible = false;
             try
             {
                 if (!string.IsNullOrEmpty(SearchValue.Text))
@@ -95,8 +111,11 @@ namespace EventApp.Views
                     if (searchText.Length > 2)
                     {
                         // Do some searching
-                        SearchHolidayList.ItemsSource =
-                            await viewModel.HolidayStore.SearchHolidays(searchText);
+                        IEnumerable<Holiday> SearchResults = await viewModel.HolidayStore.SearchHolidays(searchText);
+                        SearchHolidayList.ItemsSource = SearchResults;
+                        NoResultsBox.IsVisible = SearchResults.Count() > 0 ? false : true;
+                        SearchHolidayList.BackgroundColor = SearchResults.Count() > 0 ? Color.FromHex("E0E0E0") : Color.FromHex("FFFFFF");
+
                     }
                     else
                     {
@@ -192,11 +211,6 @@ namespace EventApp.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            if(SearchByDateText.TextColor == Color.Gray)
-            {
-                await Task.Delay(100);
-                SearchValue.Focus();
-            }
         }
 
         public void Share(object sender, EventArgs args)

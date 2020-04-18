@@ -41,9 +41,6 @@ namespace EventApp.Views
                     case (int)MenuItemType.Holidays:
                         MenuPages.Add(id, new NavigationPage(new HolidaysPage()));
                         break;
-                    case (int)MenuItemType.Trending:
-                        MenuPages.Add(id, new NavigationPage(new Trending()));
-                        break;
                     case (int)MenuItemType.Search:
                         MenuPages.Add(id, new NavigationPage(new SearchPage()));
                         break;
