@@ -119,7 +119,7 @@ namespace EventApp.Views
                         // ETC... instead of Settings plugin? Possible improvement.
                         //App.GlobalUserObject.Confetti = responseJSON.results.confetti;
                         isLoggedIn = true;
-                        currentUser = userName;
+                        currentUser = responseJSON.results.username;
                         isPremium = responseJSON.results.premium;
                         confettiCount = responseJSON.results.confetti;
 

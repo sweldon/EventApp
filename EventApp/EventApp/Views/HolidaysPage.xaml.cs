@@ -60,6 +60,18 @@ namespace EventApp.Views
                 OnPropertyChanged();
             }
         }
+        public bool isActive
+        {
+            get { return Settings.IsActive; }
+            set
+            {
+                if (Settings.IsActive == value)
+                    return;
+                Settings.IsActive = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string showAds;
         public HolidaysPage()
         {
@@ -114,22 +126,26 @@ namespace EventApp.Views
             }
         }
 
+        private async void MakeUserActive()
+        {
+            await Task.Delay(5000);
+            isActive = true;
+        }
+
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-
+            await Task.Run(async () =>
+            {
+                MakeUserActive();
+            });
             MessagingCenter.Unsubscribe<HolidayDetailPage, Object[]>(this, "UpdateCelebrateStatus");
             // When logging in from menu we need to refresh the feed statuses
-            MessagingCenter.Subscribe<LoginPage>(this, "UpdateHolidayFeed", (sender) => {
-                Debug.WriteLine("Refreshing all holidays");
-                viewModel.ExecuteLoadItemsCommand();
-            });
-
+            MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateHolidayFeed");
             MessagingCenter.Subscribe<MenuPage>(this, "UpdateHolidayFeed", (sender) => {
                 Debug.WriteLine("Refreshing all holidays");
                 viewModel.ExecuteLoadItemsCommand();
             });
-
 
             if (viewModel.Holidays.Count == 0)
                 viewModel.LoadItemsCommand.Execute(null);
@@ -145,7 +161,7 @@ namespace EventApp.Views
                     await DisplayAlert("Error", "Couldn't connect to Holidaily", "OK");
                     return;
                 }
-                await Task.Delay(2000);
+                await Task.Delay(1000);
             }
 
         }
@@ -153,17 +169,17 @@ namespace EventApp.Views
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateHolidayFeed");
+            MessagingCenter.Subscribe<LoginPage>(this, "UpdateHolidayFeed", (sender) => {
+                Debug.WriteLine("Refreshing all holidays");
+                viewModel.ExecuteLoadItemsCommand();
+            });
             MessagingCenter.Unsubscribe<MenuPage>(this, "UpdateHolidayFeed");
+
             MessagingCenter.Subscribe<HolidayDetailPage, Object[]>(this,
             "UpdateCelebrateStatus", (sender, data) => {
                 viewModel.UpdateCelebrateStatus((string)data[0], (bool)data[1], (string)data[2]);
             });
         }
-
-
-
-
 
         async void OnCelebrateTapped(object sender, EventArgs args)
         {
@@ -270,10 +286,7 @@ namespace EventApp.Views
 
             var holidayName = holiday.Name;
             var holidayLink = App.HolidailyHost+"/holiday?id=" + holiday.Id;
-            string preface = "It's " + holidayName + "! ";
-            string HolidayDescriptionShort = holiday.Description.Length <= 90 ?
-                preface + holiday.Description + "\nSee more! " : preface
-                + holiday.Description.Substring(0, 90) + "...\nSee more! ";
+            string blurb = $"{holidayName}! {holiday.Blurb}\nCheck it out on Holidaily!";
 
             if (!CrossShare.IsSupported)
                 return;
@@ -281,7 +294,7 @@ namespace EventApp.Views
             CrossShare.Current.Share(new ShareMessage
             {
                 Title = holidayName,
-                Text = HolidayDescriptionShort,
+                Text = blurb,
                 Url = holidayLink
             });
 

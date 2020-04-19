@@ -351,15 +351,10 @@ namespace EventApp.Views
         public void Share(object sender, EventArgs args)
         {
             this.IsEnabled = false;
-
             var holiday = viewModel.Holiday;
-
             var holidayName = holiday.Name;
-            var timeSince = holiday.Date;
             var holidayLink = App.HolidailyHost + "/holiday?id=" + holiday.Id;
-            string preface = "It's " + holidayName + "! ";
-            string HolidayDescriptionShort = holiday.Description.Length <= 90 ? preface + holiday.Description +
-                "\nSee more! " : preface + holiday.Description.Substring(0, 90) + "...\nSee more! ";
+            string blurb = $"{holidayName}! {holiday.Blurb}\nCheck it out on Holidaily!";
 
             if (!CrossShare.IsSupported)
                 return;
@@ -367,7 +362,7 @@ namespace EventApp.Views
             CrossShare.Current.Share(new ShareMessage
             {
                 Title = holidayName,
-                Text = HolidayDescriptionShort,
+                Text = blurb,
                 Url = holidayLink
             });
 

@@ -88,7 +88,7 @@ namespace EventApp.Views
 
                 dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                 string points = responseJSON.results.ContainsKey("confetti") ? responseJSON.results.confetti.ToString() : "0";
-                PointsLabel.Text = "You have " + points + " points!";
+                PointsLabel.Text = "You have " + points + " confetti!";
             }
             catch
             {
@@ -109,7 +109,7 @@ namespace EventApp.Views
 
             if (!isLoggedIn)
             {
-                PointsLabel.Text = "Log in to get points!";
+                PointsLabel.Text = "Log in to get confetti!";
   
             }
             else
@@ -134,7 +134,7 @@ namespace EventApp.Views
             string message = responseJSON.message;
             if (status == 200)
             {
-                await DisplayAlert("Cha-ching!", "You've been awarded "+rewardAmount+" points!", "OK");
+                await DisplayAlert("Cha-ching!", "You've been awarded "+rewardAmount+" confetti!", "OK");
                 UpdateUserPoints();
             }
             else
