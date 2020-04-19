@@ -6,7 +6,7 @@
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
               xmlns:local="clr-namespace:EventApp"  >
 
-    <StackLayout VerticalOptions="FillAndExpand" Spacing="0">
+    <StackLayout VerticalOptions="FillAndExpand" Spacing="0" BackgroundColor="#FFFFFF">
 
 
         
@@ -69,12 +69,13 @@
                   IsPullToRefreshEnabled="true"
                   CachingStrategy="RecycleElement">
 
-                    <ListView.BackgroundColor>
-                        <OnPlatform x:TypeArguments="Color"
-                        iOS="#E0E0E0"/>
-                      </ListView.BackgroundColor>
-                    
-                    <ListView.ItemTemplate>
+                <ListView.BackgroundColor>
+                    <OnPlatform x:TypeArguments="Color"
+                        iOS="#E0E0E0" Android="#F5F5F5"/>
+                </ListView.BackgroundColor>
+
+
+                <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
                                 <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="White">
@@ -195,12 +196,12 @@
             <StackLayout Orientation="Horizontal" Padding="10">
                 <!--Can use TextChanged attr with SearchTextChanged function in the future if you want, I think this is cleaner for now -->
                 <Entry HorizontalOptions="FillAndExpand"
-                       BackgroundColor="#FAFAFA"
+                       BackgroundColor="#FFFFFF"
                        Completed="DaySearched"
                        Placeholder="Type anything..."
                        FontSize="12"
                        x:Name="SearchValue" />
-                    <DatePicker BackgroundColor="#F5F5F5" Date="{Binding SelectedDate}" x:Name="DateValue" DateSelected="SearchByDate"  />
+                    <DatePicker BackgroundColor="#FFFFFF" Date="{Binding SelectedDate}" x:Name="DateValue" DateSelected="SearchByDate"  />
             </StackLayout>
 
             <ContentView x:Name="SearchPlaceholder" Padding="15,0,15,15">
@@ -228,7 +229,7 @@
                 </Frame>
             </ContentView>
 
-            <ContentView x:Name="NoResultsBox" Padding="15,0,15,15" IsVisible="False">
+            <ContentView x:Name="NoResultsBox" Padding="15,0,15,15" IsVisible="False" BackgroundColor="#FFFFFF">
                 <Frame CornerRadius="3"
                        HasShadow="False"
                        OutlineColor="#B9D3EE"
