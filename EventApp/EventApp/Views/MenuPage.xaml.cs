@@ -86,12 +86,9 @@ namespace EventApp.Views
             menuItems = new List<HomeMenuItem>
             {
                 new HomeMenuItem {Id = MenuItemType.Holidays, Title="Home", MenuImage="Home_Menu_Icon.png"},
-                new HomeMenuItem {Id = MenuItemType.Search, Title="Search", MenuImage="Search_Menu_Icon.png"},
+                new HomeMenuItem {Id = MenuItemType.Search, Title="Find Holidays", MenuImage="Search_Menu_Icon.png"},
                 new HomeMenuItem {Id = MenuItemType.AddHoliday, Title="Submit Holiday", MenuImage="Submit_Menu_Icon.png"},
                 new HomeMenuItem {Id = MenuItemType.ConfettiLeaders, Title="Confetti Leaders", MenuImage="Holiday_Menu_Icon.png"},
-                new HomeMenuItem {Id = MenuItemType.Trending, Title="Popular", MenuImage="Popular_Menu_Icon.png"},
-                //new HomeMenuItem {Id = MenuItemType.Updates, Title="News", MenuImage="News_Menu_Icon.png"},
-                //new HomeMenuItem {Id = MenuItemType.Premium, Title="Premium", MenuImage="Premium_Menu_Icon.png"},
                 new HomeMenuItem {Id = MenuItemType.Rewards, Title="Get Confetti", MenuImage="Gift.png"},
                 new HomeMenuItem {Id = MenuItemType.About, Title="About Holidaily", MenuImage="News_Menu_Icon.png"}
             };
@@ -143,19 +140,10 @@ namespace EventApp.Views
                 LoginButton.IsVisible = true;
                 DefaultHeader.IsVisible = true;
                 ProfileHeader.IsVisible = false;
-                //HeaderDivider.IsVisible = false;
                 UserLabel.Text = "Hey there!";
                 currentUser = null;
                 isPremium = false;
-               // PremiumFrame.IsVisible = true;
                 goPremiumButton.IsVisible = true;
-
-                //var menuPage = new MenuPage(); // Build hamburger menu
-                //NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
-                //var rootPage = new RootPage(); // Root handles master detail navigation
-                //rootPage.Master = menuPage; // Menu
-                //rootPage.Detail = NavigationPage; // Content
-                //Application.Current.MainPage = rootPage; // Set root to built master detail
                 MessagingCenter.Send(this, "UpdateHolidayFeed");
 
             }
@@ -179,7 +167,6 @@ namespace EventApp.Views
                 UserLabel.Text = "Hey, " + currentUser + "!";
                 UserNameHeader.Text = currentUser;
                 UserPointsHeader.Text = confettiCount;
-               // PremiumFrame.IsVisible = !isPremium;
                 goPremiumButton.IsVisible = !isPremium;
             }
             else
@@ -191,7 +178,6 @@ namespace EventApp.Views
                 LoginButton.IsVisible = true;
                 HeaderDivider.IsVisible = false;
                 UserLabel.Text = "Hey there!";
-               // PremiumFrame.IsVisible = false;
                 goPremiumButton.IsVisible = false;
             }
             

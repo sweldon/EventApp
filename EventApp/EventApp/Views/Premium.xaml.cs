@@ -9,7 +9,9 @@ using Newtonsoft.Json;
 using Plugin.InAppBilling;
 using System.Threading.Tasks;
 using System.Linq;
-
+# if __ANDROID__
+using Plugin.InAppBilling.Abstractions;
+# endif
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]

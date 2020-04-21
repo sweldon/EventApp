@@ -22,7 +22,7 @@ namespace EventApp
         #region Setting Constants
 
         private const string AppInfoKey = "app_info_key";
-        private static readonly string AppInfoKeyDefault = "Holidaily™ - Version 1.0";
+        private static readonly string AppInfoKeyDefault = "Holidaily™ - Version 1.1.1";
 
         private const string SettingsKey = "settings_key";
         private static readonly string SettingsDefault = "no";
@@ -48,7 +48,22 @@ namespace EventApp
         private const string EulaKey = "eula_key";
         private static readonly bool EulaDefault = false;
 
+        private const string OpenNotificationsKey = "open_notifications_key";
+        private static readonly bool OpenNotificationsDefault = false;
+
         #endregion
+
+        public static bool OpenNotifications
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(OpenNotificationsKey, OpenNotificationsDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(OpenNotificationsKey, value);
+            }
+        }
 
         public static bool EulaAccepted
         {

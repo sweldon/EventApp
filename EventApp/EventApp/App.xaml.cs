@@ -140,6 +140,17 @@ namespace EventApp
                 OnPropertyChanged();
             }
         }
+        public bool OpenNotifications
+        {
+            get { return Settings.OpenNotifications; }
+            set
+            {
+                if (Settings.OpenNotifications == value)
+                    return;
+                Settings.OpenNotifications = value;
+                OnPropertyChanged();
+            }
+        }
 
         public App()
         {
@@ -156,32 +167,21 @@ namespace EventApp
 
         protected override async void OnStart()
         {
-
             if (!AppCenter.Configured){
                 Push.PushNotificationReceived += (sender, e) =>
                 {
                     if (e.Message == null)
                     {
-                        // Background Android
-                        var menuPage = new MenuPage(); // Build hamburger menu
-                        NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
-                        var rootPage = new RootPage(); // Root handles master detail navigation
-                        rootPage.Master = menuPage; // Menu
-                        rootPage.Detail = NavigationPage; // Content
-                        MainPage = rootPage; // Set root to built master detail
-
+                        // Android regular push behavior from background
                         if (e.CustomData.ContainsKey("news"))
                         {
-                            NavigationPage.PushAsync(new Updates());
+                            if(!isActive)
+                                OpenNotifications = true;
                         }
                         else if (e.CustomData.ContainsKey("comment_id"))
                         {
                             string commentId = e.CustomData["comment_id"];
                             string holidayId = e.CustomData["holiday_id"];
-
-                            //NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
-                            //NavigationPage.PushAsync(new CommentPage(new CommentViewModel(commentId, holidayId)));
-
                             NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null, commentId)));
                         }
                         else if (e.CustomData.ContainsKey("holiday_id"))
@@ -192,40 +192,61 @@ namespace EventApp
                     }
                     else
                     {
-                        // Foreground Android
+                        // iOS or Android Foreground
                         if (e.CustomData.ContainsKey("news"))
                         {
-                            NavigationPage.PushAsync(new Updates());
+                            if(!isActive)
+                                OpenNotifications = true;
                         }
                         else if (e.CustomData.ContainsKey("comment_id"))
                         {
                             string commentId = e.CustomData["comment_id"];
                             string commentUser = e.CustomData["comment_user"];
                             string holidayId = e.CustomData["holiday_id"];
-                            AlertUser(commentId, holidayId, commentUser);
+                            if (!isActive)
+                            {
+                                NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null, commentId)));
+                            }
+                            else
+                            {
+                                AlertUser(commentId, holidayId, commentUser);
+                            }
                         }
                         else if (e.CustomData.ContainsKey("holiday_id"))
                         {
+                           
                             string holidayId = e.CustomData["holiday_id"];
-                            AlertUserHolidays(holidayId);
+                            if (!isActive)
+                            {
+                                NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                            }
+                            else
+                            {
+                                AlertUserHolidays(holidayId);
+                            }
                         }
                     }
                 };
             }
 
-
             AppCenter.Start("android=a43f5f54-cb5f-4ad2-af75-762b151c5891;ios=8fbf5b9b-1791-4ec5-bc9d-dead805d66a8;", typeof(Push), typeof(Analytics));
             devicePushId = AppCenter.GetInstallIdAsync().Result.Value.ToString();
-
 
             if (isLoggedIn)
             {
                 try
                 {
+                    
                     var values = new Dictionary<string, string>{
                         { "username", currentUser },
-                        { "device_id", devicePushId },
+                        { "device_id", devicePushId }
                     };
+
+                    #if __IOS__
+                        values["platform"] = "ios";
+                    #elif __ANDROID__
+                        values["platform"] = "android";
+                    #endif
 
                     var content = new FormUrlEncodedContent(values);
                     var response = await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
@@ -265,8 +286,6 @@ namespace EventApp
                 App.Current.MainPage = new NavigationPage(new Eula());
 
             }
-
-                
         }
 
         async void AlertUser(string commentId, string holidayId, string commentUser)
@@ -274,15 +293,6 @@ namespace EventApp
             var title = commentUser + " mentioned you!";   
             var userAlert = await Application.Current.MainPage.DisplayAlert(title, "", "Go to Comment", "Close");
             if (userAlert) {
-                var menuPage = new MenuPage(); // Build hamburger menu
-                NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
-                var rootPage = new RootPage(); // Root handles master detail navigation
-                rootPage.Master = menuPage; // Menu
-                rootPage.Detail = NavigationPage; // Content
-                MainPage = rootPage; // Set root to built master detail
-                //await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
-                ////OpenComment = new Comment { Id = commentId, Content = content, UserName = commentUser, TimeSince = TimeAgo };
-                //await NavigationPage.PushAsync(new CommentPage(new CommentViewModel(commentId, holidayId)));
                 await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null, commentId)));
             }
 
