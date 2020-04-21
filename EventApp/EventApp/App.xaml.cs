@@ -140,6 +140,17 @@ namespace EventApp
                 OnPropertyChanged();
             }
         }
+        public bool OpenNotifications
+        {
+            get { return Settings.OpenNotifications; }
+            set
+            {
+                if (Settings.OpenNotifications == value)
+                    return;
+                Settings.OpenNotifications = value;
+                OnPropertyChanged();
+            }
+        }
 
         public App()
         {
@@ -164,7 +175,8 @@ namespace EventApp
                         // Android regular push behavior from background
                         if (e.CustomData.ContainsKey("news"))
                         {
-                            NavigationPage.PushAsync(new Updates());
+                            if(!isActive)
+                                OpenNotifications = true;
                         }
                         else if (e.CustomData.ContainsKey("comment_id"))
                         {
@@ -183,8 +195,8 @@ namespace EventApp
                         // iOS or Android Foreground
                         if (e.CustomData.ContainsKey("news"))
                         {
-                            if (!isActive)
-                                NavigationPage.PushAsync(new Updates());
+                            if(!isActive)
+                                OpenNotifications = true;
                         }
                         else if (e.CustomData.ContainsKey("comment_id"))
                         {

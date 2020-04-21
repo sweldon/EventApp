@@ -71,6 +71,17 @@ namespace EventApp.Views
                 OnPropertyChanged();
             }
         }
+        public bool OpenNotifications
+        {
+            get { return Settings.OpenNotifications; }
+            set
+            {
+                if (Settings.OpenNotifications == value)
+                    return;
+                Settings.OpenNotifications = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string showAds;
         public HolidaysPage()
@@ -101,9 +112,16 @@ namespace EventApp.Views
 
         async void ImageToHoliday(object sender, EventArgs args)
         {
-         
-
-            var item = (sender as ContentView).BindingContext as Holiday;
+            var item = new Holiday();
+            try
+            {
+                item = (sender as ContentView).BindingContext as Holiday;
+            }
+            catch
+            {
+                item = (sender as Image).BindingContext as Holiday;
+            }
+            
             string holidayId = item.Id;
             if (holidayId != "-1") // Ad
             {
@@ -163,6 +181,12 @@ namespace EventApp.Views
                 }
                 await Task.Delay(1000);
             }
+            if (OpenNotifications)
+            {
+                await Navigation.PushModalAsync(new NavigationPage(new NotificationsPage()));
+                OpenNotifications = false;
+            }
+
 
         }
 
@@ -174,7 +198,6 @@ namespace EventApp.Views
                 viewModel.ExecuteLoadItemsCommand();
             });
             MessagingCenter.Unsubscribe<MenuPage>(this, "UpdateHolidayFeed");
-
             MessagingCenter.Subscribe<HolidayDetailPage, Object[]>(this,
             "UpdateCelebrateStatus", (sender, data) => {
                 viewModel.UpdateCelebrateStatus((string)data[0], (bool)data[1], (string)data[2]);
