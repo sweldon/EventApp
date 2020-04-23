@@ -60,17 +60,6 @@ namespace EventApp.Views
                 OnPropertyChanged();
             }
         }
-        public bool isActive
-        {
-            get { return Settings.IsActive; }
-            set
-            {
-                if (Settings.IsActive == value)
-                    return;
-                Settings.IsActive = value;
-                OnPropertyChanged();
-            }
-        }
         public bool OpenNotifications
         {
             get { return Settings.OpenNotifications; }
@@ -144,19 +133,10 @@ namespace EventApp.Views
             }
         }
 
-        private async void MakeUserActive()
-        {
-            await Task.Delay(5000);
-            isActive = true;
-        }
-
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            await Task.Run(async () =>
-            {
-                MakeUserActive();
-            });
+
             MessagingCenter.Unsubscribe<HolidayDetailPage, Object[]>(this, "UpdateCelebrateStatus");
             // When logging in from menu we need to refresh the feed statuses
             MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateHolidayFeed");
@@ -179,15 +159,13 @@ namespace EventApp.Views
                     await DisplayAlert("Error", "Couldn't connect to Holidaily", "OK");
                     return;
                 }
-                await Task.Delay(1000);
+                await Task.Delay(2000);
             }
             if (OpenNotifications)
             {
                 await Navigation.PushModalAsync(new NavigationPage(new NotificationsPage()));
                 OpenNotifications = false;
             }
-
-
         }
 
         protected override void OnDisappearing()

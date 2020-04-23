@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Microsoft.AppCenter;
 
 namespace EventApp.Views
 {
@@ -84,8 +83,8 @@ namespace EventApp.Views
         public async void Recover(object sender, EventArgs e)
         {
             this.IsEnabled = false;
-                Xamarin.Forms.Device.BeginInvokeOnMainThread(() => {
-                    Xamarin.Forms.Device.OpenUri(new Uri(App.HolidailyHost + "/portal/recover"));
+                Device.BeginInvokeOnMainThread(() => {
+                    Device.OpenUri(new Uri(App.HolidailyHost + "/portal/recover"));
                 });
             this.IsEnabled = true;
         }
@@ -122,14 +121,6 @@ namespace EventApp.Views
                         currentUser = responseJSON.results.username;
                         isPremium = responseJSON.results.premium;
                         confettiCount = responseJSON.results.confetti;
-
-                        //var menuPage = new MenuPage(); // Build hamburger menu
-                        //NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
-                        //var rootPage = new RootPage(); // Root handles master detail navigation
-                        //rootPage.Master = menuPage; // Menu
-                        //rootPage.Detail = NavigationPage; // Content
-                        //Application.Current.MainPage = rootPage; // Set root to built master detail
-
                         MessagingCenter.Send(this, "UpdateMenu", true);
                         MessagingCenter.Send(this, "UpdateComments");
                         MessagingCenter.Send(this, "UpdateHoliday");

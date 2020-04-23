@@ -155,8 +155,8 @@ namespace EventApp.Views
         }
         protected override async void OnAppearing()
         {
-            AppInfoLabel.Text = appInfo;
-            if(isLoggedIn)
+            AppInfoLabel.Text = $"Holidaily™ - Version {appInfo}";
+            if (isLoggedIn)
             {
                 HeaderBackground.BackgroundColor = Color.FromHex("FFFFFF");
                 DefaultHeader.IsVisible = false;

@@ -67,15 +67,17 @@
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	<key>CFBundleIdentifier</key>
-	<string>eventapp.com</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
 	<key>CFBundleName</key>
 	<string>Holidaily</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1.1</string>
+	<string>1.1.2</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
+	<key>CFBundleIdentifier</key>
+	<string>eventapp.com</string>
 	<key>CFBundleVersion</key>
-	<string>6</string>
+	<string>1</string>
 </dict>
 </plist>

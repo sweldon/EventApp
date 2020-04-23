@@ -9,6 +9,8 @@ using Google.MobileAds;
 using UIKit;
 using Xamarin.Forms;
 using ImageCircle.Forms.Plugin.iOS;
+using Plugin.PushNotification;
+
 namespace EventApp.iOS
 {
     // The UIApplicationDelegate for the application. This class is responsible for launching the 
@@ -32,9 +34,24 @@ namespace EventApp.iOS
             MobileAds.Configure("ca-app-pub-9382412071078825~2829867889");
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
             LoadApplication(new App());
+            PushNotificationManager.Initialize(options, true);
             return base.FinishedLaunching(app, options);
         }
+        public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
+        {
+            PushNotificationManager.DidRegisterRemoteNotifications(deviceToken);
+        }
 
+        public override void FailedToRegisterForRemoteNotifications(UIApplication application, NSError error)
+        {
+            PushNotificationManager.RemoteNotificationRegistrationFailed(error);
+        }
+        // To receive notifications in foregroung on iOS 9 and below.
+        // To receive notifications in background in any iOS version
+        public override void DidReceiveRemoteNotification(UIApplication application, NSDictionary userInfo, Action<UIBackgroundFetchResult> completionHandler)
+        {
+            PushNotificationManager.DidReceiveMessage(userInfo);
+        }
         public override bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options)
         {
             var menuPage = new MenuPage(); // Build hamburger menu
@@ -60,12 +77,7 @@ namespace EventApp.iOS
                 }
 
             }
-
-
             return true;
         }
-
     }
-
-
 }

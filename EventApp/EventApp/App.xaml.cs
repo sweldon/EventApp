@@ -2,9 +2,6 @@
 using Xamarin.Forms.Xaml;
 using EventApp.Views;
 using System.Diagnostics;
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Push;
-using Microsoft.AppCenter.Analytics;
 using EventApp.Models;
 using EventApp.ViewModels;
 using System;
@@ -13,6 +10,8 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Linq;
+using Plugin.PushNotification;
+using Badge.Plugin;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace EventApp
@@ -152,6 +151,18 @@ namespace EventApp
             }
         }
 
+        public string appInfo
+        {
+            get { return Settings.AppInfo; }
+            set
+            {
+                if (Settings.AppInfo == value)
+                    return;
+                Settings.AppInfo = value;
+                OnPropertyChanged();
+            }
+        }
+
         public App()
         {
             InitializeComponent();
@@ -162,75 +173,106 @@ namespace EventApp
             rootPage.Master = menuPage; // Menu
             rootPage.Detail = NavigationPage; // Content
             MainPage = rootPage; // Set root to built master detail
-
         }
+        private async void MakeUserActive()
+        {
+            await Task.Delay(5000);
+            isActive = true;
+        }
+        private Dictionary<string, string>
+            ConsumePush(IDictionary<string, object> pushData)
+        {
 
+            string pushType = null;
+            string holidayId = null;
+            string commentId = null;
+            string commentUser = null;
+            foreach (var data in pushData)
+            {
+                if (data.Key == "push_type")
+                {
+                    pushType = data.Value.ToString();
+                }
+                else if (data.Key == "comment_id")
+                {
+                    commentId = data.Value.ToString();
+                }
+                else if (data.Key == "holiday_id")
+                {
+                    holidayId = data.Value.ToString();
+                }
+                else if (data.Key == "comment_user")
+                {
+                    commentUser = data.Value.ToString();
+                }
+            }
+            var parsedData = new Dictionary<string, string> {
+                {"push_type", pushType },
+                {"holiday_id", holidayId },
+                {"comment_id", commentId },
+                {"comment_user", commentUser },
+            };
+            return parsedData;
+        }
         protected override async void OnStart()
         {
-            if (!AppCenter.Configured){
-                Push.PushNotificationReceived += (sender, e) =>
+            await Task.Run(async () =>
+            {
+                MakeUserActive();
+            });
+            // Clear badge notifications
+            CrossBadge.Current.ClearBadge();
+            CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
+            {
+                devicePushId = p.Token.ToString();
+            };
+            CrossPushNotification.Current.OnNotificationReceived += (s, p) =>
+            {
+                // User is active in the app
+                Dictionary<string, string> pushData = ConsumePush(p.Data);
+                string pushType = pushData["push_type"];
+                string holidayId = pushData["holiday_id"];
+                string commentId = pushData["comment_id"];
+                string commentUser = pushData["comment_user"];
+                if (pushType == "news")
                 {
-                    if (e.Message == null)
-                    {
-                        // Android regular push behavior from background
-                        if (e.CustomData.ContainsKey("news"))
-                        {
-                            if(!isActive)
-                                OpenNotifications = true;
-                        }
-                        else if (e.CustomData.ContainsKey("comment_id"))
-                        {
-                            string commentId = e.CustomData["comment_id"];
-                            string holidayId = e.CustomData["holiday_id"];
-                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null, commentId)));
-                        }
-                        else if (e.CustomData.ContainsKey("holiday_id"))
-                        {
-                            string holidayId = e.CustomData["holiday_id"];
-                            NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
-                        }
-                    }
-                    else
-                    {
-                        // iOS or Android Foreground
-                        if (e.CustomData.ContainsKey("news"))
-                        {
-                            if(!isActive)
-                                OpenNotifications = true;
-                        }
-                        else if (e.CustomData.ContainsKey("comment_id"))
-                        {
-                            string commentId = e.CustomData["comment_id"];
-                            string commentUser = e.CustomData["comment_user"];
-                            string holidayId = e.CustomData["holiday_id"];
-                            if (!isActive)
-                            {
-                                NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null, commentId)));
-                            }
-                            else
-                            {
-                                AlertUser(commentId, holidayId, commentUser);
-                            }
-                        }
-                        else if (e.CustomData.ContainsKey("holiday_id"))
-                        {
-                           
-                            string holidayId = e.CustomData["holiday_id"];
-                            if (!isActive)
-                            {
-                                NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
-                            }
-                            else
-                            {
-                                AlertUserHolidays(holidayId);
-                            }
-                        }
-                    }
-                };
-            }
-
-            AppCenter.Start("android=a43f5f54-cb5f-4ad2-af75-762b151c5891;ios=8fbf5b9b-1791-4ec5-bc9d-dead805d66a8;", typeof(Push), typeof(Analytics));
-            devicePushId = AppCenter.GetInstallIdAsync().Result.Value.ToString();
+                    //AlertNews();
+                }
+                else if (pushType == "holiday")
+                {
+                    AlertUserHolidays(holidayId);
+                }
+                else if (pushType == "comment")
+                {
+                    AlertUser(commentId, holidayId, commentUser);
+                }
+            };
+            CrossPushNotification.Current.OnNotificationOpened += (s, p) =>
+            {
+                // User is not in the app
+                Dictionary<string, string> pushData = ConsumePush(p.Data);
+                string pushType = pushData["push_type"];
+                string holidayId = pushData["holiday_id"];
+                string commentId = pushData["comment_id"];
+                string commentUser = pushData["comment_user"];
+                if (pushType == "news")
+                {
+                    OpenNotifications = true;
+                }
+                else if (pushType == "holiday")
+                {
+                    NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                }
+                else if (pushType == "comment")
+                {
+                    // Only need comment_user for active forground alert
+                    NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null, commentId)));
+                }
+            };
+            CrossPushNotification.Current.OnNotificationDeleted += (s, p) =>
+            {
+                // Clear badge notifications
+            };
 
             if (isLoggedIn)
             {
@@ -239,7 +281,8 @@ namespace EventApp
                     
                     var values = new Dictionary<string, string>{
                         { "username", currentUser },
-                        { "device_id", devicePushId }
+                        { "device_id", devicePushId },
+                        { "version", appInfo }
                     };
 
                     #if __IOS__
@@ -268,8 +311,6 @@ namespace EventApp
                     currentUser = null;
                     isPremium = false;
                 }
-
-
             }
             else
             {
@@ -284,7 +325,6 @@ namespace EventApp
                     "Please view our End User License Agreement before proceeding.",
                     "View");
                 App.Current.MainPage = new NavigationPage(new Eula());
-
             }
         }
 
@@ -295,14 +335,24 @@ namespace EventApp
             if (userAlert) {
                 await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null, commentId)));
             }
+        }
 
+        async void AlertNews()
+        {
+            var title = "Holidaily just posted an announcement";
+            var newsAlert = await Application.Current.MainPage.DisplayAlert(title, "", "Read Now", "Close");
+            if (newsAlert)
+            {
+                // Modal Async requires you to be in a content page, so use settings variable
+                OpenNotifications = true;
+            }
         }
 
         async void AlertUserHolidays(string holidayId)
         {
 
-            var title = "Todays holidays are out!";
-            var userAlert = await Application.Current.MainPage.DisplayAlert(title, "Want to see a random one?", "OK", "Close");
+            var title = "Todays holidays are live!";
+            var userAlert = await Application.Current.MainPage.DisplayAlert(title, "Want to see today's featured holiday?", "OK", "Close");
             if (userAlert)
             {
                 await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
