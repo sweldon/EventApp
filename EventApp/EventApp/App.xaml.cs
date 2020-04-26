@@ -224,7 +224,6 @@ namespace EventApp
             CrossBadge.Current.ClearBadge();
             CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
             {
-                Debug.WriteLine($"TOKEN {p.Token}");
                 devicePushId = p.Token.ToString();
             };
             CrossPushNotification.Current.OnNotificationReceived += (s, p) =>
@@ -315,18 +314,28 @@ namespace EventApp
             }
             else
             {
-                isPremium = false;
-                var values = new Dictionary<string, string>{
-                        { "device_id", devicePushId },
-                    };
+                try
+                {
+                    if(devicePushId != "none")
+                    {
+                        var values = new Dictionary<string, string>{
+                            { "device_id", devicePushId },
+                        };
 
-                #if __IOS__
-                    values["platform"] = "ios";
-                #elif __ANDROID__
-                    values["platform"] = "android";
-                #endif
-                var content = new FormUrlEncodedContent(values);
-                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
+                        #if __IOS__
+                            values["platform"] = "ios";
+                        #elif __ANDROID__
+                            values["platform"] = "android";
+                        #endif
+                        var content = new FormUrlEncodedContent(values);
+                        await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
+                    }
+                }
+                catch
+                {
+
+                }
+                isPremium = false;
             }
 
             // EULA
