@@ -26,6 +26,18 @@ namespace EventApp.Views
             }
         }
 
+        public string appInfo
+        {
+            get { return Settings.AppInfo; }
+            set
+            {
+                if (Settings.AppInfo == value)
+                    return;
+                Settings.AppInfo = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool isPremium
         {
             get { return Settings.IsPremium; }
@@ -101,10 +113,17 @@ namespace EventApp.Views
                     string pass = PassEntry.Text;
 
                     var values = new Dictionary<string, string>{
-                    { "username", userName },
-                    { "password", pass },
-                    { "device_id", devicePushId }
-                };
+                        { "username", userName },
+                        { "password", pass },
+                        { "device_id", devicePushId },
+                        { "version", appInfo }
+                    };
+
+                    #if __IOS__
+                        values["platform"] = "ios";
+                    #elif __ANDROID__
+                        values["platform"] = "android";
+                    #endif
 
                     var content = new FormUrlEncodedContent(values);
                     var response = await App.globalClient.PostAsync(App.HolidailyHost + "/accounts/login/", content);

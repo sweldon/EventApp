@@ -25,14 +25,14 @@ namespace EventApp
 
         #if DEBUG
             #if __IOS__
-                    public static string HolidailyHost = "http://localhost:8888";
+                public static string HolidailyHost = "http://localhost:8888";
             #else
-                    public static string HolidailyHost = "http://10.0.2.2:8000";
+                public static string HolidailyHost = "http://10.0.2.2:8000";
             #endif
         #else
             public static string HolidailyHost = "https://holidailyapp.com";
         #endif
-
+        //public static string HolidailyHost = "http://10.0.2.2:8888";
         public static HttpClient globalClient = new HttpClient();
         // App-wide reusable instance for choosing random ads
         public static Random randomGenerator = new Random();
@@ -224,6 +224,7 @@ namespace EventApp
             CrossBadge.Current.ClearBadge();
             CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
             {
+                Debug.WriteLine($"TOKEN {p.Token}");
                 devicePushId = p.Token.ToString();
             };
             CrossPushNotification.Current.OnNotificationReceived += (s, p) =>
@@ -315,6 +316,17 @@ namespace EventApp
             else
             {
                 isPremium = false;
+                var values = new Dictionary<string, string>{
+                        { "device_id", devicePushId },
+                    };
+
+                #if __IOS__
+                    values["platform"] = "ios";
+                #elif __ANDROID__
+                    values["platform"] = "android";
+                #endif
+                var content = new FormUrlEncodedContent(values);
+                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
             }
 
             // EULA
