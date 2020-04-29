@@ -24,13 +24,13 @@ namespace EventApp
         public Comment OpenComment { get; set; }
 
         #if DEBUG
-            #if __IOS__
-                public static string HolidailyHost = "http://localhost:8888";
-            #else
-                public static string HolidailyHost = "http://10.0.2.2:8000";
-            #endif
+        #if __IOS__
+                                public static string HolidailyHost = "http://localhost:8888";
         #else
-            public static string HolidailyHost = "https://holidailyapp.com";
+                                public static string HolidailyHost = "http://10.0.2.2:8000";
+        #endif
+        #else
+                public static string HolidailyHost = "https://holidailyapp.com";
         #endif
         //public static string HolidailyHost = "http://10.0.2.2:8888";
         public static HttpClient globalClient = new HttpClient();
@@ -91,7 +91,6 @@ namespace EventApp
                 OnPropertyChanged();
             }
         }
-
         public bool isPremium
         {
             get { return Settings.IsPremium; }
@@ -222,10 +221,6 @@ namespace EventApp
             });
             // Clear badge notifications
             CrossBadge.Current.ClearBadge();
-            CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
-            {
-                devicePushId = p.Token.ToString();
-            };
             CrossPushNotification.Current.OnNotificationReceived += (s, p) =>
             {
                 // User is active in the app
@@ -281,7 +276,6 @@ namespace EventApp
                     
                     var values = new Dictionary<string, string>{
                         { "username", currentUser },
-                        { "device_id", devicePushId },
                         { "version", appInfo }
                     };
 
@@ -290,6 +284,11 @@ namespace EventApp
                     #elif __ANDROID__
                         values["platform"] = "android";
                     #endif
+
+                    if (devicePushId != "none")
+                    {
+                        values["device_id"] = devicePushId;
+                    }
 
                     var content = new FormUrlEncodedContent(values);
                     var response = await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
@@ -327,6 +326,7 @@ namespace EventApp
                         #elif __ANDROID__
                             values["platform"] = "android";
                         #endif
+
                         var content = new FormUrlEncodedContent(values);
                         await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
                     }

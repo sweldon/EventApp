@@ -24,6 +24,27 @@ namespace EventApp.Droid
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         public NavigationPage NavigationPage { get; private set; }
+        public string devicePushId
+        {
+            get { return Settings.DevicePushId; }
+            set
+            {
+                if (Settings.DevicePushId == value)
+                    return;
+                Settings.DevicePushId = value;
+            }
+        }
+        public bool deviceRegistered
+        {
+            get { return Settings.DeviceRegistered; }
+            set
+            {
+                if (Settings.DeviceRegistered == value)
+                    return;
+                Settings.DeviceRegistered = value;
+            }
+        }
+
         protected override async void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
@@ -42,13 +63,22 @@ namespace EventApp.Droid
                 //Change for your default notification channel name here
                 PushNotificationManager.DefaultNotificationChannelName = "General";
             }
-
+            bool shouldRefreshToken = !deviceRegistered;
             //If debug you should reset the token each time.
             #if DEBUG
-                PushNotificationManager.Initialize(this,true);
+                PushNotificationManager.Initialize(this, true);
             #else
-                PushNotificationManager.Initialize(this, false);
+                PushNotificationManager.Initialize(this, shouldRefreshToken);
             #endif
+
+            CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
+            {
+                var token = p.Token.ToString();
+                if(token != "none"){
+                    devicePushId = token;
+                    deviceRegistered = true;
+                }
+            };
 
             ImageCircleRenderer.Init();
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);      

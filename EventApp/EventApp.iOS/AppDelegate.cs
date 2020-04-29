@@ -27,6 +27,26 @@ namespace EventApp.iOS
         // You have 17 seconds to return from this method, or iOS will terminate your application.
         //
         public NavigationPage NavigationPage { get; private set; }
+        public string devicePushId
+        {
+            get { return Settings.DevicePushId; }
+            set
+            {
+                if (Settings.DevicePushId == value)
+                    return;
+                Settings.DevicePushId = value;
+            }
+        }
+        public bool deviceRegistered
+        {
+            get { return Settings.DeviceRegistered; }
+            set
+            {
+                if (Settings.DeviceRegistered == value)
+                    return;
+                Settings.DeviceRegistered = value;
+            }
+        }
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
@@ -35,6 +55,17 @@ namespace EventApp.iOS
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
             LoadApplication(new App());
             PushNotificationManager.Initialize(options, true);
+
+            CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
+            {
+                var token = p.Token.ToString();
+                if (token != "none")
+                {
+                    devicePushId = token;
+                    deviceRegistered = true;
+                }
+            };
+
             return base.FinishedLaunching(app, options);
         }
         public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)

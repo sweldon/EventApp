@@ -51,7 +51,22 @@ namespace EventApp
         private const string OpenNotificationsKey = "open_notifications_key";
         private static readonly bool OpenNotificationsDefault = false;
 
+        private const string DeviceRegisteredKey = "device_registered";
+        private static readonly bool DeviceRegisteredDefault = false;
+
         #endregion
+
+        public static bool DeviceRegistered
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(DeviceRegisteredKey, DeviceRegisteredDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(DeviceRegisteredKey, value);
+            }
+        }
 
         public static bool OpenNotifications
         {
