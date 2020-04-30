@@ -25,12 +25,12 @@ namespace EventApp
 
         #if DEBUG
         #if __IOS__
-                                public static string HolidailyHost = "http://localhost:8888";
+        public static string HolidailyHost = "http://localhost:8888";
         #else
-                                public static string HolidailyHost = "http://10.0.2.2:8000";
+        public static string HolidailyHost = "http://10.0.2.2:8000";
         #endif
         #else
-                public static string HolidailyHost = "https://holidailyapp.com";
+        public static string HolidailyHost = "https://holidailyapp.com";
         #endif
         //public static string HolidailyHost = "http://10.0.2.2:8888";
         public static HttpClient globalClient = new HttpClient();
@@ -182,10 +182,10 @@ namespace EventApp
             ConsumePush(IDictionary<string, object> pushData)
         {
 
-            string pushType = null;
-            string holidayId = null;
-            string commentId = null;
-            string commentUser = null;
+            string pushType = "";
+            string holidayId = "";
+            string commentId = "";
+            string commentUser = "";
             foreach (var data in pushData)
             {
                 if (data.Key == "push_type")
@@ -239,7 +239,7 @@ namespace EventApp
                 }
                 else if (pushType == "comment")
                 {
-                    AlertUser(commentId, holidayId, commentUser);
+                    AlertUserComment(commentId, holidayId, commentUser);
                 }
             };
             CrossPushNotification.Current.OnNotificationOpened += (s, p) =>
@@ -349,16 +349,25 @@ namespace EventApp
             }
         }
 
-        async void AlertUser(string commentId, string holidayId, string commentUser)
+
+        async void handleCommentResponse(string commentId, string holidayId, string commentUser)
         {
-            var title = commentUser + " mentioned you!";   
+            var title = commentUser + " mentioned you!";
             var userAlert = await Application.Current.MainPage.DisplayAlert(title, "", "Go to Comment", "Close");
-            if (userAlert) {
+            if (userAlert)
+            {
                 await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null, commentId)));
             }
         }
 
-        async void AlertNews()
+        private void AlertUserComment(string commentId, string holidayId, string commentUser)
+        {
+            Device.BeginInvokeOnMainThread(() => {
+                handleCommentResponse(commentId, holidayId, commentUser);
+            });
+        }
+
+        async void handleNewsResponse()
         {
             var title = "Holidaily just posted an announcement";
             var newsAlert = await Application.Current.MainPage.DisplayAlert(title, "", "Read Now", "Close");
@@ -369,15 +378,27 @@ namespace EventApp
             }
         }
 
-        async void AlertUserHolidays(string holidayId)
+        private void AlertNews()
         {
+            Device.BeginInvokeOnMainThread(() => {
+                handleNewsResponse();
+            });
+        }
 
+        async void handleHolidayResponse(string holidayId)
+        {
             var title = "Todays holidays are live!";
             var userAlert = await Application.Current.MainPage.DisplayAlert(title, "Want to see today's featured holiday?", "OK", "Close");
-            if (userAlert)
+            if (userAlert == true)
             {
                 await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
             }
+        }
+        private void AlertUserHolidays(string holidayId)
+        {
+            Device.BeginInvokeOnMainThread(() => {
+                handleHolidayResponse(holidayId);
+            });
         }
 
         protected override void OnSleep()

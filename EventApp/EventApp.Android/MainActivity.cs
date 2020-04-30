@@ -34,17 +34,6 @@ namespace EventApp.Droid
                 Settings.DevicePushId = value;
             }
         }
-        public bool deviceRegistered
-        {
-            get { return Settings.DeviceRegistered; }
-            set
-            {
-                if (Settings.DeviceRegistered == value)
-                    return;
-                Settings.DeviceRegistered = value;
-            }
-        }
-
         protected override async void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
@@ -63,12 +52,13 @@ namespace EventApp.Droid
                 //Change for your default notification channel name here
                 PushNotificationManager.DefaultNotificationChannelName = "General";
             }
-            bool shouldRefreshToken = !deviceRegistered;
-            //If debug you should reset the token each time.
+            // If debug you should reset the token each time.
+            // If user still has AppCenter token, update it
+            bool shouldRefresh = devicePushId.Length == 36 ? true : false;
             #if DEBUG
                 PushNotificationManager.Initialize(this, true);
             #else
-                PushNotificationManager.Initialize(this, shouldRefreshToken);
+                PushNotificationManager.Initialize(this, shouldRefresh);
             #endif
 
             CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
@@ -76,7 +66,6 @@ namespace EventApp.Droid
                 var token = p.Token.ToString();
                 if(token != "none"){
                     devicePushId = token;
-                    deviceRegistered = true;
                 }
             };
 

@@ -11,7 +11,9 @@
                 <StackLayout Padding="5">
                 <Image Source="holiday_banner_blue.png"
                        HorizontalOptions="CenterAndExpand" />
-                <Label x:Name="EulaLabel" FontSize="Medium" />
+                <ContentView Padding="20">
+                    <Label x:Name="EulaLabel" FontSize="Medium" />
+                </ContentView>
                 <Button Text="I Agree"
                             Clicked="Agree"
                             BackgroundColor="Green"

@@ -37,16 +37,6 @@ namespace EventApp.iOS
                 Settings.DevicePushId = value;
             }
         }
-        public bool deviceRegistered
-        {
-            get { return Settings.DeviceRegistered; }
-            set
-            {
-                if (Settings.DeviceRegistered == value)
-                    return;
-                Settings.DeviceRegistered = value;
-            }
-        }
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
@@ -62,7 +52,6 @@ namespace EventApp.iOS
                 if (token != "none")
                 {
                     devicePushId = token;
-                    deviceRegistered = true;
                 }
             };
 

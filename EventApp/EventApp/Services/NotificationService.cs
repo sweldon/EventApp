@@ -42,6 +42,7 @@ namespace EventApp.Services
                 notifications.Insert(0, new Notification() {
                     Id = n.notification_id,
                     Type = n.notification_type,
+                    Title = n.title,
                     Read = n.read,
                     Content = n.content,
                     TimeSince = n.time_since });

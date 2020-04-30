@@ -64,12 +64,16 @@
                                                 <ColumnDefinition Width="5*" />
                                                 <ColumnDefinition Width="5*" />
                                                 </Grid.ColumnDefinitions>
-
-                                                <Label Text="{Binding Type}"
-                                                FontSize="14"
-                                                TextColor="#4c96e8"
-                                                Grid.Row="0" Grid.Column="0"/>
-
+                                                <ContentView>
+                                                    <ContentView.Padding>
+                                                    <OnPlatform x:TypeArguments="Thickness"
+                                                    Android="5,0,0,0"/>
+                                                    </ContentView.Padding>
+                                                    <Label Text="{Binding Title}"
+                                                    FontSize="14"
+                                                    TextColor="#4c96e8"
+                                                    Grid.Row="0" Grid.Column="0"/>
+                                                </ContentView>
                                                 <Label Text="{Binding TimeSince}"
                                                 FontSize="12"
                                                 Grid.Row="0"

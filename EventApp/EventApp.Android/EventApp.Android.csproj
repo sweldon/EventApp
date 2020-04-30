@@ -168,6 +168,10 @@
       <SubType>Designer</SubType>
     </None>
     <AndroidResource Include="Resources\drawable\Loading_Image.gif" />
+    <AndroidResource Include="Resources\drawable\Flag.png">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Tabbar.axml" />
