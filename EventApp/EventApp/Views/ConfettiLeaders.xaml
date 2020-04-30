@@ -2,9 +2,10 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.ConfettiLeaders"
-             xmlns:local="clr-namespace:EventApp"  
-              xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
-             >
+             xmlns:local="clr-namespace:EventApp"
+             xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             xmlns:controlsadmob="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob">
+
     <ContentPage.Content>
 
         <StackLayout>
@@ -155,10 +156,9 @@
                 </ContentView>
             </StackLayout>
             <StackLayout VerticalOptions="End" x:Name="AdBanner">
-        <ContentView>
-          <local:AdControlView AdUnitId="ca-app-pub-9382412071078825/3775761196" BackgroundColor="#CDCDCD"/>
+            <ContentView >
+            <controlsadmob:MTAdView AdsId="ca-app-pub-9382412071078825/3775761196" BackgroundColor="#CDCDCD"/>
         </ContentView >
-
       </StackLayout>
         </StackLayout>
     </ContentPage.Content>

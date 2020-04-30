@@ -302,17 +302,24 @@ namespace EventApp.Views
             MessagingCenter.Subscribe<LoginPage>(this, "UpdateHoliday", (sender) =>
             {
                 UpdateHoliday();
+                MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateHoliday");
             });
 
             MessagingCenter.Subscribe<NewCommentPage>(this, "UpdateComments", (sender) => {
                 viewModel.ExecuteLoadCommentsCommand();
+                MessagingCenter.Unsubscribe<NewCommentPage>(this, "UpdateComments");
             });
 
             // Reply Page
-            MessagingCenter.Unsubscribe<CommentPage>(this, "UpdateComments");
+            MessagingCenter.Subscribe<CommentPage>(this, "UpdateComments", (sender) => {
+                viewModel.ExecuteLoadCommentsCommand();
+                MessagingCenter.Unsubscribe<CommentPage>(this, "UpdateComments");
+            });
+
 
             MessagingCenter.Subscribe<LoginPage>(this, "UpdateComments", (sender) => {
                 viewModel.ExecuteLoadCommentsCommand();
+                MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateComments");
             });
 
         }
@@ -320,14 +327,6 @@ namespace EventApp.Views
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateHoliday");
-            MessagingCenter.Unsubscribe<NewCommentPage>(this, "UpdateComments");
-            MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateComments");
-
-            // Reply Page
-            MessagingCenter.Subscribe<CommentPage>(this, "UpdateComments", (sender) => {
-                viewModel.ExecuteLoadCommentsCommand();
-            });
         }
 
         async void OnTapGestureRecognizerTapped(object sender, EventArgs args)

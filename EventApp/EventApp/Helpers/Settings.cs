@@ -22,7 +22,7 @@ namespace EventApp
         #region Setting Constants
 
         private const string AppInfoKey = "app_info_key";
-        private static readonly string AppInfoKeyDefault = "Holidaily™ - Version 1.1.1";
+        private static readonly string AppInfoKeyDefault = "1.1.4";
 
         private const string SettingsKey = "settings_key";
         private static readonly string SettingsDefault = "no";

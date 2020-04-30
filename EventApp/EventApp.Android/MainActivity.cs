@@ -15,6 +15,7 @@ using EventApp.Views;
 using Plugin.InAppBilling;
 using Plugin.CurrentActivity;
 using ImageCircle.Forms.Plugin.Droid;
+using Plugin.PushNotification;
 
 namespace EventApp.Droid
 {
@@ -23,6 +24,10 @@ namespace EventApp.Droid
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         public NavigationPage NavigationPage { get; private set; }
+        public string devicePushId
+        {
+            get { return Settings.DevicePushId; }
+        }
         protected override async void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
@@ -30,6 +35,26 @@ namespace EventApp.Droid
 
             base.SetTheme(Resource.Style.MainTheme);
             base.OnCreate(savedInstanceState);
+
+
+            //Set the default notification channel for your app when running Android Oreo
+            if (Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+            {
+                //Change for your default notification channel id here
+                PushNotificationManager.DefaultNotificationChannelId = "DefaultChannel";
+
+                //Change for your default notification channel name here
+                PushNotificationManager.DefaultNotificationChannelName = "General";
+            }
+            // If debug you should reset the token each time.
+            // If user still has AppCenter token, update it
+            bool shouldRefresh = devicePushId.Length == 36 ? true : false;
+            #if DEBUG
+                PushNotificationManager.Initialize(this, true);
+            #else
+                PushNotificationManager.Initialize(this, shouldRefresh);
+            #endif
+
             ImageCircleRenderer.Init();
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);      
             MobileAds.Initialize(ApplicationContext, "ca-app-pub-9382412071078825~2735085847");
@@ -65,8 +90,9 @@ namespace EventApp.Droid
             }
 
             LoadApplication(new App());
+            PushNotificationManager.ProcessIntent(this, Intent);
 
-    }
+        }
     protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
     {
         base.OnActivityResult(requestCode, resultCode, data);
