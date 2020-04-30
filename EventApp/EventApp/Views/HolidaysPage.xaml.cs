@@ -60,6 +60,7 @@ namespace EventApp.Views
                 OnPropertyChanged();
             }
         }
+
         public bool OpenNotifications
         {
             get { return Settings.OpenNotifications; }
@@ -166,6 +167,7 @@ namespace EventApp.Views
                 await Navigation.PushModalAsync(new NavigationPage(new NotificationsPage()));
                 OpenNotifications = false;
             }
+
         }
 
         protected override void OnDisappearing()

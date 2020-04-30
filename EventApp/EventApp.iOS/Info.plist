@@ -78,6 +78,6 @@
 	<key>CFBundleIdentifier</key>
 	<string>eventapp.com</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>5</string>
 </dict>
 </plist>

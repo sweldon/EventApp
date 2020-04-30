@@ -27,12 +27,6 @@ namespace EventApp.Droid
         public string devicePushId
         {
             get { return Settings.DevicePushId; }
-            set
-            {
-                if (Settings.DevicePushId == value)
-                    return;
-                Settings.DevicePushId = value;
-            }
         }
         protected override async void OnCreate(Bundle savedInstanceState)
         {
@@ -60,14 +54,6 @@ namespace EventApp.Droid
             #else
                 PushNotificationManager.Initialize(this, shouldRefresh);
             #endif
-
-            CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
-            {
-                var token = p.Token.ToString();
-                if(token != "none"){
-                    devicePushId = token;
-                }
-            };
 
             ImageCircleRenderer.Init();
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);      

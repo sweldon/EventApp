@@ -51,7 +51,7 @@ namespace EventApp.Views
             this.IsEnabled = false;
             #if __IOS__
                 Xamarin.Forms.Device.BeginInvokeOnMainThread(() => {
-                    Xamarin.Forms.Device.OpenUri(new Uri("https://apps.apple.com/us/app/holidaily-find-holidays/id1449681401?ls=1"));
+                    Xamarin.Forms.Device.OpenUri(new Uri("https://apps.apple.com/us/app/holidaily-find-holidays/id1449681401"));
                 });
             #else
                 Xamarin.Forms.Device.BeginInvokeOnMainThread(() => {

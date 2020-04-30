@@ -25,12 +25,12 @@ namespace EventApp
 
         #if DEBUG
         #if __IOS__
-        public static string HolidailyHost = "http://localhost:8888";
+                public static string HolidailyHost = "http://localhost:8888";
         #else
-        public static string HolidailyHost = "http://10.0.2.2:8000";
+                public static string HolidailyHost = "http://10.0.2.2:8000";
         #endif
         #else
-        public static string HolidailyHost = "https://holidailyapp.com";
+                public static string HolidailyHost = "https://holidailyapp.com";
         #endif
         //public static string HolidailyHost = "http://10.0.2.2:8888";
         public static HttpClient globalClient = new HttpClient();
@@ -127,6 +127,18 @@ namespace EventApp
             }
         }
 
+        public string appInfo
+        {
+            get { return Settings.AppInfo; }
+            set
+            {
+                if (Settings.AppInfo == value)
+                    return;
+                Settings.AppInfo = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool isLoggedIn
         {
             get { return Settings.IsLoggedIn; }
@@ -146,18 +158,6 @@ namespace EventApp
                 if (Settings.OpenNotifications == value)
                     return;
                 Settings.OpenNotifications = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string appInfo
-        {
-            get { return Settings.AppInfo; }
-            set
-            {
-                if (Settings.AppInfo == value)
-                    return;
-                Settings.AppInfo = value;
                 OnPropertyChanged();
             }
         }
@@ -213,11 +213,63 @@ namespace EventApp
             };
             return parsedData;
         }
+
+        async void handleUpdate()
+        {
+            var userAlert = await Application.Current.MainPage.DisplayAlert("Holidaily Update!",
+                "There is a new version of Holidaily available",
+                "Update Now",
+                "Later");
+            if (userAlert)
+            {
+                #if __IOS__
+                    Xamarin.Forms.Device.BeginInvokeOnMainThread(() => {
+                        Xamarin.Forms.Device.OpenUri(new Uri("https://apps.apple.com/us/app/holidaily-find-holidays/id1449681401"));
+                    });
+                #else
+                    Xamarin.Forms.Device.BeginInvokeOnMainThread(() => {
+                    Xamarin.Forms.Device.OpenUri(new Uri("https://play.google.com/store/apps/details?id=com.divinity.holidailyapp"));
+                    });
+                #endif
+            }
+        }
+        private async void CheckForUpdates()
+        {
+            await Task.Delay(10000);
+            var values = new Dictionary<string, string>{
+                { "version", appInfo },
+                { "check_update", "true" },
+            };
+            #if __IOS__
+                values["platform"] = "ios";
+            #elif __ANDROID__
+                values["platform"] = "android";
+            #endif
+            dynamic response = await ApiHelpers.MakePostRequest(values, "user");
+            bool needsUpdate = response.needs_update;
+            if (needsUpdate)
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    handleUpdate();
+                });
+            }
+        }
+
         protected override async void OnStart()
         {
+            CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
+            {
+                var token = p.Token.ToString();
+                devicePushId = token;
+            };
             await Task.Run(async () =>
             {
                 MakeUserActive();
+            });
+            await Task.Run(async () =>
+            {
+                CheckForUpdates();
             });
             // Clear badge notifications
             CrossBadge.Current.ClearBadge();
