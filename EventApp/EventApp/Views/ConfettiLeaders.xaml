@@ -71,7 +71,7 @@
 
 
                                                 <ContentView HorizontalOptions="Start" Grid.Column="0" Padding="5">
-                                                    <controls:CircleImage Source="default_profile_inverted.png" WidthRequest="80" HeightRequest="80" Aspect="AspectFill" VerticalOptions="Start" HorizontalOptions="CenterAndExpand" />
+                                                    <controls:CircleImage Source="{Binding Avatar}" WidthRequest="80" HeightRequest="80" Aspect="AspectFill" VerticalOptions="Start" HorizontalOptions="CenterAndExpand" />
                                                 </ContentView>
 
                                                 <Grid Grid.Column="1" Padding="10, 0, 0, 0">

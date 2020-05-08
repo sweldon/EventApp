@@ -13,6 +13,14 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\LoginPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\ProfilePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\UserPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
@@ -111,6 +119,13 @@
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ApiHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ProfilePage.xaml.cs">
+      <DependentUpon>ProfilePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ProfileViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\UserPage.xaml.cs">
+      <DependentUpon>UserPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\RootPage.xaml">

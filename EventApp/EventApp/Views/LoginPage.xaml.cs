@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using EventApp.Models;
 
 namespace EventApp.Views
 {
@@ -140,10 +141,20 @@ namespace EventApp.Views
                         currentUser = responseJSON.results.username;
                         isPremium = responseJSON.results.premium;
                         confettiCount = responseJSON.results.confetti;
+                        string avatar = responseJSON.results.profile_image;
+                        App.GlobalUser.UserName = currentUser;
+                        App.GlobalUser.Confetti = confettiCount;
+                        App.GlobalUser.Avatar = avatar;
+                        App.GlobalUser.Premium = isPremium;
+                        App.GlobalUser.Comments = responseJSON.results.num_comments;
+                        App.GlobalUser.Approved = responseJSON.results.approved_holidays;
+                        App.GlobalUser.LastOnline = responseJSON.results.last_online;
                         MessagingCenter.Send(this, "UpdateMenu", true);
                         MessagingCenter.Send(this, "UpdateComments");
                         MessagingCenter.Send(this, "UpdateHoliday");
                         MessagingCenter.Send(this, "UpdateHolidayFeed");
+                        // ONLY DO THIS IF IT ISNT NULL
+                        MessagingCenter.Send(this, "UpdateMenuProfilePicture", avatar);
                         try
                         {
                             await Navigation.PopModalAsync();

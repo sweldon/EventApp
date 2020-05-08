@@ -61,10 +61,6 @@
 			<string>Viewer</string>
 		</dict>
 	</array>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>gamekit</string>
-	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>UIUserInterfaceStyle</key>
@@ -72,12 +68,16 @@
 	<key>CFBundleName</key>
 	<string>Holidaily</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1.4</string>
+	<string>1.2</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
 	<key>CFBundleIdentifier</key>
 	<string>eventapp.com</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Holidaily needs your permission to access the photo you choose for your profile picture in the app.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Holidaily needs your permission to access the camera to take a photo for your profile picture in the app.</string>
 	<key>CFBundleVersion</key>
-	<string>5</string>
+	<string>14</string>
 </dict>
 </plist>

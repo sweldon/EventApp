@@ -5,6 +5,7 @@
              xmlns:local="clr-namespace:EventApp"  
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
+                xmlns:circle="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              Title="{Binding Title}">
 
     <StackLayout BackgroundColor="#E0E0E0">
@@ -58,6 +59,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
@@ -66,7 +68,8 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <ContentView Grid.Column="0" Grid.Row="0">
+
+                            <ContentView Grid.Column="1" Grid.Row="0">
 
                                     <Image Source="Comment_Main_Icon.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16" >
 
@@ -80,7 +83,7 @@
 
 
 
-                                <Label Grid.Column="1" Grid.Row="0" Text="Comment" FontSize="Small" TextColor="#808080"
+                                <Label Grid.Column="2" Grid.Row="0" Text="Comment" FontSize="Small" TextColor="#808080"
                          VerticalTextAlignment="Center" HorizontalOptions="Start" Margin="0,-2,0,0">
 
                                 <Label.GestureRecognizers>
@@ -91,7 +94,7 @@
 
 
 
-                            <ContentView Grid.Column="3" Grid.Row="0" >
+                            <ContentView Grid.Column="4" Grid.Row="0" >
 
                                     <Image Source="Share_Main_Icon.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16">
                                     <Image.GestureRecognizers>
@@ -101,7 +104,7 @@
                                 </Image>
                             </ContentView>
 
-                                <Label Grid.Column="4" Grid.Row="0" Text="Share" FontSize="Small" TextColor="#808080"
+                                <Label Grid.Column="5" Grid.Row="0" Text="Share" FontSize="Small" TextColor="#808080"
                             VerticalTextAlignment="Center" HorizontalOptions="Start" Margin="0,-2,0,0">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer
@@ -111,7 +114,7 @@
 
                             <Image Source="celebrate.png"
                                    WidthRequest="16"
-                                   Grid.Column="6"
+                                   Grid.Column="7"
                                    Grid.Row="0"
                                    x:Name="UpVoteImage"
                                    HorizontalOptions="Start">
@@ -124,7 +127,7 @@
 
 
 
-                                <Label Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small" HorizontalTextAlignment="Start" Grid.Column="7" Grid.Row="0" LineBreakMode="NoWrap"
+                                <Label Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small" HorizontalTextAlignment="Start" Grid.Column="8" Grid.Row="0" LineBreakMode="NoWrap"
                                      TextColor="#808080" VerticalTextAlignment="Center" x:Name="CurrentVotes">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="UpVote"  />
@@ -195,29 +198,40 @@
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="5*" />
-                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
+
+                                        <ContentView Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" >
+                                            <circle:CircleImage Source="{Binding Avatar}" WidthRequest="32" HeightRequest="32" Aspect="AspectFill" VerticalOptions="Start" HorizontalOptions="CenterAndExpand">
+                                            <circle:CircleImage.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                Tapped="OpenProfile"  />
+                                            </circle:CircleImage.GestureRecognizers>
+                                            </circle:CircleImage>
+                                        </ContentView>
 
                                         <Label Text="{Binding UserName}"
                                             FontSize="12"
                                             FontAttributes="Bold"
                                             TextColor="#4c96e8"
                                             LineBreakMode="TailTruncation"
-                                            Grid.Row="0" Grid.Column="0" />
+                                            Grid.Row="0" Grid.Column="1">
+                                            <Label.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                            Tapped="OpenProfile"  />
+                                            </Label.GestureRecognizers>
+                                        </Label>
 
                                         <Label Text="{Binding TimeSince}"
                                                FontSize="12" 
                                                  Grid.Row="0"
-                                                 Grid.Column="1"
+                                                 Grid.Column="2"
                                                  HorizontalTextAlignment="End" 
                                                  Opacity=".8" />
-
+                                        <Label Grid.Row="1"  Grid.Column="1" Text="{Binding Content}" FontSize="12" Grid.ColumnSpan="2"/>
                                     </Grid>
-
-                                    <Label Text="{Binding Content}" FontSize="12" />
-
-
                                     <Grid Padding="5" HorizontalOptions="FillAndExpand">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />

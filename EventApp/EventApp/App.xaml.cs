@@ -22,15 +22,15 @@ namespace EventApp
         public NavigationPage NavigationPage { get; private set; }
         public Holiday OpenHolidayPage { get; set; }
         public Comment OpenComment { get; set; }
-
+        public static User GlobalUser = new User() { };
         #if DEBUG
         #if __IOS__
-                public static string HolidailyHost = "http://localhost:8888";
+                        public static string HolidailyHost = "http://localhost:8888";
         #else
                 public static string HolidailyHost = "http://10.0.2.2:8000";
         #endif
         #else
-                public static string HolidailyHost = "https://holidailyapp.com";
+                        public static string HolidailyHost = "https://holidailyapp.com";
         #endif
         //public static string HolidailyHost = "http://10.0.2.2:8888";
         public static HttpClient globalClient = new HttpClient();
@@ -349,6 +349,18 @@ namespace EventApp
                     bool active = responseJSON.results.is_active;
                     isPremium = responseJSON.results.is_premium;
                     confettiCount = responseJSON.results.confetti;
+                    App.GlobalUser.LastOnline = responseJSON.results.last_online;
+                    App.GlobalUser.Approved = responseJSON.results.approved_holidays;
+                    App.GlobalUser.Comments = responseJSON.results.num_comments;
+                    App.GlobalUser.Confetti = responseJSON.results.confetti;
+                    App.GlobalUser.Email = responseJSON.results.email;
+                    App.GlobalUser.UserName = responseJSON.results.username;
+                    string avatar = responseJSON.results.profile_image;
+                    if (avatar != null)
+                    {
+                        App.GlobalUser.Avatar = avatar;
+                        MessagingCenter.Send(this, "UpdateMenuProfilePicture", avatar);
+                    }
                     if (!active)
                     {
                         App.Current.MainPage = new NavigationPage(new LimboPage());

@@ -122,7 +122,23 @@ namespace EventApp.Services
                     {
                         commentContent = "[reported]";
                     }
-
+                    // Show user their own avatar, approved or not
+                    string avatar;
+                    if (comment.UserName == App.GlobalUser.UserName && Settings.IsLoggedIn)
+                    {
+                        avatar = App.GlobalUser.Avatar;
+                    }
+                    else
+                    {
+                        if (commentContent == "[deleted]" || commentContent == "[blocked]" || commentContent == "[reported]")
+                        {
+                            avatar = "default_user_32.png";
+                        }
+                        else
+                        {
+                            avatar = comment.avatar == null ? "default_user_32.png" : comment.avatar;
+                        }
+                    }
                     commentGroup.Add(new Comment()
                     {
                         Id = comment.id,
@@ -139,7 +155,8 @@ namespace EventApp.Services
                         ThreadPadding = paddingThickness,
                         ElementOpacity = opacity,
                         Enabled = isEnabled,
-                        ShowReport = showReport
+                        ShowReport = showReport,
+                        Avatar = avatar
                     });
                 }
                 allCommentThreads.Add(commentGroup);
@@ -230,7 +247,22 @@ namespace EventApp.Services
                     {
                         commentContent = "[reported]";
                     }
-
+                    string avatar;
+                    if (comment.UserName == App.GlobalUser.UserName && Settings.IsLoggedIn)
+                    {
+                        avatar = App.GlobalUser.Avatar;
+                    }
+                    else
+                    {
+                        if(commentContent == "[deleted]" || commentContent == "[blocked]" || commentContent == "[reported]")
+                        {
+                            avatar = "default_user_32.png";
+                        }
+                        else
+                        {
+                            avatar = comment.avatar == null ? "default_user_32.png" : comment.avatar;
+                        }                  
+                    }
                     commentGroup.Add(new Comment()
                     {
                         Id = comment.id,
@@ -247,7 +279,8 @@ namespace EventApp.Services
                         ThreadPadding = paddingThickness,
                         ElementOpacity = opacity,
                         Enabled = isEnabled,
-                        ShowReport = showReport
+                        ShowReport = showReport,
+                        Avatar = avatar
 
                     });
                 }

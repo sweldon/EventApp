@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace EventApp.ViewModels
 {
@@ -12,6 +13,10 @@ namespace EventApp.ViewModels
     {
         public ObservableCollection<User> UserList { get; set; }
         public Command LoadUsers { get; set; }
+        public string currentUser
+        {
+            get { return Settings.CurrentUser; }
+        }
 
         public ConfettiLeaderViewModel()
         {
@@ -31,18 +36,23 @@ namespace EventApp.ViewModels
             try
             {
                 UserList.Clear();
-                var response = await App.globalClient.GetAsync(App.HolidailyHost + "/users/top");
-                var responseString = await response.Content.ReadAsStringAsync();
-                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                dynamic userList = responseJSON.results;
+                var values = new Dictionary<string, string>{
+                    { "requesting_user", currentUser },
+                };
+                dynamic response = await ApiHelpers.MakePostRequest(values, "users");
+                dynamic userList = response.results;
                 foreach (var user in userList)
                 {
+                    var avatar = user.profile_image == null ? "default_user_128.png" : user.profile_image;
                     UserList.Insert(0, new User() {
                         UserName = user.username,
                         Confetti = user.confetti,
                         Submissions = user.holiday_submissions,
                         Approved = user.approved_holidays,
-                        Comments = user.num_comments });
+                        Comments = user.num_comments,
+                        Avatar = avatar,
+                        LastOnline = user.last_online
+                    });
                 }
 
             }
