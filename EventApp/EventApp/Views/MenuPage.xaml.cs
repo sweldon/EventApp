@@ -215,7 +215,7 @@ namespace EventApp.Views
         {
             base.OnDisappearing();
             MessagingCenter.Unsubscribe<LoginPage, bool>(this, "UpdateMenu");
-            MessagingCenter.Subscribe<ProfilePage, ImageSource>(this,
+            MessagingCenter.Subscribe<ProfilePage, string>(this,
             "UpdateMenuProfilePicture", (sender, data) =>
             {
                 MenuProfilePicture.Source = data;

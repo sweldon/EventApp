@@ -25,14 +25,15 @@ namespace EventApp
         public static User GlobalUser = new User() { };
         #if DEBUG
         #if __IOS__
-                        public static string HolidailyHost = "http://localhost:8888";
+            public static string HolidailyHost = "http://localhost:8888";
         #else
-                public static string HolidailyHost = "http://10.0.2.2:8000";
+            public static string HolidailyHost = "http://10.0.2.2:8000";
         #endif
         #else
-                        public static string HolidailyHost = "https://holidailyapp.com";
+            public static string HolidailyHost = "https://holidailyapp.com";
         #endif
         //public static string HolidailyHost = "http://10.0.2.2:8888";
+        //public static string HolidailyHost = "https://holidailyapp.com";
         public static HttpClient globalClient = new HttpClient();
         // App-wide reusable instance for choosing random ads
         public static Random randomGenerator = new Random();
@@ -255,7 +256,56 @@ namespace EventApp
                 });
             }
         }
+        private async void syncUser()
+        {
+            await Task.Delay(5000);
+            if (isLoggedIn)
+            {
+                try
+                {
+                    var values = new Dictionary<string, string>{
+                        { "username", currentUser },
+                        { "device_update", devicePushId },
+                    };
+                    #if __IOS__
+                        values["platform"] = "ios";
+                    #elif __ANDROID__
+                        values["platform"] = "android";
+                    #endif
+                    var content = new FormUrlEncodedContent(values);
+                    var response = await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
+                }
+                catch
+                {
+                }
+            }
+            else
+            {
+                try
+                {
+                    if (devicePushId != "none")
+                    {
+                        var values = new Dictionary<string, string>{
+                            { "device_id", devicePushId },
+                        };
 
+                        #if __IOS__
+                            values["platform"] = "ios";
+                        #elif __ANDROID__
+                            values["platform"] = "android";
+                        #endif
+
+                        var content = new FormUrlEncodedContent(values);
+                        await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
+                    }
+                }
+                catch
+                {
+
+                }
+                isPremium = false;
+            }
+        }
         protected override async void OnStart()
         {
             CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
@@ -263,6 +313,10 @@ namespace EventApp
                 var token = p.Token.ToString();
                 devicePushId = token;
             };
+            await Task.Run(async () =>
+            {
+                syncUser();
+            });
             await Task.Run(async () =>
             {
                 MakeUserActive();
@@ -337,11 +391,6 @@ namespace EventApp
                         values["platform"] = "android";
                     #endif
 
-                    if (devicePushId != "none")
-                    {
-                        values["device_id"] = devicePushId;
-                    }
-
                     var content = new FormUrlEncodedContent(values);
                     var response = await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
                     var responseString = await response.Content.ReadAsStringAsync();
@@ -370,36 +419,10 @@ namespace EventApp
                 catch
                 {
                     // Reset labels and global settings
-                    isLoggedIn = false;
-                    currentUser = null;
-                    isPremium = false;
+                    //isLoggedIn = false;
+                    //currentUser = null;
+                    //isPremium = false;
                 }
-            }
-            else
-            {
-                try
-                {
-                    if(devicePushId != "none")
-                    {
-                        var values = new Dictionary<string, string>{
-                            { "device_id", devicePushId },
-                        };
-
-                        #if __IOS__
-                            values["platform"] = "ios";
-                        #elif __ANDROID__
-                            values["platform"] = "android";
-                        #endif
-
-                        var content = new FormUrlEncodedContent(values);
-                        await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
-                    }
-                }
-                catch
-                {
-
-                }
-                isPremium = false;
             }
 
             // EULA

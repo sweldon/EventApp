@@ -89,14 +89,10 @@ namespace EventApp.Views
         }
         async void UploadAvatar(MediaFile ProfilePic)
         {
-            ImageSource newPicture = ImageSource.FromStream(() => ProfilePic.GetStreamWithImageRotatedForExternalStorage());
-            MessagingCenter.Send(this, "UpdateMenuProfilePicture", newPicture);
-            var stream = ProfilePic.GetStreamWithImageRotatedForExternalStorage();
-            var bytes = new byte[stream.Length];
+            Stream streamedImage = ProfilePic.GetStreamWithImageRotatedForExternalStorage();
             MultipartFormDataContent content = new MultipartFormDataContent();
-            ByteArrayContent baContent = new ByteArrayContent(bytes);
             StringContent username = new StringContent(currentUser);
-            content.Add(new StreamContent(ProfilePic.GetStream()), "file", $"{ProfilePic.Path}");
+            content.Add(new StreamContent(streamedImage), "file", $"{ProfilePic.Path}");
             content.Add(username, "username");
             var response = await App.globalClient.PostAsync(App.HolidailyHost + "/user/", content);
             var responseString = await response.Content.ReadAsStringAsync();
@@ -104,6 +100,7 @@ namespace EventApp.Views
             string avatar = responseJSON.avatar;
             App.GlobalUser.Avatar = avatar;
             ProfilePicture.Source = avatar;
+            MessagingCenter.Send(this, "UpdateMenuProfilePicture", avatar);
         }
         async void ChooseAvatar()
         {
@@ -140,7 +137,7 @@ namespace EventApp.Views
                 var mediaOptions = new StoreCameraMediaOptions()
                 {
                     PhotoSize = PhotoSize.Small,
-                    AllowCropping = false
+                    AllowCropping = true
                 };
                 var selectedImageFile = await CrossMedia.Current.TakePhotoAsync(mediaOptions);
                 if (selectedImageFile == null)

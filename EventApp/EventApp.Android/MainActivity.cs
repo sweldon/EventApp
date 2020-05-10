@@ -16,6 +16,7 @@ using Plugin.InAppBilling;
 using Plugin.CurrentActivity;
 using ImageCircle.Forms.Plugin.Droid;
 using Plugin.PushNotification;
+using Xamarin.Essentials;
 
 namespace EventApp.Droid
 {
@@ -49,6 +50,11 @@ namespace EventApp.Droid
             // If debug you should reset the token each time.
             // If user still has AppCenter token, update it
             bool shouldRefresh = devicePushId.Length == 36 ? true : false;
+            string buildNumber = AppInfo.BuildString;
+            // Keep this high until all android people all have reg ids?
+            if (Int32.Parse(buildNumber) < 100){
+                shouldRefresh = true;
+            }
             #if DEBUG
                 PushNotificationManager.Initialize(this, true);
             #else
