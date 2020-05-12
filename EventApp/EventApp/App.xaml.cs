@@ -25,12 +25,12 @@ namespace EventApp
         public static User GlobalUser = new User() { };
         #if DEBUG
         #if __IOS__
-            public static string HolidailyHost = "http://localhost:8888";
+        public static string HolidailyHost = "http://localhost:8888";
         #else
-            public static string HolidailyHost = "http://10.0.2.2:8000";
+        public static string HolidailyHost = "http://10.0.2.2:8000";
         #endif
         #else
-            public static string HolidailyHost = "https://holidailyapp.com";
+        public static string HolidailyHost = "https://holidailyapp.com";
         #endif
         //public static string HolidailyHost = "http://10.0.2.2:8888";
         //public static string HolidailyHost = "https://holidailyapp.com";
@@ -236,29 +236,35 @@ namespace EventApp
         }
         private async void CheckForUpdates()
         {
-            await Task.Delay(10000);
-            var values = new Dictionary<string, string>{
+            try
+            {
+                await Task.Delay(10000);
+                var values = new Dictionary<string, string>{
                 { "version", appInfo },
                 { "check_update", "true" },
-            };
-            #if __IOS__
-                values["platform"] = "ios";
-            #elif __ANDROID__
-                values["platform"] = "android";
-            #endif
-            dynamic response = await ApiHelpers.MakePostRequest(values, "user");
-            bool needsUpdate = response.needs_update;
-            if (needsUpdate)
-            {
-                Device.BeginInvokeOnMainThread(() =>
+                };
+                #if __IOS__
+                    values["platform"] = "ios";
+                #elif __ANDROID__
+                    values["platform"] = "android";
+                #endif
+                dynamic response = await ApiHelpers.MakePostRequest(values, "user");
+                bool needsUpdate = response.needs_update;
+                if (needsUpdate)
                 {
-                    handleUpdate();
-                });
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        handleUpdate();
+                    });
+                }
             }
+            catch
+            {
+            }
+
         }
         private async void syncUser()
         {
-            await Task.Delay(5000);
             if (isLoggedIn)
             {
                 try
@@ -283,21 +289,18 @@ namespace EventApp
             {
                 try
                 {
-                    if (devicePushId != "none")
-                    {
-                        var values = new Dictionary<string, string>{
-                            { "device_id", devicePushId },
-                        };
+                    var values = new Dictionary<string, string>{
+                        { "device_id", devicePushId },
+                    };
 
-                        #if __IOS__
-                            values["platform"] = "ios";
-                        #elif __ANDROID__
-                            values["platform"] = "android";
-                        #endif
+                    #if __IOS__
+                        values["platform"] = "ios";
+                    #elif __ANDROID__
+                        values["platform"] = "android";
+                    #endif
 
-                        var content = new FormUrlEncodedContent(values);
-                        await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
-                    }
+                    var content = new FormUrlEncodedContent(values);
+                    await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content); 
                 }
                 catch
                 {
@@ -312,11 +315,8 @@ namespace EventApp
             {
                 var token = p.Token.ToString();
                 devicePushId = token;
-            };
-            await Task.Run(async () =>
-            {
                 syncUser();
-            });
+            };
             await Task.Run(async () =>
             {
                 MakeUserActive();
@@ -418,10 +418,7 @@ namespace EventApp
                 }
                 catch
                 {
-                    // Reset labels and global settings
-                    //isLoggedIn = false;
-                    //currentUser = null;
-                    //isPremium = false;
+
                 }
             }
 
