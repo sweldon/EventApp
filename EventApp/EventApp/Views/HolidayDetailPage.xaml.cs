@@ -120,6 +120,22 @@ namespace EventApp.Views
             MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
         }
 
+        async void OpenProfile(object sender, EventArgs args)
+        {
+            var comment = new Comment();
+            try
+            {
+                comment = (sender as Image).BindingContext as Comment;
+            }
+            catch
+            {
+                comment = (sender as Label).BindingContext as Comment;
+            }
+            if (comment.Content == "[deleted]" || comment.Content == "[blocked]" || comment.Content == "[reported]")
+                return;
+            string UserName = comment.UserName;
+            await Navigation.PushAsync(new UserPage(user: null, userName: UserName));
+        }
 
         async void OnDeleteTapped(object sender, EventArgs args)
         {
@@ -160,6 +176,7 @@ namespace EventApp.Views
                                 item.Content = "[deleted]";
                                 item.ShowReply = "False";
                                 item.ShowDelete = "False";
+                                item.Avatar = "default_user_32.png";
 
                                 // Disable voting
                                 item.Enabled = false;
@@ -228,6 +245,7 @@ namespace EventApp.Views
                         comment.Content = "[reported]";
                         comment.UserName = "[reported]";
                     }
+                    comment.Avatar = "default_user_32.png";
                     await viewModel.CommentStore.ReportComment(comment.Id, block.ToString());
                 }
             }

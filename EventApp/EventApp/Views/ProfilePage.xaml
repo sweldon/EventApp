@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="EventApp.Views.ProfilePage"
+    Title="Your Profile"
+    xmlns:local="clr-namespace:EventApp"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
+    xmlns:images="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Back" Clicked="Back" x:Name="BackButton" />
+    </ContentPage.ToolbarItems>
+    <ScrollView Padding="10">
+    <StackLayout Spacing="0">
+
+        <ContentView Padding="20, 20, 20, 10">
+        <images:CircleImage Source="default_user_256.png" 
+            WidthRequest="180" 
+            HeightRequest="180" 
+            Aspect="AspectFill" 
+            VerticalOptions="Start"
+            x:Name="ProfilePicture"
+            HorizontalOptions="CenterAndExpand" />
+        </ContentView>
+
+
+        <ContentView HorizontalOptions="CenterAndExpand" Padding="3">
+            <Label TextColor="#4c96e8" FontSize="Micro">
+                <Label.FormattedText>
+                <FormattedString>
+                    <Span FontSize="Small" x:Name="UserName" TextColor="#4c96e8" FontAttributes="Bold"/>
+                </FormattedString>
+            </Label.FormattedText>
+            </Label>
+        </ContentView>
+
+
+        <ContentView HorizontalOptions="CenterAndExpand" Padding="5">
+                    <Label
+                    TextColor="#4c96e8" 
+                    FontSize="Micro">
+                        <Label.FormattedText>
+                        <FormattedString>
+                            <Span x:Name="Confetti" TextColor="#4c96e8" FontAttributes="Bold" FontSize="Micro"/>
+                            <Span Text=" confetti · " TextColor="Gray"  />
+
+                            <Span x:Name="Comments" TextColor="#4c96e8" FontAttributes="Bold" FontSize="Micro"/>
+                            <Span Text=" comments · " TextColor="Gray"  />
+
+                            <Span x:Name="Holidays" TextColor="#4c96e8" FontAttributes="Bold" FontSize="Micro"/>
+                            <Span Text=" holidays" TextColor="Gray"  />
+                        </FormattedString>
+                    </Label.FormattedText>
+                    </Label>
+
+        </ContentView>
+        <StackLayout Orientation="Horizontal" Padding="5" HorizontalOptions="Center">
+        <Button Text="Edit Profile Picture"
+            HorizontalOptions="Center"
+            Padding="10, 5, 10, 5"
+            CornerRadius="5"
+            BorderColor="#4c96e8"
+            BorderWidth="1"
+            FontSize="Micro"
+            x:Name="UploadButton"
+            Clicked="ChooseUploadType"
+            BackgroundColor="#FFFFFF"
+            TextColor="#4c96e8" />
+
+        <Button Text="View Public Profile"
+            HorizontalOptions="Center"
+            Padding="10, 5, 10, 5"
+            CornerRadius="5"
+            BorderColor="#4c96e8"
+            BorderWidth="1"
+            FontSize="Micro"
+            Clicked="OpenProfile"
+            BackgroundColor="#FFFFFF"
+            TextColor="#4c96e8" />
+
+            </StackLayout>
+
+        <Button Text="Unlock Premium"
+            VerticalOptions="EndAndExpand"
+            CornerRadius="5"
+            BorderColor="Green"
+            BorderWidth="1"
+            FontSize="Small"
+            Padding="5"
+            x:Name="goPremiumButton"
+            Clicked="OpenPremium"
+            BackgroundColor="#FFFFFF"
+            TextColor="Green"
+            HorizontalOptions="Fill"/>
+
+    </StackLayout>
+        </ScrollView>
+</ContentPage>

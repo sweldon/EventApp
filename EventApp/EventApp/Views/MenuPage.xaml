@@ -27,12 +27,17 @@
                              Grid.Column="0">
      
                     <ContentView HorizontalOptions="Start">
-                        <controls:CircleImage Source="default_profile_inverted.png" 
+                        <controls:CircleImage Source="default_user_128.png" 
                                               WidthRequest="80" 
                                               HeightRequest="80" 
                                               Aspect="AspectFill" 
                                               VerticalOptions="Start" 
-                                              HorizontalOptions="CenterAndExpand" />
+                                              HorizontalOptions="CenterAndExpand"
+                                              x:Name="MenuProfilePicture">
+                    <controls:CircleImage.GestureRecognizers>
+                    <TapGestureRecognizer
+                    Tapped="OpenProfile"  />
+                    </controls:CircleImage.GestureRecognizers></controls:CircleImage>
                     </ContentView>
                 </StackLayout>
 
@@ -46,12 +51,12 @@
                     <Label>
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="Confetti: " 
-                                      TextColor="Black" 
-                                      FontSize="Medium" />
                                 <Span x:Name="UserPointsHeader" 
                                       TextColor="Black" 
                                       FontAttributes="Bold" 
+                                      FontSize="Medium" />
+                                <Span Text=" confetti" 
+                                      TextColor="Black" 
                                       FontSize="Medium" />
                             </FormattedString>
                         </Label.FormattedText>
@@ -64,29 +69,15 @@
                             <ColumnDefinition Width="33*"/>
                         </Grid.ColumnDefinitions>
 
-
-                        <Button
-                                IsVisible="{Binding isPremium}"
-                                Text="Premium User"
-                                CornerRadius="5"
-                                BorderColor="#4c96e8"
-                                BorderWidth="1"
-                                FontSize="Small"
-                                x:Name="isPremiumLabel"
-                                Clicked="OpenPremium"
-                                FontAttributes="Bold"
-                                BackgroundColor="#FFFFFF"
-                                TextColor="#4c96e8" />
-
-                        <Button Text="Go Premium"
-                                CornerRadius="5"
-                                BorderColor="#4c96e8"
-                                BorderWidth="1"
-                                FontSize="Small"
-                                x:Name="goPremiumButton"
-                                Clicked="OpenPremium"
-                                BackgroundColor="#FFFFFF"
-                                TextColor="#4c96e8" />
+                        <Button Text="Edit Profile"
+                            CornerRadius="5"
+                            BorderColor="#4c96e8"
+                            BorderWidth="1"
+                            FontSize="Small"
+                            x:Name="openProfileButton"
+                            Clicked="OpenProfile"
+                            BackgroundColor="#FFFFFF"
+                            TextColor="#4c96e8" />
                      
                     </Grid>
 

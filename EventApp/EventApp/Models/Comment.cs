@@ -115,7 +115,20 @@ namespace EventApp.Models
                 OnPropertyChanged();
             }
         }
-
+        private string avatar;
+        public string Avatar
+        {
+            get { return avatar; }
+            set
+            {
+                if (avatar == value)
+                {
+                    return;
+                }
+                avatar = value;
+                OnPropertyChanged();
+            }
+        }
         public string HolidayId { get; set; }
         public string TimeSince { get; set; }
         public Thickness ThreadPadding { get; set; }

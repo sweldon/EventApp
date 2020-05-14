@@ -16,6 +16,7 @@ using Plugin.InAppBilling;
 using Plugin.CurrentActivity;
 using ImageCircle.Forms.Plugin.Droid;
 using Plugin.PushNotification;
+using Xamarin.Essentials;
 
 namespace EventApp.Droid
 {
@@ -35,7 +36,7 @@ namespace EventApp.Droid
 
             base.SetTheme(Resource.Style.MainTheme);
             base.OnCreate(savedInstanceState);
-
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
 
             //Set the default notification channel for your app when running Android Oreo
             if (Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
@@ -49,6 +50,11 @@ namespace EventApp.Droid
             // If debug you should reset the token each time.
             // If user still has AppCenter token, update it
             bool shouldRefresh = devicePushId.Length == 36 ? true : false;
+            string buildNumber = AppInfo.BuildString;
+            // Keep this high until all android people all have reg ids?
+            if (Int32.Parse(buildNumber) < 100){
+                shouldRefresh = true;
+            }
             #if DEBUG
                 PushNotificationManager.Initialize(this, true);
             #else

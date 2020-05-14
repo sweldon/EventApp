@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using System.Linq;
+using EventApp.ViewModels;
 
 namespace EventApp.Views
 {
@@ -110,12 +111,11 @@ namespace EventApp.Views
             LoginButton.IsEnabled = true;
         }
 
-        public async void OpenPremium(object sender, EventArgs e)
+        private async void OpenProfile(object sender, EventArgs e)
         {
-            goPremiumButton.IsEnabled = false;
-            App.popModalIfActive(Navigation);
-            await Navigation.PushModalAsync(new NavigationPage(new Premium()));
-            goPremiumButton.IsEnabled = true;
+            this.IsEnabled = false;
+            await Navigation.PushModalAsync(new NavigationPage(new ProfilePage(new ProfileViewModel(), fromMenu:true)));
+            this.IsEnabled = true;
         }
 
         public async void LogoutUser(object sender, EventArgs e)
@@ -143,7 +143,8 @@ namespace EventApp.Views
                 UserLabel.Text = "Hey there!";
                 currentUser = null;
                 isPremium = false;
-                goPremiumButton.IsVisible = true;
+                MenuProfilePicture.Source = "default_user_128.png";
+                //goPremiumButton.IsVisible = true;
                 MessagingCenter.Send(this, "UpdateHolidayFeed");
 
             }
@@ -154,7 +155,7 @@ namespace EventApp.Views
 
         }
         protected override async void OnAppearing()
-        {
+        {   
             AppInfoLabel.Text = $"Holidaily™ - Version {appInfo}";
             if (isLoggedIn)
             {
@@ -167,7 +168,7 @@ namespace EventApp.Views
                 UserLabel.Text = "Hey, " + currentUser + "!";
                 UserNameHeader.Text = currentUser;
                 UserPointsHeader.Text = confettiCount;
-                goPremiumButton.IsVisible = !isPremium;
+                //goPremiumButton.IsVisible = !isPremium;
             }
             else
             {
@@ -178,7 +179,7 @@ namespace EventApp.Views
                 LoginButton.IsVisible = true;
                 HeaderDivider.IsVisible = false;
                 UserLabel.Text = "Hey there!";
-                goPremiumButton.IsVisible = false;
+                //goPremiumButton.IsVisible = false;
             }
             
             MessagingCenter.Subscribe<LoginPage, bool>(this,
@@ -194,15 +195,45 @@ namespace EventApp.Views
                         UserLabel.Text = "Hey, " + currentUser + "!";
                         UserNameHeader.Text = currentUser;
                         UserPointsHeader.Text = confettiCount;
-                        goPremiumButton.IsVisible = !isPremium;
+                        Debug.WriteLine($"Setting prof pic to {App.GlobalUser.Avatar}");
+                        MenuProfilePicture.Source = App.GlobalUser.Avatar;
+                        //goPremiumButton.IsVisible = !isPremium;
                     }
                 });
-
+            // Update avatar after uploaded on profile page
+            MessagingCenter.Unsubscribe<ProfilePage, ImageSource>(this, "UpdateMenuProfilePicture");
+            MessagingCenter.Unsubscribe<LoginPage, string>(this, "UpdateMenuProfilePicture");
+            // Update avatar on app start only
+            MessagingCenter.Subscribe<App, string>(this,
+            "UpdateMenuProfilePicture", (sender, data) =>
+            {
+                MenuProfilePicture.Source = data;
+                MessagingCenter.Unsubscribe<App, string>(this, "UpdateMenuProfilePicture");
+            });
         }
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
             MessagingCenter.Unsubscribe<LoginPage, bool>(this, "UpdateMenu");
+            MessagingCenter.Subscribe<ProfilePage, string>(this,
+            "UpdateMenuProfilePicture", (sender, data) =>
+            {
+                MenuProfilePicture.Source = data;
+            });
+            MessagingCenter.Subscribe<LoginPage, string>(this,
+            "UpdateMenuProfilePicture", (sender, data) =>
+            {
+                if(data != null)
+                {
+                    MenuProfilePicture.Source = data;
+                }
+                else
+                {
+                    MenuProfilePicture.Source = "default_user_128.png";
+                }
+                
+            });
+
 
         }
 

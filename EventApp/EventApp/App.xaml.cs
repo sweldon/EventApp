@@ -22,17 +22,18 @@ namespace EventApp
         public NavigationPage NavigationPage { get; private set; }
         public Holiday OpenHolidayPage { get; set; }
         public Comment OpenComment { get; set; }
-
+        public static User GlobalUser = new User() { };
         #if DEBUG
-        #if __IOS__
+            #if __IOS__
                 public static string HolidailyHost = "http://localhost:8888";
-        #else
+            #else
                 public static string HolidailyHost = "http://10.0.2.2:8000";
-        #endif
+            #endif
         #else
-                public static string HolidailyHost = "https://holidailyapp.com";
+            public static string HolidailyHost = "https://holidailyapp.com";
         #endif
         //public static string HolidailyHost = "http://10.0.2.2:8888";
+        //public static string HolidailyHost = "https://holidailyapp.com";
         public static HttpClient globalClient = new HttpClient();
         // App-wide reusable instance for choosing random ads
         public static Random randomGenerator = new Random();
@@ -235,33 +236,86 @@ namespace EventApp
         }
         private async void CheckForUpdates()
         {
-            await Task.Delay(10000);
-            var values = new Dictionary<string, string>{
+            try
+            {
+                await Task.Delay(10000);
+                var values = new Dictionary<string, string>{
                 { "version", appInfo },
                 { "check_update", "true" },
-            };
-            #if __IOS__
-                values["platform"] = "ios";
-            #elif __ANDROID__
-                values["platform"] = "android";
-            #endif
-            dynamic response = await ApiHelpers.MakePostRequest(values, "user");
-            bool needsUpdate = response.needs_update;
-            if (needsUpdate)
-            {
-                Device.BeginInvokeOnMainThread(() =>
+                };
+                #if __IOS__
+                    values["platform"] = "ios";
+                #elif __ANDROID__
+                    values["platform"] = "android";
+                #endif
+                dynamic response = await ApiHelpers.MakePostRequest(values, "user");
+                bool needsUpdate = response.needs_update;
+                if (needsUpdate)
                 {
-                    handleUpdate();
-                });
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        handleUpdate();
+                    });
+                }
+            }
+            catch
+            {
+            }
+
+        }
+        private async void syncUser()
+        {
+            if (isLoggedIn)
+            {
+                try
+                {
+                    var values = new Dictionary<string, string>{
+                        { "username", currentUser },
+                        { "device_update", devicePushId },
+                    };
+                    #if __IOS__
+                        values["platform"] = "ios";
+                    #elif __ANDROID__
+                        values["platform"] = "android";
+                    #endif
+                    var content = new FormUrlEncodedContent(values);
+                    var response = await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
+                }
+                catch
+                {
+                }
+            }
+            else
+            {
+                try
+                {
+                    var values = new Dictionary<string, string>{
+                        { "device_id", devicePushId },
+                    };
+
+                    #if __IOS__
+                        values["platform"] = "ios";
+                    #elif __ANDROID__
+                        values["platform"] = "android";
+                    #endif
+
+                    var content = new FormUrlEncodedContent(values);
+                    await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content); 
+                }
+                catch
+                {
+
+                }
+                isPremium = false;
             }
         }
-
         protected override async void OnStart()
         {
             CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
             {
                 var token = p.Token.ToString();
                 devicePushId = token;
+                syncUser();
             };
             await Task.Run(async () =>
             {
@@ -337,11 +391,6 @@ namespace EventApp
                         values["platform"] = "android";
                     #endif
 
-                    if (devicePushId != "none")
-                    {
-                        values["device_id"] = devicePushId;
-                    }
-
                     var content = new FormUrlEncodedContent(values);
                     var response = await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
                     var responseString = await response.Content.ReadAsStringAsync();
@@ -349,6 +398,18 @@ namespace EventApp
                     bool active = responseJSON.results.is_active;
                     isPremium = responseJSON.results.is_premium;
                     confettiCount = responseJSON.results.confetti;
+                    App.GlobalUser.LastOnline = responseJSON.results.last_online;
+                    App.GlobalUser.Approved = responseJSON.results.approved_holidays;
+                    App.GlobalUser.Comments = responseJSON.results.num_comments;
+                    App.GlobalUser.Confetti = responseJSON.results.confetti;
+                    App.GlobalUser.Email = responseJSON.results.email;
+                    App.GlobalUser.UserName = responseJSON.results.username;
+                    string avatar = responseJSON.results.profile_image;
+                    if (avatar != null)
+                    {
+                        App.GlobalUser.Avatar = avatar;
+                        MessagingCenter.Send(this, "UpdateMenuProfilePicture", avatar);
+                    }
                     if (!active)
                     {
                         App.Current.MainPage = new NavigationPage(new LimboPage());
@@ -357,37 +418,8 @@ namespace EventApp
                 }
                 catch
                 {
-                    // Reset labels and global settings
-                    isLoggedIn = false;
-                    currentUser = null;
-                    isPremium = false;
-                }
-            }
-            else
-            {
-                try
-                {
-                    if(devicePushId != "none")
-                    {
-                        var values = new Dictionary<string, string>{
-                            { "device_id", devicePushId },
-                        };
-
-                        #if __IOS__
-                            values["platform"] = "ios";
-                        #elif __ANDROID__
-                            values["platform"] = "android";
-                        #endif
-
-                        var content = new FormUrlEncodedContent(values);
-                        await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
-                    }
-                }
-                catch
-                {
 
                 }
-                isPremium = false;
             }
 
             // EULA

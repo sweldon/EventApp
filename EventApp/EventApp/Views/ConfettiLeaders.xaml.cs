@@ -3,6 +3,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using EventApp.Models;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace EventApp.Views
 {
@@ -25,20 +26,48 @@ namespace EventApp.Views
         }
         
         ConfettiLeaderViewModel viewModel;
-
+        public bool CommentLock;
         public ConfettiLeaders()
         {
             InitializeComponent();
             BindingContext = viewModel = new ConfettiLeaderViewModel();
-            Title = "Top 20 Confetti Leaders";
+            Title = "Top 20";
+            ConfettiLeadersList.ItemSelected += OnItemSelected;
+            CommentLock = false;
+        }
 
+
+        async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
+        {
+
+            ((ListView)sender).SelectedItem = null;
+            if (args.SelectedItem == null)
+            {
+                return;
+            }
+            var SelectedUser = args.SelectedItem as User;
+
+            if (!CommentLock)
+            {
+                CommentLock = true;
+                try
+                {
+                    await Navigation.PushAsync(new UserPage(SelectedUser));
+                }
+                catch
+                {
+                    await DisplayAlert("Uh oh!", "Couldn't load this user's profile", "OK");
+                }
+                await Task.Delay(2000);
+                CommentLock = false;
+            }
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
-            viewModel.LoadUsers.Execute(null);
+            if(viewModel.UserList.Count == 0)
+                viewModel.LoadUsers.Execute(null);
             AdBanner.IsVisible = !isPremium;
         } 
 

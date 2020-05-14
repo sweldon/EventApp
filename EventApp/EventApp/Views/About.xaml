@@ -46,7 +46,7 @@
                     HorizontalTextAlignment="Center"
                     HorizontalOptions="CenterAndExpand" />
              
-                    <Label Text="Icons made by Kiranshastry and Roundicons from www.flaticon.com"
+                    <Label Text="Icons made by Kiranshastry, Roundicons, Those Icons from www.flaticon.com"
                     HorizontalTextAlignment="Center"
                     HorizontalOptions="CenterAndExpand" />
                </StackLayout>
