@@ -306,7 +306,6 @@ namespace EventApp
                 {
 
                 }
-                isPremium = false;
             }
         }
         protected override async void OnStart()

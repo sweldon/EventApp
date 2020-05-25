@@ -89,7 +89,9 @@ namespace EventApp.Services
                     bool showReport = true;
 
                     // If already blocked, reported or it's their own, don't allow another report
-                    if (comment.blocked == true || comment.reported == true || (String.Equals(commentUser, currentUser, StringComparison.OrdinalIgnoreCase)))
+                    if (comment.blocked == true || comment.reported == true ||
+                        (String.Equals(commentUser, currentUser, StringComparison.OrdinalIgnoreCase))
+                        || comment.deleted == true)
                     {
                         showReport = false;
                     }
@@ -215,7 +217,9 @@ namespace EventApp.Services
                     bool showReport = true;
 
                     // If already blocked, reported or it's their own, don't allow another report
-                    if(comment.blocked == true || comment.reported == true || (String.Equals(commentUser, currentUser, StringComparison.OrdinalIgnoreCase)))
+                    if(comment.blocked == true || comment.reported == true ||
+                        (String.Equals(commentUser, currentUser, StringComparison.OrdinalIgnoreCase))
+                        || comment.deleted == true)
                     {
                         showReport = false;
                     }
