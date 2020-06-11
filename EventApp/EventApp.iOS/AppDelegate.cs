@@ -10,6 +10,7 @@ using UIKit;
 using Xamarin.Forms;
 using ImageCircle.Forms.Plugin.iOS;
 using Plugin.PushNotification;
+using System.Net.Http;
 
 namespace EventApp.iOS
 {
@@ -27,6 +28,18 @@ namespace EventApp.iOS
         // You have 17 seconds to return from this method, or iOS will terminate your application.
         //
         public NavigationPage NavigationPage { get; private set; }
+        public string devicePushId
+        {
+            get { return Settings.DevicePushId; }
+        }
+        public bool isLoggedIn
+        {
+            get { return Settings.IsLoggedIn; }
+        }
+        public string currentUser
+        {
+            get { return Settings.CurrentUser; }
+        }
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
@@ -39,6 +52,43 @@ namespace EventApp.iOS
         }
         public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
         {
+            byte[] bytes = deviceToken.ToArray<byte>();
+            string[] hexArray = bytes.Select(b => b.ToString("x2")).ToArray();
+            string deviceId = string.Join(string.Empty, hexArray);
+
+            if (isLoggedIn)
+            {
+                try
+                {
+                    var values = new Dictionary<string, string>{
+                    { "username", currentUser },
+                    { "device_update", deviceId },
+                    { "platform", "ios" }
+                };
+                    var content = new FormUrlEncodedContent(values);
+                    var response = App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
+                }
+                catch
+                {
+                }
+            }
+            else
+            {
+                try
+                {
+                    var values = new Dictionary<string, string>{
+                    { "device_id", deviceId },
+                    { "platform", "ios" }
+                };
+                    var content = new FormUrlEncodedContent(values);
+                    App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
+                }
+                catch
+                {
+
+                }
+            }
+
             PushNotificationManager.DidRegisterRemoteNotifications(deviceToken);
         }
 

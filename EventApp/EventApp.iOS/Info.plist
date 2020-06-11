@@ -68,7 +68,7 @@
 	<key>CFBundleName</key>
 	<string>Holidaily</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.6</string>
+	<string>1.2.7</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
 	<key>CFBundleIdentifier</key>
@@ -78,6 +78,6 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Holidaily needs your permission to access the camera to take a photo for your profile picture in the app.</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>10</string>
 </dict>
 </plist>

@@ -195,8 +195,7 @@ namespace EventApp.Views
                         UserLabel.Text = "Hey, " + currentUser + "!";
                         UserNameHeader.Text = currentUser;
                         UserPointsHeader.Text = confettiCount;
-                        Debug.WriteLine($"Setting prof pic to {App.GlobalUser.Avatar}");
-                        MenuProfilePicture.Source = App.GlobalUser.Avatar;
+                        // Avatar is set on App.cs appearance w/ messages
                         //goPremiumButton.IsVisible = !isPremium;
                     }
                 });

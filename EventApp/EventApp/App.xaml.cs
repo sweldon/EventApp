@@ -24,13 +24,13 @@ namespace EventApp
         public Comment OpenComment { get; set; }
         public static User GlobalUser = new User() { };
         #if DEBUG
-            #if __IOS__
+        #if __IOS__
                 public static string HolidailyHost = "http://localhost:8888";
-            #else
-                public static string HolidailyHost = "http://10.0.2.2:8000";
-            #endif
         #else
-            public static string HolidailyHost = "https://holidailyapp.com";
+                public static string HolidailyHost = "http://10.0.2.2:8000";
+        #endif
+        #else
+                public static string HolidailyHost = "https://holidailyapp.com";
         #endif
         //public static string HolidailyHost = "http://10.0.2.2:8888";
         //public static string HolidailyHost = "https://holidailyapp.com";
@@ -312,9 +312,17 @@ namespace EventApp
         {
             CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
             {
+                // Handle local device id for both platforms
                 var token = p.Token.ToString();
                 devicePushId = token;
-                syncUser();
+                /*
+                    Handle token sync for iOS in AppDelegate since it has token reg callbacks
+                    Android is constantly refreshing token currently, so this always fires.
+                    For iOS, if it missed token reg on the first try this won't fire again
+                */
+                #if __ANDROID__
+                    syncUser();
+                #endif
             };
             await Task.Run(async () =>
             {
