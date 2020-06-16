@@ -178,6 +178,18 @@ namespace EventApp
         {
             await Task.Delay(5000);
             isActive = true;
+
+            // If token STILL not set, try to get it now
+            if (devicePushId == "none")
+            {
+                string token = CrossPushNotification.Current.Token;
+                if (token != null && token != "")
+                {
+                    devicePushId = token;
+                    syncUser();
+                }
+            }
+
         }
         private Dictionary<string, string>
             ConsumePush(IDictionary<string, object> pushData)
@@ -312,18 +324,11 @@ namespace EventApp
         {
             CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
             {
-                // Handle local device id for both platforms
                 var token = p.Token.ToString();
                 devicePushId = token;
-                /*
-                    Handle token sync for iOS in AppDelegate since it has token reg callbacks
-                    Android is constantly refreshing token currently, so this always fires.
-                    For iOS, if it missed token reg on the first try this won't fire again
-                */
-                #if __ANDROID__
-                    syncUser();
-                #endif
+                syncUser();
             };
+
             await Task.Run(async () =>
             {
                 MakeUserActive();
