@@ -326,18 +326,10 @@
 
 
     </StackLayout>
-
-
-        <StackLayout VerticalOptions="End" x:Name="AdBanner">
-
-        <ContentView >
-             <controls:MTAdView
-                AdsId="{OnPlatform
-                Android='ca-app-pub-9382412071078825/6429237516', 
-                iOS='ca-app-pub-9382412071078825/8862041693'}"
-                BackgroundColor="#CDCDCD"/>
-        </ContentView >
-
-        </StackLayout>
+        <controls:MTAdView
+        x:Name="AdBanner"
+        AdsId="{OnPlatform
+        Android='ca-app-pub-9382412071078825/6429237516', 
+        iOS='ca-app-pub-9382412071078825/8862041693'}"/>
     </StackLayout>
 </ContentPage>

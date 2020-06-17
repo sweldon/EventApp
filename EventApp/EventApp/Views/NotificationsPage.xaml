@@ -106,14 +106,10 @@
                     </ListView>
                 </ContentView>
             </StackLayout>
-        <StackLayout VerticalOptions="End" x:Name="AdBanner">
-        <ContentView >
             <controls:MTAdView
+                x:Name="AdBanner"
                 AdsId="{OnPlatform
                 Android='ca-app-pub-9382412071078825/6120727319', 
-                iOS='ca-app-pub-9382412071078825/5304465283'}"
-                BackgroundColor="#CDCDCD"/>
-        </ContentView >
-        </StackLayout>
+                iOS='ca-app-pub-9382412071078825/5304465283'}"/>
         </StackLayout>
 </ContentPage>
