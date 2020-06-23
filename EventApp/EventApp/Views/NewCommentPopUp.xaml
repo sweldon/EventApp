@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<pages:PopupPage 
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+    xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+    xmlns:controlsFF="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+    xmlns:local="clr-namespace:EventApp"
+    xmlns:CustomEntry="clr-namespace:EventApp"
+    x:Class="EventApp.Views.NewCommentPopUp">
+
+    <pages:PopupPage.Animation>
+        <animations:ScaleAnimation 
+            PositionIn="Bottom"
+            PositionOut="Bottom"
+            ScaleIn="1"
+            ScaleOut="1"
+            DurationIn="300"
+            DurationOut="300"
+            EasingIn="SinOut"
+            EasingOut="SinIn"/>
+    </pages:PopupPage.Animation>
+    <StackLayout
+        Spacing="0"
+        VerticalOptions="EndAndExpand"
+        BackgroundColor="#FFFFFF">
+
+ 
+        <ScrollView x:Name="ReplyWrapper" IsVisible="False">
+            <StackLayout>
+
+                <Frame HasShadow="False" CornerRadius="2" OutlineColor="#EAEAEA" Padding="10">
+                    <StackLayout>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*" />
+                                <ColumnDefinition Width="5*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label x:Name="UserName"
+                                            FontSize="12"
+                                            FontAttributes="Bold"
+                                            Opacity=".5" Grid.Row="0" Grid.Column="0" />
+
+                            <Label x:Name="TimeSince"
+                                               FontSize="12" 
+                                                 Grid.Row="0"
+                                                 Grid.Column="1"
+                                                 HorizontalTextAlignment="End" 
+                                                 Opacity=".8" />
+                        </Grid>
+                        <Label x:Name="ReplyContent" FontSize="16" />
+
+                    </StackLayout>
+                </Frame>
+
+            </StackLayout>
+        </ScrollView>
+
+
+
+        <ContentView IsVisible="False" x:Name="UserMentionPlaceHolderWrapper" Padding="15">
+
+            <Label
+                x:Name="UserMentionPlaceholder"
+                Text="Type a user's name to mention them!"
+                Opacity=".5"
+                FontAttributes="Italic"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                IsEnabled="False"
+                />
+  
+        </ContentView>
+
+        <ContentView IsVisible="False" x:Name="NoResults" Padding="15">
+
+            <Label
+                Text="No users found"
+                Opacity=".5"
+                FontAttributes="Italic"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                IsEnabled="False"
+             />
+           
+        </ContentView>
+
+        <ContentView x:Name="UserMentionListWrapper" IsVisible="False">
+            <ListView x:Name="UserMentionList"
+                    SeparatorVisibility="None"
+                    HasUnevenRows="True"
+                    IsPullToRefreshEnabled="False"
+                    CachingStrategy="RecycleElement">
+                    <ListView.BackgroundColor>
+                        <OnPlatform x:TypeArguments="Color"
+                    iOS="#E0E0E0"/>
+                    </ListView.BackgroundColor>
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="White">
+                                        <StackLayout>
+                                            <Grid HorizontalOptions="FillAndExpand" >
+
+                                                <Grid.Padding>
+                                                 <OnPlatform x:TypeArguments="Thickness"
+                                                        Android="5,5,5,5" iOS="5,5,5,5"/>
+                                                </Grid.Padding>
+
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+
+                                                <ContentView HorizontalOptions="Start" Grid.Column="0" Padding="5">
+                                                    <controlsFF:CircleImage Source="{Binding Avatar}" WidthRequest="40"
+                                                                            HeightRequest="40" Aspect="AspectFill"
+                                                                            VerticalOptions="Start"
+                                                                            HorizontalOptions="CenterAndExpand" />
+                                                </ContentView>
+
+                                                <Grid Grid.Column="1" Padding="10, 0, 0, 0">
+
+                                                    <ContentView VerticalOptions="Center">
+                                                        <Label Text="{Binding UserName}"
+                                                          FontSize="20"
+                                                          TextColor="#4c96e8" />
+                                                    </ContentView>
+                                                </Grid>
+                                            </Grid>
+                                        </StackLayout>
+                                    </ContentView>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+        </ContentView>
+
+        <Grid>
+        <!--<Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>-->
+        <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+
+
+        <ContentView
+        Grid.Column="0"
+        BackgroundColor="#FFFFFF"
+        Padding="5, 10, 5, 10"
+        HorizontalOptions="FillAndExpand"
+        >
+        <local:CustomEditor TextChanged="CheckMentions"
+        BackgroundColor="Transparent"
+        MaxLength="500"
+        AutoSize="TextChanges"
+        x:Name="CommentContent" />
+        </ContentView>
+            
+        <Button Text="Post" x:Name="SaveCommentButton" Grid.Column="1"
+                Padding="20, 10, 20, 10"
+        Clicked="SubmitComment"
+        CornerRadius="0"
+        BackgroundColor="#4c96e8"
+                HorizontalOptions="FillAndExpand"
+        TextColor="White" />
+
+        </Grid>
+
+
+
+                
+        
+    </StackLayout>
+</pages:PopupPage>

@@ -52,7 +52,7 @@ namespace EventApp.Droid
             bool shouldRefresh = devicePushId.Length == 36 ? true : false;
             string buildNumber = AppInfo.BuildString;
             // Keep this high until all android people all have reg ids?
-            if (Int32.Parse(buildNumber) < 100){
+            if (Int32.Parse(buildNumber) < 110){
                 shouldRefresh = true;
             }
             #if DEBUG
@@ -62,6 +62,7 @@ namespace EventApp.Droid
             #endif
 
             ImageCircleRenderer.Init();
+            Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);      
             MobileAds.Initialize(ApplicationContext, "ca-app-pub-9382412071078825~2735085847");
 
@@ -94,7 +95,6 @@ namespace EventApp.Droid
                 });
 
             }
-
             LoadApplication(new App());
             PushNotificationManager.ProcessIntent(this, Intent);
 
@@ -104,6 +104,20 @@ namespace EventApp.Droid
         base.OnActivityResult(requestCode, resultCode, data);
         InAppBillingImplementation.HandleActivityResult(requestCode, resultCode, data);
     }
+
+
+    public override void OnBackPressed()
+    {
+        if (Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed))
+        {
+            // Do something if there are some pages in the `PopupStack`
+        }
+        else
+        {
+            // Do something if there are not any pages in the `PopupStack`
+        }
+    }
+
 
     }
 }

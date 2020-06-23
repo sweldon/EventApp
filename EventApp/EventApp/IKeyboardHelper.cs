@@ -11,6 +11,7 @@ namespace EventApp
     public interface IKeyboardHelper
     {
         void HideKeyboard();
+        void ShowKeyboard();
     }
 }
 #endif

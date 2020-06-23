@@ -15,8 +15,10 @@ namespace CustomListViewDemo.iOS
             if (Control != null)
             {
                 Control.ShowsVerticalScrollIndicator = false;
-
+                Control.RemembersLastFocusedIndexPath = false;
+         
             }
         }
+        
     }
 }

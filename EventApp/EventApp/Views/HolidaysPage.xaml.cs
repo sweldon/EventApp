@@ -134,6 +134,8 @@ namespace EventApp.Views
             }
         }
 
+
+
         protected override async void OnAppearing()
         {
             base.OnAppearing();
@@ -167,7 +169,6 @@ namespace EventApp.Views
                 await Navigation.PushModalAsync(new NavigationPage(new NotificationsPage()));
                 OpenNotifications = false;
             }
-
         }
 
         protected override void OnDisappearing()
