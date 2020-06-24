@@ -145,15 +145,11 @@
         </ContentView>
 
         <Grid>
-        <!--<Grid.RowDefinitions>
-        <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>-->
+
         <Grid.ColumnDefinitions>
         <ColumnDefinition Width="*" />
         <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-
-
 
         <ContentView
         Grid.Column="0"
@@ -178,9 +174,5 @@
 
         </Grid>
 
-
-
-                
-        
     </StackLayout>
 </pages:PopupPage>

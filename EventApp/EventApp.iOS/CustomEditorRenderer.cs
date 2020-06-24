@@ -20,21 +20,5 @@ namespace EventApp.iOS
             base.OnElementChanged(e);
         }
 
-
-
     }
 }
-
-//[assembly: ExportRenderer(typeof(CustomEditor), typeof(CustomEditorRenderer))]
-//namespace EventApp.iOS
-//{
-//    class CustomEditorRenderer : Editor
-//    {
-
-
-//        private void OnTextChanged(object sender, TextChangedEventArgs e)
-//        {
-//            AutoSize = EditorAutoSizeOption.Disabled;
-//        }
-//    }
-//}

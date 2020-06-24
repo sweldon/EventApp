@@ -55,12 +55,6 @@ namespace EventApp.Views
 
         }
 
-        //async void ItemTapped(object sender, ItemTappedEventArgs args)
-        //{
-
-        //    await Task.Delay(500);
-
-        //}
         async void OnUserSelected(object sender, SelectedItemChangedEventArgs args)
         {
 
@@ -248,11 +242,9 @@ namespace EventApp.Views
             base.OnAppearing();
             await Task.Delay(100);
             CommentContent.Focus();
-            //CommentContent.Text = '@' + ReplyComment.UserName.PadRight(ReplyComment.UserName.Length + 1, ' ');
+
             if(isReply)
                 CommentContent.Text = $"@{ReplyComment.UserName} ";
-
-
         }
 
         protected override void OnDisappearing()
