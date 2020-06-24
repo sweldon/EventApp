@@ -103,37 +103,45 @@ namespace EventApp.Views
                 {
                     NoResults.IsVisible = false;
                 }
+                AdBanner.IsVisible = !isPremium;
             }
-            AdBanner.IsVisible = !isPremium;
+            
         }
 
         private async Task<ObservableCollection<Notification>> GetNotifications()
         {
-
-            var values = new Dictionary<string, string>{
+            try
+            {
+                var values = new Dictionary<string, string>{
                     { "username", currentUser },
                 };
 
-            var content = new FormUrlEncodedContent(values);
+                var content = new FormUrlEncodedContent(values);
 
-            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/notifications/", content);
-            var responseString = await response.Content.ReadAsStringAsync();
+                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/notifications/", content);
+                var responseString = await response.Content.ReadAsStringAsync();
 
-            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-            dynamic notifList = responseJSON.results;
-            foreach (var n in notifList)
-            {
-                notifications.Add(new Notification()
+                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                dynamic notifList = responseJSON.results;
+                foreach (var n in notifList)
                 {
-                    Id = n.notification_id,
-                    Type = n.notification_type,
-                    Title = n.title,
-                    Read = n.read,
-                    Content = n.content,
-                    TimeSince = n.time_since,
-                    Icon = n.icon == null ? "icon_splash.png" : n.icon
-                });
+                    notifications.Add(new Notification()
+                    {
+                        Id = n.notification_id,
+                        Type = n.notification_type,
+                        Title = n.title,
+                        Read = n.read,
+                        Content = n.content,
+                        TimeSince = n.time_since,
+                        Icon = n.icon == null ? "icon_splash.png" : n.icon
+                    });
+                }
             }
+            catch
+            {
+
+            }
+
             return await Task.FromResult(notifications);
         }
 

@@ -13,7 +13,7 @@
 
 
 
-    <StackLayout Spacing="0" BackgroundColor="Red">
+    <StackLayout Spacing="0">
 
         <ContentView  IsVisible="False" VerticalOptions="FillAndExpand" HeightRequest="1000" BackgroundColor="#FFFFFF">
             <ContentView.Triggers>
@@ -293,12 +293,11 @@
                 </ListView>
             </ContentView>
         </StackLayout>
-
-        <controls:MTAdView
+         <controls:MTAdView
             x:Name="AdBanner"
+            IsVisible="False"
             AdsId="{OnPlatform
             Android='ca-app-pub-9382412071078825/8429542879', 
             iOS='ca-app-pub-9382412071078825/1958380167'}"/>
-
     </StackLayout>
 </ContentPage>

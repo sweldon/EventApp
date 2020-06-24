@@ -285,7 +285,6 @@ namespace EventApp.Views
             base.OnAppearing();
             if (viewModel.GroupedCommentList.Count == 0)
                 viewModel.LoadHolidayComments.Execute(null);
-            AdBanner.IsVisible = !isPremium;
             try
             {
                 viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
@@ -336,6 +335,8 @@ namespace EventApp.Views
                 Debug.WriteLine("Refreshing comments");
                 viewModel.ExecuteLoadCommentsCommand();
             });
+
+            AdBanner.IsVisible = !isPremium;
 
         }
 
