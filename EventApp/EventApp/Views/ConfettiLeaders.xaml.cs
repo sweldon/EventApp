@@ -63,13 +63,14 @@ namespace EventApp.Views
             }
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
             if(viewModel.UserList.Count == 0)
                 viewModel.LoadUsers.Execute(null);
             AdBanner.IsVisible = !isPremium;
-        } 
+
+        }
 
     }
 }

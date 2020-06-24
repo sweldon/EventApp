@@ -10,6 +10,7 @@ using UIKit;
 using Xamarin.Forms;
 using ImageCircle.Forms.Plugin.iOS;
 using Plugin.PushNotification;
+using System.Net.Http;
 
 namespace EventApp.iOS
 {
@@ -32,6 +33,7 @@ namespace EventApp.iOS
             global::Xamarin.Forms.Forms.Init();
             ImageCircleRenderer.Init();
             MobileAds.Configure("ca-app-pub-9382412071078825~2829867889");
+            Rg.Plugins.Popup.Popup.Init();
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
             LoadApplication(new App());
             PushNotificationManager.Initialize(options, true);

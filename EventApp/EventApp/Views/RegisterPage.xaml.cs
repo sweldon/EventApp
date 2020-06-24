@@ -44,7 +44,7 @@ namespace EventApp.Views
 
 
                 this.IsEnabled = false;
-                RegisterButton.Text = "Registering...";
+                RegisterButton.Text = "Registering, please wait...";
                 if (!string.IsNullOrEmpty(NameEntry.Text))
                 {
                     string userName = NameEntry.Text.Trim();
@@ -72,10 +72,10 @@ namespace EventApp.Views
                         else
                         {
                             var values = new Dictionary<string, string>{
-                       { "username", userName },
-                       { "password", pass },
-                        { "email", email }
-                    };
+                                { "username", userName },
+                                { "password", pass },
+                                { "email", email }
+                            };
 
                             var content = new FormUrlEncodedContent(values);
                             var response = await App.globalClient.PostAsync(App.HolidailyHost + "/accounts/register/", content);
@@ -86,12 +86,13 @@ namespace EventApp.Views
 
                             if (status == 200)
                             {
-                                await DisplayAlert("Confirm it", "We sent you a confirmation email!", "OK");
+                                await DisplayAlert("Activate", $"We sent an " +
+                                    $"activation link to {email}", "OK");
                                 await Navigation.PopModalAsync();
                             }
                             else 
                             {
-                                await DisplayAlert("Error!", message, "Dang");
+                                await DisplayAlert("Uh oh!", message, "Try Again");
                             }
                         }
                     }

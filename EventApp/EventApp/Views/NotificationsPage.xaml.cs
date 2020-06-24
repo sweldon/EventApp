@@ -8,12 +8,15 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using EventApp.Models;
 using System.Diagnostics;
+using System.Collections.ObjectModel;
+using System.Net.Http;
+using Newtonsoft.Json;
+
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class NotificationsPage : ContentPage
     {
-        NotificationsViewModel viewModel;
         Comment comment;
 
         public bool isPremium
@@ -28,15 +31,20 @@ namespace EventApp.Views
             }
         }
 
-        public bool NotificationLock;
+        public string currentUser
+        {
+            get { return Settings.CurrentUser; }
+        }
 
+        public bool NotificationLock;
+        private ObservableCollection<Notification> notifications;
         public NotificationsPage()
         {
             InitializeComponent();
-            BindingContext = viewModel = new NotificationsViewModel(); ;
             Title = "Notifications";
             NotificationsList.ItemSelected += OnItemSelected;
             NotificationLock = false;
+            notifications = new ObservableCollection<Notification>();
         }
 
         async void GoBack(object sender, EventArgs e)
@@ -62,10 +70,10 @@ namespace EventApp.Views
                 NotificationLock = true;
                 try
                 {
-                    //await Navigation.PushAsync(new CommentPage(new CommentViewModel(notif.Id, comment.HolidayId)));
-                    comment = await viewModel.CommentStore.GetCommentById(notif.Id);
-                    Holiday holiday = await viewModel.HolidayStore.GetHolidayById(comment.HolidayId);
-                    await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(comment.HolidayId, holiday, notif.Id)));
+                    comment = await ApiHelpers.GetCommentById(notif.Id);
+                    Holiday holiday = await ApiHelpers.GetHolidayById(comment.HolidayId);
+                    await Navigation.PushAsync(new HolidayDetailPage(
+                        new HolidayDetailViewModel(comment.HolidayId, holiday, notif.Id)));
                 }
                 catch
                 {
@@ -76,14 +84,65 @@ namespace EventApp.Views
             }
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
 
-            if (viewModel.Notifications.Count == 0)
-                viewModel.LoadNotifications.Execute(null);
-            AdBanner.IsVisible = !isPremium;
 
+            if(notifications.Count == 0)
+            {
+
+                notifications = await GetNotifications();
+                NotificationsList.ItemsSource = notifications;
+
+                if (notifications.Count == 0)
+                {
+                    NoResults.IsVisible = true;
+                }
+                else
+                {
+                    NoResults.IsVisible = false;
+                }
+                AdBanner.IsVisible = !isPremium;
+            }
+            
+        }
+
+        private async Task<ObservableCollection<Notification>> GetNotifications()
+        {
+            try
+            {
+                var values = new Dictionary<string, string>{
+                    { "username", currentUser },
+                };
+
+                var content = new FormUrlEncodedContent(values);
+
+                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/notifications/", content);
+                var responseString = await response.Content.ReadAsStringAsync();
+
+                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                dynamic notifList = responseJSON.results;
+                foreach (var n in notifList)
+                {
+                    notifications.Add(new Notification()
+                    {
+                        Id = n.notification_id,
+                        Type = n.notification_type,
+                        Title = n.title,
+                        Read = n.read,
+                        Content = n.content,
+                        TimeSince = n.time_since,
+                        Icon = n.icon == null ? "icon_splash.png" : n.icon
+                    });
+                }
+            }
+            catch
+            {
+
+            }
+
+            return await Task.FromResult(notifications);
         }
 
     }

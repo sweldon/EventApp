@@ -153,8 +153,8 @@ namespace EventApp.Views
                         MessagingCenter.Send(this, "UpdateComments");
                         MessagingCenter.Send(this, "UpdateHoliday");
                         MessagingCenter.Send(this, "UpdateHolidayFeed");
-                        // ONLY DO THIS IF IT ISNT NULL
-                        MessagingCenter.Send(this, "UpdateMenuProfilePicture", avatar);
+                        if(avatar != null)
+                            MessagingCenter.Send(this, "UpdateMenuProfilePicture", avatar);
                         try
                         {
                             await Navigation.PopModalAsync();

@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Threading;
+using Rg.Plugins.Popup.Extensions;
 #if __IOS__
 using UIKit;
 #endif
@@ -210,7 +211,7 @@ namespace EventApp.Views
             else
             {
                 var item = (sender as Label).BindingContext as Comment;
-                await Navigation.PushAsync(new CommentPage(new CommentViewModel(item.Id, viewModel.Holiday.Id)));
+                await Navigation.PushPopupAsync(new NewCommentPopUp(viewModel.Holiday, item));
             }
         }
 
@@ -284,7 +285,6 @@ namespace EventApp.Views
             base.OnAppearing();
             if (viewModel.GroupedCommentList.Count == 0)
                 viewModel.LoadHolidayComments.Execute(null);
-            AdBanner.IsVisible = !isPremium;
             try
             {
                 viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
@@ -316,54 +316,37 @@ namespace EventApp.Views
                 await DisplayAlert("Error", "We couldn't fetch the data for this holiday", "OK");
                 await Navigation.PopAsync();
             }
-            
+
+            // On login, refresh holiday celebration data
             MessagingCenter.Subscribe<LoginPage>(this, "UpdateHoliday", (sender) =>
             {
                 UpdateHoliday();
                 MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateHoliday");
             });
 
-            MessagingCenter.Subscribe<NewCommentPage>(this, "UpdateComments", (sender) => {
-                viewModel.ExecuteLoadCommentsCommand();
-                MessagingCenter.Unsubscribe<NewCommentPage>(this, "UpdateComments");
-            });
-
-            // Reply Page
-            MessagingCenter.Subscribe<CommentPage>(this, "UpdateComments", (sender) => {
-                viewModel.ExecuteLoadCommentsCommand();
-                MessagingCenter.Unsubscribe<CommentPage>(this, "UpdateComments");
-            });
-
-
+            // On login, refresh comment data
             MessagingCenter.Subscribe<LoginPage>(this, "UpdateComments", (sender) => {
                 viewModel.ExecuteLoadCommentsCommand();
                 MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateComments");
             });
+
+            MessagingCenter.Subscribe<NewCommentPopUp>(this, "UpdateComments", (sender) =>
+            {
+                Debug.WriteLine("Refreshing comments");
+                viewModel.ExecuteLoadCommentsCommand();
+            });
+
+            AdBanner.IsVisible = !isPremium;
 
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
+            MessagingCenter.Unsubscribe<NewCommentPopUp>(this, "UpdateComments");
         }
 
-        async void OnTapGestureRecognizerTapped(object sender, EventArgs args)
-        {
-            this.IsEnabled = false;
-            if (!isLoggedIn)
-            {
-                App.promptLogin(Navigation);
-            }
-            else
-            {
-                this.IsEnabled = false;
-                await Navigation.PushModalAsync(new NavigationPage(new NewCommentPage(viewModel.Holiday)));
-                this.IsEnabled = true;
-            }
-            this.IsEnabled = true;
 
-
-        }
 
         public void Share(object sender, EventArgs args)
         {
@@ -401,7 +384,7 @@ namespace EventApp.Views
                 else
                 {
                     this.IsEnabled = false;
-                    await Navigation.PushModalAsync(new NavigationPage(new NewCommentPage(viewModel.Holiday)));
+                    await Navigation.PushPopupAsync(new NewCommentPopUp(viewModel.Holiday));
                     this.IsEnabled = true;
                 }
             }
@@ -503,7 +486,7 @@ namespace EventApp.Views
         {
             this.IsEnabled = false;
             //var voteStatus = (sender as Image).Source;
-            var item = (sender as Image).BindingContext as Comment;
+            var item = (sender as ContentView).BindingContext as Comment;
             string commentId = item.Id;
 
             #if __IOS__
@@ -517,6 +500,10 @@ namespace EventApp.Views
                         var duration = TimeSpan.FromSeconds(.025);
                         Xamarin.Essentials.Vibration.Vibrate(duration);
             #endif
+
+
+            await (sender as ContentView).ScaleTo(2, 50);
+            await (sender as ContentView).ScaleTo(1, 50);
 
             int CurrentVotes = item.Votes;
 
@@ -574,7 +561,7 @@ namespace EventApp.Views
         async void UpVoteComment(object sender, EventArgs args)
         {
             this.IsEnabled = false;
-            var item = (sender as Image).BindingContext as Comment;
+            var item = (sender as ContentView).BindingContext as Comment;
             string commentId = item.Id;
 
             #if __IOS__
@@ -588,6 +575,9 @@ namespace EventApp.Views
                         var duration = TimeSpan.FromSeconds(.025);
                         Xamarin.Essentials.Vibration.Vibrate(duration);
             #endif
+
+            await (sender as ContentView).ScaleTo(2, 50);
+            await (sender as ContentView).ScaleTo(1, 50);
 
             int CurrentVotes = item.Votes;
 

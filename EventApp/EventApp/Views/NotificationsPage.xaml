@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="EventApp.Views.NotificationsPage"
-             xmlns:local="clr-namespace:EventApp"
-             xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
-             >
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="EventApp.Views.NotificationsPage"
+    xmlns:local="clr-namespace:EventApp"
+    xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
+    xmlns:controlsFF="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+    >
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Order="Primary" Text="Back"  Clicked="GoBack" x:Name="BackBtn" />
@@ -18,12 +19,10 @@
                 <ContentView BackgroundColor="#f5f5f5" Padding="0">
 
                     <ListView x:Name="NotificationsList"
-                        IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                         SeparatorVisibility="None"
-                        ItemsSource="{Binding Notifications}"
                         HasUnevenRows="true"
-                        RefreshCommand="{Binding LoadNotifications}"
-                        IsPullToRefreshEnabled="true"
+                        RefreshCommand="{Binding GetNotifications}"
+                        IsPullToRefreshEnabled="False"
                         CachingStrategy="RecycleElement">
                         <ListView.BackgroundColor>
                             <OnPlatform x:TypeArguments="Color"
@@ -55,61 +54,99 @@
                                             <Grid HorizontalOptions="FillAndExpand" Padding="5,5,5,0">
                                                 <Grid.Padding>
                                                 <OnPlatform x:TypeArguments="Thickness"
-                                                Android="5,5,5,0" iOS="8,10,8,0"/>
+                                                Android="5,5,5,5" iOS="8,10,8,8"/>
                                                 </Grid.Padding>
+
                                                 <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
+
                                                 <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="5*" />
-                                                <ColumnDefinition Width="5*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <ContentView>
-                                                    <ContentView.Padding>
-                                                    <OnPlatform x:TypeArguments="Thickness"
-                                                    Android="5,0,0,0"/>
-                                                    </ContentView.Padding>
+
+                                                <ContentView Grid.Column="0" HorizontalOptions="Start" Padding="5" Grid.Row="0" Grid.RowSpan="2">
+                                                    <controlsFF:CircleImage Source="{Binding Icon}" WidthRequest="80" HeightRequest="80" Aspect="AspectFill" VerticalOptions="Start" HorizontalOptions="CenterAndExpand" />
+                                                </ContentView>
+
+                                                <ContentView Grid.Row="0" Grid.Column="1">
+             
                                                     <Label Text="{Binding Title}"
+                                                          
                                                     FontSize="14"
                                                     TextColor="#4c96e8"
-                                                    Grid.Row="0" Grid.Column="0"/>
+                                                    />
                                                 </ContentView>
+
                                                 <Label Text="{Binding TimeSince}"
                                                 FontSize="12"
                                                 Grid.Row="0"
-                                                Grid.Column="1"
-                                                HorizontalTextAlignment="End"
+                                                Grid.Column="2"
+                                         
                                                 Opacity=".8" />
-                                        </Grid>
-                                        <ContentView>
-                                            <ContentView.Padding>
-                                            <OnPlatform x:TypeArguments="Thickness"
-                                            Android="10,0,10,10" iOS="8,0,8,10"/>
-                                            </ContentView.Padding>
-                                            <Label Text="{Binding Content}" FontSize="14" />
-                                        </ContentView>
-                                        <BoxView
-                                        HeightRequest="2"
-                                        BackgroundColor="#DEDEDE"
-                                        HorizontalOptions="FillAndExpand" >
-                                            <BoxView.IsVisible>
-                                            <OnPlatform x:TypeArguments="x:Boolean"
-                                            iOS="false"
-                                            Android="true"/>
-                                            </BoxView.IsVisible>
-                                        </BoxView>
+
+                                                <ContentView Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2">
+                                                    <ContentView.Padding>
+                                                    <OnPlatform x:TypeArguments="Thickness"
+                                                    Android="0,0,10,10" iOS="0,0,8,10"/>
+                                                    </ContentView.Padding>
+                                                    <Label Text="{Binding Content}" FontSize="14" />
+                                                </ContentView>
+                                            </Grid>
+                                            <BoxView
+                                            HeightRequest="2"
+                                            BackgroundColor="#DEDEDE"
+                                            HorizontalOptions="FillAndExpand" >
+                                                <BoxView.IsVisible>
+                                                <OnPlatform x:TypeArguments="x:Boolean"
+                                                iOS="false"
+                                                Android="true"/>
+                                                </BoxView.IsVisible>
+                                            </BoxView>
                                         </StackLayout>
                                     </ContentView>
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
+                        <ListView.Footer>
+                        <ContentView x:Name="NoResults" IsVisible="False" Padding="15" BackgroundColor="#FFFFFF">
+
+                             <ContentView.BackgroundColor>
+                                <OnPlatform x:TypeArguments="Color"
+                                    iOS="#E0E0E0" Android="#F5F5F5"/>
+                            </ContentView.BackgroundColor>
+
+                            <Frame CornerRadius="3"
+                                   HasShadow="False"
+                                   OutlineColor="#B9D3EE"
+                                   Padding="15"
+                                   BackgroundColor="#FFFFFF">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                         <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image WidthRequest="14" Source="Search_Menu_Icon.png" Grid.Column="0"/>
+                                    <ContentView Padding="0" Grid.Column="1">
+                                    <Label FontSize="Small" Text="No updates" />
+                                    </ContentView>
+                                </Grid>
+                            </Frame>
+                        </ContentView>
+                    </ListView.Footer>
                     </ListView>
                 </ContentView>
             </StackLayout>
-        <StackLayout VerticalOptions="End" x:Name="AdBanner">
-        <ContentView >
-            <controls:MTAdView AdsId="ca-app-pub-9382412071078825/5304465283" BackgroundColor="#CDCDCD"/>
-        </ContentView >
-        </StackLayout>
+            <controls:MTAdView
+                x:Name="AdBanner"
+                AdsId="{OnPlatform
+                Android='ca-app-pub-9382412071078825/6120727319', 
+                iOS='ca-app-pub-9382412071078825/5304465283'}"/>
         </StackLayout>
 </ContentPage>

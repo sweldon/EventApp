@@ -134,6 +134,8 @@ namespace EventApp.Views
             }
         }
 
+
+
         protected override async void OnAppearing()
         {
             base.OnAppearing();
@@ -148,7 +150,7 @@ namespace EventApp.Views
 
             if (viewModel.Holidays.Count == 0)
                 viewModel.LoadItemsCommand.Execute(null);
-            AdBanner.IsVisible = !isPremium;
+
 
             int numRetries = 0;
             while(viewModel.Holidays.Count == 0)
@@ -162,6 +164,7 @@ namespace EventApp.Views
                 }
                 await Task.Delay(2000);
             }
+            AdBanner.IsVisible = !isPremium;
             if (OpenNotifications)
             {
                 await Navigation.PushModalAsync(new NavigationPage(new NotificationsPage()));

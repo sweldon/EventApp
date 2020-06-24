@@ -21,6 +21,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\NewCommentPopUp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
@@ -28,7 +32,6 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Time.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Utils.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IKeyboardHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\CommentList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Comment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\HolidayList.cs" />
@@ -40,10 +43,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\CommentInterface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\HolidayInterface.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\HolidayService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\NotificationInterface.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\NotificationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ConfettiLeaderViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\UpdateViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\CommentViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoginViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\BaseViewModel.cs" />
@@ -51,17 +51,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\HolidaysViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SearchViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TrendingViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\NotificationsViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\Eula.xaml.cs">
       <DependentUpon>Eula.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\AddHoliday.xaml.cs">
       <DependentUpon>AddHoliday.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Views\CommentPage.xaml.cs">
-      <DependentUpon>CommentPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\LimboPage.xaml.cs">
@@ -102,9 +97,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Views\HolidaysPage.xaml.cs">
       <DependentUpon>HolidaysPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Views\NewCommentPage.xaml.cs">
-      <DependentUpon>NewCommentPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -126,6 +118,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Views\UserPage.xaml.cs">
       <DependentUpon>UserPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\NewCommentPopUp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\RootPage.xaml">
@@ -133,10 +127,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\RegisterPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\CommentPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -152,9 +142,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\HolidaysPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\NewCommentPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\MenuPage.xaml">

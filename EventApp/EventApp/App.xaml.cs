@@ -25,15 +25,13 @@ namespace EventApp
         public static User GlobalUser = new User() { };
         #if DEBUG
             #if __IOS__
-                public static string HolidailyHost = "http://localhost:8888";
+                    public static string HolidailyHost = "http://localhost:8888";
             #else
-                public static string HolidailyHost = "http://10.0.2.2:8000";
+                    public static string HolidailyHost = "http://10.0.2.2:8888";
             #endif
         #else
             public static string HolidailyHost = "https://holidailyapp.com";
         #endif
-        //public static string HolidailyHost = "http://10.0.2.2:8888";
-        //public static string HolidailyHost = "https://holidailyapp.com";
         public static HttpClient globalClient = new HttpClient();
         // App-wide reusable instance for choosing random ads
         public static Random randomGenerator = new Random();
@@ -178,6 +176,18 @@ namespace EventApp
         {
             await Task.Delay(5000);
             isActive = true;
+
+            // If token STILL not set, try to get it now
+            if (devicePushId == "none")
+            {
+                string token = CrossPushNotification.Current.Token;
+                if (token != null && token != "")
+                {
+                    devicePushId = token;
+                    syncUser();
+                }
+            }
+
         }
         private Dictionary<string, string>
             ConsumePush(IDictionary<string, object> pushData)
@@ -306,7 +316,6 @@ namespace EventApp
                 {
 
                 }
-                isPremium = false;
             }
         }
         protected override async void OnStart()
@@ -317,6 +326,7 @@ namespace EventApp
                 devicePushId = token;
                 syncUser();
             };
+
             await Task.Run(async () =>
             {
                 MakeUserActive();
