@@ -24,17 +24,14 @@ namespace EventApp
         public Comment OpenComment { get; set; }
         public static User GlobalUser = new User() { };
         #if DEBUG
-        #if __IOS__
-                public static string HolidailyHost = "http://localhost:8888";
+            #if __IOS__
+                    public static string HolidailyHost = "http://localhost:8888";
+            #else
+                    public static string HolidailyHost = "http://10.0.2.2:8888";
+            #endif
         #else
-                public static string HolidailyHost = "http://10.0.2.2:8000";
+            public static string HolidailyHost = "https://holidailyapp.com";
         #endif
-        #else
-                public static string HolidailyHost = "https://holidailyapp.com";
-        #endif
-
-        // Debugging android on OSX
-        //public static string HolidailyHost = "http://10.0.2.2:8888";
         public static HttpClient globalClient = new HttpClient();
         // App-wide reusable instance for choosing random ads
         public static Random randomGenerator = new Random();
