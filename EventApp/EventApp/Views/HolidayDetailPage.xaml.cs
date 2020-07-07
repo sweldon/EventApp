@@ -178,7 +178,7 @@ namespace EventApp.Views
                                 item.ShowReply = "False";
                                 item.ShowDelete = "False";
                                 item.Avatar = "default_user_32.png";
-
+                                item.ShowEdit = "False";
                                 // Disable voting
                                 item.Enabled = false;
                                 item.ElementOpacity = .2;
@@ -201,6 +201,20 @@ namespace EventApp.Views
             }
         }
 
+        async void OnEditTapped(object sender, EventArgs args)
+        {
+            if (!isLoggedIn)
+            {
+                App.promptLogin(Navigation);
+            }
+            else
+            {
+                var item = (sender as Label).BindingContext as Comment;
+                await Navigation.PushPopupAsync(new NewCommentPopUp(viewModel.Holiday, item, edit: true));
+            }
+        }
+
+
         async void OnReplyTapped(object sender, EventArgs args)
         {
 
@@ -211,7 +225,7 @@ namespace EventApp.Views
             else
             {
                 var item = (sender as Label).BindingContext as Comment;
-                await Navigation.PushPopupAsync(new NewCommentPopUp(viewModel.Holiday, item));
+                await Navigation.PushPopupAsync(new NewCommentPopUp(viewModel.Holiday, item, reply: true));
             }
         }
 

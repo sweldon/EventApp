@@ -14,12 +14,19 @@ namespace EventApp
         {
             get { return Settings.CurrentUser; }
         }
-
-
         public static async Task<Object> MakePostRequest(Dictionary<string, string> values, string endpoint)
         {
             var content = new FormUrlEncodedContent(values);
             var response = await App.globalClient.PostAsync($"{App.HolidailyHost}/{endpoint}/", content);
+            var responseString = await response.Content.ReadAsStringAsync();
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+            return await Task.FromResult(responseJSON);
+        }
+
+        public static async Task<object> MakePatchRequest(Dictionary<string, string> values, string endpoint, string pk)
+        {
+            var content = new FormUrlEncodedContent(values);
+            var response = await App.globalClient.PatchAsync($"{App.HolidailyHost}/{endpoint}/{pk}/", content);
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
             return await Task.FromResult(responseJSON);
@@ -112,5 +119,6 @@ namespace EventApp
             return await Task.FromResult(individualComment);
 
         }
+
     }
 }

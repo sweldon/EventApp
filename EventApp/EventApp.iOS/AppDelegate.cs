@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using EventApp.ViewModels;
 using EventApp.Views;
 using Foundation;
@@ -10,7 +7,9 @@ using UIKit;
 using Xamarin.Forms;
 using ImageCircle.Forms.Plugin.iOS;
 using Plugin.PushNotification;
-using System.Net.Http;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 namespace EventApp.iOS
 {
@@ -18,7 +17,7 @@ namespace EventApp.iOS
     // User Interface of the application, as well as listening (and optionally responding) to 
     // application events from iOS.
     [Register("AppDelegate")]
-    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
+    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate, INotifyPropertyChanged
     {
         //
         // This method is invoked when the application has loaded and is ready to run. In this 
@@ -27,7 +26,34 @@ namespace EventApp.iOS
         //
         // You have 17 seconds to return from this method, or iOS will terminate your application.
         //
-        public NavigationPage NavigationPage { get; private set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+        public bool isLoggedIn
+        {
+            get { return Settings.IsLoggedIn; }
+            set
+            {
+                if (Settings.IsLoggedIn == value)
+                    return;
+                Settings.IsLoggedIn = value;
+                OnPropertyChanged();
+            }
+        }
+        public string activationToken
+        {
+            get { return Settings.ActivationToken; }
+        }
+        public bool tokenUsed
+        {
+            get { return Settings.ActivationTokenUsed; }
+            set
+            {
+                if (Settings.ActivationTokenUsed == value)
+                    return;
+                Settings.ActivationTokenUsed = value;
+                OnPropertyChanged();
+            }
+        }
+        public static NavigationPage NavigationPage { get; private set; }
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
@@ -54,21 +80,32 @@ namespace EventApp.iOS
         {
             PushNotificationManager.DidReceiveMessage(userInfo);
         }
+
         public override bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options)
         {
-            var menuPage = new MenuPage(); // Build hamburger menu
-            NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
-            var rootPage = new RootPage(); // Root handles master detail navigation
-            rootPage.Master = menuPage; // Menu
-            rootPage.Detail = NavigationPage; // Content
-            App.Current.MainPage = rootPage; // Set root to built master detail
-            //System.Diagnostics.Debug.WriteLine("OPENING HOLIDAY " + data);
+
             if (url.Query.Contains("activated"))
             {
-                NavigationPage.PushAsync(new LoginPage());
+                try
+                {
+                    string token = Regex.Match(url.Query, @"token=(.+)").Groups[1].ToString();
+                    // TODO check if token has been used in new settings var
+                    if (activationToken == token && !tokenUsed)
+                    {
+                        isLoggedIn = true;
+                        tokenUsed = true;
+                    }
+                }
+                catch
+                {
+
+                }
+
+                Utils.BuildNavigation();
             }
             else
             {
+                Utils.BuildNavigation();
                 try
                 {
                     string holidayId = url.Query.Split("=")[1];
@@ -80,6 +117,10 @@ namespace EventApp.iOS
 
             }
             return true;
+        }
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }

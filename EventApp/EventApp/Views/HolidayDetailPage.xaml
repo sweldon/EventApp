@@ -256,10 +256,21 @@
                                             </Label.GestureRecognizers>
                                         </Label>
 
+                                        <ContentView  IsVisible="{Binding ShowEdit}" Grid.Column="1" HorizontalOptions="End">
+                                                <Image Source="Submit_Menu_Icon.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="14"/>
+                                        </ContentView>
+
+                                        <Label IsVisible="{Binding ShowEdit}" Grid.Column="2" Text="Edit" FontSize="Micro" TextColor="#808080"
+                                                       VerticalTextAlignment="Center" Margin="0,0,8,0">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                            Tapped="OnEditTapped"  />
+                                            </Label.GestureRecognizers>
+                                        </Label>
+
                                         <ContentView IsVisible="{Binding ShowReply}" Grid.Column="3" HorizontalOptions="End">
                                                 <Image Source="reply.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="14" Opacity=".5"/>
                                         </ContentView>
-
 
                                         <ContentView  IsVisible="{Binding ShowDelete}" Grid.Column="3" HorizontalOptions="End">
                                                 <Image Source="delete.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="14"/>

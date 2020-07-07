@@ -18,7 +18,7 @@ namespace EventApp
 {
     public partial class App : Application
     {
-
+        public static bool syncDeviceToken = false;
         public NavigationPage NavigationPage { get; private set; }
         public Holiday OpenHolidayPage { get; set; }
         public Comment OpenComment { get; set; }
@@ -52,7 +52,7 @@ namespace EventApp
         public static async void promptLogin(INavigation nav)
         {
             popModalIfActive(nav);
-            await nav.PushModalAsync(new NavigationPage(new LoginPage()));
+            await nav.PushModalAsync(new NavigationPage(new PortalPage()));
         }
 
         public bool eulaAccepted
@@ -164,7 +164,6 @@ namespace EventApp
         public App()
         {
             InitializeComponent();
-
             var menuPage = new MenuPage(); // Build hamburger menu
             NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
             var rootPage = new RootPage(); // Root handles master detail navigation
@@ -176,17 +175,6 @@ namespace EventApp
         {
             await Task.Delay(5000);
             isActive = true;
-
-            // If token STILL not set, try to get it now
-            if (devicePushId == "none")
-            {
-                string token = CrossPushNotification.Current.Token;
-                if (token != null && token != "")
-                {
-                    devicePushId = token;
-                    syncUser();
-                }
-            }
 
         }
         private Dictionary<string, string>
@@ -273,68 +261,28 @@ namespace EventApp
             }
 
         }
-        private async void syncUser()
-        {
-            if (isLoggedIn)
-            {
-                try
-                {
-                    var values = new Dictionary<string, string>{
-                        { "username", currentUser },
-                        { "device_update", devicePushId },
-                    };
-                    #if __IOS__
-                        values["platform"] = "ios";
-                    #elif __ANDROID__
-                        values["platform"] = "android";
-                    #endif
-                    var content = new FormUrlEncodedContent(values);
-                    var response = await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
-                }
-                catch
-                {
-                }
-            }
-            else
-            {
-                try
-                {
-                    var values = new Dictionary<string, string>{
-                        { "device_id", devicePushId },
-                    };
 
-                    #if __IOS__
-                        values["platform"] = "ios";
-                    #elif __ANDROID__
-                        values["platform"] = "android";
-                    #endif
-
-                    var content = new FormUrlEncodedContent(values);
-                    await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content); 
-                }
-                catch
-                {
-
-                }
-            }
-        }
+        // Note: On Android this is always invoked on deeplink b/c intent
+        // comes through MainActivity
         protected override async void OnStart()
         {
             CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
             {
+                syncDeviceToken = true;
                 var token = p.Token.ToString();
                 devicePushId = token;
-                syncUser();
             };
 
             await Task.Run(async () =>
             {
                 MakeUserActive();
             });
+
             await Task.Run(async () =>
             {
                 CheckForUpdates();
             });
+
             // Clear badge notifications
             CrossBadge.Current.ClearBadge();
             CrossPushNotification.Current.OnNotificationReceived += (s, p) =>
@@ -385,6 +333,9 @@ namespace EventApp
                 // Clear badge notifications
             };
 
+            // Logged-in global user updates, must occur immediately. Other
+            // Async device token tasks that hit /users must be delayed, i.e.
+            // syncUser(). Duplicate device deletion occurs in here.
             if (isLoggedIn)
             {
                 try
@@ -435,11 +386,18 @@ namespace EventApp
             // EULA
             if (!eulaAccepted)
             {
-                await Application.Current.MainPage.DisplayAlert("Welcome!",
+                var acceptEULA = await Application.Current.MainPage.DisplayAlert("Welcome!",
                     "Welcome to Holidaily! You will only see this message once. " +
                     "Please view our End User License Agreement before proceeding.",
-                    "View");
-                App.Current.MainPage = new NavigationPage(new Eula());
+                    "Accept", "View");
+                if (acceptEULA)
+                {
+                    eulaAccepted = true;
+                }
+                else
+                {
+                    App.Current.MainPage = new NavigationPage(new Eula());
+                }
             }
         }
 

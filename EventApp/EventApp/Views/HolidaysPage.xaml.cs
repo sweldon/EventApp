@@ -171,7 +171,12 @@ namespace EventApp.Views
                 OpenNotifications = false;
             }
 
-        }
+            if (App.syncDeviceToken)
+            {
+                Utils.syncUser();
+            }
+
+    }
 
         protected override void OnDisappearing()
         {
@@ -185,6 +190,8 @@ namespace EventApp.Views
             "UpdateCelebrateStatus", (sender, data) => {
                 viewModel.UpdateCelebrateStatus((string)data[0], (bool)data[1], (string)data[2]);
             });
+
+            App.syncDeviceToken = false;
         }
 
         async void OnCelebrateTapped(object sender, EventArgs args)

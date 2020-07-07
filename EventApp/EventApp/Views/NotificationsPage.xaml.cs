@@ -30,7 +30,10 @@ namespace EventApp.Views
                 OnPropertyChanged();
             }
         }
-
+        public bool isLoggedIn
+        {
+            get { return Settings.IsLoggedIn; }
+        }
         public string currentUser
         {
             get { return Settings.CurrentUser; }
@@ -89,7 +92,7 @@ namespace EventApp.Views
             base.OnAppearing();
 
 
-            if(notifications.Count == 0)
+            if(notifications.Count == 0 && isLoggedIn)
             {
 
                 notifications = await GetNotifications();
@@ -104,6 +107,10 @@ namespace EventApp.Views
                     NoResults.IsVisible = false;
                 }
                 AdBanner.IsVisible = !isPremium;
+            }
+            else
+            {
+                NoResults.IsVisible = true;
             }
             
         }

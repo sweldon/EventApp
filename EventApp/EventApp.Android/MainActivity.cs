@@ -17,14 +17,52 @@ using Plugin.CurrentActivity;
 using ImageCircle.Forms.Plugin.Droid;
 using Plugin.PushNotification;
 using Xamarin.Essentials;
+using System.Runtime.CompilerServices;
+using System.ComponentModel;
 
 namespace EventApp.Droid
 {
-    [Activity(Label = "Holidaily", Icon = "@drawable/Icon", Theme = "@style/splashscreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    [IntentFilter(new[] { Intent.ActionView }, Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable }, DataScheme = "holidaily", DataHost = "holiday")]
-    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
+    [Activity(Label = "Holidaily", Icon = "@drawable/Icon", Theme = "@style/splashscreen", MainLauncher = true, Exported = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [IntentFilter(
+        new[] { Intent.ActionView },
+            Categories = new[] {
+                Intent.CategoryDefault, Intent.CategoryBrowsable
+            },
+            DataPathPrefixes = new string[] { "/portal/activate", "/holiday" },
+            DataSchemes = new string[] { "http", "https" },
+            DataHosts = new string[] { "10.0.2.2", "holidailyapp.com" }
+        )
+    ]
+    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, INotifyPropertyChanged
     {
         public NavigationPage NavigationPage { get; private set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+        public bool isLoggedIn
+        {
+            get { return Settings.IsLoggedIn; }
+            set
+            {
+                if (Settings.IsLoggedIn == value)
+                    return;
+                Settings.IsLoggedIn = value;
+                OnPropertyChanged();
+            }
+        }
+        public string activationToken
+        {
+            get { return Settings.ActivationToken; }
+        }
+        public bool tokenUsed
+        {
+            get { return Settings.ActivationTokenUsed; }
+            set
+            {
+                if (Settings.ActivationTokenUsed == value)
+                    return;
+                Settings.ActivationTokenUsed = value;
+                OnPropertyChanged();
+            }
+        }
         public string devicePushId
         {
             get { return Settings.DevicePushId; }
@@ -50,13 +88,12 @@ namespace EventApp.Droid
             // If debug you should reset the token each time.
             // If user still has AppCenter token, update it
             bool shouldRefresh = devicePushId.Length == 36 ? true : false;
-            string buildNumber = AppInfo.BuildString;
-            // Keep this high until all android people all have reg ids?
-            if (Int32.Parse(buildNumber) < 110){
-                shouldRefresh = true;
-            }
+            //if(devicePushId == "none")
+            //{
+            //    shouldRefresh = true;
+            //}
             #if DEBUG
-                PushNotificationManager.Initialize(this, true);
+                PushNotificationManager.Initialize(this, false);
             #else
                 PushNotificationManager.Initialize(this, shouldRefresh);
             #endif
@@ -71,35 +108,52 @@ namespace EventApp.Droid
 
             // FFImageLoading
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
-
-            var data = Intent?.Data?.GetQueryParameter("id");
-            if (!string.IsNullOrEmpty(data))
+            var incomingLink = Intent?.Data?.ToString();
+            var holidayId = Intent?.Data?.GetQueryParameter("id");
+            if (!string.IsNullOrEmpty(holidayId))
             {
 
-                Device.BeginInvokeOnMainThread(() => {
+
+                Device.BeginInvokeOnMainThread(() =>
+                {
                     var menuPage = new MenuPage(); // Build hamburger menu
                     NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
                     var rootPage = new RootPage(); // Root handles master detail navigation
                     rootPage.Master = menuPage; // Menu
                     rootPage.Detail = NavigationPage; // Content
                     App.Current.MainPage = rootPage; // Set root to built master detail
-                    if (data.Contains("activated"))
-                    {
-                        NavigationPage.PushAsync(new LoginPage());
-                    }
-                    else
-                    {
-                        NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(data, null)));
-                    }
-                    
+                    NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null)));
                 });
+
+
+            }
+            else if (!string.IsNullOrEmpty(incomingLink) && incomingLink.Contains("activate"))
+            {
+                string[] linkContents = incomingLink.Split("/");
+                // Trailing slash, -2 index
+                string token = linkContents[linkContents.Length - 2];
+                try
+                {
+                    if (activationToken == token && !tokenUsed)
+                    {
+                        isLoggedIn = true;
+                        tokenUsed = true;
+                    }
+                }
+                catch
+                {
+
+                }
+                Utils.BuildNavigation();
+
 
             }
             LoadApplication(new App());
             PushNotificationManager.ProcessIntent(this, Intent);
 
         }
-    protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
     {
         base.OnActivityResult(requestCode, resultCode, data);
         InAppBillingImplementation.HandleActivityResult(requestCode, resultCode, data);
@@ -117,7 +171,10 @@ namespace EventApp.Droid
             // Do something if there are not any pages in the `PopupStack`
         }
     }
-
+    protected void OnPropertyChanged([CallerMemberName] string name = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
 
     }
 }
