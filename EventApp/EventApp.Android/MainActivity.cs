@@ -19,6 +19,7 @@ using Plugin.PushNotification;
 using Xamarin.Essentials;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
+using BadgeView.Android;
 
 namespace EventApp.Droid
 {
@@ -69,6 +70,9 @@ namespace EventApp.Droid
         }
         protected override async void OnCreate(Bundle savedInstanceState)
         {
+
+
+
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 

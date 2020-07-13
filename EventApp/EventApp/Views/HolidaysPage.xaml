@@ -2,302 +2,306 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.HolidaysPage"
-              Title="{Binding Title}"
-             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-              xmlns:local="clr-namespace:EventApp"
+
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
-             x:Name="BrowseItemsPage">
+             xmlns:local="clr-namespace:EventApp.Views"
+             >
 
+            <NavigationPage.TitleView>
+                <local:CustomToolBar/>
+            </NavigationPage.TitleView>
 
+            <StackLayout>
 
-
-
-    <StackLayout Spacing="0">
-
-        <ContentView  IsVisible="False" VerticalOptions="FillAndExpand" HeightRequest="1000" BackgroundColor="#FFFFFF">
-            <ContentView.Triggers>
-            <DataTrigger TargetType="ContentView"
-                Binding="{Binding Source={x:Reference ItemsListView}, Path=ItemsSource.Count}" 
-                Value="0">
-                <Setter Property="IsVisible" Value="True" />
-            </DataTrigger>
-            </ContentView.Triggers>
-            <Image WidthRequest="15" HeightRequest="15" VerticalOptions="Center"
-            Source="holiday_banner_blue.png"
-            x:Name="LoadingIcon" />
-        </ContentView>
-
-        <StackLayout x:Name="MainFeed" VerticalOptions="Start" Padding="0" Spacing="0" >
-
-            <ContentView>
-                <ListView x:Name="ItemsListView"
-                    IsRefreshing="false" 
-                    SeparatorVisibility="None"
-                    ItemsSource="{Binding Holidays}"
-                    HasUnevenRows="true"
-                    RefreshCommand="{Binding LoadItemsCommand}"
-                    IsPullToRefreshEnabled="false"
-                    BackgroundColor="#E0E0E0">
-                    
-                <ListView.BackgroundColor>
-                    <OnPlatform x:TypeArguments="Color"
-                    iOS="#E0E0E0"/>
-                </ListView.BackgroundColor>
-
-                <ListView.Triggers>
-                <DataTrigger TargetType="ListView"
+            <StackLayout Spacing="0">
+            <ContentView  IsVisible="False" VerticalOptions="FillAndExpand" HeightRequest="1000" BackgroundColor="#FFFFFF">
+                <ContentView.Triggers>
+                <DataTrigger TargetType="ContentView"
                     Binding="{Binding Source={x:Reference ItemsListView}, Path=ItemsSource.Count}" 
                     Value="0">
-                    <Setter Property="BackgroundColor" Value="#FFFFFF" />
+                    <Setter Property="IsVisible" Value="True" />
                 </DataTrigger>
-                </ListView.Triggers>
+                </ContentView.Triggers>
+                <Image WidthRequest="15" HeightRequest="15" VerticalOptions="Center"
+                Source="holiday_banner_blue.png"
+                x:Name="LoadingIcon" />
+            </ContentView>
 
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="#FFFFFF">
+            <StackLayout x:Name="MainFeed" VerticalOptions="Start" Padding="0" Spacing="0" >
 
-                                    <ContentView.Margin>
-                                        <OnPlatform x:TypeArguments="Thickness"
-                                    Android="0,5,0,0" iOS="0,7,0,0"/>
-                                    </ContentView.Margin>
+                <ContentView>
+                    <ListView x:Name="ItemsListView"
+                        IsRefreshing="false" 
+                        SeparatorVisibility="None"
+                        ItemsSource="{Binding Holidays}"
+                        HasUnevenRows="true"
+                        RefreshCommand="{Binding LoadItemsCommand}"
+                        IsPullToRefreshEnabled="false"
+                        BackgroundColor="#E0E0E0">
+                    
+                    <ListView.BackgroundColor>
+                        <OnPlatform x:TypeArguments="Color"
+                        iOS="#E0E0E0"/>
+                    </ListView.BackgroundColor>
 
-                                    <StackLayout>
-                                        <BoxView
-                                           HeightRequest=".5"
-                                               BackgroundColor="#DEDEDE"
-                                               HorizontalOptions="FillAndExpand" >
+                    <ListView.Triggers>
+                    <DataTrigger TargetType="ListView"
+                        Binding="{Binding Source={x:Reference ItemsListView}, Path=ItemsSource.Count}" 
+                        Value="0">
+                        <Setter Property="BackgroundColor" Value="#FFFFFF" />
+                    </DataTrigger>
+                    </ListView.Triggers>
 
-                                            <BoxView.IsVisible>
-                                                <OnPlatform x:TypeArguments="x:Boolean"
-                                                    iOS="false"
-                                                    Android="true"/>
-                                            </BoxView.IsVisible>
-                                        </BoxView>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="#FFFFFF">
 
-                                        <StackLayout Spacing="0">
-                                            <Grid HorizontalOptions="FillAndExpand" IsVisible="{Binding ShowHolidayContent}">
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="*" />
-                                                </Grid.RowDefinitions>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="8*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
+                                        <ContentView.Margin>
+                                            <OnPlatform x:TypeArguments="Thickness"
+                                        Android="0,5,0,0" iOS="0,7,0,0"/>
+                                        </ContentView.Margin>
 
-                                                <Grid.Padding>
-                                                    <OnPlatform x:TypeArguments="Thickness"
-                                                Android="5,5,5,0" iOS="8,10,8,0"/>
-                                                </Grid.Padding>
-                                                <ContentView Margin="5,0,0,0"  Grid.Row="0" Grid.Column="0">
+                                        <StackLayout>
+                                            <BoxView
+                                                HeightRequest=".5"
+                                                    BackgroundColor="#DEDEDE"
+                                                    HorizontalOptions="FillAndExpand" >
+
+                                                <BoxView.IsVisible>
+                                                    <OnPlatform x:TypeArguments="x:Boolean"
+                                                        iOS="false"
+                                                        Android="true"/>
+                                                </BoxView.IsVisible>
+                                            </BoxView>
+
+                                            <StackLayout Spacing="0">
+                                                <Grid HorizontalOptions="FillAndExpand" IsVisible="{Binding ShowHolidayContent}">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="*" />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="8*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Grid.Padding>
+                                                        <OnPlatform x:TypeArguments="Thickness"
+                                                    Android="5,5,5,0" iOS="8,10,8,0"/>
+                                                    </Grid.Padding>
+                                                    <ContentView Margin="5,0,0,0"  Grid.Row="0" Grid.Column="0">
 
 
-                                                    <Label Text="{Binding Name}" FontSize="15" FontAttributes="Bold" TextColor="#4c96e8">
+                                                        <Label Text="{Binding Name}" FontSize="15" FontAttributes="Bold" TextColor="#4c96e8">
+
+                                                            <Label.GestureRecognizers>
+                                                                <TapGestureRecognizer
+                                                            Tapped="LabelToHoliday"  />
+                                                            </Label.GestureRecognizers>
+                                                        </Label>
+
+                                                    </ContentView>
+                                                    <ContentView HorizontalOptions="End"  Grid.Row="0" Grid.Column="1">
+                                                        <Label Text="{Binding TimeSince}"
+                                                            HorizontalTextAlignment="End"
+                                                                FontSize="15"
+                                                            Opacity=".8" />
+                                                    </ContentView>
+
+                                                </Grid>
+                                                <ContentView IsVisible="{Binding ShowHolidayContent}">
+
+                                                    <ContentView.Padding>
+                                                        <OnPlatform x:TypeArguments="Thickness"
+                                                        Android="10,5,10,5" iOS="14,5,14,5"/>
+                                                    </ContentView.Padding>
+                          
+
+                                                    <Label Text="{Binding Blurb}"  Grid.Row="1" FontSize="14">
 
                                                         <Label.GestureRecognizers>
                                                             <TapGestureRecognizer
-                                                        Tapped="LabelToHoliday"  />
+                                                            Tapped="LabelToHoliday"  />
                                                         </Label.GestureRecognizers>
                                                     </Label>
 
                                                 </ContentView>
-                                                <ContentView HorizontalOptions="End"  Grid.Row="0" Grid.Column="1">
-                                                    <Label Text="{Binding TimeSince}"
-                                                      HorizontalTextAlignment="End"
-                                                           FontSize="15"
-                                                       Opacity=".8" />
-                                                </ContentView>
 
-                                            </Grid>
-                                            <ContentView IsVisible="{Binding ShowHolidayContent}">
-
-                                                <ContentView.Padding>
-                                                    <OnPlatform x:TypeArguments="Thickness"
-                                                    Android="10,5,10,5" iOS="14,5,14,5"/>
-                                                </ContentView.Padding>
-                          
-
-                                                <Label Text="{Binding Blurb}"  Grid.Row="1" FontSize="14">
-
-                                                    <Label.GestureRecognizers>
-                                                        <TapGestureRecognizer
-                                                        Tapped="LabelToHoliday"  />
-                                                    </Label.GestureRecognizers>
-                                                </Label>
-
-                                            </ContentView>
-
-                                            <ContentView HeightRequest="150"  IsVisible="{Binding ShowHolidayContent}">
-                                                    <ContentView.GestureRecognizers>
-                                                        <TapGestureRecognizer
-                                                        Tapped="ImageToHoliday"  />
-                                                    </ContentView.GestureRecognizers>
-
-
-                                                <ffimageloading:CachedImage 
-                                                    Source="{Binding HolidayImage}"
-                                                    Aspect="AspectFill"
-                                                    RetryCount= "3"
-                                                    RetryDelay= "600"
-                                                    LoadingPlaceholder="Loading_Image.gif"
-                                                />
-
-
-
-                                            </ContentView>
-
-                                            <Grid IsVisible="{Binding ShowHolidayContent}">
-
-                                                <Grid.Padding>
-                                                    <OnPlatform 
-                                                        x:TypeArguments="Thickness"
-                                                        Android="10,10,10,5"
-                                                        iOS="10,10,10,10"/>
-                                                </Grid.Padding>
-
-                                                <Grid.RowDefinitions>
-                                                   <RowDefinition/>
-                                                </Grid.RowDefinitions>
-                                                
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
-
-                                                <ContentView Grid.Column="0" Grid.Row="0">
-                                                    <Image
-                                                        Source="Comment_Main_Icon.png"
-                                                        WidthRequest="16"
-                                                        VerticalOptions="Start">
-                                                        <Image.GestureRecognizers>
-                                                        <TapGestureRecognizer
+                                                <ContentView HeightRequest="150"  IsVisible="{Binding ShowHolidayContent}">
+                                                        <ContentView.GestureRecognizers>
+                                                            <TapGestureRecognizer
                                                             Tapped="ImageToHoliday"  />
-                                                        </Image.GestureRecognizers>
-                                                    </Image>
+                                                        </ContentView.GestureRecognizers>
+
+
+                                                    <ffimageloading:CachedImage 
+                                                        Source="{Binding HolidayImage}"
+                                                        Aspect="AspectFill"
+                                                        RetryCount= "3"
+                                                        RetryDelay= "600"
+                                                        LoadingPlaceholder="Loading_Image.gif"
+                                                    />
+
+
 
                                                 </ContentView>
 
-                                                <Label
-                                                    Grid.Column="1"
-                                                    Grid.Row="0"
-                                                    Text="{Binding NumComments, StringFormat='{0}'}"
-                                                    TextColor="#808080"
-                                                    FontSize="Small"
-                                                    VerticalTextAlignment="Start"
-                                                    HorizontalOptions="Start">
+                                                <Grid IsVisible="{Binding ShowHolidayContent}">
 
+                                                    <Grid.Padding>
+                                                        <OnPlatform 
+                                                            x:TypeArguments="Thickness"
+                                                            Android="10,10,10,5"
+                                                            iOS="10,10,10,10"/>
+                                                    </Grid.Padding>
 
-                                                    <Label.Margin>
-                                                        <OnPlatform x:TypeArguments="Thickness"
-                                                        Android="0,-2,0,0" iOS="0,-1,0,0"/>
-                                                    </Label.Margin>
-
-                                                    <Label.GestureRecognizers>
-                                                        <TapGestureRecognizer
-                                                            Tapped="LabelToHoliday"  />
-                                                    </Label.GestureRecognizers>
-                                                </Label>
-
-                                                <ContentView Grid.Column="3" Grid.Row="0" >
-
-                                                    <Image
-                                                        Source="Share_Main_Icon.png"
-                                                        WidthRequest="16"
-                                                        VerticalOptions="Center">
-                                                        <Image.GestureRecognizers>
-                                                            <TapGestureRecognizer
-                                                               Tapped="Share"  />
-                                                        </Image.GestureRecognizers>
-                                                    </Image>
-                                                </ContentView>
-
-                                                <Label
-                                                    Grid.Column="4"
-                                                    Grid.Row="0"
-                                                    Text="Share"
-                                                    TextColor="#808080"
-                                                    FontSize="Small"
-                                                    VerticalTextAlignment="Center" >
-                                                    <Label.GestureRecognizers>
-                                                        <TapGestureRecognizer
-                                                             Tapped="Share"  />
-                                                    </Label.GestureRecognizers>
-                                                </Label>
-
-                                 
-                                                    <Image
-                                                        Source="{Binding CelebrateStatus}"
-                                                        WidthRequest="16"
-                                                        Grid.Column="6"
-                                                        Grid.Row="0"
-                                                        x:Name="UpVoteImage" >
-                                                        <Image.GestureRecognizers>
-                                                            <TapGestureRecognizer
-                                                            Tapped="OnCelebrateTapped"
-                                                            NumberOfTapsRequired="1" />
-                                                        </Image.GestureRecognizers>
-                                                    </Image>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition/>
+                                                    </Grid.RowDefinitions>
                                                 
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <ContentView Grid.Column="0" Grid.Row="0">
+                                                        <Image
+                                                            Source="Comment_Main_Icon.png"
+                                                            WidthRequest="16"
+                                                            VerticalOptions="Start">
+                                                            <Image.GestureRecognizers>
+                                                            <TapGestureRecognizer
+                                                                Tapped="ImageToHoliday"  />
+                                                            </Image.GestureRecognizers>
+                                                        </Image>
+
+                                                    </ContentView>
+
                                                     <Label
-                                                        Grid.Column="7"
+                                                        Grid.Column="1"
                                                         Grid.Row="0"
-                                                        Text="{Binding Votes, StringFormat='{0} Celebrating!'}"
+                                                        Text="{Binding NumComments, StringFormat='{0}'}"
                                                         TextColor="#808080"
                                                         FontSize="Small"
-                                                        Margin="0, -1, 0, 0" 
-                                                        VerticalOptions="FillAndExpand"
+                                                        VerticalTextAlignment="Start"
+                                                        HorizontalOptions="Start">
+
+
+                                                        <Label.Margin>
+                                                            <OnPlatform x:TypeArguments="Thickness"
+                                                            Android="0,-2,0,0" iOS="0,-1,0,0"/>
+                                                        </Label.Margin>
+
+                                                        <Label.GestureRecognizers>
+                                                            <TapGestureRecognizer
+                                                                Tapped="LabelToHoliday"  />
+                                                        </Label.GestureRecognizers>
+                                                    </Label>
+
+                                                    <ContentView Grid.Column="3" Grid.Row="0" >
+
+                                                        <Image
+                                                            Source="Share_Main_Icon.png"
+                                                            WidthRequest="16"
+                                                            VerticalOptions="Center">
+                                                            <Image.GestureRecognizers>
+                                                                <TapGestureRecognizer
+                                                                    Tapped="Share"  />
+                                                            </Image.GestureRecognizers>
+                                                        </Image>
+                                                    </ContentView>
+
+                                                    <Label
+                                                        Grid.Column="4"
+                                                        Grid.Row="0"
+                                                        Text="Share"
+                                                        TextColor="#808080"
+                                                        FontSize="Small"
                                                         VerticalTextAlignment="Center" >
                                                         <Label.GestureRecognizers>
                                                             <TapGestureRecognizer
-                                                                Tapped="OnCelebrateTapped"  />
+                                                                    Tapped="Share"  />
                                                         </Label.GestureRecognizers>
                                                     </Label>
-                                            </Grid>
 
+                                 
+                                                        <Image
+                                                            Source="{Binding CelebrateStatus}"
+                                                            WidthRequest="16"
+                                                            Grid.Column="6"
+                                                            Grid.Row="0"
+                                                            x:Name="UpVoteImage" >
+                                                            <Image.GestureRecognizers>
+                                                                <TapGestureRecognizer
+                                                                Tapped="OnCelebrateTapped"
+                                                                NumberOfTapsRequired="1" />
+                                                            </Image.GestureRecognizers>
+                                                        </Image>
+                                                
+                                                        <Label
+                                                            Grid.Column="7"
+                                                            Grid.Row="0"
+                                                            Text="{Binding Votes, StringFormat='{0} Celebrating!'}"
+                                                            TextColor="#808080"
+                                                            FontSize="Small"
+                                                            Margin="0, -1, 0, 0" 
+                                                            VerticalOptions="FillAndExpand"
+                                                            VerticalTextAlignment="Center" >
+                                                            <Label.GestureRecognizers>
+                                                                <TapGestureRecognizer
+                                                                    Tapped="OnCelebrateTapped"  />
+                                                            </Label.GestureRecognizers>
+                                                        </Label>
+                                                </Grid>
+
+
+                                            </StackLayout>
+
+                                                <!--Looks weird on iphone, disable it--> 
+                                            <BoxView
+                                                HeightRequest="1"
+                                                BackgroundColor="#DEDEDE"
+                                                HorizontalOptions="FillAndExpand" >
+
+                                                <BoxView.IsVisible>
+                                                    <OnPlatform x:TypeArguments="x:Boolean"
+                                                        iOS="false"
+                                                        Android="true"/>
+                                                </BoxView.IsVisible>
+                                            </BoxView>
 
                                         </StackLayout>
 
-                                        <!-- Looks weird on iphone, disable it -->
-                                        <BoxView
-                                            HeightRequest="1"
-                                            BackgroundColor="#DEDEDE"
-                                            HorizontalOptions="FillAndExpand" >
 
-                                            <BoxView.IsVisible>
-                                                <OnPlatform x:TypeArguments="x:Boolean"
-                                                    iOS="false"
-                                                    Android="true"/>
-                                            </BoxView.IsVisible>
-                                        </BoxView>
+                                    </ContentView>
 
-                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Footer>
+                            <StackLayout Spacing="0">
+                                <Label Text="" FontSize="5" />
+                            </StackLayout >
+                        </ListView.Footer>
+                    </ListView>
+                </ContentView>
+            </StackLayout>
+                <controls:MTAdView
+                x:Name="AdBanner"
+                IsVisible="False"
+                AdsId="{OnPlatform
+                Android='ca-app-pub-9382412071078825/8429542879', 
+                iOS='ca-app-pub-9382412071078825/1958380167'}"/>
+            </StackLayout>
 
-
-                                </ContentView>
-
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.Footer>
-                        <StackLayout Spacing="0">
-                            <Label Text="" FontSize="5" />
-                        </StackLayout >
-                    </ListView.Footer>
-                </ListView>
-            </ContentView>
         </StackLayout>
-         <controls:MTAdView
-            x:Name="AdBanner"
-            IsVisible="False"
-            AdsId="{OnPlatform
-            Android='ca-app-pub-9382412071078825/8429542879', 
-            iOS='ca-app-pub-9382412071078825/1958380167'}"/>
-    </StackLayout>
+     
+
 </ContentPage>

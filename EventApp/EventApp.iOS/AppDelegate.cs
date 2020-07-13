@@ -10,6 +10,7 @@ using Plugin.PushNotification;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using BadgeView.iOS;
 
 namespace EventApp.iOS
 {
@@ -63,6 +64,7 @@ namespace EventApp.iOS
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
             LoadApplication(new App());
             PushNotificationManager.Initialize(options, true);
+            CircleViewRenderer.Initialize();
             return base.FinishedLaunching(app, options);
         }
         public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)

@@ -114,7 +114,7 @@ namespace EventApp.Views
         {
 
             base.OnAppearing();
-
+            //MessagingCenter.Send(this, "UpdateToolbar", true);
             if (isLoggedIn)
             {
                 try

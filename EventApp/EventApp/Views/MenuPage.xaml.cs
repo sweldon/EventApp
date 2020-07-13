@@ -157,6 +157,7 @@ namespace EventApp.Views
         }
         protected override async void OnAppearing()
         {
+
             string buildNumber = Xamarin.Essentials.AppInfo.BuildString;
             AppInfoLabel.Text = $"v{appInfo}-{buildNumber}";
             if (isLoggedIn)

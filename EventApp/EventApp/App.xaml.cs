@@ -266,6 +266,7 @@ namespace EventApp
         // comes through MainActivity
         protected override async void OnStart()
         {
+            
             CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
             {
                 syncDeviceToken = true;

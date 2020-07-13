@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EventApp.Views.CustomToolBar"
+             xmlns:badge="clr-namespace:BadgeView.Shared;assembly=BadgeView.Shared"
+             BackgroundColor="{StaticResource NavigationPrimary}"
+             x:Name="CToolBar"
+             >
+
+        <Grid x:Name="ToolbarWrapper" ColumnSpacing="0" RowSpacing="0">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+             <!--<ContentView Padding="10"
+                    Grid.Column="0"
+                    x:Name="BackBtn"
+                    IsVisible="False"
+                    Opacity="0"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Start">
+                <Image Source="Back.png">
+
+
+                    <Image.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Tapped="Back"  />
+                    </Image.GestureRecognizers>
+
+                </Image>
+
+                <ContentView.Padding>
+                    <OnPlatform
+                        x:TypeArguments="Thickness"
+                    Android="22" iOS="12"/>
+                </ContentView.Padding>
+
+            </ContentView>-->
+
+            <!--<ContentView Grid.Column="0"
+                         x:Name="MenuBtn"
+                         IsVisible="True"
+                         Opacity="1"
+                         VerticalOptions="Center"
+                        HorizontalOptions="Start">
+
+                <Image Source="Menu.png">
+
+                    <Image.GestureRecognizers>
+                    <TapGestureRecognizer
+                    Tapped="OpenMenu"  />
+                    </Image.GestureRecognizers>
+
+                </Image>
+
+                <ContentView.Padding>
+                    <OnPlatform
+                        x:TypeArguments="Thickness"
+                    Android="22" iOS="12"/>
+                </ContentView.Padding> 
+
+            </ContentView>-->
+           
+
+            <Label x:Name="HeaderLabel"
+                   HorizontalOptions="CenterAndExpand"
+                   TextColor="#FFFFFF"
+                   VerticalOptions="Center"
+                   FontAttributes="Bold"
+                   FontSize="Medium"
+                   IsVisible="False"
+                   Opacity="0"
+                   Grid.Column="1"
+                   Padding="0"
+                   />
+
+           <ContentView Grid.Column="0">
+            <Image Source="holidaily_banner_white.png"
+                    HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                    IsVisible="True"
+                    Opacity="1" 
+                    x:Name="HeaderImage"/>
+
+            <ContentView.Padding>
+                <OnPlatform
+                    x:TypeArguments="Thickness"
+                Android="0, 15, 0, 10" iOS="5"/>
+            </ContentView.Padding>
+            </ContentView>
+        
+
+            <ContentView Grid.Column="2">
+            <Image Source="Notification_Main_Icon.png"
+                    VerticalOptions="Center"
+                    x:Name="BellBtn"
+                    
+                    HorizontalOptions="End">
+                  
+                <Image.GestureRecognizers>
+                <TapGestureRecognizer
+                    Tapped="OpenNotifications"  />
+                </Image.GestureRecognizers>      
+                <Image.HeightRequest>
+                <OnPlatform
+                x:TypeArguments="x:Double"
+                Android="32" iOS="24"/>
+                </Image.HeightRequest>
+            </Image>
+            <ContentView.Padding>
+                    <OnPlatform
+                        x:TypeArguments="Thickness"
+                    Android="15" iOS="10"/>
+                </ContentView.Padding> 
+            </ContentView>
+            <!--<badge:BadgeView Text="25"
+                                BadgeColor="Red"
+                                Margin="18, -15, 0, 0"
+                                Grid.Column="2"
+
+                                />-->
+          
+
+
+            </Grid>
+
+</ContentView>
+

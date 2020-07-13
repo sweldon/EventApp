@@ -11,23 +11,63 @@ namespace EventApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class RootPage : MasterDetailPage
     {
+        private Image MenuImage;
         Dictionary<int, NavigationPage> MenuPages = new Dictionary<int, NavigationPage>();
         public RootPage()
         {
             InitializeComponent();
 
             MasterBehavior = MasterBehavior.Popover;
-         
+
+            IsPresentedChanged += RootPage_IsPresentedChanged;
 
         }
 
-        async void OpenNotifications(object sender, EventArgs e)
+        private void RootPage_IsPresentedChanged(object sender, EventArgs e)
         {
-            BellBtn.IsEnabled = false;
-            await Navigation.PushModalAsync(new NavigationPage(new NotificationsPage()));
-            await Task.Delay(2000);
-            BellBtn.IsEnabled = true;
+
+            if(!IsPresented && MenuImage != null)
+                MenuImage.Rotation = 0;
+
         }
+
+        //async void OpenNotifications(object sender, EventArgs e)
+        //{
+        //    //BellBtn.IsEnabled = false;
+        //    await Navigation.PushModalAsync(new NavigationPage(new NotificationsPage()));
+        //    await Task.Delay(2000);
+        //    //BellBtn.IsEnabled = true;
+        //}
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            MessagingCenter.Subscribe<CustomToolBar, Image>(this, "OpenMenu", (sender, image) => {
+                IsPresented = true;
+                image.Rotation = 90;
+                MenuImage = image;
+            });
+        }
+
+        //public async Task PushAsync(Page page)
+        //{
+        //    if (Detail is NavigationPage navPage)
+        //    {
+        //        await navPage.PushAsync(page);
+        //        IsGestureEnabled = false;
+        //    }
+        //}
+
+        //public async Task PopAsync()
+        //{
+        //    if (Detail is NavigationPage navPage)
+        //    {
+        //        await navPage.PopAsync();
+
+        //        if (navPage.Navigation.NavigationStack.Count == 1)  //if count == 1 -> is root page
+        //            IsGestureEnabled = true;
+        //    }
+        //}
 
         public async Task NavigateFromMenu(int id)
         {

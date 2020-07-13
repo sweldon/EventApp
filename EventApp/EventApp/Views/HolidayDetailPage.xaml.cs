@@ -80,6 +80,7 @@ namespace EventApp.Views
         {
             InitializeComponent();
             BindingContext = this.viewModel = viewModel;
+            //NavigationPage.SetHasNavigationBar(this, false);
             // Remove when reply button added
             HolidayDetailList.ItemSelected += OnCommentSelected;
 
@@ -109,7 +110,11 @@ namespace EventApp.Views
 
 
         }
-
+        //private void SwipeBack(object sender, SwipedEventArgs e)
+        //{
+        //    Debug.WriteLine("asdfasdfafds");
+        //    Navigation.PopAsync();
+        //}
         async Task UpdateHoliday()
         {
             viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
@@ -297,6 +302,9 @@ namespace EventApp.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+
+            MessagingCenter.Send(this, "UpdateToolbar", false);
+
             if (viewModel.GroupedCommentList.Count == 0)
                 viewModel.LoadHolidayComments.Execute(null);
             try
@@ -307,7 +315,8 @@ namespace EventApp.Views
                     Description.Text = viewModel.Holiday.Description;
                 else
                     Description.Text = "This holiday has no information yet!";
-                this.Title = viewModel.Holiday.Name;
+                //this.Title = viewModel.Holiday.Name;
+                TitleBar.Title = viewModel.Holiday.Name;
                 CurrentVotes.Text = viewModel.Holiday.Votes.ToString() + " Celebrating!";
 
                 if (isLoggedIn)
@@ -350,7 +359,7 @@ namespace EventApp.Views
                 viewModel.ExecuteLoadCommentsCommand();
             });
 
-            AdBanner.IsVisible = !isPremium;
+            //AdBanner.IsVisible = !isPremium;
 
         }
 

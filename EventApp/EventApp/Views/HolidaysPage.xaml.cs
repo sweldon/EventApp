@@ -77,28 +77,11 @@ namespace EventApp.Views
         public HolidaysPage()
         {
             InitializeComponent();
-
+            //NavigationPage.SetHasNavigationBar(this, false);
             BindingContext = viewModel = new HolidaysViewModel();
-            DateTime currentDate = DateTime.Today;
 
-            string dateString = currentDate.ToString("dd-MM-yyyy");
-            string dayNumber = dateString.Split('-')[0].TrimStart('0');
-            int monthNumber = Int32.Parse(dateString.Split('-')[1]);
-
-            List<string> months = new List<string>() {
-                "January","February","March","April","May","June","July",
-                "August", "September", "October", "November", "December"
-            };
-
-            string monthString = months[monthNumber - 1];
-            string todayString = currentDate.DayOfWeek.ToString();
-            //ItemsListView.ItemSelected += OnItemSelected;
-            ItemsListView.ItemTapped += (object sender, ItemTappedEventArgs e) => {
-                if (e.Item == null) return;
-                ((ListView)sender).SelectedItem = null;
-            };
-            viewModel.Title = monthString + " " + dayNumber;
         }
+
 
         async void ImageToHoliday(object sender, EventArgs args)
         {
@@ -139,7 +122,7 @@ namespace EventApp.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-
+            MessagingCenter.Send(this, "UpdateToolbar", true);
             MessagingCenter.Unsubscribe<HolidayDetailPage, Object[]>(this, "UpdateCelebrateStatus");
             // When logging in from menu we need to refresh the feed statuses
             MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateHolidayFeed");

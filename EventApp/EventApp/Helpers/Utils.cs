@@ -151,5 +151,22 @@ namespace EventApp
                 }
             }
         }
+        public static string GetDay()
+        {
+            DateTime currentDate = DateTime.Today;
+
+            string dateString = currentDate.ToString("dd-MM-yyyy");
+            string dayNumber = dateString.Split('-')[0].TrimStart('0');
+            int monthNumber = Int32.Parse(dateString.Split('-')[1]);
+
+            List<string> months = new List<string>() {
+                "January","February","March","April","May","June","July",
+                "August", "September", "October", "November", "December"
+            };
+
+            string monthString = months[monthNumber - 1];
+            string todayString = currentDate.DayOfWeek.ToString();
+            return $"{monthString} {dayNumber}";
+        }
     }
 }
