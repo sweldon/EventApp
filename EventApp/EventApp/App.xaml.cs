@@ -23,6 +23,7 @@ namespace EventApp
         public Holiday OpenHolidayPage { get; set; }
         public Comment OpenComment { get; set; }
         public static User GlobalUser = new User() { };
+        public static bool NotificationsRefreshed = false;
         #if DEBUG
             #if __IOS__
                     public static string HolidailyHost = "http://localhost:8888";
@@ -266,7 +267,7 @@ namespace EventApp
         // comes through MainActivity
         protected override async void OnStart()
         {
-            
+            isActive = false;
             CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
             {
                 syncDeviceToken = true;
@@ -327,6 +328,9 @@ namespace EventApp
                 {
                     // Only need comment_user for active forground alert
                     NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null, commentId)));
+                    //Utils.DecrementBellWithDelay();
+                    //MessagingCenter.Send(Application.Current, "RefreshNotifications");
+                    Utils.ReadNotification("comment", commentId);
                 }
             };
             CrossPushNotification.Current.OnNotificationDeleted += (s, p) =>
@@ -410,6 +414,7 @@ namespace EventApp
             if (userAlert)
             {
                 await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null, commentId)));
+                Utils.ReadNotification("comment", commentId);
             }
         }
 

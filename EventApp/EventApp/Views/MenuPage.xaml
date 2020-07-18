@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.MenuPage"
-             xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              BackgroundColor="#FFFFFF"
              Title="Menu">
 
@@ -26,27 +27,39 @@
                 <StackLayout BackgroundColor="#FFFFFF"
                              Grid.Column="0">
      
-                    <ContentView HorizontalOptions="Start">
-                        <controls:CircleImage Source="default_user_128.png" 
-                                              WidthRequest="80" 
-                                              HeightRequest="80" 
-                                              Aspect="AspectFill" 
-                                              VerticalOptions="Start" 
-                                              HorizontalOptions="CenterAndExpand"
-                                              x:Name="MenuProfilePicture">
-                    <controls:CircleImage.GestureRecognizers>
-                    <TapGestureRecognizer
-                    Tapped="OpenProfile"  />
-                    </controls:CircleImage.GestureRecognizers></controls:CircleImage>
+                    <ContentView  HorizontalOptions="Start">
+                        <ffimageloading:CachedImage
+                            Source="default_user_128.png" 
+                            WidthRequest="80" 
+                            HeightRequest="80" 
+                            Aspect="AspectFill" 
+                            VerticalOptions="Start" 
+                            HorizontalOptions="CenterAndExpand"
+                            x:Name="MenuProfilePicture"
+                            LoadingPlaceholder="default_user_32.png">
+                            <ffimageloading:CachedImage.Transformations>
+                                <fftransformations:CircleTransformation />
+                            </ffimageloading:CachedImage.Transformations>
+                         </ffimageloading:CachedImage>
+
+                        <ContentView.GestureRecognizers>
+                            <TapGestureRecognizer
+                            Tapped="OpenProfile"  />
+                        </ContentView.GestureRecognizers>
+
                     </ContentView>
+
                 </StackLayout>
 
                 <!--User info i.e. confetti-->
                 <StackLayout Grid.Column="1" 
-                             BackgroundColor="#FFFFFF">
+                             BackgroundColor="#FFFFFF"
+                             >
                     <Label x:Name="UserNameHeader" 
                            TextColor="Black" 
-                           FontSize="Medium" 
+                           FontSize="Medium"
+                           Padding="0,0,20,0"
+                           LineBreakMode="TailTruncation"
                            FontAttributes="Bold" />
                     <Label>
                         <Label.FormattedText>

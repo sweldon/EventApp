@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using EventApp.Views;
@@ -26,6 +28,11 @@ namespace EventApp
         {
             get { return Settings.IsLoggedIn; }
         }
+        public static int notifCount
+        {
+            get { return Settings.NotificationCount; }
+        }
+
         public static NavigationPage NavigationPage { get; private set; }
         public static string GetCelebrationImage(bool is_celebrating)
         {
@@ -38,6 +45,7 @@ namespace EventApp
                 return "celebrate.png";
             }
         }
+
         public static string GetUpVoteImage(string vote)
         {
             // TODO: consider turning this into a global static app variable
@@ -165,8 +173,56 @@ namespace EventApp
             };
 
             string monthString = months[monthNumber - 1];
-            string todayString = currentDate.DayOfWeek.ToString();
+            //string todayString = currentDate.DayOfWeek.ToString();
             return $"{monthString} {dayNumber}";
         }
+
+        public async static Task<int> GetUserNotificationCount()
+        {
+            App.NotificationsRefreshed = true;
+            if (isLoggedIn)
+            {
+                var values = new Dictionary<string, string>{
+                       { "username", currentUser}
+                    };
+                dynamic responseJSON = await ApiHelpers.MakePostRequest(values,
+                    "notifications");
+                int unread = responseJSON.unread;
+                MessagingCenter.Send(Application.Current, "UpdateBellCount", unread);
+                return await Task.FromResult(unread);
+            }
+            return 0;
+        }
+
+
+        public static async void ReadNotification(string type, string id)
+        {
+
+            var values = new Dictionary<string, string>{
+                { "mark_read_type", type},
+                { "mark_read_id", id}
+            };
+            await ApiHelpers.MakePostRequest(values, "notifications");
+            // Update when leaving the page after viewing notification
+            App.NotificationsRefreshed = false;
+        }
+
+        //public async static void DecrementBellWithDelay()
+        //{
+        //    /* This function is used to sync up the bell count after a little
+        //     * while after the user has launched, such as if theyre following
+        //     * a push notification into the app. They may do it first by
+        //     * hitting the bell, but if not we will take care of it.
+        //     */
+        //    await Task.Delay(10000);
+        //    if(notifCount > 0)
+        //    {
+        //        MessagingCenter.Send(Application.Current, "UpdateBellCount",
+        //            notifCount - 1);
+        //    }
+        //}
+
+
+
     }
 }

@@ -66,7 +66,7 @@ namespace EventApp.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            //MessagingCenter.Send(this, "UpdateToolbar", true);
+            MessagingCenter.Send(Application.Current, "UpdateToolbar", true);
             if (viewModel.UserList.Count == 0)
                 viewModel.LoadUsers.Execute(null);
             AdBanner.IsVisible = !isPremium;

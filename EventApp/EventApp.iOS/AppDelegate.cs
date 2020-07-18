@@ -5,7 +5,6 @@ using Foundation;
 using Google.MobileAds;
 using UIKit;
 using Xamarin.Forms;
-using ImageCircle.Forms.Plugin.iOS;
 using Plugin.PushNotification;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -42,15 +41,11 @@ namespace EventApp.iOS
         public string activationToken
         {
             get { return Settings.ActivationToken; }
-        }
-        public bool tokenUsed
-        {
-            get { return Settings.ActivationTokenUsed; }
             set
             {
-                if (Settings.ActivationTokenUsed == value)
+                if (Settings.ActivationToken == value)
                     return;
-                Settings.ActivationTokenUsed = value;
+                Settings.ActivationToken = value;
                 OnPropertyChanged();
             }
         }
@@ -58,7 +53,6 @@ namespace EventApp.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
-            ImageCircleRenderer.Init();
             MobileAds.Configure("ca-app-pub-9382412071078825~2829867889");
             Rg.Plugins.Popup.Popup.Init();
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
@@ -76,8 +70,6 @@ namespace EventApp.iOS
         {
             PushNotificationManager.RemoteNotificationRegistrationFailed(error);
         }
-        // To receive notifications in foregroung on iOS 9 and below.
-        // To receive notifications in background in any iOS version
         public override void DidReceiveRemoteNotification(UIApplication application, NSDictionary userInfo, Action<UIBackgroundFetchResult> completionHandler)
         {
             PushNotificationManager.DidReceiveMessage(userInfo);
@@ -91,11 +83,11 @@ namespace EventApp.iOS
                 try
                 {
                     string token = Regex.Match(url.Query, @"token=(.+)").Groups[1].ToString();
-                    // TODO check if token has been used in new settings var
-                    if (activationToken == token && !tokenUsed)
+                    if (activationToken == token &&
+                        !string.IsNullOrEmpty(activationToken))
                     {
                         isLoggedIn = true;
-                        tokenUsed = true;
+                        activationToken = "";
                     }
                 }
                 catch

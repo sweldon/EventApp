@@ -2,9 +2,6 @@
 
 using Android.App;
 using Android.Content.PM;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.OS;
 using Android.Gms.Ads;
 using System.Diagnostics;
@@ -14,12 +11,9 @@ using EventApp.ViewModels;
 using EventApp.Views;
 using Plugin.InAppBilling;
 using Plugin.CurrentActivity;
-using ImageCircle.Forms.Plugin.Droid;
 using Plugin.PushNotification;
-using Xamarin.Essentials;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
-using BadgeView.Android;
 
 namespace EventApp.Droid
 {
@@ -52,15 +46,11 @@ namespace EventApp.Droid
         public string activationToken
         {
             get { return Settings.ActivationToken; }
-        }
-        public bool tokenUsed
-        {
-            get { return Settings.ActivationTokenUsed; }
             set
             {
-                if (Settings.ActivationTokenUsed == value)
+                if (Settings.ActivationToken == value)
                     return;
-                Settings.ActivationTokenUsed = value;
+                Settings.ActivationToken = value;
                 OnPropertyChanged();
             }
         }
@@ -89,20 +79,13 @@ namespace EventApp.Droid
                 //Change for your default notification channel name here
                 PushNotificationManager.DefaultNotificationChannelName = "General";
             }
-            // If debug you should reset the token each time.
-            // If user still has AppCenter token, update it
-            bool shouldRefresh = devicePushId.Length == 36 ? true : false;
-            //if(devicePushId == "none")
-            //{
-            //    shouldRefresh = true;
-            //}
+
             #if DEBUG
-                PushNotificationManager.Initialize(this, false);
+                PushNotificationManager.Initialize(this, true);
             #else
-                PushNotificationManager.Initialize(this, shouldRefresh);
+                PushNotificationManager.Initialize(this, false);
             #endif
 
-            ImageCircleRenderer.Init();
             Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);      
             MobileAds.Initialize(ApplicationContext, "ca-app-pub-9382412071078825~2735085847");
@@ -138,10 +121,11 @@ namespace EventApp.Droid
                 string token = linkContents[linkContents.Length - 2];
                 try
                 {
-                    if (activationToken == token && !tokenUsed)
+                    if (activationToken == token &&
+                        !string.IsNullOrEmpty(activationToken))
                     {
                         isLoggedIn = true;
-                        tokenUsed = true;
+                        activationToken = "";
                     }
                 }
                 catch

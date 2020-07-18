@@ -17,6 +17,12 @@ namespace EventApp.Views
 			InitializeComponent ();
 		}
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            MessagingCenter.Send(Application.Current, "UpdateToolbar", true);
+        }
+
         async void ViewEula(object sender, EventArgs e)
         {
 			await Navigation.PushAsync(new Eula());

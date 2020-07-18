@@ -53,7 +53,8 @@ namespace EventApp.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            MessagingCenter.Send(this, "UpdateToolbar", false);
+            MessagingCenter.Send(Application.Current, "UpdateToolbar", false);
+
             if (SelectedUser == null)
             {
                 var values = new Dictionary<string, string>{

@@ -165,6 +165,9 @@ namespace EventApp.Views
                             await Navigation.PopAsync();
                         }
 
+                        // Update bell
+                        await Utils.GetUserNotificationCount();
+
                     }
                     else
                     {

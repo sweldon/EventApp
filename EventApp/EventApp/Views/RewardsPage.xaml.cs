@@ -99,8 +99,10 @@ namespace EventApp.Views
 
         protected override void OnAppearing()
         {
+            MessagingCenter.Send(Application.Current, "UpdateToolbar", true);
+
             #if __IOS__
-                        CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/4201400125");
+                CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/4201400125");
             #endif
 
             #if __ANDROID__

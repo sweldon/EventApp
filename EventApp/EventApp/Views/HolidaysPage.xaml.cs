@@ -73,13 +73,40 @@ namespace EventApp.Views
             }
         }
 
+        public int notifCount
+        {
+            get { return Settings.NotificationCount; }
+            set
+            {
+                if (Settings.NotificationCount == value)
+                    return;
+                Settings.NotificationCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool isActive
+        {
+            get { return Settings.IsActive; }
+            set
+            {
+                if (Settings.IsActive == value)
+                    return;
+                Settings.IsActive = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string showAds;
         public HolidaysPage()
         {
             InitializeComponent();
-            //NavigationPage.SetHasNavigationBar(this, false);
             BindingContext = viewModel = new HolidaysViewModel();
-
+            ItemsListView.ItemTapped += (object sender, ItemTappedEventArgs e) => {
+                if (e.Item == null) return;
+                Task.Delay(500);
+                if (sender is ListView lv) lv.SelectedItem = null;
+                };
         }
 
 
@@ -122,7 +149,15 @@ namespace EventApp.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            MessagingCenter.Send(this, "UpdateToolbar", true);
+            MessagingCenter.Send(Application.Current, "UpdateToolbar", true);
+
+            // Get new notifications on first launch
+            if (!App.NotificationsRefreshed)
+            {
+                notifCount = await Utils.GetUserNotificationCount();
+            }
+            
+            
             MessagingCenter.Unsubscribe<HolidayDetailPage, Object[]>(this, "UpdateCelebrateStatus");
             // When logging in from menu we need to refresh the feed statuses
             MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateHolidayFeed");

@@ -39,6 +39,18 @@ namespace EventApp.Views
             get { return Settings.CurrentUser; }
         }
 
+        public int notifCount
+        {
+            get { return Settings.NotificationCount; }
+            set
+            {
+                if (Settings.NotificationCount == value)
+                    return;
+                Settings.NotificationCount = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool NotificationLock;
         private ObservableCollection<Notification> notifications;
         public NotificationsPage()
@@ -91,8 +103,7 @@ namespace EventApp.Views
         {
             base.OnAppearing();
 
-
-            if(notifications.Count == 0 && isLoggedIn)
+            if (notifications.Count == 0 && isLoggedIn)
             {
 
                 notifications = await GetNotifications();
@@ -110,17 +121,20 @@ namespace EventApp.Views
             }
             else
             {
-                NoResults.IsVisible = true;
+                if(!isLoggedIn)
+                    NoResults.IsVisible = true;
             }
             
         }
 
         private async Task<ObservableCollection<Notification>> GetNotifications()
         {
+
             try
             {
                 var values = new Dictionary<string, string>{
                     { "username", currentUser },
+                    { "clear_notifications", "true" },
                 };
 
                 var content = new FormUrlEncodedContent(values);
@@ -132,6 +146,7 @@ namespace EventApp.Views
                 dynamic notifList = responseJSON.results;
                 foreach (var n in notifList)
                 {
+                    Color bg_color = n.read == true ? Color.FromHex("FFFFFF") : Color.FromHex("ebf3fd");
                     notifications.Add(new Notification()
                     {
                         Id = n.notification_id,
@@ -140,13 +155,14 @@ namespace EventApp.Views
                         Read = n.read,
                         Content = n.content,
                         TimeSince = n.time_since,
-                        Icon = n.icon == null ? "icon_splash.png" : n.icon
+                        Icon = n.icon == null ? "icon_splash.png" : n.icon,
+                        BackgroundColor = bg_color
                     });
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                Debug.WriteLine(ex);
             }
 
             return await Task.FromResult(notifications);

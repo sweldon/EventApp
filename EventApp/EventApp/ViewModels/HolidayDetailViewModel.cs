@@ -74,7 +74,7 @@ namespace EventApp.ViewModels
                             {
                                 if (CommentLink != null && comment.Id == CommentLink)
                                 {
-                                    comment.BackgroundColor = Color.FromHex("F0F8FF");
+                                    comment.BackgroundColor = Color.FromHex("ebf3fd");
                                 }
                                 else
                                 {

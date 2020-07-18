@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System.Collections.Generic;
 #if __IOS__
-    using UIKit;
+using UIKit;
 #elif __ANDROID__
     using Android.Content;
 #endif
@@ -68,9 +65,10 @@ namespace EventApp.Views
             control.HeaderLabel.Text = newValue.ToString();
         }
 
-        public async void updateBell()
+        public void updateBell()
         {
-
+            //BadgeWrapper.IsVisible = true;
+            BadgeWrapper.FadeTo(1, 100);
             if (notifCount > 0)
             {
                 if(notifCount > 99)
@@ -82,34 +80,53 @@ namespace EventApp.Views
                 {
                     BellBadge.Text = notifCount.ToString();
                 }
-                BadgeWrapper.IsVisible = true;
             }
             else
             {
-                BadgeWrapper.IsVisible = false;
+                //BadgeWrapper.IsVisible = false;
+                BadgeWrapper.FadeTo(0, 100);
             }
+
+            // Just in case some async shenanigans caused us to drop below 0
+            if (notifCount < 0)
+                notifCount = 0;
 
         }
 
-        public void UpdateToolbar(bool IsRoot)
+        public async void UpdateToolbar(bool IsRoot)
         {
             if (IsRoot)
             {
-                HeaderImage.IsVisible = true;
                 HeaderLabel.IsVisible = false;
-                HeaderImage.FadeTo(1, 500);
-                HeaderLabel.FadeTo(0, 500);
+                HeaderImage.IsVisible = true;
+                await HeaderLabel.FadeTo(0, 500);
+                await HeaderImage.FadeTo(1, 500);
 
             }
             else
             {
                 HeaderImage.IsVisible = false;
                 HeaderLabel.IsVisible = true;
-                HeaderImage.FadeTo(0, 500);
-                HeaderLabel.FadeTo(1, 500);
+                await HeaderImage.FadeTo(0, 500);
+                await HeaderLabel.FadeTo(1, 500);
+
             }
             updateBell();
         }
+
+        //private async void RefreshNotifications()
+        //{
+        //    await Task.Delay(3000);  
+        //    if (!App.NotificationsRefreshed)
+        //    {
+        //        await Utils.GetUserNotificationCount();
+        //    }
+        //    else
+        //    {
+        //        await Application.Current.MainPage.DisplayAlert("test", "already refreshed", "test");
+        //    }
+        //}
+
 
         public CustomToolBar()
         {
@@ -128,6 +145,12 @@ namespace EventApp.Views
                 notifCount = count;
                 updateBell();
             });
+
+            //MessagingCenter.Subscribe<Application>(this, "RefreshNotifications", (sender) =>
+            //{
+            //    // If the app launch hasnt triggered notif refresh, do it again
+            //    RefreshNotifications();
+            //});
 
         }
 

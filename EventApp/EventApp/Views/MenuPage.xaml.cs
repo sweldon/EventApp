@@ -147,6 +147,7 @@ namespace EventApp.Views
                 //goPremiumButton.IsVisible = true;
                 Utils.ResetGlobalUser();
                 MessagingCenter.Send(this, "UpdateHolidayFeed");
+                MessagingCenter.Send(Application.Current, "UpdateBellCount", 0);
 
             }
             catch

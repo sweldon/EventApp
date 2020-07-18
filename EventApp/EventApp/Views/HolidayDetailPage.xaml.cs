@@ -131,7 +131,7 @@ namespace EventApp.Views
             var comment = new Comment();
             try
             {
-                comment = (sender as Image).BindingContext as Comment;
+                comment = (sender as ContentView).BindingContext as Comment;
             }
             catch
             {
@@ -302,8 +302,7 @@ namespace EventApp.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-
-            MessagingCenter.Send(this, "UpdateToolbar", false);
+            MessagingCenter.Send(Application.Current, "UpdateToolbar", false);
 
             if (viewModel.GroupedCommentList.Count == 0)
                 viewModel.LoadHolidayComments.Execute(null);
