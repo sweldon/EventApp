@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EventApp.Views.PortalPage"
+             Title="{Binding Title}">
+    
+    
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Back" Clicked="Cancel" />
+    </ContentPage.ToolbarItems>
+    
+
+    <ScrollView>
+    <StackLayout>
+
+        <ContentView Padding="0,20,0,10">
+            <Image Source="holiday_banner_blue.png" HorizontalOptions="CenterAndExpand" />
+        </ContentView>
+
+        <ContentView> 
+            <StackLayout Orientation="Vertical" Padding="16,10,16,10" Spacing="10">
+
+            <Button Margin="0,10,0,0" Text="Register"
+                    Clicked="Register"
+                    BackgroundColor="#4c96e8"
+                    TextColor="White" />
+               
+            <Button Margin="0,10,0,0" Text="Login"
+                    Clicked="Login"
+                    BackgroundColor="#FFFFFF"
+                    BorderColor="#4c96e8"
+                    BorderWidth="1"
+                    TextColor="#4c96e8" />
+
+          
+            </StackLayout>
+        </ContentView>
+    </StackLayout>
+        </ScrollView>
+</ContentPage>

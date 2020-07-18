@@ -18,23 +18,28 @@ namespace EventApp.Views
         public string currentUser
         {
             get { return Settings.CurrentUser; }
-            set
-            {
-                if (Settings.CurrentUser == value)
-                    return;
-                Settings.CurrentUser = value;
-                OnPropertyChanged();
-            }
         }
+        public string devicePushId
+        {
+            get { return Settings.DevicePushId; }
+        }
+
         private int overflowCount = 0;
         private bool overflow = false;
         public Holiday OpenedHoliday { get; set; }
         public string CommentTitle { get; set; }
         public ObservableCollection<User> users { get; set; }
-        private Comment ReplyComment { get; set; }
+        private Comment LinkedComment { get; set; }
         private bool isSearching = false;
         private bool isReply = false;
-        public NewCommentPopUp(Holiday holiday, Comment comment=null)
+        private bool isEdit = false;
+
+        public NewCommentPopUp(
+            Holiday holiday,
+            Comment comment=null,
+            bool reply=false,
+            bool edit=false
+        )
         {
             InitializeComponent();
             users = new ObservableCollection<User>();
@@ -42,15 +47,20 @@ namespace EventApp.Views
             UserMentionList.ItemSelected += OnUserSelected;
             //UserMentionList.ItemTapped += ItemTapped;
             CommentContent.Placeholder = "Say something";
-            if (comment != null)
-            {
-                // Replying
-                ReplyComment = comment;
+
+            if(comment != null)
+                LinkedComment = comment;
+
+            if (reply)
+            {                
                 isReply = true;
                 ReplyWrapper.IsVisible = true;
                 UserName.Text = comment.UserName;
                 TimeSince.Text = comment.TimeSince;
                 ReplyContent.Text = comment.Content;
+            }else if (edit)
+            {
+                isEdit = true;
             }
 
         }
@@ -72,7 +82,7 @@ namespace EventApp.Views
         private async void CheckMentions(object sender, TextChangedEventArgs e)
         {
             users.Clear();
-            // TODO just have to figure out how to go back down
+
             #if __IOS__
                 if(CommentContent.Height > 100 && !overflow)
                 {
@@ -188,31 +198,45 @@ namespace EventApp.Views
 
         public async void SubmitComment(object sender, EventArgs e)
         {
+
             SaveCommentButton.IsEnabled = false;
             SaveCommentButton.Text = "Posting...";
             if (string.IsNullOrEmpty(CommentContent.Text))
             {
-                await DisplayAlert("Nothing to say?", "You have to type something to say something...", "Well okay.");
+                await DisplayAlert("Nothing to say?", "Please enter some text " +
+                    "before posting", "OK");
                 SaveCommentButton.IsEnabled = true;
                 SaveCommentButton.Text = "Post";
             }
             else
             {
-                var values = new Dictionary<string, string>{
-                   { "holiday", OpenedHoliday.Id },
-                   { "content", CommentContent.Text },
-                   { "username", currentUser}
-                };
-                if (isReply)
+                dynamic responseJSON;
+                if (isEdit)
                 {
-                    values["parent"] = ReplyComment.Id;
+                    var values = new Dictionary<string, string>{
+                       { "device_id", devicePushId },
+                       { "content", CommentContent.Text },
+                       { "username", currentUser}
+                    };
+
+                    responseJSON = await ApiHelpers.MakePatchRequest(values, "comments", LinkedComment.Id);
+                }
+                else
+                {
+                    var values = new Dictionary<string, string>{
+                       { "holiday", OpenedHoliday.Id },
+                       { "content", CommentContent.Text },
+                       { "username", currentUser}
+                    };
+                    if (isReply)
+                    {
+                        values["parent"] = LinkedComment.Id;
+                    }
+
+                    responseJSON = await ApiHelpers.MakePostRequest(values, "comments");
+
                 }
 
-                var content = new FormUrlEncodedContent(values);
-                var response = await App.globalClient.PostAsync(App.HolidailyHost + "/comments/", content);
-
-                var responseString = await response.Content.ReadAsStringAsync();
-                dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                 int status = responseJSON.status;
                 string message = responseJSON.message;
 
@@ -243,8 +267,16 @@ namespace EventApp.Views
             await Task.Delay(100);
             CommentContent.Focus();
 
-            if(isReply)
-                CommentContent.Text = $"@{ReplyComment.UserName} ";
+            if (isReply)
+            {
+                CommentContent.Text = $"@{LinkedComment.UserName} ";
+            }else if (isEdit)
+            {
+                CommentContent.Text = $"{LinkedComment.Content} ";
+            }
+                
+
+
         }
 
         protected override void OnDisappearing()

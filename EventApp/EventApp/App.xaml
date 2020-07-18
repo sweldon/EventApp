@@ -2,6 +2,7 @@
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
+             xmlns:local="clr-namespace:EventApp.Views"
              x:Class="EventApp.App">
     <Application.Resources>
         <ResourceDictionary>
@@ -18,6 +19,9 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+
         </ResourceDictionary>
+
     </Application.Resources>
 </Application>

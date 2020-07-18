@@ -211,6 +211,7 @@ namespace EventApp.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+            MessagingCenter.Send(Application.Current, "UpdateToolbar", true);
         }
 
         public void Share(object sender, EventArgs args)

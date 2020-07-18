@@ -1,16 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using EventApp.Views;
 using MarcTron.Plugin.Controls;
 using Newtonsoft.Json;
+using Xamarin.Forms;
 
 namespace EventApp
 {
-    public static class Utils
+    public class Utils
     {
-         public static string GetCelebrationImage(bool is_celebrating)
+        public static string currentUser
+        {
+            get { return Settings.CurrentUser; }
+        }
+
+        public static string devicePushId
+        {
+            get { return Settings.DevicePushId; }
+        }
+
+        public static bool isLoggedIn
+        {
+            get { return Settings.IsLoggedIn; }
+        }
+        public static int notifCount
+        {
+            get { return Settings.NotificationCount; }
+        }
+
+        public static NavigationPage NavigationPage { get; private set; }
+        public static string GetCelebrationImage(bool is_celebrating)
         {
             if (is_celebrating)
             {
@@ -21,6 +45,7 @@ namespace EventApp
                 return "celebrate.png";
             }
         }
+
         public static string GetUpVoteImage(string vote)
         {
             // TODO: consider turning this into a global static app variable
@@ -61,5 +86,143 @@ namespace EventApp
                 return false;
             }
         }
+        public static void BuildNavigation()
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var menuPage = new MenuPage(); // Build hamburger menu
+                NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
+                var rootPage = new RootPage(); // Root handles master detail navigation
+                rootPage.Master = menuPage; // Menu
+                rootPage.Detail = NavigationPage; // Content
+                App.Current.MainPage = rootPage; // Set root to built master detail
+            });
+
+        }
+        public static void ResetGlobalUser(string username=null)
+        {
+            App.GlobalUser.UserName = username != null ? username : "none";
+            App.GlobalUser.Confetti = "0";
+            App.GlobalUser.Comments = "0";
+            App.GlobalUser.Approved = "0";
+            App.GlobalUser.LastOnline = "just now";
+            App.GlobalUser.Avatar = null;
+            App.GlobalUser.Premium = false;
+        }
+        public async static void syncUser()
+        {
+            // Keep logged-in user devices up-to-date
+            if (isLoggedIn)
+            {
+                try
+                {
+                    var values = new Dictionary<string, string>{
+                        { "username", currentUser },
+                        { "device_update", devicePushId },
+                    };
+
+                    // Needs platform for device type
+                    #if __IOS__
+                    values["platform"] = "ios";
+                    #elif __ANDROID__
+                    values["platform"] = "android";
+                    #endif
+                    var content = new FormUrlEncodedContent(values);
+                    var response = await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
+                }
+                catch
+                {
+                }
+            }
+            else
+            {
+                // Keep anonymous devices up-to-date
+                try
+                {
+                    var values = new Dictionary<string, string>{
+                        { "device_id", devicePushId },
+                    };
+
+                    // Needs platform for device type
+                    #if __IOS__
+                    values["platform"] = "ios";
+                    #elif __ANDROID__
+                    values["platform"] = "android";
+                    #endif
+
+                    var content = new FormUrlEncodedContent(values);
+                    await App.globalClient.PostAsync(App.HolidailyHost + "/users/", content);
+                }
+                catch
+                {
+
+                }
+            }
+        }
+        public static string GetDay()
+        {
+            DateTime currentDate = DateTime.Today;
+
+            string dateString = currentDate.ToString("dd-MM-yyyy");
+            string dayNumber = dateString.Split('-')[0].TrimStart('0');
+            int monthNumber = Int32.Parse(dateString.Split('-')[1]);
+
+            List<string> months = new List<string>() {
+                "January","February","March","April","May","June","July",
+                "August", "September", "October", "November", "December"
+            };
+
+            string monthString = months[monthNumber - 1];
+            //string todayString = currentDate.DayOfWeek.ToString();
+            return $"{monthString} {dayNumber}";
+        }
+
+        public async static Task<int> GetUserNotificationCount()
+        {
+            App.NotificationsRefreshed = true;
+            if (isLoggedIn)
+            {
+                var values = new Dictionary<string, string>{
+                       { "username", currentUser}
+                    };
+                dynamic responseJSON = await ApiHelpers.MakePostRequest(values,
+                    "notifications");
+                int unread = responseJSON.unread;
+                MessagingCenter.Send(Application.Current, "UpdateBellCount", unread);
+                return await Task.FromResult(unread);
+            }
+            return 0;
+        }
+
+
+        public static async void ReadNotification(string type, string id)
+        {
+
+            var values = new Dictionary<string, string>{
+                { "mark_read_type", type},
+                { "mark_read_id", id}
+            };
+            await ApiHelpers.MakePostRequest(values, "notifications");
+            // Update when leaving the page after viewing notification
+            App.NotificationsRefreshed = false;
+        }
+
+        //public async static void DecrementBellWithDelay()
+        //{
+        //    /* This function is used to sync up the bell count after a little
+        //     * while after the user has launched, such as if theyre following
+        //     * a push notification into the app. They may do it first by
+        //     * hitting the bell, but if not we will take care of it.
+        //     */
+        //    await Task.Delay(10000);
+        //    if(notifCount > 0)
+        //    {
+        //        MessagingCenter.Send(Application.Current, "UpdateBellCount",
+        //            notifCount - 1);
+        //    }
+        //}
+
+
+
     }
 }

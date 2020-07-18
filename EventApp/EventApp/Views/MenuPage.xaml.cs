@@ -107,7 +107,7 @@ namespace EventApp.Views
 
         public async void PromptLogin(object sender, EventArgs e) {
             LoginButton.IsEnabled = false;
-            App.promptLogin(Navigation);
+            await Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             LoginButton.IsEnabled = true;
         }
 
@@ -145,7 +145,9 @@ namespace EventApp.Views
                 isPremium = false;
                 MenuProfilePicture.Source = "default_user_128.png";
                 //goPremiumButton.IsVisible = true;
+                Utils.ResetGlobalUser();
                 MessagingCenter.Send(this, "UpdateHolidayFeed");
+                MessagingCenter.Send(Application.Current, "UpdateBellCount", 0);
 
             }
             catch
@@ -155,8 +157,10 @@ namespace EventApp.Views
 
         }
         protected override async void OnAppearing()
-        {   
-            AppInfoLabel.Text = $"Holidaily™ - Version {appInfo}";
+        {
+
+            string buildNumber = Xamarin.Essentials.AppInfo.BuildString;
+            AppInfoLabel.Text = $"v{appInfo}-{buildNumber}";
             if (isLoggedIn)
             {
                 HeaderBackground.BackgroundColor = Color.FromHex("FFFFFF");
@@ -199,6 +203,7 @@ namespace EventApp.Views
                         //goPremiumButton.IsVisible = !isPremium;
                     }
                 });
+
             // Update avatar after uploaded on profile page
             MessagingCenter.Unsubscribe<ProfilePage, ImageSource>(this, "UpdateMenuProfilePicture");
             MessagingCenter.Unsubscribe<LoginPage, string>(this, "UpdateMenuProfilePicture");

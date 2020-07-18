@@ -60,7 +60,7 @@ namespace EventApp.Services
                 commentGroup = new CommentList();
                 foreach (var comment in thread)
                 {
-                    string TimeAgo = comment.time_since;
+                    string TimeAgo = comment.edited == null ? comment.time_since : $"{comment.time_since} (edited {comment.edited})";
                     string commentUser = comment.user;
                     if (String.Equals(commentUser, currentUser, StringComparison.OrdinalIgnoreCase))
                     {
@@ -149,6 +149,7 @@ namespace EventApp.Services
                         UserName = author,
                         TimeSince = TimeAgo,
                         ShowReply = allowReply,
+                        ShowEdit = allowDelete, // If you can delete, you can edit
                         ShowDelete = allowDelete,
                         Votes = comment.votes,
                         UpVoteStatus = UpVoteImage,
@@ -188,7 +189,7 @@ namespace EventApp.Services
                 commentGroup = new CommentList();
                 foreach (var comment in thread)
                 {
-                    string TimeAgo = comment.time_since;
+                    string TimeAgo = comment.edited == null ? comment.time_since : $"{comment.time_since} (edited {comment.edited})";
                     string commentUser = comment.user;
                     if (String.Equals(commentUser, currentUser, StringComparison.OrdinalIgnoreCase))
                     {
@@ -275,6 +276,7 @@ namespace EventApp.Services
                         UserName = author,
                         TimeSince = TimeAgo,
                         ShowReply = allowReply,
+                        ShowEdit = allowDelete, // If you can delete, you can edit
                         ShowDelete = allowDelete,
                         Votes = comment.votes,
                         UpVoteStatus = UpVoteImage, 

@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EventApp.Views.CustomToolBar"
+             xmlns:badge="clr-namespace:BadgeView.Shared;assembly=BadgeView.Shared"
+             BackgroundColor="{StaticResource NavigationPrimary}"
+             x:Name="CToolBar"
+             >
+
+        <Grid RowSpacing="0" ColumnSpacing="0" x:Name="NavWrapper">
+
+            <Grid.HeightRequest>
+                <OnPlatform
+                    x:TypeArguments="x:Double"
+                Android="48"/>
+            </Grid.HeightRequest>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+      
+            <Label x:Name="HeaderLabel"
+                   HorizontalOptions="Center"
+                   TextColor="#FFFFFF"
+                   VerticalOptions="Center"
+                   FontAttributes="Bold"
+                   FontSize="Medium"
+                   IsVisible="False"
+                   Opacity="0"
+                   Grid.Column="0"
+                   >
+                <Label.Padding>
+                    <OnPlatform
+                    x:TypeArguments="Thickness"
+                    Android="0,0,18,0" iOS="0"/>
+                </Label.Padding>
+            </Label>
+
+           <ContentView Grid.Column="0">
+            <Image Source="holidaily_banner_white.png"
+                    VerticalOptions="Center"
+                    x:Name="HeaderImage"/>
+
+            <ContentView.Padding>
+                <OnPlatform
+                    x:TypeArguments="Thickness"
+                Android="5" iOS="5"/>
+            </ContentView.Padding>
+               
+            <ContentView.Margin>
+                <OnPlatform
+                    x:TypeArguments="Thickness"
+                Android="-18,0,0,0" iOS="0"/>
+            </ContentView.Margin>
+            </ContentView>
+        
+
+            <ContentView Grid.Column="1">
+            <Image Source="Notification_Main_Icon.png"
+                    VerticalOptions="Start"
+                    x:Name="BellBtn"
+                    HorizontalOptions="End">
+                  
+                <Image.GestureRecognizers>
+                <TapGestureRecognizer
+                    Tapped="OpenNotifications"  />
+                </Image.GestureRecognizers>      
+                <Image.HeightRequest>
+                <OnPlatform
+                x:TypeArguments="x:Double"
+                Android="32" iOS="24"/>
+                </Image.HeightRequest>
+            </Image>
+            <ContentView.Padding>
+                    <OnPlatform
+                        x:TypeArguments="Thickness"
+                    Android="10" iOS="10"/>
+                </ContentView.Padding> 
+            </ContentView>
+
+            <Grid Grid.Column="1"
+                  x:Name="BadgeWrapper"
+                    Opacity="0"
+                 >
+
+
+                <Grid.Margin>
+                    <OnPlatform
+                    x:TypeArguments="Thickness"
+                    Android="18, -20, 0, 0" iOS="18, -15, 0, 0"/>
+                </Grid.Margin>
+
+            <badge:CircleView
+                BackgroundColor="Red"
+                x:Name="BadgeCircle"
+                HeightRequest="18"
+                WidthRequest="18"
+                CornerRadius="18"
+                VerticalOptions="Center"
+                HorizontalOptions="Center" />
+            <Label FontAttributes="Bold"
+                   x:Name="BellBadge"
+                   TextColor="White"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"
+                   FontSize="10"/>
+
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer
+                Tapped="OpenNotifications"  />
+            </Grid.GestureRecognizers>
+
+            </Grid>
+
+
+            </Grid>
+
+</ContentView>
+

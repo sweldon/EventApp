@@ -16,11 +16,56 @@ namespace EventApp.Views
         public string devicePushId
         {
             get { return Settings.DevicePushId; }
+        }
+
+        public string appInfo
+        {
+            get { return Settings.AppInfo; }
+        }
+
+        public string activationToken
+        {
+            get { return Settings.ActivationToken; }
             set
             {
-                if (Settings.DevicePushId == value)
+                if (Settings.ActivationToken == value)
                     return;
-                Settings.DevicePushId = value;
+                Settings.ActivationToken = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string currentUser
+        {
+            get { return Settings.CurrentUser; }
+            set
+            {
+                if (Settings.CurrentUser == value)
+                    return;
+                Settings.CurrentUser = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string confettiCount
+        {
+            get { return Settings.ConfettiCount; }
+            set
+            {
+                if (Settings.ConfettiCount == value)
+                    return;
+                Settings.ConfettiCount = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool isPremium
+        {
+            get { return Settings.IsPremium; }
+            set
+            {
+                if (Settings.IsPremium == value)
+                    return;
+                Settings.IsPremium = value;
                 OnPropertyChanged();
             }
         }
@@ -74,8 +119,16 @@ namespace EventApp.Views
                             var values = new Dictionary<string, string>{
                                 { "username", userName },
                                 { "password", pass },
-                                { "email", email }
+                                { "email", email },
+                                { "device_id", devicePushId },
+                                { "version", appInfo }
                             };
+
+                            #if __IOS__
+                                values["platform"] = "ios";
+                            #elif __ANDROID__
+                                values["platform"] = "android";
+                            #endif
 
                             var content = new FormUrlEncodedContent(values);
                             var response = await App.globalClient.PostAsync(App.HolidailyHost + "/accounts/register/", content);
@@ -83,7 +136,12 @@ namespace EventApp.Views
                             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
                             int status = responseJSON.status;
                             string message = responseJSON.message;
-
+                            activationToken = responseJSON.token;
+                            currentUser = userName;
+                            isPremium = false;
+                            confettiCount = "0";
+                            // Reset global user
+                            Utils.ResetGlobalUser(userName);
                             if (status == 200)
                             {
                                 await DisplayAlert("Activate", $"We sent an " +

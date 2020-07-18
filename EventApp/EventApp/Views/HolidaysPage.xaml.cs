@@ -73,32 +73,42 @@ namespace EventApp.Views
             }
         }
 
+        public int notifCount
+        {
+            get { return Settings.NotificationCount; }
+            set
+            {
+                if (Settings.NotificationCount == value)
+                    return;
+                Settings.NotificationCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool isActive
+        {
+            get { return Settings.IsActive; }
+            set
+            {
+                if (Settings.IsActive == value)
+                    return;
+                Settings.IsActive = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string showAds;
         public HolidaysPage()
         {
             InitializeComponent();
-
             BindingContext = viewModel = new HolidaysViewModel();
-            DateTime currentDate = DateTime.Today;
-
-            string dateString = currentDate.ToString("dd-MM-yyyy");
-            string dayNumber = dateString.Split('-')[0].TrimStart('0');
-            int monthNumber = Int32.Parse(dateString.Split('-')[1]);
-
-            List<string> months = new List<string>() {
-                "January","February","March","April","May","June","July",
-                "August", "September", "October", "November", "December"
-            };
-
-            string monthString = months[monthNumber - 1];
-            string todayString = currentDate.DayOfWeek.ToString();
-            //ItemsListView.ItemSelected += OnItemSelected;
             ItemsListView.ItemTapped += (object sender, ItemTappedEventArgs e) => {
                 if (e.Item == null) return;
-                ((ListView)sender).SelectedItem = null;
-            };
-            viewModel.Title = monthString + " " + dayNumber;
+                Task.Delay(500);
+                if (sender is ListView lv) lv.SelectedItem = null;
+                };
         }
+
 
         async void ImageToHoliday(object sender, EventArgs args)
         {
@@ -139,7 +149,15 @@ namespace EventApp.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+            MessagingCenter.Send(Application.Current, "UpdateToolbar", true);
 
+            // Get new notifications on first launch
+            if (!App.NotificationsRefreshed)
+            {
+                notifCount = await Utils.GetUserNotificationCount();
+            }
+            
+            
             MessagingCenter.Unsubscribe<HolidayDetailPage, Object[]>(this, "UpdateCelebrateStatus");
             // When logging in from menu we need to refresh the feed statuses
             MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateHolidayFeed");
@@ -171,7 +189,12 @@ namespace EventApp.Views
                 OpenNotifications = false;
             }
 
-        }
+            if (App.syncDeviceToken)
+            {
+                Utils.syncUser();
+            }
+
+    }
 
         protected override void OnDisappearing()
         {
@@ -185,6 +208,8 @@ namespace EventApp.Views
             "UpdateCelebrateStatus", (sender, data) => {
                 viewModel.UpdateCelebrateStatus((string)data[0], (bool)data[1], (string)data[2]);
             });
+
+            App.syncDeviceToken = false;
         }
 
         async void OnCelebrateTapped(object sender, EventArgs args)

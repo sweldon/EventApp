@@ -39,8 +39,6 @@ namespace EventApp.Views
             if (user != null)
             {
                 SelectedUser = user;
-                // No need for slow load
-                Title = $"{SelectedUser.UserName}'s Profile";
                 ProfilePicture.Source = SelectedUser.Avatar == null ? "default_user_256.png" : SelectedUser.Avatar;
                 UserName.Text = SelectedUser.UserName;
                 Confetti.Text = SelectedUser.Confetti;
@@ -55,8 +53,9 @@ namespace EventApp.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+            MessagingCenter.Send(Application.Current, "UpdateToolbar", false);
 
-            if(SelectedUser == null)
+            if (SelectedUser == null)
             {
                 var values = new Dictionary<string, string>{
                     { "username", SubmittedUserName },
@@ -84,7 +83,7 @@ namespace EventApp.Views
                 Holidays.Text = SelectedUser.Approved;
                 LastOnline.Text = SelectedUser.LastOnline;
             }
-
+            TitleBar.Title = $"{SelectedUser.UserName}'s Profile";
             UserCommentList.ItemsSource = await GetUserComments(SelectedUser.UserName);
 
         }

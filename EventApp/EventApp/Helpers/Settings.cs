@@ -22,7 +22,7 @@ namespace EventApp
         #region Setting Constants
 
         private const string AppInfoKey = "app_info_key";
-        private static readonly string AppInfoKeyDefault = "1.3";
+        private static readonly string AppInfoKeyDefault = "1.4";
 
         private const string SettingsKey = "settings_key";
         private static readonly string SettingsDefault = "no";
@@ -51,7 +51,37 @@ namespace EventApp
         private const string OpenNotificationsKey = "open_notifications_key";
         private static readonly bool OpenNotificationsDefault = false;
 
+        private const string ActivationTokenKey = "activation_token";
+        private static readonly string ActivationTokenDefault = "";
+
+        private const string NotifCountKey = "notif_count_key";
+        private static readonly int NotifCountDefault = 0;
         #endregion
+
+        // Only used for android because you can't use a custom data scheme
+        public static int NotificationCount
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(NotifCountKey, NotifCountDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(NotifCountKey, value);
+            }
+        }
+
+        public static string ActivationToken
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(ActivationTokenKey, ActivationTokenDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(ActivationTokenKey, value);
+            }
+        }
 
         public static bool OpenNotifications
         {

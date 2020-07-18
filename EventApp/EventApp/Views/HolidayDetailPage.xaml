@@ -2,15 +2,17 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.HolidayDetailPage"
-             xmlns:local="clr-namespace:EventApp"  
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
-                xmlns:circle="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             xmlns:local="clr-namespace:EventApp.Views" xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
              Title="{Binding Title}">
 
-    <StackLayout BackgroundColor="#E0E0E0">
 
-        <StackLayout VerticalOptions="Start" Padding="0" Spacing="0">
+        <NavigationPage.TitleView>
+             <local:CustomToolBar x:Name="TitleBar"/>
+        </NavigationPage.TitleView>
+
+        <StackLayout VerticalOptions="Start" Padding="0" Spacing="0" Grid.Row="1">
 
             <ContentView Padding="0" >
 
@@ -203,13 +205,26 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
-                                        <ContentView Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" >
-                                            <circle:CircleImage Source="{Binding Avatar}" WidthRequest="32" HeightRequest="32" Aspect="AspectFill" VerticalOptions="Start" HorizontalOptions="CenterAndExpand">
-                                            <circle:CircleImage.GestureRecognizers>
+
+                                        <ContentView  Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
+                                            <ffimageloading:CachedImage
+                                                Source="{Binding Avatar}"
+                                                WidthRequest="32"
+                                                HeightRequest="32"
+                                                Aspect="AspectFill"
+                                                VerticalOptions="Start"
+                                                HorizontalOptions="CenterAndExpand"
+                                                LoadingPlaceholder="default_user_128.png">
+                                                <ffimageloading:CachedImage.Transformations>
+                                                    <fftransformations:CircleTransformation />
+                                                </ffimageloading:CachedImage.Transformations>
+                                             </ffimageloading:CachedImage>
+
+                                            <ContentView.GestureRecognizers>
                                                 <TapGestureRecognizer
                                                 Tapped="OpenProfile"  />
-                                            </circle:CircleImage.GestureRecognizers>
-                                            </circle:CircleImage>
+                                            </ContentView.GestureRecognizers>
+
                                         </ContentView>
 
                                         <Label Text="{Binding UserName}"
@@ -256,10 +271,21 @@
                                             </Label.GestureRecognizers>
                                         </Label>
 
+                                        <ContentView  IsVisible="{Binding ShowEdit}" Grid.Column="1" HorizontalOptions="End">
+                                                <Image Source="Submit_Menu_Icon.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="14"/>
+                                        </ContentView>
+
+                                        <Label IsVisible="{Binding ShowEdit}" Grid.Column="2" Text="Edit" FontSize="Micro" TextColor="#808080"
+                                                       VerticalTextAlignment="Center" Margin="0,0,8,0">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                            Tapped="OnEditTapped"  />
+                                            </Label.GestureRecognizers>
+                                        </Label>
+
                                         <ContentView IsVisible="{Binding ShowReply}" Grid.Column="3" HorizontalOptions="End">
                                                 <Image Source="reply.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="14" Opacity=".5"/>
                                         </ContentView>
-
 
                                         <ContentView  IsVisible="{Binding ShowDelete}" Grid.Column="3" HorizontalOptions="End">
                                                 <Image Source="delete.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="14"/>
@@ -329,12 +355,12 @@
  
         </ContentView>
 
-
-    </StackLayout>
         <controls:MTAdView
         x:Name="AdBanner"
         AdsId="{OnPlatform
         Android='ca-app-pub-9382412071078825/6429237516', 
         iOS='ca-app-pub-9382412071078825/8862041693'}"/>
+
     </StackLayout>
+
 </ContentPage>

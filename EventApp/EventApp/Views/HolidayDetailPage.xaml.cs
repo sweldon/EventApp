@@ -80,6 +80,7 @@ namespace EventApp.Views
         {
             InitializeComponent();
             BindingContext = this.viewModel = viewModel;
+            //NavigationPage.SetHasNavigationBar(this, false);
             // Remove when reply button added
             HolidayDetailList.ItemSelected += OnCommentSelected;
 
@@ -109,7 +110,11 @@ namespace EventApp.Views
 
 
         }
-
+        //private void SwipeBack(object sender, SwipedEventArgs e)
+        //{
+        //    Debug.WriteLine("asdfasdfafds");
+        //    Navigation.PopAsync();
+        //}
         async Task UpdateHoliday()
         {
             viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
@@ -126,7 +131,7 @@ namespace EventApp.Views
             var comment = new Comment();
             try
             {
-                comment = (sender as Image).BindingContext as Comment;
+                comment = (sender as ContentView).BindingContext as Comment;
             }
             catch
             {
@@ -178,7 +183,7 @@ namespace EventApp.Views
                                 item.ShowReply = "False";
                                 item.ShowDelete = "False";
                                 item.Avatar = "default_user_32.png";
-
+                                item.ShowEdit = "False";
                                 // Disable voting
                                 item.Enabled = false;
                                 item.ElementOpacity = .2;
@@ -201,6 +206,20 @@ namespace EventApp.Views
             }
         }
 
+        async void OnEditTapped(object sender, EventArgs args)
+        {
+            if (!isLoggedIn)
+            {
+                App.promptLogin(Navigation);
+            }
+            else
+            {
+                var item = (sender as Label).BindingContext as Comment;
+                await Navigation.PushPopupAsync(new NewCommentPopUp(viewModel.Holiday, item, edit: true));
+            }
+        }
+
+
         async void OnReplyTapped(object sender, EventArgs args)
         {
 
@@ -211,7 +230,7 @@ namespace EventApp.Views
             else
             {
                 var item = (sender as Label).BindingContext as Comment;
-                await Navigation.PushPopupAsync(new NewCommentPopUp(viewModel.Holiday, item));
+                await Navigation.PushPopupAsync(new NewCommentPopUp(viewModel.Holiday, item, reply: true));
             }
         }
 
@@ -283,6 +302,8 @@ namespace EventApp.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+            MessagingCenter.Send(Application.Current, "UpdateToolbar", false);
+
             if (viewModel.GroupedCommentList.Count == 0)
                 viewModel.LoadHolidayComments.Execute(null);
             try
@@ -293,7 +314,8 @@ namespace EventApp.Views
                     Description.Text = viewModel.Holiday.Description;
                 else
                     Description.Text = "This holiday has no information yet!";
-                this.Title = viewModel.Holiday.Name;
+                //this.Title = viewModel.Holiday.Name;
+                TitleBar.Title = viewModel.Holiday.Name;
                 CurrentVotes.Text = viewModel.Holiday.Votes.ToString() + " Celebrating!";
 
                 if (isLoggedIn)
@@ -336,7 +358,7 @@ namespace EventApp.Views
                 viewModel.ExecuteLoadCommentsCommand();
             });
 
-            AdBanner.IsVisible = !isPremium;
+            //AdBanner.IsVisible = !isPremium;
 
         }
 

@@ -69,6 +69,21 @@ namespace EventApp.Models
             }
         }
 
+        private string showedit;
+        public string ShowEdit
+        {
+            get { return showedit; }
+            set
+            {
+                if (showedit == value)
+                {
+                    return;
+                }
+                showedit = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string showdelete;
         public string ShowDelete
         {
@@ -131,6 +146,20 @@ namespace EventApp.Models
         }
         public string HolidayId { get; set; }
         public string TimeSince { get; set; }
+        private string timeSinceEdit;
+        public string TimeSinceEdit
+        {
+            get { return timeSinceEdit; }
+            set
+            {
+                if (timeSinceEdit == value)
+                {
+                    return;
+                }
+                timeSinceEdit = value;
+                OnPropertyChanged();
+            }
+        }
         public Thickness ThreadPadding { get; set; }
         public string Parent { get; set; }
 

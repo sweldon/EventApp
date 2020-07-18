@@ -38,12 +38,7 @@ namespace EventApp.Views
         async void Agree(object sender, EventArgs e)
         {
             eulaAccepted = true;
-            var menuPage = new MenuPage(); // Build hamburger menu
-            NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
-            var rootPage = new RootPage(); // Root handles master detail navigation
-            rootPage.Master = menuPage; // Menu
-            rootPage.Detail = NavigationPage; // Content
-            Application.Current.MainPage = rootPage; // Set root to built master detail
+            Utils.BuildNavigation();
         }
 
         protected override void OnAppearing()
