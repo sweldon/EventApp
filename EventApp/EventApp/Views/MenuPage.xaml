@@ -7,14 +7,24 @@
              BackgroundColor="#FFFFFF"
              Title="Menu">
 
-    <Grid x:Name="HeaderBackground" RowSpacing="0">
+    <Grid x:Name="HeaderBackground" RowSpacing="0" ColumnSpacing="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="25*"/>
             <RowDefinition Height="60*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackLayout Grid.Row="0" VerticalOptions="Center">
+        <!-- Right Border -->
+        <BoxView WidthRequest="1" Grid.Column="1"
+            BackgroundColor="#DEDEDE"
+                Grid.RowSpan="3"
+                 />
+
+        <StackLayout Grid.Row="0" VerticalOptions="Center" Grid.Column="0">
 
             <!--User Profile Header-->
             <Grid x:Name="ProfileHeader" Padding="15,30,0,15">
@@ -105,7 +115,7 @@
        
 
         <!--Menu List-->
-        <StackLayout Grid.Row="1" Spacing="0">
+        <StackLayout Grid.Row="1" Spacing="0" Grid.Column="0">
 
         <BoxView HeightRequest=".5"
             BackgroundColor="#D3D3D3"
@@ -159,7 +169,8 @@
 
 
         <!--Login/Logout-->
-        <StackLayout Grid.Row="2"
+        <StackLayout Grid.Column="0"
+                    Grid.Row="2"
                      Orientation="Vertical" 
                      Padding="16,5,16,5"
                      BackgroundColor="White">

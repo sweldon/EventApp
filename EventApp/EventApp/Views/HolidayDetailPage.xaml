@@ -49,8 +49,16 @@
                                 RetryCount= "3"
                                 RetryDelay= "600"
                                 HeightRequest="150"
-                                LoadingPlaceholder="Loading_Image.gif"
-                            />
+                                LoadingPlaceholder="Loading_Image.gif">
+
+                                <ffimageloading:CachedImage.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Tapped="PreviewImage"  />
+                                </ffimageloading:CachedImage.GestureRecognizers>
+
+                            </ffimageloading:CachedImage>
+
+
                         </ContentView>
                         <Grid Padding="10, 0, 10, 0" >
 
@@ -245,7 +253,12 @@
                                                  Grid.Column="2"
                                                  HorizontalTextAlignment="End" 
                                                  Opacity=".8" />
-                                        <Label Grid.Row="1"  Grid.Column="1" Text="{Binding Content}" FontSize="12" Grid.ColumnSpan="2"/>
+                                        <Label Grid.Row="1"
+                                               Grid.Column="1"
+                                               FormattedText="{Binding Content, Converter={StaticResource CustomTextFormatter}}"
+                                               FontSize="12"
+                                               Grid.ColumnSpan="2"
+                                            />
                                     </Grid>
                                     <Grid Padding="5" HorizontalOptions="FillAndExpand">
                                         <Grid.ColumnDefinitions>

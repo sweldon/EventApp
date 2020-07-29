@@ -13,6 +13,9 @@ using System.Diagnostics;
 using Xamarin.Essentials;
 using Plugin.Share;
 using Plugin.Share.Abstractions;
+using System.Collections.ObjectModel;
+using Stormlion.PhotoBrowser;
+using FFImageLoading.Forms;
 
 #if __IOS__
 using UIKit;
@@ -98,17 +101,68 @@ namespace EventApp.Views
         }
 
         public string showAds;
+        public ObservableCollection<Tweet> Tweets { get; set; }
+        
         public HolidaysPage()
         {
             InitializeComponent();
+            Tweets = new ObservableCollection<Tweet>();
             BindingContext = viewModel = new HolidaysViewModel();
             ItemsListView.ItemTapped += (object sender, ItemTappedEventArgs e) => {
                 if (e.Item == null) return;
                 Task.Delay(500);
                 if (sender is ListView lv) lv.SelectedItem = null;
                 };
+
+            // Twitter feed infinite scroll
+            // Infinite scrolling for comments
+            SocialMediaList.ItemAppearing += (sender, e) =>
+            {
+
+                //if (viewModel.IsBusy || viewModel.GroupedCommentList.Count == 0)
+                //{
+                //    return;
+                //}
+                //LoadingCommentsDialog.IsVisible = true;
+                var tweet = e.Item as Tweet;
+                if (Tweets.Last() == tweet)
+                {
+                    LoadMoreTweets();
+                }
+                //LoadingCommentsDialog.IsVisible = false;
+            };
+
+            // List highlighting
+            SocialMediaList.ItemTapped += (object sender, ItemTappedEventArgs e) => {
+                // don't do anything if we just de-selected the row.
+                if (e.Item == null) return;
+
+                // Optionally pause a bit to allow the preselect hint.
+                Task.Delay(500);
+
+                // Deselect the item.
+                if (sender is ListView lv) lv.SelectedItem = null;
+
+  
+                };
+
         }
 
+        public int page = 0;
+        public bool allLoaded = false;
+        public async void LoadMoreTweets()
+        {
+            //LoadingDialog.IsVisible = true;
+            //if (!allLoaded)
+            //{
+            page += 1;
+            ObservableCollection<Tweet> moreTweets = await Services.GlobalServices.GetTweets(page);
+            foreach(Tweet t in moreTweets)
+            {
+                Tweets.Add(t);
+            }
+            //LoadingDialog.IsVisible = false;
+        }
 
         async void ImageToHoliday(object sender, EventArgs args)
         {
@@ -144,7 +198,13 @@ namespace EventApp.Views
             }
         }
 
-
+        public async void OpenInTwitter(object sender, EventArgs e)
+        {
+            var tweet = (sender as StackLayout).BindingContext as Tweet;
+            Device.BeginInvokeOnMainThread(() => {
+                Device.OpenUri(new Uri(tweet.Url));
+            });
+        }
 
         protected override async void OnAppearing()
         {
@@ -182,7 +242,6 @@ namespace EventApp.Views
                 }
                 await Task.Delay(2000);
             }
-            AdBanner.IsVisible = !isPremium;
             if (OpenNotifications)
             {
                 await Navigation.PushModalAsync(new NavigationPage(new NotificationsPage()));
@@ -193,8 +252,8 @@ namespace EventApp.Views
             {
                 Utils.syncUser();
             }
-
-    }
+            AdBanner.IsVisible = !isPremium;
+        }
 
         protected override void OnDisappearing()
         {
@@ -330,6 +389,90 @@ namespace EventApp.Views
             });
 
             this.IsEnabled = true;
+
+        }
+
+
+        protected void RefreshSocialMediaCommand(object sender, EventArgs e)
+        {
+            page = 0;
+            RefreshSocialMediaFeed();
+            SocialMediaList.EndRefresh();
+            NoResults.IsVisible = Tweets.Count == 0 ? true : false;
+        }
+
+
+        private async void RefreshSocialMediaFeed()
+        {
+
+            try
+            {
+                //tweets.Clear();
+                Tweets = await Services.GlobalServices.GetTweets();
+                SocialMediaList.ItemsSource = Tweets;
+                NoResults.IsVisible = Tweets.Count == 0 ? true : false;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        public async void ToggleFindType(object sender, EventArgs args)
+        {
+
+            var contentViewSender = (ContentView)sender;
+            var labelSender = (Label)contentViewSender.Children[0];
+            var searchType = labelSender.Text;
+            if (searchType == TodayLabel.Text)
+            {
+                HolidayListWrapper.IsVisible = true;
+                SocialMediaWrapper.IsVisible = false;
+                TodaySelected.IsVisible = true;
+                SocialMediaSelected.IsVisible = false;
+                TodayLabel.TextColor = Color.FromHex("4c96e8");
+                SocialMediaLabel.TextColor = Color.Gray;
+            }
+            else
+            {
+                if (Tweets.Count == 0)
+                    RefreshSocialMediaFeed();
+
+                SocialMediaWrapper.IsVisible = true;
+                HolidayListWrapper.IsVisible = false;
+                SocialMediaSelected.IsVisible = true;
+                TodaySelected.IsVisible = false;
+                TodayLabel.TextColor = Color.Gray;
+                SocialMediaLabel.TextColor = Color.FromHex("4c96e8");
+            }
+        }
+        public async void PreviewImage(object sender, EventArgs args)
+        {
+            try
+            {
+                var tweet = (sender as CachedImage).BindingContext as Tweet;
+                string tweetUrl = tweet.Image;
+                new PhotoBrowser
+                {
+                    Photos = new List<Photo>
+                {
+                    new Photo
+                    {
+                        URL = tweetUrl,
+                        Title = $"{tweet.Handle}'s Photo on Twitter"
+                    }
+                }
+                }.Show();
+            }
+            catch
+            {
+                await DisplayAlert("Ouch!", "Sorry, we couldn't load this" +
+                    " image at the moment", "OK");
+            }
 
         }
 

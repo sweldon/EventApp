@@ -14,6 +14,8 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Threading;
 using Rg.Plugins.Popup.Extensions;
+using FFImageLoading.Forms;
+using Stormlion.PhotoBrowser;
 #if __IOS__
 using UIKit;
 #endif
@@ -311,9 +313,15 @@ namespace EventApp.Views
                 viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
                 HolidayImageSource.Source = viewModel.Holiday.HolidayImage;
                 if (!string.IsNullOrEmpty(viewModel.Holiday.Description))
+                {
+
                     Description.Text = viewModel.Holiday.Description;
+                }
                 else
+                {
                     Description.Text = "This holiday has no information yet!";
+                }
+                      
                 //this.Title = viewModel.Holiday.Name;
                 TitleBar.Title = viewModel.Holiday.Name;
                 CurrentVotes.Text = viewModel.Holiday.Votes.ToString() + " Celebrating!";
@@ -656,6 +664,30 @@ namespace EventApp.Views
 
         }
 
+        public async void PreviewImage(object sender, EventArgs args)
+        {
+            try
+            {
+                new PhotoBrowser
+                {
+                    Photos = new List<Photo>
+                {
+                    new Photo
+                    {
+                        URL = $"{viewModel.Holiday.HolidayImage}",
+                        Title = $"{viewModel.Holiday.Name}"
+                    }
+                }
+                }.Show();
+            }
+            catch(Exception e)
+            {
+                await DisplayAlert("Ouch!", "Sorry, we couldn't load this" +
+                    " image at the moment", "OK");
+                Debug.WriteLine($"{e}");
+            }
+
+        }
 
     }
 }

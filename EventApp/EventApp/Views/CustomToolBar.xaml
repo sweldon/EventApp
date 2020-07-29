@@ -30,6 +30,7 @@
                    IsVisible="False"
                    Opacity="0"
                    Grid.Column="0"
+                   LineBreakMode="TailTruncation"
                    >
                 <Label.Padding>
                     <OnPlatform

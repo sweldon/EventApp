@@ -59,6 +59,7 @@ namespace EventApp.iOS
             LoadApplication(new App());
             PushNotificationManager.Initialize(options, true);
             CircleViewRenderer.Initialize();
+            Stormlion.PhotoBrowser.iOS.Platform.Init();
             return base.FinishedLaunching(app, options);
         }
         public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)

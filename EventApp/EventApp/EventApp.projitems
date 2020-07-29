@@ -134,6 +134,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Views\CustomToolBar.xaml.cs">
       <DependentUpon>CustomToolBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Services\GlobalServices.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Tweet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomTextFormatter.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\RootPage.xaml">
