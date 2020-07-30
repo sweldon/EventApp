@@ -424,7 +424,7 @@
                                                     />
                                                 </ContentView>
 
-                                                <ContentView Grid.Column="1" IsVisible="{Binding Verified}" Padding="2, 0, 2, 0">
+                                                <ContentView Grid.Column="1" IsVisible="{Binding Verified}" Padding="2, 0, 4, 0">
                                                    <ffimageloading:CachedImage
                                                         Source="twitter_verified.png"
                                                         WidthRequest="12" HeightRequest="12"
@@ -435,7 +435,7 @@
                                                 </ContentView>
      
 
-                                                <ContentView HorizontalOptions="Start" Grid.Column="2" Padding="5, 0, 0, 0">
+                                                <ContentView HorizontalOptions="Start" Grid.Column="2">
              
                                                 <Label Text="{Binding Handle}"
                                                 LineBreakMode="TailTruncation"
