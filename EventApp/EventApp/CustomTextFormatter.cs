@@ -96,10 +96,29 @@ namespace EventApp
         private ICommand _openProfile = new Command<string>((username) =>
         {
             string usernameCleaned = username.Substring(1);
+            int modalStackLength = Application.Current.MainPage.Navigation.ModalStack.Count;
+            if(modalStackLength > 0)
+            {
+                //Device.BeginInvokeOnMainThread(() =>
+                //{
+                //    ((RootPage)Application.Current.MainPage).Detail.
+                //    Navigation.PopModalAsync();
+      
+                //        ((RootPage)Application.Current.MainPage).Detail.
+                //        Navigation.PushAsync(
+                //            new UserPage(user: null, userName: usernameCleaned));
 
-            Device.BeginInvokeOnMainThread(() => {
-                ((RootPage)Application.Current.MainPage).Detail.Navigation.PushAsync(new UserPage(user: null, userName: usernameCleaned));
-            });
+                //});
+            }
+            else
+            {
+                Device.BeginInvokeOnMainThread(() => {
+                    ((RootPage)Application.Current.MainPage).Detail.
+                    Navigation.PushAsync(new UserPage(
+                        user: null, userName: usernameCleaned));
+                });
+            }
+
 
         });
 

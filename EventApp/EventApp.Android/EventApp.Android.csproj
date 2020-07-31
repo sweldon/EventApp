@@ -208,11 +208,11 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\drawable\twitter_verified.png">
+    <AndroidResource Include="Resources\drawable\share_twitter_blue.png">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\drawable\share_twitter_blue.png">
+    <AndroidResource Include="Resources\drawable\twitter_verified.png">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>

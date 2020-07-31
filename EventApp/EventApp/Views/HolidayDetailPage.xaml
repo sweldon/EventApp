@@ -46,10 +46,9 @@
                             <ffimageloading:CachedImage
                                 x:Name="HolidayImageSource"
                                 Aspect="AspectFill"
-                                RetryCount= "3"
-                                RetryDelay= "600"
-                                HeightRequest="150"
-                                LoadingPlaceholder="Loading_Image.gif">
+                                RetryCount= "60"
+                                RetryDelay= "1000"
+                                HeightRequest="150">
 
                                 <ffimageloading:CachedImage.GestureRecognizers>
                                 <TapGestureRecognizer
@@ -222,6 +221,8 @@
                                                 Aspect="AspectFill"
                                                 VerticalOptions="Start"
                                                 HorizontalOptions="CenterAndExpand"
+                                                RetryCount= "60"
+                                                RetryDelay= "1000"
                                                 LoadingPlaceholder="default_user_128.png">
                                                 <ffimageloading:CachedImage.Transformations>
                                                     <fftransformations:CircleTransformation />

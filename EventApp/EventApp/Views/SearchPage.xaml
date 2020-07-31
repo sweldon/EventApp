@@ -151,7 +151,7 @@
                                                     <OnPlatform x:TypeArguments="Thickness"
                                                     Android="10,0,10,0" iOS="12,0,12,0"/>
                                                 </ContentView.Padding>
-                                                <Label Text="{Binding Blurb}" FontSize="14" />
+                                                <Label FontSize="14" FormattedText="{Binding Blurb, Converter={StaticResource CustomTextFormatter}}"/>
                                             </ContentView>
                                             <ContentView Padding="0, 0, 0, 10">
                                                 
@@ -338,7 +338,7 @@
                                                         Android="10,0,10,0" iOS="14,0,14,5"/>
                                                     </ContentView.Padding>
 
-                                                    <Label Text="{Binding Blurb}"  Grid.Row="1" FontSize="14">
+                                                    <Label FormattedText="{Binding Blurb, Converter={StaticResource CustomTextFormatter}}"  Grid.Row="1" FontSize="14">
 
                                                         <Label.GestureRecognizers>
                                                             <TapGestureRecognizer

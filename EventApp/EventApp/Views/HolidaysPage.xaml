@@ -162,7 +162,7 @@
                                                     </ContentView.Padding>
                           
 
-                                                    <Label Text="{Binding Blurb}"  Grid.Row="1" FontSize="14">
+                                                    <Label Grid.Row="1" FontSize="14" FormattedText="{Binding Blurb, Converter={StaticResource CustomTextFormatter}}">
 
                                                         <Label.GestureRecognizers>
                                                             <TapGestureRecognizer
@@ -182,9 +182,9 @@
                                                     <ffimageloading:CachedImage 
                                                         Source="{Binding HolidayImage}"
                                                         Aspect="AspectFill"
-                                                        RetryCount= "3"
-                                                        RetryDelay= "600"
-                                                        LoadingPlaceholder="Loading_Image.gif"
+                                                        RetryCount= "60"
+                                                        RetryDelay= "1000"
+                                                        DownsampleToViewSize="true"
                                                     />
 
 
@@ -400,7 +400,6 @@
                                                         VerticalOptions="Start"
                                                         RetryCount= "3"
                                                         RetryDelay= "600"
-                                                        LoadingPlaceholder="Loading_Image.gif"
                                                     />
 
                                                     </ContentView>
@@ -409,9 +408,9 @@
                                             <Grid Grid.Row="0" Grid.Column="1" ColumnSpacing="0">
 
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
 
@@ -421,21 +420,24 @@
                                                     VerticalOptions="Center"
                                                     FontSize="14"
                                                     TextColor="#4c96e8"
+                                                    LineBreakMode="TailTruncation"
                                                     />
                                                 </ContentView>
 
-                                                <ContentView Grid.Column="1" IsVisible="{Binding Verified}" Padding="2, 0, 4, 0">
+                                                <ContentView Grid.Column="1" IsVisible="{Binding Verified}" Padding="2, 0, 0, 0">
                                                    <ffimageloading:CachedImage
                                                         Source="twitter_verified.png"
-                                                        WidthRequest="12" HeightRequest="12"
-                                                        RetryCount= "3"
-                                                        RetryDelay= "600"
+                                                        RetryCount="3"
+                                                        RetryDelay="600"
+                                                        WidthRequest="12"
+                                                        HeightRequest="12"
                                                         VerticalOptions="Center"
-                                                        LoadingPlaceholder="Loading_Image.gif" />
+                                                        HorizontalOptions="StartAndExpand"
+                                                        />
                                                 </ContentView>
      
 
-                                                <ContentView HorizontalOptions="Start" Grid.Column="2">
+                                                <ContentView HorizontalOptions="Start" Grid.Column="2" Padding="5, 0, 5, 0">
              
                                                 <Label Text="{Binding Handle}"
                                                 LineBreakMode="TailTruncation"
@@ -448,20 +450,13 @@
                                                 <Label Text="{Binding Timestamp, StringFormat='· {0}'}"
                                                 FontSize="14"
                                                 VerticalOptions="Center"
-                                                LineBreakMode="TailTruncation"
+                                                HorizontalOptions="EndAndExpand"
                                                 Opacity=".5"  />
                                                 </ContentView>
    
 
                                             </Grid>
  
-
-                                            <!--<Label Text="{Binding Timestamp}"
-                                            FontSize="12"
-                                            Grid.Row="0"
-                                            Grid.Column="2"
-                                         
-                                            Opacity=".8" />-->
 
                                             <StackLayout Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Spacing="0">
                                                 <StackLayout.Padding>
@@ -480,9 +475,9 @@
                                                     Source="{Binding Image}"
                                                     Aspect="AspectFill"
                                                     HeightRequest="150"
-                                                    RetryCount= "10"
-                                                    RetryDelay= "600"
-                                                    LoadingPlaceholder="Loading_Image.gif"
+                                                    RetryCount= "60"
+                                                    RetryDelay= "1000"
+                                                    DownsampleToViewSize="true"
                                                     IsVisible="{Binding ShowImage}" >
 
                                                 <!--<ffimageloading:CachedImage.Transformations>
@@ -507,20 +502,6 @@
                                                     <Label FontSize="Small" Text="View on Twitter" TextColor="#56ACEE" VerticalOptions="Center"/>
                                                 
                                                 </StackLayout>
-
-                                               <!--<Button Text="View on Twitter"
-                                                     
-                                                    VerticalOptions="EndAndExpand"
-                                                    CornerRadius="5"
-                                                    BorderColor="#56ACEE"
-                                                    BorderWidth="1"
-                                                    FontSize="Small"
-                                                    Padding="5"
-                                                    Clicked="OpenInTwitter"
-                                                    BackgroundColor="#FFFFFF"
-                                                 
-                                                    TextColor="#56ACEE"
-                                                    HorizontalOptions="Fill"/>-->
 
                                             </StackLayout>
 
@@ -555,9 +536,6 @@
                             </Grid>
                         </Frame>
 
-                    <!--<ContentView Padding="10"  IsVisible="false" x:Name="LoadingDialog" >
-                        <Label HorizontalTextAlignment="Center" Text="Loading..." />
-                    </ContentView>-->
 
                     </StackLayout>
                         
