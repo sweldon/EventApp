@@ -214,7 +214,14 @@ namespace EventApp.Views
             // Get new notifications on first launch
             if (!App.NotificationsRefreshed)
             {
-                notifCount = await Utils.GetUserNotificationCount();
+                try
+                {
+                    notifCount = await Utils.GetUserNotificationCount();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Could not sync user data: {ex.Message}");
+                }
             }
             
             
@@ -234,14 +241,13 @@ namespace EventApp.Views
             while(viewModel.Holidays.Count == 0)
             {
                 numRetries++;
-                await LoadingIcon.ScaleTo(15, 100);
-                await LoadingIcon.ScaleTo(10, 100);
                 if (numRetries >= 15) {
                     await DisplayAlert("Error", "Couldn't connect to Holidaily", "OK");
                     return;
                 }
                 await Task.Delay(2000);
             }
+    
             if (OpenNotifications)
             {
                 await Navigation.PushModalAsync(new NavigationPage(new NotificationsPage()));
@@ -250,7 +256,15 @@ namespace EventApp.Views
 
             if (App.syncDeviceToken)
             {
-                Utils.syncUser();
+                try
+                {
+                    Utils.syncUser();
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine($"Could not sync user data: {ex.Message}");
+                }
+                
             }
             AdBanner.IsVisible = !isPremium;
         }
@@ -401,6 +415,11 @@ namespace EventApp.Views
             NoResults.IsVisible = Tweets.Count == 0 ? true : false;
         }
 
+        protected void RefreshHolidaysCommand(object sender, EventArgs e)
+        {
+            viewModel.LoadItemsCommand.Execute(null);
+            ItemsListView.EndRefresh();
+        }
 
         private async void RefreshSocialMediaFeed()
         {

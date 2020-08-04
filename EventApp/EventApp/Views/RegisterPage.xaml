@@ -28,6 +28,18 @@
                 <Entry Placeholder="Password Again"  FontSize="18" IsPassword="True" x:Name="PassEntryConfirm" />
 
                 <Entry Keyboard="Email" Placeholder="Email" FontSize="18" x:Name="EmailEntry" />
+                
+                <Picker x:Name="ReferringSource" Title="Where did you hear about Holidaily?" SelectedIndex="0">
+                    <Picker.Items>
+                    <x:String>Friend</x:String>
+                    <x:String>App Store/Google Play</x:String> 
+                    <x:String>Facebook</x:String>
+                    <x:String>Instagram</x:String>
+                    <x:String>Twitter</x:String>
+                    <x:String>Business</x:String>
+                    <x:String>Other</x:String>
+                    </Picker.Items>
+                </Picker>
 
                 <StackLayout VerticalOptions="EndAndExpand">
                     <Button Margin="0,10,0,0" Text="Register" x:Name="RegisterButton"

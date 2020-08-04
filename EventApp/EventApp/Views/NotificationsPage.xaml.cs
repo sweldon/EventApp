@@ -127,6 +127,14 @@ namespace EventApp.Views
             
         }
 
+        protected async void RefreshNotifications(object sender, EventArgs e)
+        {
+            notifications.Clear();
+            notifications = await GetNotifications();
+            NotificationsList.ItemsSource = notifications;
+            NotificationsList.EndRefresh();
+        }
+
         private async Task<ObservableCollection<Notification>> GetNotifications()
         {
 

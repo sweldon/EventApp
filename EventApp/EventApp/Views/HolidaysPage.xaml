@@ -63,18 +63,6 @@
                 </Grid>
 
             <StackLayout Spacing="0" x:Name="HolidayListWrapper">
-            <ContentView  IsVisible="False" VerticalOptions="FillAndExpand" HeightRequest="1000" BackgroundColor="#FFFFFF">
-                <ContentView.Triggers>
-                <DataTrigger TargetType="ContentView"
-                    Binding="{Binding Source={x:Reference ItemsListView}, Path=ItemsSource.Count}" 
-                    Value="0">
-                    <Setter Property="IsVisible" Value="True" />
-                </DataTrigger>
-                </ContentView.Triggers>
-                <Image WidthRequest="15" HeightRequest="15" VerticalOptions="Center"
-                Source="holiday_banner_blue.png"
-                x:Name="LoadingIcon" />
-            </ContentView>
 
             <StackLayout x:Name="MainFeed" VerticalOptions="Start" Padding="0" Spacing="0" >
 
@@ -84,11 +72,10 @@
                         SeparatorVisibility="None"
                         ItemsSource="{Binding Holidays}"
                         HasUnevenRows="true"
-                        RefreshCommand="{Binding LoadItemsCommand}"
-                        IsPullToRefreshEnabled="false"
+                        IsPullToRefreshEnabled="True"
+                        Refreshing="RefreshHolidaysCommand"
                         BackgroundColor="#DEDEDE">
                     
-
                     <ListView.Triggers>
                     <DataTrigger TargetType="ListView"
                         Binding="{Binding Source={x:Reference ItemsListView}, Path=ItemsSource.Count}" 
@@ -531,7 +518,7 @@
                                 </Grid.ColumnDefinitions>
                                 <Image WidthRequest="14" Source="News_Menu_Icon.png" Grid.Column="0"/>
                                 <ContentView Padding="0" Grid.Column="1">
-                                <Label FontSize="Small" Text="Today's buzz hasnt begun yet, stay tuned!" />
+                                <Label FontSize="Small" Text="Today's buzz hasn't begun yet, stay tuned!" />
                                 </ContentView>
                             </Grid>
                         </Frame>

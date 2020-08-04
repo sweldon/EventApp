@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
@@ -15,7 +16,9 @@ namespace EventApp
             var formatted = new FormattedString();
             // TODO find out why this is looping 2x
             foreach (var item in ProcessString((string)value))
+            {
                 formatted.Spans.Add(CreateSpan(item));
+            }
             return formatted;
         }
 
@@ -25,6 +28,7 @@ namespace EventApp
             {
                 Text = section.Text
             };
+
             if (section.Text.StartsWith("@"))
             {
                 // TODO set parameter to section.Text without the @
@@ -51,7 +55,7 @@ namespace EventApp
         public IList<StringSection> ProcessString(string rawText)
         {
             
-            const string spanPattern = @"(((http|https):\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*))|@([^\s.,\?""\'\;]+)";
+            const string spanPattern = @"(((http|https):\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*))|@([a-zA-Z0-9_]+)";
 
             MatchCollection collection = Regex.Matches(rawText, spanPattern, RegexOptions.Singleline);
 
@@ -88,9 +92,18 @@ namespace EventApp
 
         private ICommand _navigationCommand = new Command<string>((url) =>
         {
-            if (!url.StartsWith("http") && !url.StartsWith("https://"))
-                url = $"https://{url}";
-            Device.OpenUri(new Uri(url));
+            try
+            {
+                if (!url.StartsWith("http") && !url.StartsWith("https://"))
+                    url = $"https://{url}";
+                Device.OpenUri(new Uri(url));
+            }
+            catch
+            {
+                Application.Current.MainPage.DisplayAlert("Uh oh!", "That's " +
+                    "not a valid link", "OK");
+            }
+
         });
 
         private ICommand _openProfile = new Command<string>((username) =>
@@ -112,6 +125,7 @@ namespace EventApp
             }
             else
             {
+                Debug.WriteLine($"Adding command for push async for {username}");
                 Device.BeginInvokeOnMainThread(() => {
                     ((RootPage)Application.Current.MainPage).Detail.
                     Navigation.PushAsync(new UserPage(
