@@ -241,7 +241,7 @@ namespace EventApp
 
             #elif __IOS__
                 CrossStoreReview.Current.RequestReview();
-                MessagingCenter.Send(Application.Current, "UpdateAskedToReview", true);
+                //MessagingCenter.Send(Application.Current, "UpdateAskedToReview", true);
             #endif
             }
 

@@ -366,7 +366,7 @@ namespace EventApp.Views
                 viewModel.ExecuteLoadCommentsCommand();
             });
 
-            //AdBanner.IsVisible = !isPremium;
+            AdBanner.IsVisible = !isPremium;
 
         }
 
