@@ -76,8 +76,8 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Holidaily needs your permission to access the camera to take a photo for your profile picture in the app.</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.4</string>
+	<string>1.4.3</string>
 	<key>CFBundleVersion</key>
-	<string>3</string>
+	<string>2</string>
 </dict>
 </plist>

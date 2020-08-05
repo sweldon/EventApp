@@ -1,7 +1,6 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using EventApp.Views;
-using System.Diagnostics;
 using EventApp.Models;
 using EventApp.ViewModels;
 using System;
@@ -9,9 +8,10 @@ using System.Collections.Generic;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
-using System.Linq;
 using Plugin.PushNotification;
 using Badge.Plugin;
+using System.Diagnostics;
+using System.Linq;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace EventApp
@@ -54,6 +54,30 @@ namespace EventApp
         {
             popModalIfActive(nav);
             await nav.PushModalAsync(new NavigationPage(new PortalPage()));
+        }
+
+        public int launchedCount
+        {
+            get { return Settings.LaunchedCount; }
+            set
+            {
+                if (Settings.LaunchedCount == value)
+                    return;
+                Settings.LaunchedCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool askedToReview
+        {
+            get { return Settings.AskedToReview; }
+            set
+            {
+                if (Settings.AskedToReview == value)
+                    return;
+                Settings.AskedToReview = value;
+                OnPropertyChanged();
+            }
         }
 
         public bool eulaAccepted
@@ -186,6 +210,7 @@ namespace EventApp
             string holidayId = "";
             string commentId = "";
             string commentUser = "";
+            string unread = "";
             foreach (var data in pushData)
             {
                 if (data.Key == "push_type")
@@ -204,12 +229,17 @@ namespace EventApp
                 {
                     commentUser = data.Value.ToString();
                 }
+                else if (data.Key == "unread")
+                {
+                    unread = data.Value.ToString();
+                }
             }
             var parsedData = new Dictionary<string, string> {
                 {"push_type", pushType },
                 {"holiday_id", holidayId },
                 {"comment_id", commentId },
                 {"comment_user", commentUser },
+                {"unread", unread },
             };
             return parsedData;
         }
@@ -256,11 +286,13 @@ namespace EventApp
                         handleUpdate();
                     });
                 }
+
+                await Task.Delay(10000);
+                Utils.AskForReview();
             }
             catch
             {
             }
-
         }
 
         // Note: On Android this is always invoked on deeplink b/c intent
@@ -268,6 +300,8 @@ namespace EventApp
         protected override async void OnStart()
         {
             isActive = false;
+            launchedCount += 1;
+
             CrossPushNotification.Current.OnTokenRefresh += (s, p) =>
             {
                 syncDeviceToken = true;
@@ -295,6 +329,7 @@ namespace EventApp
                 string holidayId = pushData["holiday_id"];
                 string commentId = pushData["comment_id"];
                 string commentUser = pushData["comment_user"];
+                int unread = int.Parse(pushData["unread"]);
                 if (pushType == "news")
                 {
                     //AlertNews();
@@ -305,7 +340,8 @@ namespace EventApp
                 }
                 else if (pushType == "comment")
                 {
-                    AlertUserComment(commentId, holidayId, commentUser);
+                    //AlertUserComment(commentId, holidayId, commentUser);
+                    MessagingCenter.Send(Application.Current, "UpdateBellCount", unread);
                 }
             };
             CrossPushNotification.Current.OnNotificationOpened += (s, p) =>
@@ -404,6 +440,11 @@ namespace EventApp
                     App.Current.MainPage = new NavigationPage(new Eula());
                 }
             }
+
+            MessagingCenter.Subscribe<Application, bool>(this, "UpdateAskedToReview", (sender, val) =>
+            {
+                askedToReview = val;
+            });
         }
 
 

@@ -46,11 +46,18 @@
                             <ffimageloading:CachedImage
                                 x:Name="HolidayImageSource"
                                 Aspect="AspectFill"
-                                RetryCount= "3"
-                                RetryDelay= "600"
-                                HeightRequest="150"
-                                LoadingPlaceholder="Loading_Image.gif"
-                            />
+                                RetryCount= "60"
+                                RetryDelay= "1000"
+                                HeightRequest="150">
+
+                                <ffimageloading:CachedImage.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Tapped="PreviewImage"  />
+                                </ffimageloading:CachedImage.GestureRecognizers>
+
+                            </ffimageloading:CachedImage>
+
+
                         </ContentView>
                         <Grid Padding="10, 0, 10, 0" >
 
@@ -214,6 +221,8 @@
                                                 Aspect="AspectFill"
                                                 VerticalOptions="Start"
                                                 HorizontalOptions="CenterAndExpand"
+                                                RetryCount= "60"
+                                                RetryDelay= "1000"
                                                 LoadingPlaceholder="default_user_128.png">
                                                 <ffimageloading:CachedImage.Transformations>
                                                     <fftransformations:CircleTransformation />
@@ -245,7 +254,12 @@
                                                  Grid.Column="2"
                                                  HorizontalTextAlignment="End" 
                                                  Opacity=".8" />
-                                        <Label Grid.Row="1"  Grid.Column="1" Text="{Binding Content}" FontSize="12" Grid.ColumnSpan="2"/>
+                                        <Label Grid.Row="1"
+                                               Grid.Column="1"
+                                               FormattedText="{Binding Content, Converter={StaticResource CustomTextFormatter}}"
+                                               FontSize="12"
+                                               Grid.ColumnSpan="2"
+                                            />
                                     </Grid>
                                     <Grid Padding="5" HorizontalOptions="FillAndExpand">
                                         <Grid.ColumnDefinitions>

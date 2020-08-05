@@ -62,29 +62,45 @@ namespace EventApp.Views
                     { "requesting_user",  currentUser }
                 };
                 dynamic response = await ApiHelpers.MakePostRequest(values, "user");
-                dynamic results = response.results;
-                SelectedUser = new User()
+                var status = response.status;
+
+                if(status == 200)
                 {
-                    UserName = results.username,
-                    Confetti = results.confetti,
-                    Submissions = results.holiday_submissions,
-                    Approved = results.approved_holidays,
-                    Comments = results.num_comments,
-                    Premium = results.premium,
-                    Avatar = results.profile_image,
-                    LastOnline = results.last_online
-                };
-                // Little slower because of api call
-                Title = $"{SelectedUser.UserName}'s Profile";
-                ProfilePicture.Source = SelectedUser.Avatar == null ? "default_user_256.png" : SelectedUser.Avatar;
-                UserName.Text = SelectedUser.UserName;
-                Confetti.Text = SelectedUser.Confetti;
-                Comments.Text = SelectedUser.Comments;
-                Holidays.Text = SelectedUser.Approved;
-                LastOnline.Text = SelectedUser.LastOnline;
+                    dynamic results = response.results;
+                    SelectedUser = new User()
+                    {
+                        UserName = results.username,
+                        Confetti = results.confetti,
+                        Submissions = results.holiday_submissions,
+                        Approved = results.approved_holidays,
+                        Comments = results.num_comments,
+                        Premium = results.premium,
+                        Avatar = results.profile_image,
+                        LastOnline = results.last_online
+                    };
+                    // Little slower because of api call
+                    Title = $"{SelectedUser.UserName}'s Profile";
+                    ProfilePicture.Source = SelectedUser.Avatar == null ? "default_user_256.png" : SelectedUser.Avatar;
+                    UserName.Text = SelectedUser.UserName;
+                    Confetti.Text = SelectedUser.Confetti;
+                    Comments.Text = SelectedUser.Comments;
+                    Holidays.Text = SelectedUser.Approved;
+                    LastOnline.Text = SelectedUser.LastOnline;
+                }
+
             }
-            TitleBar.Title = $"{SelectedUser.UserName}'s Profile";
-            UserCommentList.ItemsSource = await GetUserComments(SelectedUser.UserName);
+
+            if(SelectedUser != null)
+            {
+                TitleBar.Title = $"{SelectedUser.UserName}'s Profile";
+                UserCommentList.ItemsSource = await GetUserComments(SelectedUser.UserName);
+            }
+            else
+            {
+                await DisplayAlert("Uh oh!", "Sorry, that user does not " +
+                                    "exist", "OK");
+                await Navigation.PopAsync();
+            }
 
         }
 

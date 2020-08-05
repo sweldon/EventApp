@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace EventApp.Views
 {
@@ -96,6 +97,8 @@ namespace EventApp.Views
                     string pass = PassEntry.Text;
                     string passConfirm = PassEntryConfirm.Text;
                     string email = EmailEntry.Text;
+                    string referrer = ReferringSource.SelectedIndex > -1 ?
+                        ReferringSource.Items[ReferringSource.SelectedIndex] : "";
 
                     if (String.Equals(pass, passConfirm))
                     {
@@ -121,7 +124,8 @@ namespace EventApp.Views
                                 { "password", pass },
                                 { "email", email },
                                 { "device_id", devicePushId },
-                                { "version", appInfo }
+                                { "version", appInfo },
+                                {"referrer", referrer }
                             };
 
                             #if __IOS__
@@ -148,7 +152,7 @@ namespace EventApp.Views
                                     $"activation link to {email}", "OK");
                                 await Navigation.PopModalAsync();
                             }
-                            else 
+                            else
                             {
                                 await DisplayAlert("Uh oh!", message, "Try Again");
                             }
@@ -160,8 +164,9 @@ namespace EventApp.Views
                     }
                 }
             }
-            catch
+            catch(Exception ex)
             {
+                Debug.WriteLine($"{ex.Message}");
                 await DisplayAlert("Sorry!", "Something went wrong on our end. Please try again", "Try again");
             }
             RegisterButton.Text = "Register";

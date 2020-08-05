@@ -95,6 +95,9 @@ namespace EventApp.Droid
 
             // FFImageLoading
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
+
+            Stormlion.PhotoBrowser.Droid.Platform.Init(this);
+
             var incomingLink = Intent?.Data?.ToString();
             var holidayId = Intent?.Data?.GetQueryParameter("id");
             if (!string.IsNullOrEmpty(holidayId))

@@ -20,9 +20,9 @@
 
                     <ListView x:Name="NotificationsList"
                         SeparatorVisibility="None"
-                        HasUnevenRows="true"
-                        RefreshCommand="{Binding GetNotifications}"
-                        IsPullToRefreshEnabled="False"
+                        HasUnevenRows="True"
+                        Refreshing="RefreshNotifications"
+                        IsPullToRefreshEnabled="True"
                         CachingStrategy="RecycleElement">
                         <ListView.BackgroundColor>
                             <OnPlatform x:TypeArguments="Color"

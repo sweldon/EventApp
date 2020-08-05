@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
-             xmlns:local="clr-namespace:EventApp.Views"
-             x:Class="EventApp.App">
+        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+        xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
+        xmlns:local="clr-namespace:EventApp.Views"
+        xmlns:custom="clr-namespace:EventApp"
+        x:Class="EventApp.App">
     <Application.Resources>
         <ResourceDictionary>
             <!--Global Styles-->
@@ -20,6 +21,7 @@
                 </Setter>
             </Style>
 
+             <custom:CustomTextFormatter x:Key="CustomTextFormatter" />
 
         </ResourceDictionary>
 

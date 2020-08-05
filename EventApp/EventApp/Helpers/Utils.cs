@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using EventApp.Views;
 using MarcTron.Plugin.Controls;
 using Newtonsoft.Json;
+using Plugin.StoreReview;
 using Xamarin.Forms;
 
 namespace EventApp
@@ -31,6 +33,15 @@ namespace EventApp
         public static int notifCount
         {
             get { return Settings.NotificationCount; }
+        }
+
+        public static bool askedToReview
+        {
+            get { return Settings.AskedToReview; }
+        }
+        public static int launchedCount
+        {
+            get { return Settings.LaunchedCount; }
         }
 
         public static NavigationPage NavigationPage { get; private set; }
@@ -207,22 +218,35 @@ namespace EventApp
             App.NotificationsRefreshed = false;
         }
 
-        //public async static void DecrementBellWithDelay()
-        //{
-        //    /* This function is used to sync up the bell count after a little
-        //     * while after the user has launched, such as if theyre following
-        //     * a push notification into the app. They may do it first by
-        //     * hitting the bell, but if not we will take care of it.
-        //     */
-        //    await Task.Delay(10000);
-        //    if(notifCount > 0)
-        //    {
-        //        MessagingCenter.Send(Application.Current, "UpdateBellCount",
-        //            notifCount - 1);
-        //    }
-        //}
+        public static async void AskForReview()
+        {
+            int[] reviewIntervals = { 3, 45, 90 };
+            if (!askedToReview && reviewIntervals.Contains(launchedCount))
+            {
+            #if __ANDROID__
+
+                Device.BeginInvokeOnMainThread(async() =>
+                {
+                    var accepted = await Application.Current.MainPage.DisplayAlert(
+                    "Enjoying Holidaily?", "Would you mind taking a moment to" + 
+                    " rate us on the store?",
+                    "Yes!", "Not Now");
+                    if (accepted)
+                    {
+                        MessagingCenter.Send(Application.Current, "UpdateAskedToReview", true);
+                        CrossStoreReview.Current.OpenStoreReviewPage(
+                        "com.divinity.holidailyapp");  
+                    }
+                });
+
+            #elif __IOS__
+                CrossStoreReview.Current.RequestReview();
+                //MessagingCenter.Send(Application.Current, "UpdateAskedToReview", true);
+            #endif
+            }
 
 
+        }
 
     }
 }

@@ -22,7 +22,7 @@ namespace EventApp
         #region Setting Constants
 
         private const string AppInfoKey = "app_info_key";
-        private static readonly string AppInfoKeyDefault = "1.4";
+        private static readonly string AppInfoKeyDefault = "1.4.3";
 
         private const string SettingsKey = "settings_key";
         private static readonly string SettingsDefault = "no";
@@ -56,7 +56,38 @@ namespace EventApp
 
         private const string NotifCountKey = "notif_count_key";
         private static readonly int NotifCountDefault = 0;
+
+
+        private const string LaunchedCountKey = "launched_count_key";
+        private static readonly int LaunchedCountDefault = 0;
+        private const string AskedToReviewKey = "asked_to_review_key";
+        private static readonly bool AskedToReviewDefault = false;
+
         #endregion
+
+        public static int LaunchedCount
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(LaunchedCountKey, LaunchedCountDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(LaunchedCountKey, value);
+            }
+        }
+        public static bool AskedToReview
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(AskedToReviewKey, AskedToReviewDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(AskedToReviewKey, value);
+            }
+        }
+
 
         // Only used for android because you can't use a custom data scheme
         public static int NotificationCount

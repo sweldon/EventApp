@@ -15,14 +15,12 @@
     <StackLayout Spacing="0">
         <ContentView  Padding="20, 20, 20, 10">
             <ffimageloading:CachedImage
-                Source="default_user_256.png" 
                 WidthRequest="180" 
                 HeightRequest="180" 
                 Aspect="AspectFill" 
                 VerticalOptions="Start"
                 x:Name="ProfilePicture"
-                HorizontalOptions="CenterAndExpand"
-                LoadingPlaceholder="default_user_128.png">
+                HorizontalOptions="CenterAndExpand">
                 <ffimageloading:CachedImage.Transformations>
                     <fftransformations:CircleTransformation />
                 </ffimageloading:CachedImage.Transformations>
