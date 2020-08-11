@@ -72,9 +72,8 @@ namespace EventApp.Views
                 
                 if (notifCount > 0)
                 {
-
-                    BadgeWrapper.FadeTo(1, 100);
                     BellBadge.FadeTo(1, 100);
+                    BadgeWrapper.FadeTo(1, 100);
 
                     if (notifCount > 99)
                     {
@@ -88,8 +87,8 @@ namespace EventApp.Views
                 }
                 else
                 {
-                    BadgeWrapper.FadeTo(0, 100);
                     BellBadge.FadeTo(0, 100);
+                    BadgeWrapper.FadeTo(0, 100);
                 }
 
                 // Just in case some async shenanigans caused us to drop below 0
@@ -163,15 +162,16 @@ namespace EventApp.Views
 
         async void OpenNotifications(object sender, EventArgs e)
         {
+            // Reset bell
+            await BellBadge.FadeTo(0, 100);
+            await BadgeWrapper.FadeTo(0, 100);
+            notifCount = 0;
+
             BellBtn.IsEnabled = false;
             await Navigation.PushModalAsync(new NavigationPage(new NotificationsPage()));
             await Task.Delay(2000);
             BellBtn.IsEnabled = true;
 
-            // Reset bell
-            await BadgeWrapper.FadeTo(0, 100);
-            await BellBadge.FadeTo(0, 100);
-            notifCount = 0;
         }
     }
 }
