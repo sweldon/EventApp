@@ -67,29 +67,35 @@ namespace EventApp.Views
 
         public void updateBell()
         {
-            //BadgeWrapper.IsVisible = true;
-            BadgeWrapper.FadeTo(1, 100);
-            if (notifCount > 0)
+            Device.BeginInvokeOnMainThread(() =>
             {
-                if(notifCount > 99)
+                
+                if (notifCount > 0)
                 {
- 
-                    BellBadge.Text = "!";
+
+                    BadgeWrapper.FadeTo(1, 100);
+                    BellBadge.FadeTo(1, 100);
+
+                    if (notifCount > 99)
+                    {
+
+                        BellBadge.Text = "!";
+                    }
+                    else
+                    {
+                        BellBadge.Text = notifCount.ToString();
+                    }
                 }
                 else
                 {
-                    BellBadge.Text = notifCount.ToString();
+                    BadgeWrapper.FadeTo(0, 100);
+                    BellBadge.FadeTo(0, 100);
                 }
-            }
-            else
-            {
-                //BadgeWrapper.IsVisible = false;
-                BadgeWrapper.FadeTo(0, 100);
-            }
 
-            // Just in case some async shenanigans caused us to drop below 0
-            if (notifCount < 0)
-                notifCount = 0;
+                // Just in case some async shenanigans caused us to drop below 0
+                if (notifCount < 0)
+                    notifCount = 0;
+            });
 
         }
 
@@ -163,7 +169,8 @@ namespace EventApp.Views
             BellBtn.IsEnabled = true;
 
             // Reset bell
-            BadgeWrapper.IsVisible = false;
+            await BadgeWrapper.FadeTo(0, 100);
+            await BellBadge.FadeTo(0, 100);
             notifCount = 0;
         }
     }
