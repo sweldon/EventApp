@@ -58,6 +58,19 @@ namespace EventApp.Droid
         {
             get { return Settings.DevicePushId; }
         }
+
+        public bool refreshToken
+        {
+            get { return Settings.RefreshToken; }
+            set
+            {
+                if (Settings.RefreshToken == value)
+                    return;
+                Settings.RefreshToken = value;
+                OnPropertyChanged();
+            }
+        }
+
         protected override async void OnCreate(Bundle savedInstanceState)
         {
 
@@ -80,11 +93,14 @@ namespace EventApp.Droid
                 PushNotificationManager.DefaultNotificationChannelName = "General";
             }
 
+
             #if DEBUG
                 PushNotificationManager.Initialize(this, true);
             #else
-                PushNotificationManager.Initialize(this, false);
+                PushNotificationManager.Initialize(this, refreshToken);
             #endif
+
+            refreshToken = false;
 
             Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);      

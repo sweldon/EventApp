@@ -80,6 +80,18 @@ namespace EventApp
             }
         }
 
+        public bool refreshToken
+        {
+            get { return Settings.RefreshToken; }
+            set
+            {
+                if (Settings.RefreshToken == value)
+                    return;
+                Settings.RefreshToken = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool eulaAccepted
         {
             get { return Settings.EulaAccepted; }
@@ -407,6 +419,18 @@ namespace EventApp
                     App.GlobalUser.Email = responseJSON.results.email;
                     App.GlobalUser.UserName = responseJSON.results.username;
                     string avatar = responseJSON.results.profile_image;
+                    bool deviceActive = responseJSON.results.device_active;
+
+
+                    if (!deviceActive)
+                    {
+
+                        #if __ANDROID__
+                            refreshToken = true;
+                        #endif
+
+                    }
+
                     if (avatar != null)
                     {
                         App.GlobalUser.Avatar = avatar;
@@ -418,9 +442,9 @@ namespace EventApp
                     }
 
                 }
-                catch
+                catch(Exception ex)
                 {
-
+                    Debug.WriteLine($"ERROR: {ex}");
                 }
             }
 
