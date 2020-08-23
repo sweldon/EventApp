@@ -137,6 +137,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\GlobalServices.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Tweet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomTextFormatter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomFrame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\CountDown.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\RootPage.xaml">

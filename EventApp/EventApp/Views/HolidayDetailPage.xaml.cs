@@ -321,6 +321,8 @@ namespace EventApp.Views
                 {
                     Description.Text = "This holiday has no information yet!";
                 }
+
+                HolidayDate.Text = viewModel.Holiday.TimeSince;
                       
                 //this.Title = viewModel.Holiday.Name;
                 TitleBar.Title = viewModel.Holiday.Name;

@@ -36,9 +36,11 @@
 
                         <StackLayout Spacing="0" Orientation="Vertical" BackgroundColor="White">
 
+                        <ContentView Padding="0,10">
+                                <Label x:Name="HolidayDate" TextColor="Gray" HorizontalTextAlignment="Center" FontSize="Small"/>
+                        </ContentView>
                             
-                        <ContentView Padding="10">
-
+                        <ContentView Padding="10,0,10,5">
                                 <Label x:Name="Description" FontSize="Small"/>
                         </ContentView>
 

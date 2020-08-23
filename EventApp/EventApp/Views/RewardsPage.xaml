@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             Title="Confetti"
-             x:Class="EventApp.Views.RewardsPage"
-            xmlns:local="clr-namespace:EventApp.Views"
-             >
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Confetti"
+    x:Class="EventApp.Views.RewardsPage"
+    xmlns:local="clr-namespace:EventApp.Views"
+    xmlns:frame="clr-namespace:EventApp">
 
     <NavigationPage.TitleView>
         <local:CustomToolBar/>
@@ -12,37 +12,111 @@
 
     <ContentPage.Content>
 
+        <ScrollView BackgroundColor="#E5E5E5" Padding="15">
 
-        <ScrollView>
 
             <StackLayout>
-                <StackLayout Orientation="Horizontal" VerticalOptions="Start">
-                    <ContentView>
-                        <Image Source="rewards.png" />
-                    </ContentView>
-                </StackLayout>
 
-                <StackLayout VerticalOptions="StartAndExpand">
-                    <ContentView>
-                        <Button CornerRadius="0" Text="Loading Rewards..." Margin="0, 5, 0, 0"
+                <frame:CustomFrame IsVisible="False" x:Name="CountdownWrapper" HasShadow="True" CornerRadius="2" Padding="10" BackgroundColor="#4D71A3">
+
+                    <frame:CustomFrame.Margin>
+                    <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" iOS="0,5" />
+                    </frame:CustomFrame.Margin>
+
+
+                    <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackLayout Orientation="Horizontal" Spacing="3">
+                            <!--<BoxView WidthRequest="12" HeightRequest="12" CornerRadius="6" BackgroundColor="#F8F8F8" VerticalOptions="Center"/>-->
+                            <Image Source="holidaily_logo_1_transparent.png" WidthRequest="24" HeightRequest="24" VerticalOptions="Center"/>
+                            <Label Text="Confetti Cooldown" FontSize="14" TextColor="#F8F8F8" VerticalOptions="Center" />
+                        </StackLayout>
+
+                        <StackLayout x:Name="TimerWrapper" Orientation="Horizontal" Grid.Row="1" HorizontalOptions="End" Margin="10" Spacing="15">
+                            <!--<StackLayout>
+                                <Label Text="0" FontSize="35" FontAttributes="Bold" TextColor="White" HorizontalOptions="End"/>
+                                <Label Text="DAYS" FontSize="10" TextColor="White" Opacity="0.5" HorizontalOptions="End" Margin="0,-5,0,0"/>
+                            </StackLayout>-->
+
+                            <StackLayout>
+                                <Label x:Name="HoursLabel" FontSize="35" FontAttributes="Bold" TextColor="White" HorizontalOptions="End"/>
+                                <Label Text="HOURS" FontSize="10" TextColor="White" Opacity="0.5" HorizontalOptions="End" Margin="0,-5,0,0"/>
+                            </StackLayout>
+                            <StackLayout>
+                                <Label x:Name="MinutesLabel" FontSize="35" FontAttributes="Bold" TextColor="White" HorizontalOptions="End"/>
+                                <Label Text="MINUTES" FontSize="10" TextColor="White" Opacity="0.5" HorizontalOptions="End" Margin="0,-5,0,0"/>
+                            </StackLayout>
+                            <StackLayout>
+                                <Label x:Name="SecondsLabel" FontSize="35" FontAttributes="Bold" TextColor="White" HorizontalOptions="End"/>
+                                <Label Text="SECONDS" FontSize="10" TextColor="White" Opacity="0.5" HorizontalOptions="End" Margin="0,-5,0,0"/>
+                            </StackLayout>
+                        </StackLayout>
+
+
+                        <ContentView IsVisible="False" x:Name="CompleteWrapper" Grid.Row="1" HorizontalOptions="End" Margin="10">
+                            
+                            <Label Text="Cooldown Complete!" TextColor="White" FontSize="24"/>
+                          
+                        </ContentView>
+
+                    </Grid>
+                </frame:CustomFrame>
+
+                <StackLayout IsVisible="False" Orientation="Horizontal" HorizontalOptions="End" x:Name="NotifyWrapper" Margin="0,5">
+                    <Label VerticalTextAlignment="Center" TextColor="#5C5C5C" Text="Notify me when unlocked"/>
+                     <Switch x:Name="NotifySwitch" />
+                </StackLayout>
+               
+
+                <frame:CustomFrame CornerRadius="2"  HasShadow="True">
+
+                <frame:CustomFrame.Margin>
+                <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" />
+                </frame:CustomFrame.Margin>
+
+                <StackLayout>
+                    <ContentView HorizontalOptions="FillAndExpand">
+                        <Label FontSize="72" TextColor="#4c96e8" HorizontalTextAlignment="Center" Text="{Binding Points}" x:Name="PointsLabel" />
+                    </ContentView>
+                    <Label Text="Confetti"
+                           x:Name="SubTitle"
+                           HorizontalOptions="Center"
+                           TextColor="#5C5C5C"/>
+                     <!--<Label
+                         HorizontalTextAlignment="Center"
+                         Text="Once this holiday is approved, you will be able to submit another."
+                         FontSize="Micro"
+                         HorizontalOptions="Center"
+                         Padding="0, 0, 0, 0"
+                         TextColor="#5C5C5C"/>-->
+
+                 </StackLayout>
+
+            </frame:CustomFrame>
+
+
+            <Button IsVisible="False" CornerRadius="0" Text="Log in to get confetti!" Margin="0, 5, 0, 0"
+                        x:Name="LogInBtn"
+                        Clicked="LogIn"
+                        BackgroundColor="#4c96e8"
+                        TextColor="White" />
+           
+            <Button
+                IsVisible="False"
+                CornerRadius="0"
+                Text="Loading Ad..."
+                Margin="0, 5, 0, 0"
                 x:Name="WatchAdButton"
-                            Clicked="WatchAd"
-                            BackgroundColor="#4c96e8"
-                            TextColor="White" IsEnabled="False" />
-                    </ContentView>
-
-                    <ContentView Padding="15">
-                        <Label FontSize="28" TextColor="#4c96e8" HorizontalTextAlignment="Center" Text="{Binding Points}" x:Name="PointsLabel" />
-                    </ContentView>
-
-                    <ContentView Padding="10, 0, 10, 0">
-
-                        <Label FontSize="Micro" HorizontalTextAlignment="Center" Text="Rewards will be used to unlock in-app items, and are a great way to support the developers if you like the app. Please note that we are still actively building the rewards to spend your points on, but you will be able to use all of these points when the features are released!" />
-
-                    </ContentView>
+                Clicked="WatchAd"
+                BackgroundColor="Gray"
+                TextColor="White"
+                />
 
 
-                </StackLayout>
+
 
 
             </StackLayout>

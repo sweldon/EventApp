@@ -2,7 +2,9 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.AddHoliday"
+             xmlns:placeholder="clr-namespace:EventApp"
              xmlns:local="clr-namespace:EventApp.Views"
+             xmlns:frame="clr-namespace:EventApp"
              Title="Add a Holiday to Holidaily">
 
         <NavigationPage.TitleView>
@@ -11,30 +13,108 @@
     <ContentPage.Content>
 
 
-        <ScrollView BackgroundColor="#FFFFFF" Padding="15" >
-     
-            <StackLayout VerticalOptions="FillAndExpand">
+        <ScrollView BackgroundColor="#E5E5E5" Padding="15">
+            <StackLayout>
 
-                <Label FontSize="Medium" Text="If you know a holiday that we don't have, tell us and we'll send you confetti! If we add your holiday, we will show your username with it in the app for all to see." />
+            <frame:CustomFrame CornerRadius="2"  HasShadow="True" IsVisible="False" x:Name="PendingWrapper">
+
+                <frame:CustomFrame.Margin>
+                <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" />
+                </frame:CustomFrame.Margin>
+
+                <StackLayout>
+                    <Image Source="check.png" />
+                    <Label Text="Holiday Submitted!"
+                           HorizontalOptions="Center"
+                           Padding="15, 15, 15, 0"
+                           TextColor="#5C5C5C"/>
+                     <Label
+                         HorizontalTextAlignment="Center"
+                         Text="Once this holiday is approved, you will be able to submit another."
+                         FontSize="Micro"
+                         HorizontalOptions="Center"
+                         Padding="0, 0, 0, 0"
+                         TextColor="#5C5C5C"/>
+
+                 </StackLayout>
+
+            </frame:CustomFrame>
+
+            <ContentView Padding="0, 5, 0, 0" x:Name="CheckStatusWrapper">
+                <Button Text="Check Status"
+                Clicked="CheckStatus"
+                x:Name="CheckStatusBtn"
+                BackgroundColor="{StaticResource NavigationPrimary}"
+                CornerRadius="0"
+                TextColor="White" />  
+            </ContentView>
 
 
-                <Entry BackgroundColor="#F5F5F5" Placeholder="Holiday Name" FontSize="Medium" x:Name="HolidayNameEntry" />
-                <DatePicker BackgroundColor="#F5F5F5" x:Name="HolidayDateEntry"  />
 
-                <Label FontSize="Medium" Text="Provide some details below about the holiday, or what you would like to appear in the description if we add it to the app" />
+            <frame:CustomFrame CornerRadius="2" HasShadow="True"  IsVisible="False" x:Name="SubmissionWrapper">
 
-                <Editor HeightRequest="100" x:Name="HolidayDetailEntry" FontSize="Medium" VerticalOptions="FillAndExpand" BackgroundColor="#F5F5F5" />
+                <frame:CustomFrame.Margin>
+                    <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" />
+                </frame:CustomFrame.Margin>
 
-                <Button VerticalOptions="End" Text="Send It" Clicked="SendHoliday" x:Name="SendHolidayBtn"
-                            BackgroundColor="Green"
-                            TextColor="White" />
-                
-                <Button VerticalOptions="End" Text="Submission Pending..." Clicked="PendingAlert" x:Name="PendingBtn" IsVisible="false"
-                            BackgroundColor="Green"
-                            TextColor="Black" />
+                <StackLayout Spacing="10">
+                    <Entry Placeholder="Holiday name" FontSize="Medium" x:Name="HolidayNameEntry">
 
-            </StackLayout>
-       
+                    <Entry.BackgroundColor>
+                        <OnPlatform x:TypeArguments="Color"
+                        iOS="#F5F5F5" Android="#FFFFFF"/>
+                        </Entry.BackgroundColor>
+                    </Entry>
+
+                    <DatePicker x:Name="HolidayDateEntry">
+                        <DatePicker.BackgroundColor>
+                        <OnPlatform x:TypeArguments="Color"
+                        iOS="#F5F5F5" Android="#FFFFFF"/>
+                        </DatePicker.BackgroundColor>
+                    </DatePicker>
+
+                    <Frame HasShadow="False" OutlineColor="#C4C4C4" Padding="0">
+
+
+
+                   <!--<placeholder:CustomEditor Placeholder="Tell us about your holiday" AutoSize="TextChanges" x:Name="HolidayDetailEntry">
+                                               <placeholder:CustomEditor.BackgroundColor>
+                        <OnPlatform x:TypeArguments="Color"
+                        iOS="#F5F5F5" Android="#FFFFFF"/>
+                        </placeholder:CustomEditor.BackgroundColor>
+                    </placeholder:CustomEditor>-->
+
+                        
+                   <Editor Placeholder="Tell us about your holiday" AutoSize="TextChanges" x:Name="HolidayDetailEntry">
+                                               <Editor.BackgroundColor>
+                        <OnPlatform x:TypeArguments="Color"
+                        iOS="#F5F5F5" Android="#FFFFFF"/>
+                        </Editor.BackgroundColor>
+                    </Editor>
+
+                    </Frame>
+                    <Image x:Name="UploadedImage" IsVisible="False" />
+
+                    <Button
+                        Text="Upload Image"
+                        Clicked="UploadImage"
+                        x:Name="UploadButton"
+                        BackgroundColor="{StaticResource NavigationPrimary}"
+                        TextColor="White"
+                        CornerRadius="0"
+                        />
+
+                    <Button  Text="Submit" Clicked="SendHoliday" x:Name="SendHolidayBtn"
+                                BackgroundColor="Green"
+                                CornerRadius="0"
+                                TextColor="White" />
+                </StackLayout>
+    
+         </frame:CustomFrame>
+
+
+        
+    </StackLayout>
     </ScrollView>
     </ContentPage.Content>
 </ContentPage>

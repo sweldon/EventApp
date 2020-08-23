@@ -380,6 +380,10 @@ namespace EventApp
                     //MessagingCenter.Send(Application.Current, "RefreshNotifications");
                     Utils.ReadNotification("comment", commentId);
                 }
+                else if (pushType == "rewards")
+                {
+                    NavigationPage.PushAsync(new RewardsPage());
+                }
             };
             CrossPushNotification.Current.OnNotificationDeleted += (s, p) =>
             {
