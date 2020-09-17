@@ -26,10 +26,10 @@ namespace EventApp.iOS
                 base.OnElementPropertyChanged(sender, e);
 
                 // If the Frame's position or size changes we need to reset the shadow
-                if (e.PropertyName == "X" || e.PropertyName == "Y" || e.PropertyName == "Width" || e.PropertyName == "Height" || e.PropertyName == "IsVisible")
-                {
+                //if (e.PropertyName == "X" || e.PropertyName == "Y" || e.PropertyName == "Width" || e.PropertyName == "Height" || e.PropertyName == "IsVisible")
+                //{
                     SetFrameShadow();
-                }
+                //}
             }
             catch (Exception ex)
             {

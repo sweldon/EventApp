@@ -32,13 +32,13 @@
                 <Frame HasShadow="False" CornerRadius="2" OutlineColor="#EAEAEA" Padding="10">
                     <StackLayout>
 
-                        <Grid>
+                        <Grid ColumnSpacing="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="5*" />
-                                <ColumnDefinition Width="5*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <Label x:Name="UserName"
@@ -46,12 +46,14 @@
                                             FontAttributes="Bold"
                                             Opacity=".5" Grid.Row="0" Grid.Column="0" />
 
+
                             <Label x:Name="TimeSince"
-                                               FontSize="12" 
-                                                 Grid.Row="0"
-                                                 Grid.Column="1"
-                                                 HorizontalTextAlignment="End" 
-                                                 Opacity=".8" />
+                                                FontSize="12"
+                                                FontAttributes="Bold"
+                                                    Grid.Row="0"
+                                                    Grid.Column="1"
+                                                    HorizontalTextAlignment="Start" 
+                                                    Opacity=".5" />
                         </Grid>
                         <Label x:Name="ReplyContent" FontSize="16" />
 

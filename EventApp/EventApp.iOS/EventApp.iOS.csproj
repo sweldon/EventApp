@@ -82,6 +82,8 @@
     <Compile Include="CustomEditorRenderer.cs" />
     <Compile Include="CustomFrameRenderer.cs" />
     <Compile Include="Control\ShouldChangeText.cs" />
+    <Compile Include="KeyboardViewRenderer.cs" />
+    <Compile Include="ExtendedEditorRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">
@@ -170,6 +172,12 @@
     <BundleResource Include="Resources\Gift.png" />
     <BundleResource Include="Resources\share_twitter_blue.png" />
     <BundleResource Include="Resources\check.png" />
+    <BundleResource Include="Resources\holidaily_avatar.png" />
+    <BundleResource Include="Resources\camera.png" />
+    <BundleResource Include="Resources\picture.png" />
+    <BundleResource Include="Resources\like_neutral.png" />
+    <BundleResource Include="Resources\like_active.png" />
+    <BundleResource Include="Resources\ellipses.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

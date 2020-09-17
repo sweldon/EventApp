@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Net.Http;
+using System.Runtime.Remoting;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EventApp.Models;
@@ -29,14 +30,14 @@ namespace EventApp.Views
         public Holiday OpenedHoliday { get; set; }
         public string CommentTitle { get; set; }
         public ObservableCollection<User> users { get; set; }
-        private Comment LinkedComment { get; set; }
+        private dynamic LinkedEntity { get; set; }
         private bool isSearching = false;
         private bool isReply = false;
         private bool isEdit = false;
-
+        private Type EntityType;
         public NewCommentPopUp(
             Holiday holiday,
-            Comment comment=null,
+            dynamic entity = null,
             bool reply=false,
             bool edit=false
         )
@@ -48,16 +49,20 @@ namespace EventApp.Views
             //UserMentionList.ItemTapped += ItemTapped;
             CommentContent.Placeholder = "Say something";
 
-            if(comment != null)
-                LinkedComment = comment;
+            if(entity != null)
+            {
+                LinkedEntity = entity;
+               
+            }
+               
 
             if (reply)
             {                
                 isReply = true;
                 ReplyWrapper.IsVisible = true;
-                UserName.Text = comment.UserName;
-                TimeSince.Text = comment.TimeSince;
-                ReplyContent.Text = comment.Content;
+                UserName.Text = entity.UserName;
+                TimeSince.Text = $" · {entity.TimeSince}";
+                ReplyContent.Text = entity.Content;
             }else if (edit)
             {
                 isEdit = true;
@@ -213,13 +218,14 @@ namespace EventApp.Views
                 dynamic responseJSON;
                 if (isEdit)
                 {
+                    
                     var values = new Dictionary<string, string>{
                        { "device_id", devicePushId },
                        { "content", CommentContent.Text },
                        { "username", currentUser}
                     };
 
-                    responseJSON = await ApiHelpers.MakePatchRequest(values, "comments", LinkedComment.Id);
+                    responseJSON = await ApiHelpers.MakePatchRequest(values, "comments", LinkedEntity.Id);
                 }
                 else
                 {
@@ -230,27 +236,34 @@ namespace EventApp.Views
                     };
                     if (isReply)
                     {
-                        values["parent"] = LinkedComment.Id;
+                        if(LinkedEntity.GetType() == typeof(Post))
+                        {
+                            values["post"] = LinkedEntity.Id;
+                        }
+                        else if (LinkedEntity.GetType() == typeof(Comment))
+                        {
+                            values["parent"] = LinkedEntity.Id;
+                        }
+                        
                     }
 
                     responseJSON = await ApiHelpers.MakePostRequest(values, "comments");
 
                 }
 
-                int status = responseJSON.status;
-                string message = responseJSON.message;
-
-                if (status == 200)
-                {
+                try
+                { 
                     //await Navigation.PopModalAsync();
                     await Navigation.PopPopupAsync();
                     SaveCommentButton.IsEnabled = true;
                     SaveCommentButton.Text = "Post";
+                    // todo just update the object... not refresh?
                     MessagingCenter.Send(this, "UpdateComments");
                 }
-                else
+                catch(Exception ex)
                 {
-                    await DisplayAlert("Error", message, "OK");
+                    Debug.WriteLine($"{ex}");
+                    await DisplayAlert("Error", "Please try again", "OK");
                     SaveCommentButton.IsEnabled = true;
                     SaveCommentButton.Text = "Post";
                 }
@@ -269,10 +282,10 @@ namespace EventApp.Views
 
             if (isReply)
             {
-                CommentContent.Text = $"@{LinkedComment.UserName} ";
+                CommentContent.Text = $"@{LinkedEntity.UserName} ";
             }else if (isEdit)
             {
-                CommentContent.Text = $"{LinkedComment.Content} ";
+                CommentContent.Text = $"{LinkedEntity.Content} ";
             }
                 
 

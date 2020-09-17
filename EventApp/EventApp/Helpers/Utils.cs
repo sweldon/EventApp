@@ -11,6 +11,9 @@ using MarcTron.Plugin.Controls;
 using Newtonsoft.Json;
 using Plugin.StoreReview;
 using Xamarin.Forms;
+#if __IOS__
+using UIKit;
+#endif
 
 namespace EventApp
 {
@@ -246,6 +249,21 @@ namespace EventApp
             }
 
 
+        }
+
+        public static async void Vibrate()
+        {
+        #if __IOS__
+            var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
+            haptic.Prepare();
+            haptic.ImpactOccurred();
+            haptic.Dispose();
+        #endif
+
+        #if __ANDROID__
+            var duration = TimeSpan.FromSeconds(.025);
+            Xamarin.Essentials.Vibration.Vibrate(duration);
+        #endif
         }
 
     }

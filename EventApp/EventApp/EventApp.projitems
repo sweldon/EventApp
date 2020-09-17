@@ -25,11 +25,21 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\PostOptionsPopUp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\PortalPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\CustomToolBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\PostPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -139,6 +149,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)CustomTextFormatter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomFrame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\CountDown.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Post.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\PostPage.xaml.cs">
+      <DependentUpon>PostPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\KeyboardView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ExtendedEditor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\PostOptionsPopUp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\PostOption.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\RootPage.xaml">
