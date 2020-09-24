@@ -23,12 +23,9 @@
                         Refreshing="RefreshPosts"
                         CachingStrategy="RecycleElement"
                         IsPullToRefreshEnabled="true"
+                        BackgroundColor="#e5e5e5"
                         IsVisible="False">
-                
-                <ListView.BackgroundColor>
-                    <OnPlatform x:TypeArguments="Color"
-                        Android="#F2F2F2" iOS="#E0E0E0"/>
-                </ListView.BackgroundColor>
+               
 
                 <ListView.Header>
 

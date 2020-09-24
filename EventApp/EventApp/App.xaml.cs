@@ -361,11 +361,7 @@ namespace EventApp
                 {
                     //AlertNews();
                 }
-                else if (pushType == "holiday")
-                {
-                    AlertUserHolidays(holidayId);
-                }
-                else if (pushType == "comment" || pushType == "post" || pushType == "like")
+                else
                 {
                     MessagingCenter.Send(Application.Current, "UpdateBellCount", unread);
                 }

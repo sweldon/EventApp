@@ -13,6 +13,7 @@ using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Stormlion.PhotoBrowser;
 using Xamarin.Forms;
+using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 
 namespace EventApp.Views
 {
@@ -86,7 +87,24 @@ namespace EventApp.Views
         {
             base.OnAppearing();
 
+            // For floating menu above keyboard on Android
+            Xamarin.Forms.Application.Current.On<Xamarin.Forms.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
 
+            Debug.WriteLine("POST PAGE REAPPEARED");
+            // If android and uploaded image is visible, send message to holiday detail to resubscribe. then UNSUBCRIBE within it when executed.
+            // This is a workaround for detail appearing MID image preview on post.
+            // todo only if android
+            //if (UploadedImage.IsVisible)
+            //{
+            //    MessagingCenter.Send(this, "RestorePostListener");
+            //}
+
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            Xamarin.Forms.Application.Current.On<Xamarin.Forms.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Pan);
         }
 
         async void AddPost(object sender, EventArgs e)
@@ -107,7 +125,8 @@ namespace EventApp.Views
 
             if (UploadedMedia != null)
             {
-                Stream streamedImage = UploadedMedia.GetStreamWithImageRotatedForExternalStorage();
+
+                Stream streamedImage = UploadedMedia.GetStream();
                 content.Add(new StreamContent(streamedImage), "post_image", $"{UploadedMedia.Path}");
             }
             if(!string.IsNullOrEmpty(CommentContent.Text))
@@ -151,7 +170,6 @@ namespace EventApp.Views
 
                 string image = responseJSON.image;
                 bool ShowImage = string.IsNullOrEmpty(image) ? false : true;
-                await Navigation.PopModalAsync();
                 Post NewPost = new Post()
                 {
                     Id = postId,
@@ -171,8 +189,10 @@ namespace EventApp.Views
                     LikeEnabled = true,
                     LikeTextColor = Color.FromHex("808080"),
                 };
-
+                Debug.WriteLine($"Sending post {postId}");
                 MessagingCenter.Send(this, "AddPost", NewPost);
+                await Navigation.PopModalAsync();
+
             }
 
 
@@ -183,30 +203,41 @@ namespace EventApp.Views
 
         async void UploadImage(object sender, EventArgs e)
         {
-            await CrossMedia.Current.Initialize();
-            if (!CrossMedia.Current.IsPickPhotoSupported)
+            try
             {
-                await DisplayAlert("Not Supported", "Uploading pictures" +
-                    " doesn't seem to be supported by your device.", "OK");
-                return;
+                await CrossMedia.Current.Initialize();
+                if (!CrossMedia.Current.IsPickPhotoSupported)
+                {
+                    await DisplayAlert("Not Supported", "Uploading pictures" +
+                        " doesn't seem to be supported by your device.", "OK");
+                    return;
+                }
+                var mediaOptions = new PickMediaOptions()
+                {
+                    PhotoSize = PhotoSize.Full
+                };
+                var selectedImageFile = await CrossMedia.Current.PickPhotoAsync(mediaOptions);
+                if (selectedImageFile == null)
+                {
+                    await DisplayAlert("Uh oh!", "We couldn't upload that pic. " +
+                        "Please try again.", "OK");
+                    return;
+                }
+                ImagePath = selectedImageFile.Path;
+                UploadedImage.Source = ImageSource.FromStream(() => selectedImageFile.GetStreamWithImageRotatedForExternalStorage());
+                UploadedImage.IsVisible = true;
+                RemoveImageButton.IsVisible = true;
+                UploadedMedia = selectedImageFile;
+                //CommentContent.Focus();
+                #if __ANDROID__
+                    MessagingCenter.Send(this, "RestorePostListener");
+                #endif
             }
-            var mediaOptions = new PickMediaOptions()
+            catch
             {
-                PhotoSize = PhotoSize.Small
-            };
-            var selectedImageFile = await CrossMedia.Current.PickPhotoAsync(mediaOptions);
-            if (selectedImageFile == null)
-            {
-                await DisplayAlert("Uh oh!", "We couldn't upload that pic. " +
-                    "Please try again.", "OK");
-                return;
+
             }
-            ImagePath = selectedImageFile.Path;
-            UploadedImage.Source = ImageSource.FromStream(() => selectedImageFile.GetStream());
-            UploadedImage.IsVisible = true;
-            RemoveImageButton.IsVisible = true;
-            UploadedMedia = selectedImageFile;
-            CommentContent.Focus();
+
 
         }
 
@@ -222,7 +253,7 @@ namespace EventApp.Views
                 }
                 var mediaOptions = new StoreCameraMediaOptions()
                 {
-                    PhotoSize = PhotoSize.Small,
+                    PhotoSize = PhotoSize.Full,
                     AllowCropping = true
                 };
                 var selectedImageFile = await CrossMedia.Current.TakePhotoAsync(mediaOptions);
@@ -233,7 +264,7 @@ namespace EventApp.Views
                     return;
                 }
                 ImagePath = selectedImageFile.Path;
-                UploadedImage.Source = ImageSource.FromStream(() => selectedImageFile.GetStream());
+                UploadedImage.Source = ImageSource.FromStream(() => selectedImageFile.GetStreamWithImageRotatedForExternalStorage());
                 UploadedImage.IsVisible = true;
                 RemoveImageButton.IsVisible = true;
                 UploadedMedia = selectedImageFile;

@@ -314,10 +314,22 @@ namespace EventApp.Views
                 await (sender as StackLayout).ScaleTo(1.5, 50);
                 await (sender as StackLayout).ScaleTo(1, 50);
                 post.Likes += 1;
+                #if __ANDROID__
+                    if (post.Likes > 1)
+                        post.LikeLabel = "Likes";
+                    else
+                        post.LikeLabel = "Like";
+                #endif
             }
             else
             {
                 post.Likes -= 1;
+                #if __ANDROID__
+                    if (post.Likes > 1)
+                        post.LikeLabel = "Likes";
+                    else
+                        post.LikeLabel = "Like";
+                #endif
             }
 
             post.ShowReactions = post.Likes > 0 ? true : false;
@@ -788,7 +800,7 @@ namespace EventApp.Views
         {
             base.OnAppearing();
             MessagingCenter.Send(Application.Current, "UpdateToolbar", false);
-
+            
             //if (viewModel.GroupedCommentList.Count == 0)
             //{
             //    //viewModel.LoadHolidayComments.Execute(null);
@@ -847,12 +859,20 @@ namespace EventApp.Views
             }
             finally
             {
-                if (HolidayPosts.Count == 0)
+                try
                 {
-                    HolidayPosts = await GetHolidayPosts();
+                    if (HolidayPosts.Count == 0)
+                    {
+                        HolidayPosts = await GetHolidayPosts();
+                    }
+
+                    PostList.ItemsSource = HolidayPosts;
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine($"{ex}");
                 }
 
-                PostList.ItemsSource = HolidayPosts;
             }
 
             // On login, refresh holiday celebration data
@@ -888,6 +908,7 @@ namespace EventApp.Views
             MessagingCenter.Subscribe<PostPage, Object[]>(this,
             "UpdatePostInPlace", (sender, data) =>
             {
+
                 var post = ((Post)data[0]);
                 post.Content = (string)data[1];
                 post.TimeSince = $"{(string)data[2]}";
@@ -975,8 +996,28 @@ namespace EventApp.Views
             });
 
 
+
             MessagingCenter.Unsubscribe<PostPage, Post>(this, "AddPost");
 
+            #if __ANDROID__
+                MessagingCenter.Subscribe<PostPage>(this, "RestorePostListener", (sender) =>
+                {
+                    MessagingCenter.Subscribe<PostPage, Post>(this, "AddPost", (sender, post) =>
+                    {
+                        Debug.WriteLine($"adding post {post.Id}");
+                        if (HolidayPosts.Count > 0)
+                        {
+                            HolidayPosts.Insert(0, post);
+                            PostList.ScrollTo(((IList)PostList.ItemsSource)[0], ScrollToPosition.Start, true);
+                        }
+                        else
+                        {
+                            ScrollToFirstPost();
+                        }
+                        MessagingCenter.Unsubscribe<PostPage, Post>(this, "AddPost");
+                    });
+                });
+            #endif
             AdBanner.IsVisible = !isPremium;
 
         }
@@ -1001,6 +1042,9 @@ namespace EventApp.Views
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
+
+            MessagingCenter.Unsubscribe<PostPage>(this, "RestorePostListener");
+
             MessagingCenter.Unsubscribe<NewCommentPopUp, Object[]>(this, "UpdateComments");
             MessagingCenter.Unsubscribe<PostOptionsPopUp, Object[]>(this, "EditPost");
             MessagingCenter.Unsubscribe<PostOptionsPopUp, Post>(this, "DeletePost");
@@ -1051,15 +1095,21 @@ namespace EventApp.Views
 
         }
 
+        private bool coolDown;
         public async void AddPost(object sender, EventArgs args)
         {
+            if (coolDown)
+                return;
+            coolDown = true;
             if (!isLoggedIn)
             {
                 App.promptLogin(Navigation);
+                coolDown = false;
                 return;
             }
             await Navigation.PushModalAsync(new NavigationPage(new PostPage(holiday: viewModel.Holiday)));
-
+            await Task.Delay(1000);
+            coolDown = false;
         }
 
         async void UpVote(object sender, EventArgs args)

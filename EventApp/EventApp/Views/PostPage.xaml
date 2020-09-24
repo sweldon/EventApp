@@ -14,7 +14,7 @@
 
                 <Grid.Padding>
                     <OnPlatform x:TypeArguments="Thickness"
-                        Android="0, 0, 20, 0" />
+                        Android="0, 0, 15, 0" />
                 </Grid.Padding>
 
             <Grid.ColumnDefinitions>
@@ -117,7 +117,7 @@
             </StackLayout.GestureRecognizers>
 
         </StackLayout>
-        <Image x:Name="UploadedImage" IsVisible="False" Aspect="AspectFill">
+        <Image x:Name="UploadedImage" IsVisible="False" Aspect="AspectFill" VerticalOptions="FillAndExpand">
 
             <!--Photo browser does not work in modal-->
             <!--<Image.GestureRecognizers>
