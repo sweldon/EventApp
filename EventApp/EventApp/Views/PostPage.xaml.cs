@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EventApp.Models;
 using Newtonsoft.Json;
@@ -18,6 +20,9 @@ namespace EventApp.Views
     {
         private MediaFile UploadedMedia;
         private string ImagePath;
+        private int overflowCount = 0;
+        private bool isSearching = false;
+        private bool overflow = false;
         private bool ImageRemoved = false;
         public string currentUser
         {
@@ -37,9 +42,14 @@ namespace EventApp.Views
         private Holiday Holiday;
         private bool isEdit;
         private Post EditedPost;
-        public PostPage(Holiday holiday, Post post=null)
+        public ObservableCollection<User> users { get; set; }
+        ContentView Container;
+        public PostPage(Holiday holiday, Post post=null, ContentView container =null)
         {
             InitializeComponent();
+            Container = container;
+            users = new ObservableCollection<User>();
+            UserMentionList.ItemSelected += OnUserSelected;
             Holiday = holiday;
             if (post != null)
             {
@@ -97,7 +107,7 @@ namespace EventApp.Views
 
             if (UploadedMedia != null)
             {
-                Stream streamedImage = UploadedMedia.GetStream();
+                Stream streamedImage = UploadedMedia.GetStreamWithImageRotatedForExternalStorage();
                 content.Add(new StreamContent(streamedImage), "post_image", $"{UploadedMedia.Path}");
             }
             if(!string.IsNullOrEmpty(CommentContent.Text))
@@ -118,7 +128,11 @@ namespace EventApp.Views
                 var response = await App.globalClient.PatchAsync($"{App.HolidailyHost}/posts/{EditedPost.Id}/", content);
                 if (response.IsSuccessStatusCode)
                 {
-                    MessagingCenter.Send(this, "RefreshPosts");
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    dynamic postJSON = JsonConvert.DeserializeObject(responseString);
+                    var TimeSinceEdit = $"{postJSON.time_since} (edited now)";
+                    Object[] data = { EditedPost, CommentContent.Text, TimeSinceEdit, Container };
+                    MessagingCenter.Send(this, "UpdatePostInPlace", data);
                     await Navigation.PopModalAsync();
                 }
                 else
@@ -138,7 +152,7 @@ namespace EventApp.Views
                 string image = responseJSON.image;
                 bool ShowImage = string.IsNullOrEmpty(image) ? false : true;
                 await Navigation.PopModalAsync();
-                Post post = new Post()
+                Post NewPost = new Post()
                 {
                     Id = postId,
                     Content = CommentContent.Text,
@@ -153,9 +167,12 @@ namespace EventApp.Views
                     Avatar = App.GlobalUser.Avatar == null ?
                    "default_user_128.png" : App.GlobalUser.Avatar,
                     Image = image,
-                    ShowImage = ShowImage
+                    ShowImage = ShowImage,
+                    LikeEnabled = true,
+                    LikeTextColor = Color.FromHex("808080"),
                 };
-                MessagingCenter.Send(this, "AddPost", post);
+
+                MessagingCenter.Send(this, "AddPost", NewPost);
             }
 
 
@@ -185,7 +202,7 @@ namespace EventApp.Views
                 return;
             }
             ImagePath = selectedImageFile.Path;
-            UploadedImage.Source = ImageSource.FromStream(() => selectedImageFile.GetStreamWithImageRotatedForExternalStorage());
+            UploadedImage.Source = ImageSource.FromStream(() => selectedImageFile.GetStream());
             UploadedImage.IsVisible = true;
             RemoveImageButton.IsVisible = true;
             UploadedMedia = selectedImageFile;
@@ -216,7 +233,7 @@ namespace EventApp.Views
                     return;
                 }
                 ImagePath = selectedImageFile.Path;
-                UploadedImage.Source = ImageSource.FromStream(() => selectedImageFile.GetStreamWithImageRotatedForExternalStorage());
+                UploadedImage.Source = ImageSource.FromStream(() => selectedImageFile.GetStream());
                 UploadedImage.IsVisible = true;
                 RemoveImageButton.IsVisible = true;
                 UploadedMedia = selectedImageFile;
@@ -241,6 +258,138 @@ namespace EventApp.Views
             ImageRemoved = true;
         }
 
+
+        private async void CheckMentions(object sender, TextChangedEventArgs e)
+        {
+            users.Clear();
+
+            #if __IOS__
+                if (CommentContent.Height > 100 && !overflow)
+                {
+                    CommentContent.AutoSize = EditorAutoSizeOption.Disabled;
+                    overflowCount = CommentContent.Text.Length;
+                    overflow = true;
+                }
+                if (CommentContent.Text.Length < overflowCount)
+                {
+                    CommentContent.AutoSize = EditorAutoSizeOption.TextChanges;
+                    overflow = false;
+                }
+            #endif
+
+            // Sync width for autosizing
+            CommentContent.WidthRequest = CommentContent.Width;
+
+
+            UserMentionList.ItemsSource = users;
+            // Nothing entered
+            if (CommentContent.Text.Length == 0)
+            {
+                UserMentionPlaceHolderWrapper.IsVisible = false;
+                UserMentionListWrapper.IsVisible = false;
+                isSearching = false;
+                return;
+            }
+            // Sentence terminator
+            else if (new Regex(@"[.?!\s]").IsMatch(CommentContent.Text.Substring(CommentContent.Text.Length - 1)))
+            {
+                UserMentionPlaceHolderWrapper.IsVisible = false;
+                UserMentionListWrapper.IsVisible = false;
+                NoResults.IsVisible = false;
+                isSearching = false;
+                return;
+            }
+            // Mention beginning
+            if (CommentContent.Text.Substring(CommentContent.Text.Length - 1) == "@")
+            {
+                isSearching = true;
+                UserMentionPlaceHolderWrapper.IsVisible = true;
+                NoResults.IsVisible = false;
+                UserMentionListWrapper.IsVisible = false;
+                UserMentionListWrapper.HeightRequest = 70;
+            }
+
+            var match = Regex.Match(CommentContent.Text, @".+@([^\s]+)");
+            // First word
+            if (!CommentContent.Text.Contains(" "))
+            {
+                match = Regex.Match(CommentContent.Text, @"@([^\s]+)");
+            }
+            string searchText = match.Groups[match.Groups.Count - 1].ToString();
+
+            if (searchText.Length > 15)
+                return;
+
+            if (isSearching && searchText != "" && CommentContent.Text.Substring(CommentContent.Text.Length - 1) != "@")
+            {
+                try
+                {
+
+                    var response = await App.globalClient.GetAsync(App.HolidailyHost + $"/users/?search={searchText}");
+                    var responseString = await response.Content.ReadAsStringAsync();
+
+                    dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+                    dynamic userList = responseJSON.results;
+
+                    if (userList.Count > 0)
+                    {
+                        UserMentionListWrapper.IsVisible = true;
+                        UserMentionPlaceHolderWrapper.IsVisible = false;
+                        NoResults.IsVisible = false;
+                    }
+
+                    if (userList.Count > 1)
+                    {
+                        UserMentionListWrapper.HeightRequest = 140;
+                    }
+                    else if (userList.Count == 1)
+                    {
+                        UserMentionListWrapper.HeightRequest = 70;
+                    }
+                    else
+                    {
+                        UserMentionListWrapper.IsVisible = false;
+                        UserMentionPlaceHolderWrapper.IsVisible = false;
+                        NoResults.IsVisible = true;
+                    }
+
+
+                    foreach (var user in userList)
+                    {
+                        var avatar = user.profile_image == null ? "default_user_128.png" : user.profile_image;
+                        users.Add(new User()
+                        {
+                            UserName = user.username,
+                            Avatar = avatar,
+                        });
+
+                    }
+
+                    UserMentionList.ItemsSource = users;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"{ex}");
+                }
+            }
+
+
+        }
+
+
+        async void OnUserSelected(object sender, SelectedItemChangedEventArgs args)
+        {
+
+            #if __ANDROID__
+                CommentContent.Focus();
+            #endif
+            var SelectedUser = args.SelectedItem as User;
+            string username = SelectedUser.UserName;
+
+            CommentContent.Text = Regex.Replace(CommentContent.Text,
+                @"\B\@([\w\-]+)$", $"@{username} ");
+
+        }
 
 
     }

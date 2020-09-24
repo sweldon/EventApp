@@ -35,14 +35,20 @@ namespace EventApp.Views
         private bool isReply = false;
         private bool isEdit = false;
         private Type EntityType;
+        private dynamic Container;
+        private Post ParentPost;
         public NewCommentPopUp(
             Holiday holiday,
             dynamic entity = null,
             bool reply=false,
-            bool edit=false
+            bool edit=false,
+            dynamic container =null,
+            Post post=null
         )
         {
             InitializeComponent();
+            Container = container;
+            ParentPost = post;
             users = new ObservableCollection<User>();
             OpenedHoliday = holiday;
             UserMentionList.ItemSelected += OnUserSelected;
@@ -206,6 +212,7 @@ namespace EventApp.Views
 
             SaveCommentButton.IsEnabled = false;
             SaveCommentButton.Text = "Posting...";
+            dynamic response;
             if (string.IsNullOrEmpty(CommentContent.Text))
             {
                 await DisplayAlert("Nothing to say?", "Please enter some text " +
@@ -225,7 +232,7 @@ namespace EventApp.Views
                        { "username", currentUser}
                     };
 
-                    responseJSON = await ApiHelpers.MakePatchRequest(values, "comments", LinkedEntity.Id);
+                    response = await ApiHelpers.MakePatchRequest(values, "comments", LinkedEntity.Id);
                 }
                 else
                 {
@@ -247,7 +254,7 @@ namespace EventApp.Views
                         
                     }
 
-                    responseJSON = await ApiHelpers.MakePostRequest(values, "comments");
+                    response = await ApiHelpers.MakePostRequest(values, "comments");
 
                 }
 
@@ -257,8 +264,36 @@ namespace EventApp.Views
                     await Navigation.PopPopupAsync();
                     SaveCommentButton.IsEnabled = true;
                     SaveCommentButton.Text = "Post";
-                    // todo just update the object... not refresh?
-                    MessagingCenter.Send(this, "UpdateComments");
+
+
+                    //MessagingCenter.Send(this, "AppendComment", data);
+                    if (isEdit)
+                    {
+                        var TimeSinceEdit = $"{response.time_since} (edited now)";
+                        Object[] data = { LinkedEntity, CommentContent.Text, TimeSinceEdit, Container};
+                        MessagingCenter.Send(this, "UpdateCommentInPlace", data);
+                        
+                    }
+                    else
+                    {
+                        // todo append to list
+                        //MessagingCenter.Send(this, "UpdateComments");
+                        Comment c = new Comment()
+                        {
+                            Id = response.id,
+                            Content = response.content,
+                            HolidayId = response.holiday,
+                            UserName = response.user,
+                            TimeSince = "now",
+                            Avatar = response.avatar == null ? "default_user_128.png" : response.avatar,
+                            ShowEdit = "True", // If you can delete, you can edit
+                            ShowDelete = "True",
+                            ShowReport = false,
+                        };
+                        Object[] data = { c, ParentPost, Container};
+                        MessagingCenter.Send(this, "UpdateComments", data);
+                    }
+                    
                 }
                 catch(Exception ex)
                 {

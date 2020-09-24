@@ -4,7 +4,6 @@
              x:Class="EventApp.Views.HolidayDetailPage"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
-             xmlns:frame="clr-namespace:EventApp"
              xmlns:local="clr-namespace:EventApp.Views" xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
              Title="{Binding Title}">
 
@@ -18,7 +17,7 @@
             <ContentView >
 
             <ListView x:Name="PostList"
-    
+                    VerticalScrollBarVisibility="Never"
                       SeparatorVisibility="None"
                         HasUnevenRows="true"
                         Refreshing="RefreshPosts"
@@ -37,12 +36,12 @@
 
 
                   
-                    <ContentView Padding="10, 5, 10, 0" >                    
-                    <frame:CustomFrame HasShadow="True" CornerRadius="2" Padding="0,2,0,2">
+                                   <ContentView BackgroundColor="#ffffff">
+                
 
-                    <frame:CustomFrame.Margin>
-                    <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" iOS="0,2" />
-                    </frame:CustomFrame.Margin>
+                        <ContentView.Margin>
+                        <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" iOS="0,8,0,0" />
+                        </ContentView.Margin>
                     
                     <ContentView x:Name="PostWrapper">
 
@@ -84,7 +83,6 @@
 
                             <StackLayout Grid.Column="1">
                                <ContentView Padding="10, 10, 10, 5">
-                                   <!--todo add CheckMentions function-->
                                 <Label Text="Post something..." TextColor="Gray" />
                                 </ContentView>
                           <BoxView HeightRequest="1"
@@ -97,16 +95,16 @@
  
 
 
-                    </frame:CustomFrame>
+             
                     </ContentView>
 
                     
-                  <ContentView Padding="10, 5, 10, 0">                    
-                    <frame:CustomFrame HasShadow="True" CornerRadius="2" Padding="0,2,0,2">
+                                   <ContentView BackgroundColor="#ffffff">
+                
 
-                        <frame:CustomFrame.Margin>
-                        <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" iOS="0,2" />
-                        </frame:CustomFrame.Margin>
+                        <ContentView.Margin>
+                        <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" iOS="0,8,0,0" />
+                        </ContentView.Margin>
                         <StackLayout Spacing="0" Orientation="Vertical" BackgroundColor="White">
 
                         <Grid Padding="10">
@@ -236,7 +234,7 @@
 
 
                         </StackLayout>
-                        </frame:CustomFrame>
+                  
                         </ContentView>
 
                           </StackLayout>
@@ -286,13 +284,12 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell >
-                           <!--todo change this to a regular list of posts instead of grouped comments comments, save the grouped comments logic for post replies-->
-                  <ContentView Padding="10, 5, 10, 0">                    
-                    <frame:CustomFrame HasShadow="True" CornerRadius="2" Padding="0,2,0,2">
+                                   <ContentView BackgroundColor="#ffffff">
+                
 
-                        <frame:CustomFrame.Margin>
-                        <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" iOS="0,2" />
-                        </frame:CustomFrame.Margin>
+                        <ContentView.Margin>
+                        <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" iOS="0,8,0,0" />
+                        </ContentView.Margin>
 
                         <StackLayout Spacing="0" Orientation="Vertical" BackgroundColor="White" Padding="0">
 
@@ -328,12 +325,24 @@
                                 <fftransformations:CircleTransformation />
                             </ffimageloading:CachedImage.Transformations>
                             </ffimageloading:CachedImage>
+        
+                                <ContentView.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                    Tapped="OpenProfile"  />
+                                </ContentView.GestureRecognizers>
+
                             </ContentView>
 
 
                             
                             <ContentView  Grid.Column="1" Grid.Row="0" Padding="0, 10, 0, 0">
                                     <Label Text="{Binding UserName}" TextColor="{StaticResource Key='NavigationPrimary'}" HorizontalOptions="Start" FontSize="Small"/>
+
+                               <ContentView.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                    Tapped="OpenProfile"  />
+                                </ContentView.GestureRecognizers>
+
                             </ContentView>
 
                             <ContentView Grid.Column="1" Grid.Row="1" Margin="0,-5">
@@ -441,7 +450,7 @@
 
                                     <StackLayout.GestureRecognizers>
                                     <TapGestureRecognizer
-                                    Tapped="OnReplyTapped"  />
+                                    Tapped="ReplyPost"  />
                                     </StackLayout.GestureRecognizers>
                                 </StackLayout>
 
@@ -454,7 +463,7 @@
                                     BackgroundColor="#DEDEDE"
                                     HorizontalOptions="FillAndExpand" />
 
-                                <StackLayout BindableLayout.ItemsSource="{Binding Comments}">
+                                <StackLayout BindableLayout.ItemsSource="{Binding Comments}" Padding="0,0,0,10">
                                     <BindableLayout.ItemTemplate>
                                         <DataTemplate>
 
@@ -491,12 +500,23 @@
                                                     <fftransformations:CircleTransformation />
                                                 </ffimageloading:CachedImage.Transformations>
                                                 </ffimageloading:CachedImage>
+
+                                                <ContentView.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                    Tapped="OpenProfile"  />
+                                                </ContentView.GestureRecognizers>
+
                                                 </ContentView>
 
 
                             
                                                 <ContentView  Grid.Column="1" Grid.Row="0" Padding="0, 10, 0, 0">
                                                         <Label Text="{Binding UserName}" TextColor="{StaticResource Key='NavigationPrimary'}" HorizontalOptions="Start" FontSize="Small"/>
+                                                    <ContentView.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                        Tapped="OpenProfile"  />
+                                                    </ContentView.GestureRecognizers>
+
                                                 </ContentView>
 
                                                 <ContentView Grid.Column="1" Grid.Row="1" Margin="0,-5">
@@ -512,7 +532,7 @@
                                                     FontSize="Small"/>
                                                     </ContentView>
 
-                                               <ContentView Grid.Column="2" Grid.Row="0" Margin="0, 15, 0, 0" Padding="0, 0, 10, 0">
+                                               <ContentView Grid.Column="2" Grid.Row="0" Margin="0, 15, 0, 0" HorizontalOptions="End" Padding="0,0,10,0">
                                                      <Image Source="ellipses.png" WidthRequest="18" HeightRequest="18" />
                                                         <ContentView.GestureRecognizers>
                                                         <TapGestureRecognizer
@@ -545,7 +565,7 @@
                             </StackLayout>
 
                     </StackLayout>
-                    </frame:CustomFrame>
+                
                     </ContentView>
                         </ViewCell>
                     </DataTemplate>

@@ -86,7 +86,7 @@ namespace EventApp.Views
             HolidayPosts = new ObservableCollection<Post>();
             //NavigationPage.SetHasNavigationBar(this, false);
             // Remove when reply button added
-            //PostList.ItemSelected += OnCommentSelected;
+            PostList.ItemSelected += OnCommentSelected;
 
             // Infinite scrolling for comments
             //PostList.ItemAppearing += (sender, e) =>
@@ -132,18 +132,20 @@ namespace EventApp.Views
 
         async void OpenProfile(object sender, EventArgs args)
         {
-            var comment = new Comment();
+            dynamic item;
             try
             {
-                comment = (sender as ContentView).BindingContext as Comment;
+                item = (sender as ContentView).BindingContext as dynamic;
             }
             catch
             {
-                comment = (sender as Label).BindingContext as Comment;
+                item = (sender as ContentView).BindingContext as dynamic;
             }
-            if (comment.Content == "[deleted]" || comment.Content == "[blocked]" || comment.Content == "[reported]")
+            Debug.WriteLine($"{item}");
+            if (item.Content == "[deleted]" || item.Content == "[blocked]" || item.Content == "[reported]")
                 return;
-            string UserName = comment.UserName;
+
+            string UserName = item.UserName;
             await Navigation.PushAsync(new UserPage(user: null, userName: UserName));
         }
 
@@ -286,21 +288,11 @@ namespace EventApp.Views
             }
         }
 
-
-        //async void EditPost(object sender, EventArgs args)
-        //{
-           
-        //    var post = (sender as Label).BindingContext as Post;
-        //    await Navigation.PushModalAsync(new NavigationPage(new PostPage(viewModel.Holiday, post)));
-            
-        //}
-
         async void LikePost(object sender, EventArgs args)
         {
 
             Utils.Vibrate();
             Post post = (sender as StackLayout).BindingContext as Post;
-
 
             if (!isLoggedIn)
             {
@@ -382,11 +374,10 @@ namespace EventApp.Views
             {
                 await Task.Delay(1000);
                 post.LikeEnabled = true;
-                //LikeContainer.IsEnabled = true;
             }
         }
 
-        async void OnReplyTapped(object sender, EventArgs args)
+        async void ReplyPost(object sender, EventArgs args)
         {
 
             if (!isLoggedIn)
@@ -398,13 +389,13 @@ namespace EventApp.Views
                 
                Post post = (sender as StackLayout).BindingContext as Post;
                 await Navigation.PushPopupAsync(new NewCommentPopUp(
-                    viewModel.Holiday, entity: post, reply: true));
+                    viewModel.Holiday, entity: post, reply: true,
+                    container: (sender as StackLayout), post: post));
             }
         }
 
         async void ReplyComment(object sender, EventArgs args)
         {
-
             if (!isLoggedIn)
             {
                 App.promptLogin(Navigation);
@@ -414,8 +405,16 @@ namespace EventApp.Views
                 
                Comment comment = (sender as StackLayout).BindingContext as Comment;
 
+                //(sender as StackLayout).Parent.Parent.Parent.Parent.Parent.BindingContext
+                var post = (sender as StackLayout).Parent;
+                while (post.BindingContext.GetType() != typeof(Post))
+                {
+                    post = post.Parent;
+                }
+
+                Post parentPost = post.BindingContext as Post;
                 await Navigation.PushPopupAsync(new NewCommentPopUp(
-                    viewModel.Holiday, entity: comment, reply: true));
+                    viewModel.Holiday, entity: comment, reply: true, container: (sender as StackLayout), post: parentPost));
             }
         }
 
@@ -537,6 +536,31 @@ namespace EventApp.Views
             PostList.EndRefresh();
         }
 
+        private void RefreshPostsAndScroll(Comment comment, Post post, dynamic container)
+        {
+
+            post.ShowComments = true;
+            post.Comments.Insert(0, comment);
+            var index = ((IList)PostList.ItemsSource).IndexOf(post);
+            try
+            {
+
+                PostList.ScrollTo(((IList)PostList.ItemsSource)[index], ScrollToPosition.Start, true);
+            }
+            catch
+            {
+
+            }
+
+            var element = container.Parent;
+            while (element.GetType() != typeof(ViewCell))
+            {
+                element = element.Parent;
+            }
+           ((ViewCell)element).ForceUpdateSize();
+
+        }
+
         //async Task<ObservableCollection<Comment>> GetPostComments(int PostId)
         //{
         //    ObservableCollection<Comment> PostComments = new ObservableCollection<Comment>();
@@ -622,7 +646,9 @@ namespace EventApp.Views
                 foreach (var comment in comments)
                 {
 
-                    string TimeAgoComment = comment.edited == null ? comment.time_since : $"{comment.time_since} (edited {comment.edited})";
+                    string suffixComment = comment.time_since_edit.ToString().Contains("now") ? "" : " ago";
+                    string TimeAgoComment = comment.edited == null ? comment.time_since :
+                        $"{comment.time_since} (edited {comment.time_since_edit}{suffixComment})";
                     string commentUser = comment.user;
                     string avatarComment;
                     if (comment.UserName == App.GlobalUser.UserName && Settings.IsLoggedIn)
@@ -675,9 +701,19 @@ namespace EventApp.Views
                     // Append replies
                     foreach (var r in replies)
                     {
+
+                        string avatarReply;
                         string replyAuthor = r.user;
+                        if (r.UserName == App.GlobalUser.UserName && Settings.IsLoggedIn)
+                        {
+                            avatarReply = App.GlobalUser.Avatar;
+                        }
+                        else
+                        {
+                            avatarReply = r.avatar == null ? "default_user_128.png" : r.avatar;
+                        }
                         string ShowDeleteReply;
-                        if (String.Equals(commentAuthor, currentUser, StringComparison.OrdinalIgnoreCase))
+                        if (String.Equals(replyAuthor, currentUser, StringComparison.OrdinalIgnoreCase))
                         {
 
                             ShowDeleteReply = "true";
@@ -691,20 +727,25 @@ namespace EventApp.Views
 
                         // If already blocked, reported or it's their own, don't allow another report
                         if (r.blocked == true || r.reported == true ||
-                            (String.Equals(commentAuthor, currentUser, StringComparison.OrdinalIgnoreCase))
+                            (String.Equals(replyAuthor, currentUser, StringComparison.OrdinalIgnoreCase))
                             || r.deleted == true)
                         {
                             showReportReply = false;
                         }
-                        Thickness paddingThickness = new Thickness(Convert.ToDouble(20), 10, 10, 10);
+                        Thickness paddingThickness = new Thickness(Convert.ToDouble(20), 0, 0, 0);
+
+                        string suffixReply = r.time_since_edit.ToString().Contains("now") ? "" : " ago";
+                        string TimeAgoReply = r.edited == null ? r.time_since :
+                            $"{r.time_since} (edited {r.time_since_edit}{suffixReply})";
+
                         PostComments.Add(new Comment()
                         {
                             Id = r.id,
                             Content = r.content,
                             HolidayId = r.holiday,
-                            UserName = r.user,
-                            TimeSince = TimeAgoComment,
-                            Avatar = avatarComment,
+                            UserName = replyAuthor,
+                            TimeSince = TimeAgoReply,
+                            Avatar = avatarReply,
                             ShowEdit = ShowDeleteReply, // If you can delete, you can edit
                             ShowDelete = ShowDeleteReply,
                             ShowReport = showReportReply,
@@ -754,17 +795,9 @@ namespace EventApp.Views
 
             //}
 
-            if(HolidayPosts.Count == 0)
-            {
-                Debug.WriteLine("Refreshing");
-                HolidayPosts = await GetHolidayPosts();
-            }
-
-            PostList.ItemsSource = HolidayPosts;
 
 
-
-               try
+            try
             {
                 viewModel.Holiday = await viewModel.HolidayStore.GetHolidayById(viewModel.HolidayId);
                 HolidayImageSource.Source = viewModel.Holiday.HolidayImage;
@@ -780,7 +813,6 @@ namespace EventApp.Views
 
                 HolidayDate.Text = viewModel.Holiday.TimeSince;
 
-                //this.Title = viewModel.Holiday.Name;
                 TitleBar.Title = viewModel.Holiday.Name;
                 CurrentVotes.Text = viewModel.Holiday.Votes.ToString() + " Celebrating!";
 
@@ -800,18 +832,27 @@ namespace EventApp.Views
 
                 PostList.IsVisible = true;
 
-                if (viewModel.CommentLink != null)
-                {
-                    // TODO scroll to comment linked
-                    //HolidayDetailList.ScrollTo(viewModel.CommentLink, ScrollToPosition.MakeVisible, true);
-                    //Debug.WriteLine($"Index of comment {viewModel.GroupedCommentList.IndexOf(viewModel.CommentLink)}");
-                }
+                //if (viewModel.CommentLink != null)
+                //{
+                //    // TODO scroll to comment linked
+                //    //HolidayDetailList.ScrollTo(viewModel.CommentLink, ScrollToPosition.MakeVisible, true);
+                //    //Debug.WriteLine($"Index of comment {viewModel.GroupedCommentList.IndexOf(viewModel.CommentLink)}");
+                //}
 
             }
             catch
             {
                 await DisplayAlert("Error", "We couldn't fetch the data for this holiday", "OK");
                 await Navigation.PopAsync();
+            }
+            finally
+            {
+                if (HolidayPosts.Count == 0)
+                {
+                    HolidayPosts = await GetHolidayPosts();
+                }
+
+                PostList.ItemsSource = HolidayPosts;
             }
 
             // On login, refresh holiday celebration data
@@ -827,32 +868,93 @@ namespace EventApp.Views
                 MessagingCenter.Unsubscribe<LoginPage>(this, "UpdatePosts");
             });
 
-
-
-            MessagingCenter.Subscribe<NewCommentPopUp>(this, "UpdateComments", (sender) =>
+            MessagingCenter.Subscribe<NewCommentPopUp, Object[]>(this,
+            "UpdateCommentInPlace", (sender, data) =>
             {
-                Debug.WriteLine("Refreshing comments");
-                viewModel.ExecuteLoadCommentsCommand();
+                var comment = ((Comment)data[0]);
+                comment.Content = (string)data[1];
+                comment.TimeSince = $"{(string)data[2]}";
+
+
+                var element = (data[3] as ContentView).Parent;
+                while (element.GetType() != typeof(ViewCell))
+                {
+                    element = element.Parent;
+                }
+                ((ViewCell)element).ForceUpdateSize();
+
             });
 
+            MessagingCenter.Subscribe<PostPage, Object[]>(this,
+            "UpdatePostInPlace", (sender, data) =>
+            {
+                var post = ((Post)data[0]);
+                post.Content = (string)data[1];
+                post.TimeSince = $"{(string)data[2]}";
+
+
+                var element = (data[3] as ContentView).Parent;
+                while (element.GetType() != typeof(ViewCell))
+                {
+                    element = element.Parent;
+                }
+                ((ViewCell)element).ForceUpdateSize();
+
+
+            });
+
+
+
+            MessagingCenter.Subscribe<NewCommentPopUp, Object[]>(this, "UpdateComments", (sender, data) =>
+            {
+                //RefreshPosts(null, null);
+                //ScrollToFirstPost();
+                RefreshPostsAndScroll((Comment)data[0], (Post)data[1], (dynamic)data[2]);
+            });
+
+            // Edit post and edit comment go to different places
             MessagingCenter.Subscribe<PostPage>(this, "RefreshPosts", (sender) =>
             {
                 RefreshPosts(null, null);
                 MessagingCenter.Unsubscribe<PostPage>(this, "RefreshPosts");
             });
 
-            MessagingCenter.Subscribe<PostOptionsPopUp, Post>(this, "EditPost", (sender, entity) =>
+
+            MessagingCenter.Subscribe<PostOptionsPopUp, Object[]>(this,
+            "EditPost", (sender, data) =>
             {
-                Navigation.PushModalAsync(
-                           new NavigationPage(
-                               new PostPage(viewModel.Holiday, entity)
-                           ));
+                var container = (ContentView)data[1];
+                if (data[0].GetType() == typeof(Post))
+                {
+                    
+                    var post = (Post)data[0];
+                    Navigation.PushModalAsync(
+                       new NavigationPage(
+                           new PostPage(viewModel.Holiday, post, container)
+                       ));
+
+                }
+                else if (data[0].GetType() == typeof(Comment))
+                {
+                    var comment = (Comment)data[0];
+                    Navigation.PushPopupAsync(new NewCommentPopUp(viewModel.Holiday, comment, edit: true, container: container));
+
+                }
+
             });
 
-            MessagingCenter.Subscribe<PostOptionsPopUp, Comment>(this, "EditPost", (sender, entity) =>
-            {
-               Navigation.PushPopupAsync(new NewCommentPopUp(viewModel.Holiday, entity, edit: true));
-            });
+            //MessagingCenter.Subscribe<PostOptionsPopUp, Post>(this, "EditPost", (sender, entity) =>
+            //{
+            //    Navigation.PushModalAsync(
+            //               new NavigationPage(
+            //                   new PostPage(viewModel.Holiday, entity)
+            //               ));
+            //});
+
+            //MessagingCenter.Subscribe<PostOptionsPopUp, Comment>(this, "EditPost", (sender, entity) =>
+            //{
+            //    Navigation.PushPopupAsync(new NewCommentPopUp(viewModel.Holiday, entity, edit: true));
+            //});
 
             MessagingCenter.Subscribe<PostOptionsPopUp, Post>(this, "DeletePost", (sender, entity) =>
             {
@@ -872,52 +974,57 @@ namespace EventApp.Views
                 ReportPost(comment: entity);
             });
 
-            async void ScrollToPost()
-            {
-                int numTries = 10;
-                while (HolidayPosts.Count == 0)
-                {
-                    numTries++;
 
-                    if (numTries >= 15)
-                    {
-                        await DisplayAlert("Error", "Couldn't load posts", "OK");
-                        return;
-                    }
-                    await Task.Delay(500);
+            MessagingCenter.Unsubscribe<PostPage, Post>(this, "AddPost");
+
+            AdBanner.IsVisible = !isPremium;
+
+        }
+
+        async void ScrollToFirstPost()
+        {
+            int numTries = 10;
+            while (HolidayPosts.Count == 0)
+            {
+                numTries++;
+
+                if (numTries >= 15)
+                {
+                    await DisplayAlert("Error", "Couldn't load posts", "OK");
+                    return;
                 }
-                PostList.ScrollTo(((IList)PostList.ItemsSource)[0], ScrollToPosition.Start, true);
+                await Task.Delay(500);
             }
+            PostList.ScrollTo(((IList)PostList.ItemsSource)[0], ScrollToPosition.Start, true);
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            MessagingCenter.Unsubscribe<NewCommentPopUp, Object[]>(this, "UpdateComments");
+            MessagingCenter.Unsubscribe<PostOptionsPopUp, Object[]>(this, "EditPost");
+            MessagingCenter.Unsubscribe<PostOptionsPopUp, Post>(this, "DeletePost");
+            MessagingCenter.Unsubscribe<PostOptionsPopUp, Post>(this, "ReportPost");
+
+
+            MessagingCenter.Unsubscribe<PostOptionsPopUp, Comment>(this, "DeletePost");
+            MessagingCenter.Unsubscribe<PostOptionsPopUp, Comment>(this, "ReportPost");
+            MessagingCenter.Unsubscribe<NewCommentPopUp, Object[]>(this, "UpdateCommentInPlace");
+            MessagingCenter.Unsubscribe<NewCommentPopUp, Object[]>(this, "UpdatePostInPlace");
+            
+            //MessagingCenter.Unsubscribe<HolidayDetailPage, Object[]>(this, "AppendComment");
             MessagingCenter.Subscribe<PostPage, Post>(this, "AddPost", (sender, post) =>
             {
-
-                if(HolidayPosts.Count > 0)
+                if (HolidayPosts.Count > 0)
                 {
                     HolidayPosts.Insert(0, post);
                     PostList.ScrollTo(((IList)PostList.ItemsSource)[0], ScrollToPosition.Start, true);
                 }
                 else
                 {
-                    ScrollToPost();
+                    ScrollToFirstPost();
                 }
-                MessagingCenter.Unsubscribe<PostPage, Post>(this, "AddPost");
             });
-
-            AdBanner.IsVisible = !isPremium;
-
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-            MessagingCenter.Unsubscribe<NewCommentPopUp>(this, "UpdateComments");
-            MessagingCenter.Unsubscribe<PostOptionsPopUp, Post>(this, "EditPost");
-            MessagingCenter.Unsubscribe<PostOptionsPopUp, Post>(this, "DeletePost");
-            MessagingCenter.Unsubscribe<PostOptionsPopUp, Post>(this, "ReportPost");
-
-            MessagingCenter.Unsubscribe<PostOptionsPopUp, Comment>(this, "EditPost");
-            MessagingCenter.Unsubscribe<PostOptionsPopUp, Comment>(this, "DeletePost");
-            MessagingCenter.Unsubscribe<PostOptionsPopUp, Comment>(this, "ReportPost");
         }
 
 
@@ -955,33 +1062,6 @@ namespace EventApp.Views
 
         }
 
-        async void AddComment(object sender, EventArgs args)
-        {
-            
-            this.IsEnabled = false;
-            bool allowed = Time.ActiveHoliday(viewModel.Holiday.TimeSince);
-            if (allowed)
-            {
-                if (!isLoggedIn)
-                {
-                    App.promptLogin(Navigation);
-                }
-                else
-                {
-                    this.IsEnabled = false;
-                    await Navigation.PushPopupAsync(new NewCommentPopUp(viewModel.Holiday));
-                    this.IsEnabled = true;
-                }
-            }
-            else
-            {
-                await DisplayAlert("Sorry!", "We currently restrict new comments to holidays in the past week.", "OK");
-            }
-            this.IsEnabled = true;
-
-        }
-
-
         async void UpVote(object sender, EventArgs args)
         {
             this.IsEnabled = false;
@@ -1011,7 +1091,7 @@ namespace EventApp.Views
                     UpVoteImage.Source = "celebrate.png";
                     await UpVoteImage.ScaleTo(2, 50);
                     await UpVoteImage.ScaleTo(1, 50);
-                    await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, "3");
+                    await Services.GlobalServices.VoteHoliday(viewModel.HolidayId, "3");
 
 
                     Object[] values = { viewModel.Holiday.Name, false, newVotesInt.ToString() };
@@ -1027,7 +1107,7 @@ namespace EventApp.Views
                         UpVoteImage.Source = "celebrate_active.png";
                         await UpVoteImage.ScaleTo(2, 50);
                         await UpVoteImage.ScaleTo(1, 50);
-                        await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, "1");
+                        await Services.GlobalServices.VoteHoliday(viewModel.HolidayId, "1");
 
 
                     Object[] values = { viewModel.Holiday.Name, true, newVotesInt.ToString() };
@@ -1040,7 +1120,7 @@ namespace EventApp.Views
                     UpVoteImage.Source = "celebrate.png";
                     await UpVoteImage.ScaleTo(2, 50);
                     await UpVoteImage.ScaleTo(1, 50);
-                    await viewModel.HolidayStore.VoteHoliday(viewModel.HolidayId, "5");
+                    await Services.GlobalServices.VoteHoliday(viewModel.HolidayId, "5");
 
     
                     Object[] values = { viewModel.Holiday.Name, false, newVotesInt.ToString() };
@@ -1214,10 +1294,15 @@ namespace EventApp.Views
         }
         public async void OpenOptions(object sender, EventArgs args)
         {
+            if (!isLoggedIn)
+            {
+                App.promptLogin(Navigation);
+                return;
+            }
             Post post = (sender as ContentView).BindingContext as Post;
             try
             {
-                await Navigation.PushPopupAsync(new PostOptionsPopUp(post: post));
+                await Navigation.PushPopupAsync(new PostOptionsPopUp(post: post, container: (sender as ContentView)));
             }
             catch (Exception ex)
             {
@@ -1228,12 +1313,16 @@ namespace EventApp.Views
 
         public async void OpenCommentOptions(object sender, EventArgs args)
         {
-     
-          
+
+            if (!isLoggedIn)
+            {
+                App.promptLogin(Navigation);
+                return;
+            }
             Comment comment = (sender as ContentView).BindingContext as Comment;
             try
             {
-                await Navigation.PushPopupAsync(new PostOptionsPopUp(comment: comment));
+                await Navigation.PushPopupAsync(new PostOptionsPopUp(comment: comment, container: (sender as ContentView)));
             }
             catch (Exception ex)
             {

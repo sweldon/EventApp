@@ -15,6 +15,7 @@ namespace EventApp.Models
         public string Title { get; set; }
         public string Author { get; set; }
         public string Icon { get; set; }
+        public string HolidayId { get; set; }
         private Color bg;
         public Color BackgroundColor
         {

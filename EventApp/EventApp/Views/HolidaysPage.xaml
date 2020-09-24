@@ -5,7 +5,6 @@
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
              xmlns:local="clr-namespace:EventApp.Views"
-             xmlns:frame="clr-namespace:EventApp"
              xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
              >
 
@@ -15,7 +14,7 @@
 
         <StackLayout Spacing="0">
 
-            <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="0" BackgroundColor="#FFFFFF">
+            <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="0">
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -23,9 +22,29 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <StackLayout Grid.Column="0" Spacing="0">
+                        <ContentView Padding="10">
+                            <Label x:Name="PastLabel"
+                                    Text="Past"
+                                    TextColor="Gray"
+                                    HorizontalOptions="CenterAndExpand" />
+                            <ContentView.GestureRecognizers>
+                            <TapGestureRecognizer
+                            Tapped="ToggleFindType"  />
+                            </ContentView.GestureRecognizers>
+                        </ContentView>
+                        <BoxView x:Name="PastSelected"
+                            IsVisible="False"
+                            VerticalOptions="End"
+                            HeightRequest="1"
+                            BackgroundColor="#4c96e8"
+                            HorizontalOptions="FillAndExpand" />
+                    </StackLayout>
+
+                    <StackLayout Grid.Column="1" Spacing="0">
                         <ContentView Padding="10">
                             <Label x:Name="TodayLabel"
                                     Text="Today"
@@ -43,7 +62,7 @@
                             BackgroundColor="#4c96e8"
                             HorizontalOptions="FillAndExpand" />
                     </StackLayout>
-                    <StackLayout Grid.Column="1" Spacing="0">
+                    <StackLayout Grid.Column="2" Spacing="0">
                         <ContentView Padding="10">
                             <Label x:Name="SocialMediaLabel"
                                    Text="Buzz"
@@ -63,19 +82,23 @@
                     </StackLayout>
                 </Grid>
 
+
+            <local:PastHolidays x:Name="PastHolidaysWrapper" IsVisible="{Binding IsVisible}"/>
+
             <StackLayout Spacing="0" x:Name="HolidayListWrapper">
 
             <StackLayout x:Name="MainFeed" VerticalOptions="Start" Spacing="0">
 
 
                     <ListView x:Name="ItemsListView"
-                        IsRefreshing="false" 
+                        IsRefreshing="false"
+                        VerticalScrollBarVisibility="Never"
                         SeparatorVisibility="None"
                         ItemsSource="{Binding Holidays}"
                         HasUnevenRows="true"
                         IsPullToRefreshEnabled="True"
                         Refreshing="RefreshHolidaysCommand"
-                        BackgroundColor="#E5E5E5" 
+                        BackgroundColor="#e5e5e5"
                         >
 
                     <!--This is for dynamically changing background color based on list size-->
@@ -91,12 +114,12 @@
                             <DataTemplate>
                                 <ViewCell>
 
-                                   <ContentView Padding="10, 5, 10, 0">
-                    <frame:CustomFrame HasShadow="True" CornerRadius="2" Padding="0">
+                                   <ContentView BackgroundColor="#ffffff">
+                
 
-                        <frame:CustomFrame.Margin>
-                        <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" iOS="0,2" />
-                        </frame:CustomFrame.Margin>
+                        <ContentView.Margin>
+                        <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" iOS="0,8,0,0" />
+                        </ContentView.Margin>
 
                              
 
@@ -309,7 +332,7 @@
 
 
                                
-                    </frame:CustomFrame>
+                 
                                        </ContentView>
 
 
@@ -334,17 +357,18 @@
                     HasUnevenRows="true"
                     IsPullToRefreshEnabled="True"
                     Refreshing="RefreshSocialMediaCommand"
-                    BackgroundColor="#DEDEDE">
+                    VerticalScrollBarVisibility="Never"
+                    BackgroundColor="#E5E5E5">
 
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                   <ContentView Padding="10, 5, 10, 0">
-                            <frame:CustomFrame HasShadow="True" CornerRadius="2" Padding="0">
+                                       <ContentView BackgroundColor="#ffffff">
+                
 
-                                <frame:CustomFrame.Margin>
-                                <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" iOS="0,2" />
-                                </frame:CustomFrame.Margin>
+                            <ContentView.Margin>
+                            <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" iOS="0,8,0,0" />
+                            </ContentView.Margin>
                                             <StackLayout Spacing="0">
 
                                                 <Grid HorizontalOptions="FillAndExpand" BackgroundColor="{Binding BackgroundColor}">
@@ -443,7 +467,7 @@
                                                     </Grid>
  
 
-                                                    <StackLayout Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Spacing="0">
+                                                    <StackLayout  Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Spacing="0">
                                                         <StackLayout.Padding>
                                                         <OnPlatform x:TypeArguments="Thickness"
                                                         Android="0,0,10,0" iOS="0,0,8,0"/>
@@ -494,13 +518,13 @@
 
                                             </StackLayout>
 
-                                    </frame:CustomFrame>
+                      
                                 </ContentView>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.Footer>
-                    <StackLayout x:Name="NoResults" IsVisible="False" Padding="15" BackgroundColor="#DEDEDE">
+                    <StackLayout x:Name="NoResults" IsVisible="False" Padding="15" BackgroundColor="#E5E5E5">
                         
                        
                         <Frame CornerRadius="3"

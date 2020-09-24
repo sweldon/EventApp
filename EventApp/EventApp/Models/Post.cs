@@ -214,18 +214,17 @@ namespace EventApp.Models
             }
         }
         public string HolidayId { get; set; }
-        public string TimeSince { get; set; }
-        private string timeSinceEdit;
-        public string TimeSinceEdit
+        private string timesince;
+        public string TimeSince
         {
-            get { return timeSinceEdit; }
+            get { return timesince; }
             set
             {
-                if (timeSinceEdit == value)
+                if (timesince == value)
                 {
                     return;
                 }
-                timeSinceEdit = value;
+                timesince = value;
                 OnPropertyChanged();
             }
         }

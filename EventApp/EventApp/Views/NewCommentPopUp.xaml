@@ -63,8 +63,6 @@
             </StackLayout>
         </ScrollView>
 
-
-
         <ContentView IsVisible="False" x:Name="UserMentionPlaceHolderWrapper" Padding="15">
 
             <Label

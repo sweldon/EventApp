@@ -80,21 +80,21 @@ namespace EventApp.Views
             }
             var notif = args.SelectedItem as Notification;
 
-            if (notif.Type == "Comment" && !NotificationLock)
+            if (!NotificationLock)
             {
                 NotificationLock = true;
                 try
                 {
-                    comment = await ApiHelpers.GetCommentById(notif.Id);
-                    Holiday holiday = await ApiHelpers.GetHolidayById(comment.HolidayId);
+                    Holiday holiday = await ApiHelpers.GetHolidayById(notif.HolidayId);
                     await Navigation.PushAsync(new HolidayDetailPage(
-                        new HolidayDetailViewModel(comment.HolidayId, holiday, notif.Id)));
+                        new HolidayDetailViewModel(notif.HolidayId, holiday)));
                 }
                 catch
                 {
-                    await DisplayAlert("Uh oh!", "We could no longer find that comment.", "Fine");
+                    await DisplayAlert("Uh oh!", "We could no longer find that " +
+                        "notification", "OK");
                 }
-                await Task.Delay(2000);
+                await Task.Delay(1000);
                 NotificationLock = false;
             }
         }
@@ -164,7 +164,8 @@ namespace EventApp.Views
                         Content = n.content,
                         TimeSince = n.time_since,
                         Icon = n.icon == null ? "icon_splash.png" : n.icon,
-                        BackgroundColor = bg_color
+                        BackgroundColor = bg_color,
+                        HolidayId = n.holiday_id
                     });
                 }
             }

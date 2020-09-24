@@ -28,9 +28,9 @@ namespace EventApp.Views
             get { return Settings.DevicePushId; }
         }
         private dynamic LinkedEntity;
-
+        private ContentView ContainingElement;
         private List<PostOption> options = new List<PostOption>();
-        public PostOptionsPopUp(Post post = null, Comment comment = null)
+        public PostOptionsPopUp(Post post = null, Comment comment = null, ContentView container =null)
         {
             InitializeComponent();
 
@@ -43,6 +43,8 @@ namespace EventApp.Views
                 LinkedEntity = comment;
             }
 
+            ContainingElement = container;
+
             if (bool.Parse(LinkedEntity.ShowEdit))
                 options.Add(new PostOption() { Name = "Edit", Icon = "Submit_Menu_Icon.png" });
 
@@ -52,6 +54,8 @@ namespace EventApp.Views
             if (LinkedEntity.ShowReport)
                 options.Add(new PostOption() { Name = "Report", Icon = "Flag.png" });
 
+            if(options.Count == 0)
+                options.Add(new PostOption() { Name = "No Options Available", Icon = "alert.png" });
             OptionList.ItemsSource = options;
         }
 
@@ -91,7 +95,9 @@ namespace EventApp.Views
                     Debug.WriteLine($"{option.Name}");
                     if (option.Name == "Edit")
                     {
-                        MessagingCenter.Send(this, "EditPost", LinkedEntity);
+                        //MessagingCenter.Send(this, "EditPost", LinkedEntity);
+                        Object[] data = { LinkedEntity, ContainingElement };
+                        MessagingCenter.Send(this, "EditPost", data);
                     }
                     else if (option.Name == "Delete")
                     {

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.PostPage"
     xmlns:local="clr-namespace:EventApp.Views"
+             xmlns:editor="clr-namespace:EventApp"
                  xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations">
 
@@ -10,6 +11,12 @@
 
         <NavigationPage.TitleView>
         <Grid HorizontalOptions="FillAndExpand">
+
+                <Grid.Padding>
+                    <OnPlatform x:TypeArguments="Thickness"
+                        Android="0, 0, 20, 0" />
+                </Grid.Padding>
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                  <ColumnDefinition />
@@ -76,13 +83,51 @@
                     <Label x:Name="UserName" TextColor="{StaticResource Key='NavigationPrimary'}" HorizontalOptions="Start" FontSize="Small"/>
             </ContentView>
 
-        <ContentView Grid.Row="1" Grid.ColumnSpan="2" Padding="15, 5, 0, 0">
-            <local:ExtendedEditor 
+        <StackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="0">
+                    <ContentView  Padding="15, 5, 0, 0">
+            <editor:CustomEditor
             MaxLength="500"
+            TextChanged="CheckMentions"
             AutoSize="TextChanges"
             Placeholder="Post something..."
             x:Name="CommentContent" />
         </ContentView>
+
+         <StackLayout IsVisible="False" x:Name="RemoveImageButton" Padding="0" Spacing="0" BackgroundColor="#F0F0F0">
+            <BoxView Color="LightGray" 
+                HorizontalOptions="FillAndExpand" 
+                HeightRequest="1"/>
+
+            <ContentView Padding="5" VerticalOptions="Center">
+            <Label Text="Remove Image"
+                    TextColor="Gray"
+                    FontAttributes="Bold"
+                    VerticalTextAlignment="Center"
+                    HorizontalTextAlignment="Center" />
+            </ContentView>
+
+            <BoxView Color="LightGray" 
+            HorizontalOptions="FillAndExpand" 
+            HeightRequest="1"/>
+
+       
+            <StackLayout.GestureRecognizers>
+            <TapGestureRecognizer
+            Tapped="RemoveImage"  />
+            </StackLayout.GestureRecognizers>
+
+        </StackLayout>
+        <Image x:Name="UploadedImage" IsVisible="False" Aspect="AspectFill">
+
+            <!--Photo browser does not work in modal-->
+            <!--<Image.GestureRecognizers>
+            <TapGestureRecognizer
+            Tapped="PreviewImage"  />
+            </Image.GestureRecognizers>-->
+
+        </Image>
+     </StackLayout>
+
 
 
         <StackLayout x:Name="layout"  VerticalOptions="EndAndExpand"
@@ -94,40 +139,101 @@
                     BackgroundColor="White">
 
 
-
-            <StackLayout IsVisible="False" x:Name="RemoveImageButton" Padding="0" Spacing="0" BackgroundColor="#F0F0F0">
                 <BoxView Color="LightGray" 
                     HorizontalOptions="FillAndExpand" 
                     HeightRequest="1"/>
+        <!--User mention list-->
+        <ContentView IsVisible="False" x:Name="UserMentionPlaceHolderWrapper" Padding="15">
 
-                <ContentView Padding="5" VerticalOptions="Center">
-                <Label Text="Remove Image"
-                       TextColor="Gray"
-                       FontAttributes="Bold"
-                       VerticalTextAlignment="Center"
-                       HorizontalTextAlignment="Center" />
-                </ContentView>
+            <Label
+                x:Name="UserMentionPlaceholder"
+                Text="Type a user's name to mention them!"
+                Opacity=".5"
+                FontAttributes="Italic"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                IsEnabled="False"
+                />
+  
+        </ContentView>
 
-                <BoxView Color="LightGray" 
-                HorizontalOptions="FillAndExpand" 
-                HeightRequest="1"/>
+        <ContentView IsVisible="False" x:Name="NoResults" Padding="15">
 
-       
-                <StackLayout.GestureRecognizers>
-                <TapGestureRecognizer
-                Tapped="RemoveImage"  />
-                </StackLayout.GestureRecognizers>
+            <Label
+                Text="No users found"
+                Opacity=".5"
+                FontAttributes="Italic"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                IsEnabled="False"
+             />
+           
+        </ContentView>
 
-            </StackLayout>
-            <Image x:Name="UploadedImage" IsVisible="False" HeightRequest="200" Aspect="AspectFill">
+        <ContentView x:Name="UserMentionListWrapper" IsVisible="False">
+            <ListView x:Name="UserMentionList"
+                    SeparatorVisibility="None"
+                    HasUnevenRows="True"
+                    IsPullToRefreshEnabled="False"
+                    CachingStrategy="RecycleElement">
+                    <ListView.BackgroundColor>
+                        <OnPlatform x:TypeArguments="Color"
+                    iOS="#E0E0E0"/>
+                    </ListView.BackgroundColor>
 
-            <!--Photo browser does not work in modal-->
-            <!--<Image.GestureRecognizers>
-            <TapGestureRecognizer
-            Tapped="PreviewImage"  />
-            </Image.GestureRecognizers>-->
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="White">
+                                        <StackLayout>
+                                            <Grid HorizontalOptions="FillAndExpand" >
 
-            </Image>
+                                                <Grid.Padding>
+                                                 <OnPlatform x:TypeArguments="Thickness"
+                                                        Android="5,5,5,5" iOS="5,5,5,5"/>
+                                                </Grid.Padding>
+
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+
+                                                <ContentView HorizontalOptions="Start" Grid.Column="0" Padding="5">
+                                                    <ffimageloading:CachedImage
+                                                        Source="{Binding Avatar}"
+                                                        WidthRequest="40"
+                                                        HeightRequest="40" Aspect="AspectFill"
+                                                        VerticalOptions="Start"
+                                                        HorizontalOptions="CenterAndExpand"
+                                                        LoadingPlaceholder="default_user_32.png">
+                                                        <ffimageloading:CachedImage.Transformations>
+                                                            <fftransformations:CircleTransformation />
+                                                        </ffimageloading:CachedImage.Transformations>
+                                                     </ffimageloading:CachedImage>
+
+
+                                                </ContentView>
+
+
+                                                <Grid Grid.Column="1" Padding="10, 0, 0, 0">
+
+                                                    <ContentView VerticalOptions="Center">
+                                                        <Label Text="{Binding UserName}"
+                                                          FontSize="20"
+                                                          TextColor="#4c96e8" />
+                                                    </ContentView>
+                                                </Grid>
+                                            </Grid>
+                                        </StackLayout>
+                                    </ContentView>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+            </ContentView>
+
 
             <BoxView Color="LightGray" 
                     HorizontalOptions="FillAndExpand" 

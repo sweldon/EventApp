@@ -11,6 +11,7 @@ using MarcTron.Plugin.Controls;
 using Newtonsoft.Json;
 using Plugin.StoreReview;
 using Xamarin.Forms;
+using EventApp.Models;
 #if __IOS__
 using UIKit;
 #endif

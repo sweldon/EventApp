@@ -40,7 +40,8 @@
             </Label>
 
            <ContentView Grid.Column="0">
-            <Image Source="holidaily_banner_white.png"
+               <!--845x267-->
+            <Image Source="holidaily_header_white.png"
                     VerticalOptions="Center"
                     x:Name="HeaderImage"/>
 

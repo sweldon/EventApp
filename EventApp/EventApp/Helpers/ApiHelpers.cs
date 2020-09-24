@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using EventApp.Models;
 using Newtonsoft.Json;
-
+using System.Diagnostics;
 
 namespace EventApp
 {
@@ -84,41 +84,38 @@ namespace EventApp
 
         }
 
-        public static async Task<Comment> GetCommentById(string id)
-        {
-            Comment individualComment = null;
-            var values = new Dictionary<string, string>{
-                   { "id", id }
-                };
+        //public static async Task<dynamic> GetNotification(Notiication notif)
+        //{
+        //    Comment individualComment = null;
 
-            var content = new FormUrlEncodedContent(values);
-            var response = await App.globalClient.PostAsync(App.HolidailyHost + "/comments/" + id + "/", content);
-            var responseString = await response.Content.ReadAsStringAsync();
-            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-            dynamic commentJSON = responseJSON.results;
+        //    var response = await App.globalClient.GetAsync($"{App.HolidailyHost}/{ep}/{id}/");
+        //    var responseString = await response.Content.ReadAsStringAsync();
+        //    dynamic commentJSON = JsonConvert.DeserializeObject(responseString);
 
-            try
-            {
-                string TimeAgo = commentJSON.time_since;
+        //    try
+        //    {
+        //        // todo parse this as a generic notification. you just
+        //        // need the holiday id to push async holiday detail
+        //        string TimeAgo = commentJSON.time_since;
 
-                individualComment = new Comment()
-                {
-                    Id = commentJSON.id,
-                    Content = commentJSON.content,
-                    HolidayId = commentJSON.holiday_id,
-                    UserName = commentJSON.user,
-                    TimeSince = TimeAgo
-                };
-            }
-            catch
-            {
-
-            }
+        //        individualComment = new Comment()
+        //        {
+        //            Id = commentJSON.id,
+        //            Content = commentJSON.content,
+        //            HolidayId = commentJSON.holiday_id,
+        //            UserName = commentJSON.user,
+        //            TimeSince = TimeAgo
+        //        };
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        Debug.WriteLine($"{ex}");
+        //    }
 
 
-            return await Task.FromResult(individualComment);
+        //    return await Task.FromResult(individualComment);
 
-        }
+        //}
 
     }
 }

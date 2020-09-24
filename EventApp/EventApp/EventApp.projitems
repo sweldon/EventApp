@@ -43,6 +43,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\PastHolidays.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\ForceUpdatePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
@@ -157,6 +165,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Views\ExtendedEditor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\PostOptionsPopUp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\PostOption.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\PastHolidays.xaml.cs">
+      <DependentUpon>PastHolidays.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ForceUpdatePage.xaml.cs">
+      <DependentUpon>ForceUpdatePage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\RootPage.xaml">

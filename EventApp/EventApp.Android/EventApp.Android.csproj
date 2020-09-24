@@ -140,13 +140,13 @@
       <Version>5.0.1</Version>
     </PackageReference>
     <PackageReference Include="Rg.Plugins.Popup">
-      <Version>2.0.0.3</Version>
+      <Version>2.0.0.5</Version>
     </PackageReference>
     <PackageReference Include="BadgeView">
       <Version>2017.10.17</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>4.8.0.1269</Version>
+      <Version>4.8.0.1451</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.Compat">
       <Version>28.0.0.3</Version>
@@ -198,10 +198,6 @@
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\drawable\holidaily_banner_white.png">
-      <SubType></SubType>
-      <Generator></Generator>
-    </AndroidResource>
     <AndroidResource Include="Resources\drawable\twitter.png">
       <SubType></SubType>
       <Generator></Generator>
@@ -247,6 +243,18 @@
       <Generator></Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\ellipses.png">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\splash_text_blue.png">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\alert.png">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\holidaily_header_white.png">
       <SubType></SubType>
       <Generator></Generator>
     </AndroidResource>
