@@ -8,6 +8,7 @@
     
     xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+    xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
     x:Class="EventApp.Views.PostOptionsPopUp">
 
     <pages:PopupPage.Animation>
@@ -22,13 +23,10 @@
             EasingOut="SinIn"/>
     </pages:PopupPage.Animation>
 
-    <frame:CustomFrame
-        CornerRadius="20"
-        HasShadow="True"
-        Padding="0"
-        VerticalOptions="FillAndExpand"
-        Background="#FFFFFF"
-        Margin="0, 300, 0, 0">
+
+
+    <pancake:PancakeView  Margin="0, 300, 0, 0" Padding="0"
+        BackgroundColor="#FFFFFF" CornerRadius="20,20,0,0" HorizontalOptions="FillAndExpand">
 
         <!--<Label Text="More options such as Edit, Delete, Report" />-->
         
@@ -55,6 +53,6 @@
 
                 </CollectionView.ItemTemplate>
         </CollectionView>
-    </frame:CustomFrame>
+    </pancake:PancakeView>
 
 </pages:PopupPage>

@@ -246,6 +246,9 @@
     <PackageReference Include="Plugin.StoreReview">
       <Version>2.0.0.5</Version>
     </PackageReference>
+    <PackageReference Include="Xamarin.Forms.PancakeView">
+      <Version>2.1.0.714</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets.xcassets\logo_splash_screen.imageset\" />

@@ -89,7 +89,12 @@ namespace EventApp.Models
         private string showreply;
         public string ShowReply
         {
-            get { return showreply; }
+            get
+            {
+                if (string.IsNullOrEmpty(showreply))
+                    return "true";
+                return showreply;
+            }
             set
             {
                 if (showreply == value)

@@ -267,5 +267,15 @@ namespace EventApp
         #endif
         }
 
+        public static void RefreshElement(dynamic element)
+        {
+            var entity = element.Parent;
+            while (entity.GetType() != typeof(ViewCell))
+            {
+                entity = entity.Parent;
+            }
+            ((ViewCell)entity).ForceUpdateSize();
+        }
+
     }
 }

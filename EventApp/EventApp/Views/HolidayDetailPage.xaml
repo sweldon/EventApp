@@ -440,7 +440,7 @@
                                 </StackLayout>
 
 
-                                <StackLayout Orientation="Horizontal" Spacing="5" Grid.Column="1" HorizontalOptions="End">
+                                <StackLayout Orientation="Horizontal" Spacing="5" Grid.Column="1" HorizontalOptions="End" IsVisible="{Binding ShowReply}">
                                     <Image Source="reply.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16" Opacity=".8"/>
                                     <Label Text="Reply" TextColor="#808080"
                                     VerticalTextAlignment="Center" Margin="0,0,8,0" />
@@ -538,7 +538,7 @@
                                                 </ContentView>
 
                                                 
-                                                <StackLayout Orientation="Horizontal" Spacing="5" Grid.Column="2" Grid.Row="4" HorizontalOptions="End">
+                                                <StackLayout Orientation="Horizontal" Spacing="5" Grid.Column="2" Grid.Row="4" HorizontalOptions="End" IsVisible="{Binding ShowReply}">
                                                     <Image Source="reply.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="14" Opacity=".8"/>
                                                     <Label Text="Reply" TextColor="#808080" FontSize="Small"
                                                     VerticalTextAlignment="Center" Margin="0,0,8,0" />

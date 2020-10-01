@@ -27,7 +27,7 @@
                 
 
                     <ContentView.Margin>
-                    <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" iOS="0,8,0,0" />
+                    <OnPlatform x:TypeArguments="Thickness" Android="0,6,0,0" iOS="0,8,0,0" />
                     </ContentView.Margin>
 
                         <StackLayout  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">

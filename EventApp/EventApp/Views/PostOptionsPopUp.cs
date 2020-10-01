@@ -101,10 +101,12 @@ namespace EventApp.Views
                     }
                     else if (option.Name == "Delete")
                     {
-                        MessagingCenter.Send(this, "DeletePost", LinkedEntity);
+                        Object[] data = { LinkedEntity, ContainingElement };
+                        MessagingCenter.Send(this, "DeletePost", data);
                     }else if (option.Name == "Report")
                     {
-                        MessagingCenter.Send(this, "ReportPost", LinkedEntity);
+                        Object[] data = { LinkedEntity, ContainingElement };
+                        MessagingCenter.Send(this, "ReportPost", data);
                     }
                 }
             }

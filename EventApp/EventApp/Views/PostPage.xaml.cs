@@ -20,6 +20,7 @@ namespace EventApp.Views
     public partial class PostPage : ContentPage
     {
         private MediaFile UploadedMedia;
+        private Stream UploadedStream;
         private string ImagePath;
         private int overflowCount = 0;
         private bool isSearching = false;
@@ -90,15 +91,6 @@ namespace EventApp.Views
             // For floating menu above keyboard on Android
             Xamarin.Forms.Application.Current.On<Xamarin.Forms.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
 
-            Debug.WriteLine("POST PAGE REAPPEARED");
-            // If android and uploaded image is visible, send message to holiday detail to resubscribe. then UNSUBCRIBE within it when executed.
-            // This is a workaround for detail appearing MID image preview on post.
-            // todo only if android
-            //if (UploadedImage.IsVisible)
-            //{
-            //    MessagingCenter.Send(this, "RestorePostListener");
-            //}
-
         }
 
         protected override void OnDisappearing()
@@ -114,7 +106,10 @@ namespace EventApp.Views
 
             MultipartFormDataContent content = new MultipartFormDataContent();
 
-            if(!UploadedImage.IsVisible && string.IsNullOrEmpty(CommentContent.Text))
+            if (CommentContent.Text != null)
+                CommentContent.Text = CommentContent.Text.Trim();
+
+            if (!UploadedImage.IsVisible && string.IsNullOrEmpty(CommentContent.Text))
             {
                 await DisplayAlert("Content Required",
                     "Please either type a comment or add an image", "OK");
@@ -125,9 +120,7 @@ namespace EventApp.Views
 
             if (UploadedMedia != null)
             {
-
-                Stream streamedImage = UploadedMedia.GetStream();
-                content.Add(new StreamContent(streamedImage), "post_image", $"{UploadedMedia.Path}");
+                content.Add(new StreamContent(UploadedStream), "post_image", $"{UploadedMedia.Path}");
             }
             if(!string.IsNullOrEmpty(CommentContent.Text))
             {
@@ -144,21 +137,29 @@ namespace EventApp.Views
                     content.Add(new StringContent("1"), "clear_image");
                 }
                 content.Add(new StringContent(devicePushId), "device_id");
-                var response = await App.globalClient.PatchAsync($"{App.HolidailyHost}/posts/{EditedPost.Id}/", content);
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    var responseString = await response.Content.ReadAsStringAsync();
-                    dynamic postJSON = JsonConvert.DeserializeObject(responseString);
-                    var TimeSinceEdit = $"{postJSON.time_since} (edited now)";
-                    Object[] data = { EditedPost, CommentContent.Text, TimeSinceEdit, Container };
-                    MessagingCenter.Send(this, "UpdatePostInPlace", data);
-                    await Navigation.PopModalAsync();
+                    var response = await App.globalClient.PatchAsync($"{App.HolidailyHost}/posts/{EditedPost.Id}/", content);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseString = await response.Content.ReadAsStringAsync();
+                        dynamic postJSON = JsonConvert.DeserializeObject(responseString);
+                        var TimeSinceEdit = $"{postJSON.time_since} (edited now)";
+                        string image = postJSON.image == null ? "" : postJSON.image;
+                        Object[] data = { EditedPost, CommentContent.Text, TimeSinceEdit, Container, image};
+                        MessagingCenter.Send(this, "UpdatePostInPlace", data);
+                        await Navigation.PopModalAsync();
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"ERROR: {response.StatusCode}");
+
+                    }
                 }
-                else
+                catch(Exception ex)
                 {
-                    Debug.WriteLine($"ERROR: {response.StatusCode}");
+                    Debug.WriteLine($"ERROR: {ex}");
                 }
-               
                 
             }
             else
@@ -177,7 +178,7 @@ namespace EventApp.Views
                     HolidayId = Holiday.Id,
                     UserName = currentUser,
                     TimeSince = "now",
-                    ShowReply = "false",
+                    ShowReply = "true",
                     ShowEdit = "true", // If you can delete, you can edit
                     ShowDelete = "true",
                     ShowReport = false,
@@ -194,7 +195,6 @@ namespace EventApp.Views
                 await Navigation.PopModalAsync();
 
             }
-
 
             await Task.Delay(3000);
             PostBtn.IsEnabled = true;
@@ -228,10 +228,8 @@ namespace EventApp.Views
                 UploadedImage.IsVisible = true;
                 RemoveImageButton.IsVisible = true;
                 UploadedMedia = selectedImageFile;
+                UploadedStream = selectedImageFile.GetStreamWithImageRotatedForExternalStorage();
                 //CommentContent.Focus();
-                #if __ANDROID__
-                    MessagingCenter.Send(this, "RestorePostListener");
-                #endif
             }
             catch
             {
@@ -268,6 +266,7 @@ namespace EventApp.Views
                 UploadedImage.IsVisible = true;
                 RemoveImageButton.IsVisible = true;
                 UploadedMedia = selectedImageFile;
+                UploadedStream = selectedImageFile.GetStreamWithImageRotatedForExternalStorage();
             }
             catch (Exception ex)
             {
