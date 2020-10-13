@@ -978,7 +978,7 @@ namespace EventApp.Views
                 MessagingCenter.Unsubscribe<PostPage, Post>(this, "AddPost");
             #endif
 
-            AdBanner.IsVisible = !isPremium;
+            //AdBanner.IsVisible = !isPremium;
 
         }
 

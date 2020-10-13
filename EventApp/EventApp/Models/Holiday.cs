@@ -15,9 +15,23 @@ namespace EventApp.Models
         public string DescriptionShort { get; set; }
         public string HolidayImage { get; set; }
         public bool ShowHolidayContent { get; set; }
-        public bool ShowAd { get; set; }
         public string Date { get; set; }
         public bool Active { get; set; }
+
+        public bool showad;
+        public bool ShowAd
+        {
+            get { return showad; }
+            set
+            {
+                if (showad == value)
+                {
+                    return;
+                }
+                showad = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string votes;
         public string Votes

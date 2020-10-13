@@ -92,11 +92,25 @@ namespace EventApp.Services
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
             dynamic holidayList = responseJSON.results;
-
+            bool todayDone = false;
             foreach (var holiday in holidayList)
             {
                 string holidayDescription = holiday.description;
                 string HolidayDescriptionShort = holidayDescription.Length <= 90 ? holidayDescription : holidayDescription.Substring(0, 90) + "...";
+
+                if (holiday.time_since != "Today" && !todayDone && page == 0 && !past)
+                {
+                    todayDone = true;
+                    items.Add(new Holiday()
+                    {
+                        Id = "-1",
+                        ShowAd = true,
+                        ShowHolidayContent = false,
+                    });
+
+
+                }
+
                 items.Add(new Holiday()
                 {
                     Id = holiday.id,

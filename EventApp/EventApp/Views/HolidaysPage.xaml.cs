@@ -16,6 +16,7 @@ using Plugin.Share.Abstractions;
 using System.Collections.ObjectModel;
 using Stormlion.PhotoBrowser;
 using FFImageLoading.Forms;
+using System.Collections;
 
 #if __IOS__
 using UIKit;
@@ -101,6 +102,7 @@ namespace EventApp.Views
         }
 
         public string showAds;
+        private bool todayDone = false;
         public ObservableCollection<Tweet> Tweets { get; set; }
         
         public HolidaysPage()
@@ -149,16 +151,17 @@ namespace EventApp.Views
             // Infinite scrolling for main holidays
             ItemsListView.ItemAppearing += (sender, e) =>
             {
-                // Don't load more immediately
-                if(isActive)
+                var holiday = e.Item as Holiday;
+
+                if (isActive)
                 {
-                    var holiday = e.Item as Holiday;
+
                     if (viewModel.Holidays.Last() == holiday)
                     {
                         LoadMoreHolidays();
                     }
-                }
 
+                }
             };
 
         }
@@ -307,7 +310,7 @@ namespace EventApp.Views
                 }
                 
             }
-            AdBanner.IsVisible = !isPremium;
+            //AdBanner.IsVisible = !isPremium;
         }
 
         protected override void OnDisappearing()
@@ -456,8 +459,9 @@ namespace EventApp.Views
             NoResults.IsVisible = Tweets.Count == 0 ? true : false;
         }
 
-        protected void RefreshHolidaysCommand(object sender, EventArgs e)
+        protected async void RefreshHolidaysCommand(object sender, EventArgs e)
         {
+            
             viewModel.LoadItemsCommand.Execute(null);
             ItemsListView.EndRefresh();
             mainHolidaysPage = 0;
@@ -528,7 +532,7 @@ namespace EventApp.Views
                 PastSelected.IsVisible = false;
                 TodayLabel.TextColor = Color.Gray;
                 SocialMediaLabel.TextColor = Color.FromHex("4c96e8");
-                SocialMediaLabel.TextColor = Color.Gray;
+                PastLabel.TextColor = Color.Gray;
             }
         }
         public async void PreviewImage(object sender, EventArgs args)

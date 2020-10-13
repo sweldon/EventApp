@@ -117,7 +117,7 @@ namespace EventApp.Views
                 {
                     NoResults.IsVisible = false;
                 }
-                AdBanner.IsVisible = !isPremium;
+                //AdBanner.IsVisible = !isPremium;
             }
             else
             {

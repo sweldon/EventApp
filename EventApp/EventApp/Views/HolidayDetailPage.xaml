@@ -567,16 +567,18 @@
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-
+                <ListView.Footer>
+                    <ContentView Padding="0,10,0,0"/>
+                </ListView.Footer>
             </ListView>
  
         </ContentView>
 
-        <controls:MTAdView
+        <!--<controls:MTAdView
         x:Name="AdBanner"
         AdsId="{OnPlatform
         Android='ca-app-pub-9382412071078825/6429237516', 
-        iOS='ca-app-pub-9382412071078825/8862041693'}"/>
+        iOS='ca-app-pub-9382412071078825/8862041693'}"/>-->
 
     </StackLayout>
 
