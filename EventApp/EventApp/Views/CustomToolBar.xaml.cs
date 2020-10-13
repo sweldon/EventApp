@@ -67,29 +67,34 @@ namespace EventApp.Views
 
         public void updateBell()
         {
-            //BadgeWrapper.IsVisible = true;
-            BadgeWrapper.FadeTo(1, 100);
-            if (notifCount > 0)
+            Device.BeginInvokeOnMainThread(() =>
             {
-                if(notifCount > 99)
+                
+                if (notifCount > 0)
                 {
- 
-                    BellBadge.Text = "!";
+                    BellBadge.FadeTo(1, 100);
+                    BadgeWrapper.FadeTo(1, 100);
+
+                    if (notifCount > 99)
+                    {
+
+                        BellBadge.Text = "!";
+                    }
+                    else
+                    {
+                        BellBadge.Text = notifCount.ToString();
+                    }
                 }
                 else
                 {
-                    BellBadge.Text = notifCount.ToString();
+                    BellBadge.FadeTo(0, 100);
+                    BadgeWrapper.FadeTo(0, 100);
                 }
-            }
-            else
-            {
-                //BadgeWrapper.IsVisible = false;
-                BadgeWrapper.FadeTo(0, 100);
-            }
 
-            // Just in case some async shenanigans caused us to drop below 0
-            if (notifCount < 0)
-                notifCount = 0;
+                // Just in case some async shenanigans caused us to drop below 0
+                if (notifCount < 0)
+                    notifCount = 0;
+            });
 
         }
 
@@ -157,14 +162,16 @@ namespace EventApp.Views
 
         async void OpenNotifications(object sender, EventArgs e)
         {
+            // Reset bell
+            await BellBadge.FadeTo(0, 100);
+            await BadgeWrapper.FadeTo(0, 100);
+            notifCount = 0;
+
             BellBtn.IsEnabled = false;
             await Navigation.PushModalAsync(new NavigationPage(new NotificationsPage()));
             await Task.Delay(2000);
             BellBtn.IsEnabled = true;
 
-            // Reset bell
-            BadgeWrapper.IsVisible = false;
-            notifCount = 0;
         }
     }
 }

@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EventApp.Views.PostPage"
+    xmlns:local="clr-namespace:EventApp.Views"
+             xmlns:editor="clr-namespace:EventApp"
+                 xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations">
+
+
+
+        <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand">
+
+                <Grid.Padding>
+                    <OnPlatform x:TypeArguments="Thickness"
+                        Android="0, 0, 15, 0" />
+                </Grid.Padding>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                 <ColumnDefinition />
+                 <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+        <Label Margin="5,0,0,0" TextColor="White" Text="Cancel" x:Name="BackBtn" VerticalOptions="Center" Grid.Column="0" HorizontalOptions="Start">
+        <Label.GestureRecognizers>
+        <TapGestureRecognizer
+        Tapped="GoBack"  />
+        </Label.GestureRecognizers>
+
+        </Label>
+
+        <Label FontAttributes="Bold" Text="Write a Post"  TextColor="White" VerticalOptions="Center" Grid.Column="1" HorizontalOptions="Center"/>
+
+        <Label Margin="0,0,5,0" Text="Post" x:Name="PostBtn" TextColor="White" VerticalOptions="Center" Grid.Column="2" HorizontalOptions="End">
+
+            <Label.GestureRecognizers>
+            <TapGestureRecognizer
+            Tapped="AddPost"  />
+            </Label.GestureRecognizers>
+        </Label>
+
+         </Grid>
+
+    </NavigationPage.TitleView>
+
+
+    <local:KeyboardView
+            VerticalOptions="FillAndExpand">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+
+            </Grid.RowDefinitions>
+
+            <ContentView Grid.Column="0" Grid.Row="0" Padding="15, 15, 0, 0">
+            <ffimageloading:CachedImage
+            x:Name="Avatar"
+
+            WidthRequest="48"
+            HeightRequest="48"
+            Aspect="AspectFill"
+            VerticalOptions="Start"
+            HorizontalOptions="Start"
+            RetryCount= "60"
+            RetryDelay= "1000">
+
+            <ffimageloading:CachedImage.Transformations>
+                <fftransformations:CircleTransformation />
+            </ffimageloading:CachedImage.Transformations>
+            </ffimageloading:CachedImage>
+            </ContentView>
+
+
+                            
+            <ContentView Grid.Row="0"  Grid.Column="1" Padding="0, 15, 0, 0">
+                    <Label x:Name="UserName" TextColor="{StaticResource Key='NavigationPrimary'}" HorizontalOptions="Start" FontSize="Small"/>
+            </ContentView>
+
+        <StackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="0">
+                    <ContentView  Padding="15, 5, 0, 0">
+            <editor:CustomEditor
+            MaxLength="500"
+            TextChanged="CheckMentions"
+            AutoSize="TextChanges"
+            Placeholder="Post something..."
+            x:Name="CommentContent" />
+        </ContentView>
+
+         <StackLayout IsVisible="False" x:Name="RemoveImageButton" Padding="0" Spacing="0" BackgroundColor="#F0F0F0">
+            <BoxView Color="LightGray" 
+                HorizontalOptions="FillAndExpand" 
+                HeightRequest="1"/>
+
+            <ContentView Padding="5" VerticalOptions="Center">
+            <Label Text="Remove Image"
+                    TextColor="Gray"
+                    FontAttributes="Bold"
+                    VerticalTextAlignment="Center"
+                    HorizontalTextAlignment="Center" />
+            </ContentView>
+
+            <BoxView Color="LightGray" 
+            HorizontalOptions="FillAndExpand" 
+            HeightRequest="1"/>
+
+       
+            <StackLayout.GestureRecognizers>
+            <TapGestureRecognizer
+            Tapped="RemoveImage"  />
+            </StackLayout.GestureRecognizers>
+
+        </StackLayout>
+        <Image x:Name="UploadedImage" IsVisible="False" Aspect="AspectFill" VerticalOptions="FillAndExpand">
+
+            <!--Photo browser does not work in modal-->
+            <!--<Image.GestureRecognizers>
+            <TapGestureRecognizer
+            Tapped="PreviewImage"  />
+            </Image.GestureRecognizers>-->
+
+        </Image>
+     </StackLayout>
+
+
+
+        <StackLayout x:Name="layout"  VerticalOptions="EndAndExpand"
+                    Grid.Column="0"
+                    Grid.Row="2" 
+                    Grid.ColumnSpan="2"
+                    Spacing="0" 
+                    Padding="0"
+                    BackgroundColor="White">
+
+
+                <BoxView Color="LightGray" 
+                    HorizontalOptions="FillAndExpand" 
+                    HeightRequest="1"/>
+        <!--User mention list-->
+        <ContentView IsVisible="False" x:Name="UserMentionPlaceHolderWrapper" Padding="15">
+
+            <Label
+                x:Name="UserMentionPlaceholder"
+                Text="Type a user's name to mention them!"
+                Opacity=".5"
+                FontAttributes="Italic"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                IsEnabled="False"
+                />
+  
+        </ContentView>
+
+        <ContentView IsVisible="False" x:Name="NoResults" Padding="15">
+
+            <Label
+                Text="No users found"
+                Opacity=".5"
+                FontAttributes="Italic"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                IsEnabled="False"
+             />
+           
+        </ContentView>
+
+        <ContentView x:Name="UserMentionListWrapper" IsVisible="False">
+            <ListView x:Name="UserMentionList"
+                    SeparatorVisibility="None"
+                    HasUnevenRows="True"
+                    IsPullToRefreshEnabled="False"
+                    CachingStrategy="RecycleElement">
+                    <ListView.BackgroundColor>
+                        <OnPlatform x:TypeArguments="Color"
+                    iOS="#E0E0E0"/>
+                    </ListView.BackgroundColor>
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="White">
+                                        <StackLayout>
+                                            <Grid HorizontalOptions="FillAndExpand" >
+
+                                                <Grid.Padding>
+                                                 <OnPlatform x:TypeArguments="Thickness"
+                                                        Android="5,5,5,5" iOS="5,5,5,5"/>
+                                                </Grid.Padding>
+
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+
+                                                <ContentView HorizontalOptions="Start" Grid.Column="0" Padding="5">
+                                                    <ffimageloading:CachedImage
+                                                        Source="{Binding Avatar}"
+                                                        WidthRequest="40"
+                                                        HeightRequest="40" Aspect="AspectFill"
+                                                        VerticalOptions="Start"
+                                                        HorizontalOptions="CenterAndExpand"
+                                                        LoadingPlaceholder="default_user_32.png">
+                                                        <ffimageloading:CachedImage.Transformations>
+                                                            <fftransformations:CircleTransformation />
+                                                        </ffimageloading:CachedImage.Transformations>
+                                                     </ffimageloading:CachedImage>
+
+
+                                                </ContentView>
+
+
+                                                <Grid Grid.Column="1" Padding="10, 0, 0, 0">
+
+                                                    <ContentView VerticalOptions="Center">
+                                                        <Label Text="{Binding UserName}"
+                                                          FontSize="20"
+                                                          TextColor="#4c96e8" />
+                                                    </ContentView>
+                                                </Grid>
+                                            </Grid>
+                                        </StackLayout>
+                                    </ContentView>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+            </ContentView>
+
+
+            <BoxView Color="LightGray" 
+                    HorizontalOptions="FillAndExpand" 
+                    HeightRequest="1"/>
+                
+            <StackLayout Orientation="Horizontal" 
+                        MinimumHeightRequest="35"
+                        Margin="0,10"  
+                        BackgroundColor="White"
+                        VerticalOptions="EndAndExpand">
+                <Image WidthRequest="25" 
+                    Margin="20,0,0,0"
+                    Source="picture.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Tapped="UploadImage"/>
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Text="Upload Image"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="Center"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    Margin="0,2,0,0"
+                    TextColor="Gray">
+                    <Label.GestureRecognizers>
+                    <TapGestureRecognizer
+                                    Tapped="UploadImage"/>
+                </Label.GestureRecognizers>
+                </Label>
+                         
+                <Image WidthRequest="25" 
+                        HorizontalOptions="End"
+                        Source="camera.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Tapped="TakePhoto" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Text="Take Photo"
+                    Margin="0,2,20,0"
+                    VerticalOptions="Center"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    TextColor="Gray">
+                    <Label.GestureRecognizers>
+                    <TapGestureRecognizer
+                                Tapped="TakePhoto" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+        </StackLayout>
+
+
+
+        </local:KeyboardView>
+
+</ContentPage>

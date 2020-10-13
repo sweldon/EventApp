@@ -14,7 +14,7 @@
 
         <StackLayout Spacing="0">
 
-            <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="0" BackgroundColor="#FFFFFF">
+            <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="0">
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -22,9 +22,29 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <StackLayout Grid.Column="0" Spacing="0">
+                        <ContentView Padding="10">
+                            <Label x:Name="PastLabel"
+                                    Text="Past"
+                                    TextColor="Gray"
+                                    HorizontalOptions="CenterAndExpand" />
+                            <ContentView.GestureRecognizers>
+                            <TapGestureRecognizer
+                            Tapped="ToggleFindType"  />
+                            </ContentView.GestureRecognizers>
+                        </ContentView>
+                        <BoxView x:Name="PastSelected"
+                            IsVisible="False"
+                            VerticalOptions="End"
+                            HeightRequest="1"
+                            BackgroundColor="#4c96e8"
+                            HorizontalOptions="FillAndExpand" />
+                    </StackLayout>
+
+                    <StackLayout Grid.Column="1" Spacing="0">
                         <ContentView Padding="10">
                             <Label x:Name="TodayLabel"
                                     Text="Today"
@@ -42,7 +62,7 @@
                             BackgroundColor="#4c96e8"
                             HorizontalOptions="FillAndExpand" />
                     </StackLayout>
-                    <StackLayout Grid.Column="1" Spacing="0">
+                    <StackLayout Grid.Column="2" Spacing="0">
                         <ContentView Padding="10">
                             <Label x:Name="SocialMediaLabel"
                                    Text="Buzz"
@@ -62,50 +82,58 @@
                     </StackLayout>
                 </Grid>
 
+
+            <local:PastHolidays x:Name="PastHolidaysWrapper" IsVisible="{Binding IsVisible}"/>
+
             <StackLayout Spacing="0" x:Name="HolidayListWrapper">
 
-            <StackLayout x:Name="MainFeed" VerticalOptions="Start" Padding="0" Spacing="0" >
+            <StackLayout x:Name="MainFeed" VerticalOptions="Start" Spacing="0">
 
-                <ContentView>
+
                     <ListView x:Name="ItemsListView"
-                        IsRefreshing="false" 
+                        IsRefreshing="false"
+                        VerticalScrollBarVisibility="Never"
                         SeparatorVisibility="None"
                         ItemsSource="{Binding Holidays}"
                         HasUnevenRows="true"
                         IsPullToRefreshEnabled="True"
                         Refreshing="RefreshHolidaysCommand"
-                        BackgroundColor="#DEDEDE">
-                    
-                    <ListView.Triggers>
+                        BackgroundColor="#e5e5e5"
+                        >
+
+                    <!--This is for dynamically changing background color based on list size-->
+                    <!--<ListView.Triggers>
                     <DataTrigger TargetType="ListView"
                         Binding="{Binding Source={x:Reference ItemsListView}, Path=ItemsSource.Count}" 
                         Value="0">
                         <Setter Property="BackgroundColor" Value="#FFFFFF" />
                     </DataTrigger>
-                    </ListView.Triggers>
+                    </ListView.Triggers>-->
 
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <ContentView HorizontalOptions="FillAndExpand" BackgroundColor="#FFFFFF">
 
-                                        <ContentView.Margin>
-                                            <OnPlatform x:TypeArguments="Thickness"
-                                        Android="0,5,0,0" iOS="0,7,0,0"/>
-                                        </ContentView.Margin>
+                                   <ContentView BackgroundColor="#ffffff">
+                
 
-                                        <StackLayout>
-                                            <BoxView
-                                                HeightRequest=".5"
-                                                    BackgroundColor="#DEDEDE"
-                                                    HorizontalOptions="FillAndExpand" >
+                        <ContentView.Margin>
+                        <OnPlatform x:TypeArguments="Thickness" Android="0,6,0,0" iOS="0,8,0,0" />
+                        </ContentView.Margin>
 
-                                                <BoxView.IsVisible>
-                                                    <OnPlatform x:TypeArguments="x:Boolean"
-                                                        iOS="false"
-                                                        Android="true"/>
-                                                </BoxView.IsVisible>
-                                            </BoxView>
+                             
+                                        <StackLayout  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+
+                                            <StackLayout IsVisible="{Binding ShowAd}" Padding="10">
+                                                <Image Source="calendar.png" WidthRequest="100" HeightRequest="100"/>
+                                                <ContentView HorizontalOptions="CenterAndExpand" Padding="0, 15, 0, 0">
+                                                    <Label HorizontalTextAlignment="Center"
+                                                           FontSize="Small"
+                                                           Text="That's it for today's holidays. Keep scrolling to see what's coming up!"
+                                                           TextColor="Gray"
+                                                           />
+                                                </ContentView>
+                                            </StackLayout>
 
                                             <StackLayout Spacing="0">
                                                 <Grid HorizontalOptions="FillAndExpand" IsVisible="{Binding ShowHolidayContent}">
@@ -124,7 +152,7 @@
                                                     <ContentView Margin="5,0,0,0"  Grid.Row="0" Grid.Column="0">
 
 
-                                                        <Label Text="{Binding Name}" FontSize="15" FontAttributes="Bold" TextColor="#4c96e8">
+                                                        <Label Text="{Binding Name}" FontSize="15" FontAttributes="Bold" TextColor="#4c96e8" HorizontalOptions="Start">
 
                                                             <Label.GestureRecognizers>
                                                                 <TapGestureRecognizer
@@ -145,7 +173,7 @@
 
                                                     <ContentView.Padding>
                                                         <OnPlatform x:TypeArguments="Thickness"
-                                                        Android="10,5,10,5" iOS="14,5,14,5"/>
+                                                        Android="10,5,10,5" iOS="14,10,14,10"/>
                                                     </ContentView.Padding>
                           
 
@@ -159,7 +187,7 @@
 
                                                 </ContentView>
 
-                                                <ContentView HeightRequest="150"  IsVisible="{Binding ShowHolidayContent}">
+                                                <ContentView HeightRequest="300"  IsVisible="{Binding ShowHolidayContent}">
                                                         <ContentView.GestureRecognizers>
                                                             <TapGestureRecognizer
                                                             Tapped="ImageToHoliday"  />
@@ -311,7 +339,10 @@
                                         </StackLayout>
 
 
-                                    </ContentView>
+                               
+                 
+                                       </ContentView>
+
 
                                 </ViewCell>
                             </DataTemplate>
@@ -322,7 +353,7 @@
                             </StackLayout >
                         </ListView.Footer>
                     </ListView>
-                </ContentView>
+             
             </StackLayout>
 
             </StackLayout>
@@ -334,173 +365,174 @@
                     HasUnevenRows="true"
                     IsPullToRefreshEnabled="True"
                     Refreshing="RefreshSocialMediaCommand"
-                    BackgroundColor="#DEDEDE">
+                    VerticalScrollBarVisibility="Never"
+                    BackgroundColor="#E5E5E5">
 
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <ContentView HorizontalOptions="FillAndExpand" Padding="0" BackgroundColor="#FFFFFF">
+                                       <ContentView BackgroundColor="#ffffff">
+                
 
-                                    <ContentView.Margin>
-                                        <OnPlatform x:TypeArguments="Thickness"
-                                            Android="0,8,0,0" iOS="0,10,0,0"/>
-                                    </ContentView.Margin>
+                            <ContentView.Margin>
+                            <OnPlatform x:TypeArguments="Thickness" Android="0,6,0,0" iOS="0,8,0,0" />
+                            </ContentView.Margin>
+                                            <StackLayout Spacing="0">
 
-                                    <StackLayout Spacing="0">
+                                                <Grid HorizontalOptions="FillAndExpand" BackgroundColor="{Binding BackgroundColor}">
+                                                    <Grid.Padding>
+                                                    <OnPlatform x:TypeArguments="Thickness"
+                                                    Android="5,10,5,0" iOS="8,10,8,0"/>
+                                                    </Grid.Padding>
 
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
 
-                                        <Grid HorizontalOptions="FillAndExpand" BackgroundColor="{Binding BackgroundColor}">
-                                            <Grid.Padding>
-                                            <OnPlatform x:TypeArguments="Thickness"
-                                            Android="5,10,5,0" iOS="8,10,8,0"/>
-                                            </Grid.Padding>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
 
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <StackLayout Grid.Column="0" HorizontalOptions="Start" Padding="5" Grid.Row="0" Grid.RowSpan="2">
-                                                <ffimageloading:CachedImage
-                                                    Source="{Binding UserProfileImage}"
-                                                    WidthRequest="50"
-                                                    HeightRequest="50"
-                                                    Aspect="AspectFill"
-                                                    VerticalOptions="Start"
-                                                    HorizontalOptions="CenterAndExpand"
-                                                    LoadingPlaceholder="default_user_128.png">
-                                                    <ffimageloading:CachedImage.Transformations>
-                                                        <fftransformations:CircleTransformation />
-                                                    </ffimageloading:CachedImage.Transformations>
-                                                    </ffimageloading:CachedImage>
+                                                    <StackLayout Grid.Column="0" HorizontalOptions="Start" Padding="5" Grid.Row="0" Grid.RowSpan="2">
+                                                        <ffimageloading:CachedImage
+                                                            Source="{Binding UserProfileImage}"
+                                                            WidthRequest="50"
+                                                            HeightRequest="50"
+                                                            Aspect="AspectFill"
+                                                            VerticalOptions="Start"
+                                                            HorizontalOptions="CenterAndExpand"
+                                                            LoadingPlaceholder="default_user_128.png">
+                                                            <ffimageloading:CachedImage.Transformations>
+                                                                <fftransformations:CircleTransformation />
+                                                            </ffimageloading:CachedImage.Transformations>
+                                                            </ffimageloading:CachedImage>
 
 
-                                                <ContentView WidthRequest="20" Padding="5">
-                                                    <ffimageloading:CachedImage 
-                                                        Source="twitter.png"
-                                                        VerticalOptions="Start"
-                                                        RetryCount= "3"
-                                                        RetryDelay= "600"
-                                                    />
+                                                        <ContentView WidthRequest="20" Padding="5">
+                                                            <ffimageloading:CachedImage 
+                                                                Source="twitter.png"
+                                                                VerticalOptions="Start"
+                                                                RetryCount= "3"
+                                                                RetryDelay= "600"
+                                                            />
 
-                                                    </ContentView>
+                                                            </ContentView>
 
-                                            </StackLayout>
-                                            <Grid Grid.Row="0" Grid.Column="1" ColumnSpacing="0">
+                                                    </StackLayout>
+                                                    <Grid Grid.Row="0" Grid.Column="1" ColumnSpacing="0">
 
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
 
-                                                <ContentView Grid.Column="0">
+                                                        <ContentView Grid.Column="0">
              
-                                                    <Label Text="{Binding UserName}"
-                                                    VerticalOptions="Center"
-                                                    FontSize="14"
-                                                    TextColor="#4c96e8"
-                                                    LineBreakMode="TailTruncation"
-                                                    />
-                                                </ContentView>
+                                                            <Label Text="{Binding UserName}"
+                                                            VerticalOptions="Center"
+                                                            FontSize="14"
+                                                            TextColor="#4c96e8"
+                                                            LineBreakMode="TailTruncation"
+                                                            />
+                                                        </ContentView>
 
-                                                <ContentView Grid.Column="1" IsVisible="{Binding Verified}" Padding="2, 0, 0, 0">
-                                                   <ffimageloading:CachedImage
-                                                        Source="twitter_verified.png"
-                                                        RetryCount="3"
-                                                        RetryDelay="600"
-                                                        WidthRequest="12"
-                                                        HeightRequest="12"
-                                                        VerticalOptions="Center"
-                                                        HorizontalOptions="StartAndExpand"
-                                                        />
-                                                </ContentView>
+                                                        <ContentView Grid.Column="1" IsVisible="{Binding Verified}" Padding="2, 0, 0, 0">
+                                                            <ffimageloading:CachedImage
+                                                                Source="twitter_verified.png"
+                                                                RetryCount="3"
+                                                                RetryDelay="600"
+                                                                WidthRequest="12"
+                                                                HeightRequest="12"
+                                                                VerticalOptions="Center"
+                                                                HorizontalOptions="StartAndExpand"
+                                                                />
+                                                        </ContentView>
      
 
-                                                <ContentView HorizontalOptions="Start" Grid.Column="2" Padding="5, 0, 5, 0">
+                                                        <ContentView HorizontalOptions="Start" Grid.Column="2" Padding="5, 0, 5, 0">
              
-                                                <Label Text="{Binding Handle}"
-                                                LineBreakMode="TailTruncation"
-                                                FontSize="14"
-                                                VerticalOptions="Center"
-                                                Opacity=".5" 
-                                                />
-                                                </ContentView>
-                                                <ContentView VerticalOptions="Center" Grid.Column="3">
-                                                <Label Text="{Binding Timestamp, StringFormat='· {0}'}"
-                                                FontSize="14"
-                                                VerticalOptions="Center"
-                                                HorizontalOptions="EndAndExpand"
-                                                Opacity=".5"  />
-                                                </ContentView>
+                                                        <Label Text="{Binding Handle}"
+                                                        LineBreakMode="TailTruncation"
+                                                        FontSize="14"
+                                                        VerticalOptions="Center"
+                                                        Opacity=".5" 
+                                                        />
+                                                        </ContentView>
+                                                        <ContentView VerticalOptions="Center" Grid.Column="3">
+                                                        <Label Text="{Binding Timestamp, StringFormat='· {0}'}"
+                                                        FontSize="14"
+                                                        VerticalOptions="Center"
+                                                        HorizontalOptions="EndAndExpand"
+                                                        Opacity=".5"  />
+                                                        </ContentView>
    
 
-                                            </Grid>
+                                                    </Grid>
  
 
-                                            <StackLayout Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Spacing="0">
-                                                <StackLayout.Padding>
-                                                <OnPlatform x:TypeArguments="Thickness"
-                                                Android="0,0,10,0" iOS="0,0,8,0"/>
-                                                </StackLayout.Padding>
+                                                    <StackLayout  Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Spacing="0">
+                                                        <StackLayout.Padding>
+                                                        <OnPlatform x:TypeArguments="Thickness"
+                                                        Android="0,0,10,0" iOS="0,0,8,0"/>
+                                                        </StackLayout.Padding>
 
 
-                                                <ContentView Padding="0,0,0,15"> 
-                                                    <Label Text="{Binding Body}" FontSize="14" />
-                                                </ContentView>
+                                                        <ContentView Padding="0,0,0,15"> 
+                                                            <Label Text="{Binding Body}" FontSize="14" />
+                                                        </ContentView>
                                                 
 
 
-                                                <ffimageloading:CachedImage 
-                                                    Source="{Binding Image}"
-                                                    Aspect="AspectFill"
-                                                    HeightRequest="150"
-                                                    RetryCount= "60"
-                                                    RetryDelay= "1000"
-                                                    DownsampleToViewSize="true"
-                                                    IsVisible="{Binding ShowImage}" >
+                                                        <ffimageloading:CachedImage 
+                                                            Source="{Binding Image}"
+                                                            Aspect="AspectFill"
+                                                            HeightRequest="150"
+                                                            RetryCount= "60"
+                                                            RetryDelay= "1000"
+                                                            DownsampleToViewSize="true"
+                                                            IsVisible="{Binding ShowImage}" >
 
-                                                <!--<ffimageloading:CachedImage.Transformations>
-                                                    <fftransformations:RoundedTransformation Radius="150"/>
-                                                </ffimageloading:CachedImage.Transformations>-->
+                                                        <!--<ffimageloading:CachedImage.Transformations>
+                                                            <fftransformations:RoundedTransformation Radius="150"/>
+                                                        </ffimageloading:CachedImage.Transformations>-->
 
-                                                <ffimageloading:CachedImage.GestureRecognizers>
-                                                <TapGestureRecognizer
-                                                    Tapped="PreviewImage"  />
-                                                </ffimageloading:CachedImage.GestureRecognizers>
+                                                        <ffimageloading:CachedImage.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                            Tapped="PreviewImage"  />
+                                                        </ffimageloading:CachedImage.GestureRecognizers>
 
-                                                </ffimageloading:CachedImage>
+                                                        </ffimageloading:CachedImage>
 
-                                                <StackLayout Orientation="Horizontal" HorizontalOptions="End" Padding="0,15,0,10">
+                                                        <StackLayout Orientation="Horizontal" HorizontalOptions="End" Padding="0,15,0,10">
 
-                                                    <StackLayout.GestureRecognizers>
-                                                    <TapGestureRecognizer
-                                                    Tapped="OpenInTwitter"  />
-                                                    </StackLayout.GestureRecognizers>
+                                                            <StackLayout.GestureRecognizers>
+                                                            <TapGestureRecognizer
+                                                            Tapped="OpenInTwitter"  />
+                                                            </StackLayout.GestureRecognizers>
 
-                                                    <Image Source="share_twitter_blue.png" WidthRequest="14" VerticalOptions="Center" />
-                                                    <Label FontSize="Small" Text="View on Twitter" TextColor="#56ACEE" VerticalOptions="Center"/>
+                                                            <Image Source="share_twitter_blue.png" WidthRequest="14" VerticalOptions="Center" />
+                                                            <Label FontSize="Small" Text="View on Twitter" TextColor="#56ACEE" VerticalOptions="Center"/>
                                                 
-                                                </StackLayout>
+                                                        </StackLayout>
+
+                                                    </StackLayout>
+
+                                                </Grid>
 
                                             </StackLayout>
 
-                                        </Grid>
-
-                                    </StackLayout>
+                      
                                 </ContentView>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.Footer>
-                    <StackLayout x:Name="NoResults" IsVisible="False" Padding="15" BackgroundColor="#DEDEDE">
+                    <StackLayout x:Name="NoResults" IsVisible="False" Padding="15" BackgroundColor="#E5E5E5">
                         
                        
                         <Frame CornerRadius="3"
@@ -534,11 +566,11 @@
             </StackLayout>
 
 
-            <controls:MTAdView
+            <!--<controls:MTAdView
             x:Name="AdBanner"
             AdsId="{OnPlatform
             Android='ca-app-pub-9382412071078825/8429542879', 
-            iOS='ca-app-pub-9382412071078825/1958380167'}"/>
+            iOS='ca-app-pub-9382412071078825/1958380167'}"/>-->
 
         </StackLayout>
 

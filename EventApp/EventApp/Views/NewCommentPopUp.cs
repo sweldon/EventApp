@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Net.Http;
+using System.Runtime.Remoting;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EventApp.Models;
@@ -29,35 +30,45 @@ namespace EventApp.Views
         public Holiday OpenedHoliday { get; set; }
         public string CommentTitle { get; set; }
         public ObservableCollection<User> users { get; set; }
-        private Comment LinkedComment { get; set; }
+        private dynamic LinkedEntity { get; set; }
         private bool isSearching = false;
         private bool isReply = false;
         private bool isEdit = false;
-
+        private Type EntityType;
+        private dynamic Container;
+        private Post ParentPost;
         public NewCommentPopUp(
             Holiday holiday,
-            Comment comment=null,
+            dynamic entity = null,
             bool reply=false,
-            bool edit=false
+            bool edit=false,
+            dynamic container =null,
+            Post post=null
         )
         {
             InitializeComponent();
+            Container = container;
+            ParentPost = post;
             users = new ObservableCollection<User>();
             OpenedHoliday = holiday;
             UserMentionList.ItemSelected += OnUserSelected;
             //UserMentionList.ItemTapped += ItemTapped;
             CommentContent.Placeholder = "Say something";
 
-            if(comment != null)
-                LinkedComment = comment;
+            if(entity != null)
+            {
+                LinkedEntity = entity;
+               
+            }
+               
 
             if (reply)
             {                
                 isReply = true;
                 ReplyWrapper.IsVisible = true;
-                UserName.Text = comment.UserName;
-                TimeSince.Text = comment.TimeSince;
-                ReplyContent.Text = comment.Content;
+                UserName.Text = entity.UserName;
+                TimeSince.Text = $" · {entity.TimeSince}";
+                ReplyContent.Text = entity.Content;
             }else if (edit)
             {
                 isEdit = true;
@@ -201,6 +212,7 @@ namespace EventApp.Views
 
             SaveCommentButton.IsEnabled = false;
             SaveCommentButton.Text = "Posting...";
+            dynamic response;
             if (string.IsNullOrEmpty(CommentContent.Text))
             {
                 await DisplayAlert("Nothing to say?", "Please enter some text " +
@@ -213,13 +225,14 @@ namespace EventApp.Views
                 dynamic responseJSON;
                 if (isEdit)
                 {
+                    
                     var values = new Dictionary<string, string>{
                        { "device_id", devicePushId },
                        { "content", CommentContent.Text },
                        { "username", currentUser}
                     };
 
-                    responseJSON = await ApiHelpers.MakePatchRequest(values, "comments", LinkedComment.Id);
+                    response = await ApiHelpers.MakePatchRequest(values, "comments", LinkedEntity.Id);
                 }
                 else
                 {
@@ -230,27 +243,62 @@ namespace EventApp.Views
                     };
                     if (isReply)
                     {
-                        values["parent"] = LinkedComment.Id;
+                        if(LinkedEntity.GetType() == typeof(Post))
+                        {
+                            values["post"] = LinkedEntity.Id;
+                        }
+                        else if (LinkedEntity.GetType() == typeof(Comment))
+                        {
+                            values["parent"] = LinkedEntity.Id;
+                        }
+                        
                     }
 
-                    responseJSON = await ApiHelpers.MakePostRequest(values, "comments");
+                    response = await ApiHelpers.MakePostRequest(values, "comments");
 
                 }
 
-                int status = responseJSON.status;
-                string message = responseJSON.message;
-
-                if (status == 200)
-                {
+                try
+                { 
                     //await Navigation.PopModalAsync();
                     await Navigation.PopPopupAsync();
                     SaveCommentButton.IsEnabled = true;
                     SaveCommentButton.Text = "Post";
-                    MessagingCenter.Send(this, "UpdateComments");
+
+
+                    //MessagingCenter.Send(this, "AppendComment", data);
+                    if (isEdit)
+                    {
+                        var TimeSinceEdit = $"{response.time_since} (edited now)";
+                        Object[] data = { LinkedEntity, CommentContent.Text, TimeSinceEdit, Container};
+                        MessagingCenter.Send(this, "UpdateCommentInPlace", data);
+                        
+                    }
+                    else
+                    {
+                        // todo append to list
+                        //MessagingCenter.Send(this, "UpdateComments");
+                        Comment c = new Comment()
+                        {
+                            Id = response.id,
+                            Content = response.content,
+                            HolidayId = response.holiday,
+                            UserName = response.user,
+                            TimeSince = "now",
+                            Avatar = response.avatar == null ? "default_user_128.png" : response.avatar,
+                            ShowEdit = "True", // If you can delete, you can edit
+                            ShowDelete = "True",
+                            ShowReport = false,
+                        };
+                        Object[] data = { c, ParentPost, Container};
+                        MessagingCenter.Send(this, "UpdateComments", data);
+                    }
+                    
                 }
-                else
+                catch(Exception ex)
                 {
-                    await DisplayAlert("Error", message, "OK");
+                    Debug.WriteLine($"{ex}");
+                    await DisplayAlert("Error", "Please try again", "OK");
                     SaveCommentButton.IsEnabled = true;
                     SaveCommentButton.Text = "Post";
                 }
@@ -269,10 +317,10 @@ namespace EventApp.Views
 
             if (isReply)
             {
-                CommentContent.Text = $"@{LinkedComment.UserName} ";
+                CommentContent.Text = $"@{LinkedEntity.UserName} ";
             }else if (isEdit)
             {
-                CommentContent.Text = $"{LinkedComment.Content} ";
+                CommentContent.Text = $"{LinkedEntity.Content} ";
             }
                 
 

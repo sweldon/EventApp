@@ -54,12 +54,16 @@ namespace EventApp
 
         public IList<StringSection> ProcessString(string rawText)
         {
-            
+            var sections = new List<StringSection>();
+
+            if (string.IsNullOrEmpty(rawText))
+                return sections;
+
             const string spanPattern = @"(((http|https):\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*))|@([a-zA-Z0-9_]+)";
 
             MatchCollection collection = Regex.Matches(rawText, spanPattern, RegexOptions.Singleline);
 
-            var sections = new List<StringSection>();
+            
 
             var lastIndex = 0;
             foreach (Match item in collection)

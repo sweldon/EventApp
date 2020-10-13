@@ -22,7 +22,7 @@ namespace EventApp
         #region Setting Constants
 
         private const string AppInfoKey = "app_info_key";
-        private static readonly string AppInfoKeyDefault = "1.4.3";
+        private static readonly string AppInfoKeyDefault = "2.0.1";
 
         private const string SettingsKey = "settings_key";
         private static readonly string SettingsDefault = "no";
@@ -63,7 +63,23 @@ namespace EventApp
         private const string AskedToReviewKey = "asked_to_review_key";
         private static readonly bool AskedToReviewDefault = false;
 
+
+        private const string RefreshTokenKey = "refresh_token_key";
+        private static readonly bool RefreshTokenDefault = false;
+
         #endregion
+
+        public static bool RefreshToken
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(RefreshTokenKey, RefreshTokenDefault);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(RefreshTokenKey, value);
+            }
+        }
 
         public static int LaunchedCount
         {
@@ -76,6 +92,7 @@ namespace EventApp
                 AppSettings.AddOrUpdateValue(LaunchedCountKey, value);
             }
         }
+
         public static bool AskedToReview
         {
             get

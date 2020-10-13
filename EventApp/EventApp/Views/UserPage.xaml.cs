@@ -118,7 +118,7 @@ namespace EventApp.Views
                 TapLock = true;
                 try
                 {
-                    await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(comment.HolidayId, null, comment.Id)));
+                    await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(comment.HolidayId)));
                 }
                 catch
                 {

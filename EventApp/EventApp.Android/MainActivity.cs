@@ -58,6 +58,19 @@ namespace EventApp.Droid
         {
             get { return Settings.DevicePushId; }
         }
+
+        public bool refreshToken
+        {
+            get { return Settings.RefreshToken; }
+            set
+            {
+                if (Settings.RefreshToken == value)
+                    return;
+                Settings.RefreshToken = value;
+                OnPropertyChanged();
+            }
+        }
+
         protected override async void OnCreate(Bundle savedInstanceState)
         {
 
@@ -80,11 +93,14 @@ namespace EventApp.Droid
                 PushNotificationManager.DefaultNotificationChannelName = "General";
             }
 
+
             #if DEBUG
                 PushNotificationManager.Initialize(this, true);
             #else
-                PushNotificationManager.Initialize(this, false);
+                PushNotificationManager.Initialize(this, refreshToken);
             #endif
+
+            refreshToken = false;
 
             Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);      
@@ -117,6 +133,19 @@ namespace EventApp.Droid
 
 
             }
+            else if (!string.IsNullOrEmpty(incomingLink) && incomingLink.Contains("rewards"))
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    var menuPage = new MenuPage(); // Build hamburger menu
+                    NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
+                    var rootPage = new RootPage(); // Root handles master detail navigation
+                    rootPage.Master = menuPage; // Menu
+                    rootPage.Detail = NavigationPage; // Content
+                    App.Current.MainPage = rootPage; // Set root to built master detail
+                    NavigationPage.PushAsync(new RewardsPage());
+                });
+            }
             else if (!string.IsNullOrEmpty(incomingLink) && incomingLink.Contains("activate"))
             {
                 string[] linkContents = incomingLink.Split("/");
@@ -135,7 +164,15 @@ namespace EventApp.Droid
                 {
 
                 }
-                Utils.BuildNavigation();
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    var menuPage = new MenuPage(); // Build hamburger menu
+                    NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
+                    var rootPage = new RootPage(); // Root handles master detail navigation
+                    rootPage.Master = menuPage; // Menu
+                    rootPage.Detail = NavigationPage; // Content
+                    App.Current.MainPage = rootPage; // Set root to built master detail
+                });
 
 
             }

@@ -21,6 +21,7 @@ namespace EventApp.Droid
             Control.SetBackgroundColor(Android.Graphics.Color.Transparent);
             // Stop scaling after a certain point
             Control.SetMaxHeight(250);
+            
         }
 
     }

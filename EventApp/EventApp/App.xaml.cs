@@ -80,6 +80,18 @@ namespace EventApp
             }
         }
 
+        public bool refreshToken
+        {
+            get { return Settings.RefreshToken; }
+            set
+            {
+                if (Settings.RefreshToken == value)
+                    return;
+                Settings.RefreshToken = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool eulaAccepted
         {
             get { return Settings.EulaAccepted; }
@@ -209,6 +221,7 @@ namespace EventApp
             string pushType = "";
             string holidayId = "";
             string commentId = "";
+            string postId = "";
             string commentUser = "";
             string unread = "";
             foreach (var data in pushData)
@@ -220,6 +233,10 @@ namespace EventApp
                 else if (data.Key == "comment_id")
                 {
                     commentId = data.Value.ToString();
+                }
+                else if (data.Key == "post_id")
+                {
+                    postId = data.Value.ToString();
                 }
                 else if (data.Key == "holiday_id")
                 {
@@ -238,6 +255,7 @@ namespace EventApp
                 {"push_type", pushType },
                 {"holiday_id", holidayId },
                 {"comment_id", commentId },
+                {"post_id", postId },
                 {"comment_user", commentUser },
                 {"unread", unread },
             };
@@ -279,7 +297,18 @@ namespace EventApp
                 #endif
                 dynamic response = await ApiHelpers.MakePostRequest(values, "user");
                 bool needsUpdate = response.needs_update;
-                if (needsUpdate)
+                bool forceUpdate = response.force_update;
+
+                if (forceUpdate && needsUpdate)
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        App.Current.MainPage = new NavigationPage(new ForceUpdatePage());
+                    });
+                    return;
+                }
+
+                if (needsUpdate && !forceUpdate)
                 {
                     Device.BeginInvokeOnMainThread(() =>
                     {
@@ -327,20 +356,13 @@ namespace EventApp
                 Dictionary<string, string> pushData = ConsumePush(p.Data);
                 string pushType = pushData["push_type"];
                 string holidayId = pushData["holiday_id"];
-                string commentId = pushData["comment_id"];
-                string commentUser = pushData["comment_user"];
                 int unread = int.Parse(pushData["unread"]);
                 if (pushType == "news")
                 {
                     //AlertNews();
                 }
-                else if (pushType == "holiday")
+                else
                 {
-                    AlertUserHolidays(holidayId);
-                }
-                else if (pushType == "comment")
-                {
-                    //AlertUserComment(commentId, holidayId, commentUser);
                     MessagingCenter.Send(Application.Current, "UpdateBellCount", unread);
                 }
             };
@@ -351,6 +373,7 @@ namespace EventApp
                 string pushType = pushData["push_type"];
                 string holidayId = pushData["holiday_id"];
                 string commentId = pushData["comment_id"];
+                string postId = pushData["post_id"];
                 string commentUser = pushData["comment_user"];
                 if (pushType == "news")
                 {
@@ -362,11 +385,22 @@ namespace EventApp
                 }
                 else if (pushType == "comment")
                 {
-                    // Only need comment_user for active forground alert
-                    NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null, commentId)));
-                    //Utils.DecrementBellWithDelay();
-                    //MessagingCenter.Send(Application.Current, "RefreshNotifications");
+                    NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
                     Utils.ReadNotification("comment", commentId);
+                }
+                else if (pushType == "post")
+                {
+                    NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                    Utils.ReadNotification("post", postId);
+                }
+                else if (pushType == "like")
+                {
+                    NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                    Utils.ReadNotification("like", postId);
+                }
+                else if (pushType == "rewards")
+                {
+                    NavigationPage.PushAsync(new RewardsPage());
                 }
             };
             CrossPushNotification.Current.OnNotificationDeleted += (s, p) =>
@@ -407,6 +441,18 @@ namespace EventApp
                     App.GlobalUser.Email = responseJSON.results.email;
                     App.GlobalUser.UserName = responseJSON.results.username;
                     string avatar = responseJSON.results.profile_image;
+                    bool deviceActive = responseJSON.results.device_active;
+
+
+                    if (!deviceActive)
+                    {
+
+                        #if __ANDROID__
+                            refreshToken = true;
+                        #endif
+
+                    }
+
                     if (avatar != null)
                     {
                         App.GlobalUser.Avatar = avatar;
@@ -418,9 +464,9 @@ namespace EventApp
                     }
 
                 }
-                catch
+                catch(Exception ex)
                 {
-
+                    Debug.WriteLine($"ERROR: {ex}");
                 }
             }
 
@@ -454,7 +500,7 @@ namespace EventApp
             var userAlert = await Application.Current.MainPage.DisplayAlert(title, "", "Go to Comment", "Close");
             if (userAlert)
             {
-                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId, null, commentId)));
+                await NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
                 Utils.ReadNotification("comment", commentId);
             }
         }
