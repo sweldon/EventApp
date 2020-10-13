@@ -48,6 +48,7 @@ namespace EventApp.ViewModels
                         h.CelebrateStatus = "celebrate.png";
                         h.Votes = newVotes;
                     }
+                    break;
                 }
             }
         }
@@ -61,87 +62,15 @@ namespace EventApp.ViewModels
             try
             {
                 Holidays.Clear();
-                //var Items = new List<Holiday>();
-                //var Items = new HolidayList();
-                var OldList = new List<Holiday>();
-                //var TomorrowList = new HolidayList();
-                //GroupedHolidayList = new List<HolidayList>();
 
-                var holidays = await HolidayStore.GetHolidaysAsync(true);
-                //var showAd = false;
+                var holidays = await Services.GlobalServices.GetHolidaysAsync();
 
-                // Final Ad, bottom of stack
-                //Holidays.Insert(0, new Holiday()
-                //{
-                //    Id = "-1",
-                //    ShowAd = true,
-                //    ShowHolidayContent = false,
-                //});
-                //bool todayDone = false;
                 foreach (var holiday in holidays)
                 {
 
-                    if (holiday.TimeSince == "Tomorrow")
-                    {
-                        // Skip tomorrow's for now
-                        //tomorrowlist.insert(0, holiday);
-                    }
-                    else
-                    {
-                        // Put ad right after todays
-                        //if(holiday.TimeSince == "Today" && !todayDone)
-                        //{
-                        //    Holidays.Insert(0, new Holiday()
-                        //    {
-                        //        Id = "-1",
-                        //        ShowAd = true,
-                        //        ShowHolidayContent = false,
-                        //    });
-                        //    todayDone = true;
-                        //}
-                        Holidays.Insert(0, holiday);
-                    }
-
-
+                    Holidays.Add(holiday);
                 }
 
-                // Add at location 3
-                //Holidays.Insert(4, new Holiday()
-                //{
-                //    Id = "-1",
-                //    ShowAd = true,
-                //    ShowHolidayContent = false,
-                //});
-
-                // And then add every 3 after that
-                //int listCount = Holidays.Count();
-                //for(int i = 0; i < listCount; i++)
-                //{
-                //    if(i % 3 == 0 && i != 0 && i != 3)
-                //    {
-                //        Holidays.Insert(i, new Holiday()
-                //        {
-                //            Id = "-1",
-                //            ShowAd = true,
-                //            ShowHolidayContent = false,
-                //        });
-                //    }
-                //}
-
-                //Items.Heading = "Today";
-                //Items.HeadingImage = "today_icon.png";
-                //OldList.Heading = "Past Week";
-                //OldList.HeadingImage ="past_icon.png";
-                //TomorrowList.Heading = "Tomorrow";
-                //TomorrowList.HeadingImage = "tomorrow_icon.png";
-
-
-                //var list = new List<HolidayList>()
-                //{
-                //    Items
-                //};
-
-                //GroupedHolidayList = list;
             }
             catch (Exception ex)
             {

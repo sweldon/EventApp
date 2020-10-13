@@ -57,7 +57,12 @@ namespace EventApp.Models
         private string showreply;
         public string ShowReply
         {
-            get { return showreply; }
+            get
+            {
+                if (string.IsNullOrEmpty(showreply))
+                    return "true";
+                return showreply;
+            }
             set
             {
                 if (showreply == value)
@@ -145,21 +150,34 @@ namespace EventApp.Models
             }
         }
         public string HolidayId { get; set; }
-        public string TimeSince { get; set; }
-        private string timeSinceEdit;
-        public string TimeSinceEdit
+        private string timesince;
+        public string TimeSince
         {
-            get { return timeSinceEdit; }
+            get { return timesince; }
             set
             {
-                if (timeSinceEdit == value)
+                if (timesince == value)
                 {
                     return;
                 }
-                timeSinceEdit = value;
+                timesince = value;
                 OnPropertyChanged();
             }
         }
+        //private string timeSinceEdit;
+        //public string TimeSinceEdit
+        //{
+        //    get { return timeSinceEdit; }
+        //    set
+        //    {
+        //        if (timeSinceEdit == value)
+        //        {
+        //            return;
+        //        }
+        //        timeSinceEdit = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
         public Thickness ThreadPadding { get; set; }
         public string Parent { get; set; }
 

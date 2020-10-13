@@ -16,6 +16,7 @@ using Plugin.Share.Abstractions;
 using System.Collections.ObjectModel;
 using Stormlion.PhotoBrowser;
 using FFImageLoading.Forms;
+using System.Collections;
 
 #if __IOS__
 using UIKit;
@@ -101,6 +102,7 @@ namespace EventApp.Views
         }
 
         public string showAds;
+        private bool todayDone = false;
         public ObservableCollection<Tweet> Tweets { get; set; }
         
         public HolidaysPage()
@@ -144,24 +146,46 @@ namespace EventApp.Views
                 if (sender is ListView lv) lv.SelectedItem = null;
 
   
-                };
+            };
+
+            // Infinite scrolling for main holidays
+            ItemsListView.ItemAppearing += (sender, e) =>
+            {
+                var holiday = e.Item as Holiday;
+
+                if (isActive)
+                {
+
+                    if (viewModel.Holidays.Last() == holiday)
+                    {
+                        LoadMoreHolidays();
+                    }
+
+                }
+            };
 
         }
 
         public int page = 0;
-        public bool allLoaded = false;
         public async void LoadMoreTweets()
         {
-            //LoadingDialog.IsVisible = true;
-            //if (!allLoaded)
-            //{
             page += 1;
             ObservableCollection<Tweet> moreTweets = await Services.GlobalServices.GetTweets(page);
             foreach(Tweet t in moreTweets)
             {
                 Tweets.Add(t);
             }
-            //LoadingDialog.IsVisible = false;
+        }
+
+        private int mainHolidaysPage = 0;
+        public async void LoadMoreHolidays()
+        {
+            mainHolidaysPage += 1;
+            var moreHolidays = await Services.GlobalServices.GetHolidaysAsync(page: mainHolidaysPage);
+            foreach (Holiday h in moreHolidays)
+            {
+                viewModel.Holidays.Add(h);
+            }
         }
 
         async void ImageToHoliday(object sender, EventArgs args)
@@ -175,7 +199,16 @@ namespace EventApp.Views
             {
                 item = (sender as Image).BindingContext as Holiday;
             }
-            
+
+            if (!item.Active)
+            {
+                await Application.Current.MainPage.DisplayAlert("Holiday Inactive", "This holiday is currently not ready " +
+                        "for viewing. We like to keep a close eye on our holidays " +
+                        "and keep them up to date, so sometimes they are removed " +
+                        "from the active queue. Try again later!", "OK");
+                return;
+            }
+
             string holidayId = item.Id;
             if (holidayId != "-1") // Ad
             {
@@ -189,6 +222,16 @@ namespace EventApp.Views
         {
 
             var item = (sender as Label).BindingContext as Holiday;
+
+            if (!item.Active)
+            {
+                await Application.Current.MainPage.DisplayAlert("Holiday Inactive", "This holiday is currently not ready " +
+                        "for viewing. We like to keep a close eye on our holidays " +
+                        "and keep them up to date, so sometimes they are removed " +
+                        "from the active queue. Try again later!", "OK");
+                return;
+            }
+
             string holidayId = item.Id;
             if (holidayId != "-1") // Ad
             {
@@ -234,9 +277,10 @@ namespace EventApp.Views
             });
 
             if (viewModel.Holidays.Count == 0)
+            {
                 viewModel.LoadItemsCommand.Execute(null);
-
-
+            }
+                
             int numRetries = 0;
             while(viewModel.Holidays.Count == 0)
             {
@@ -266,7 +310,7 @@ namespace EventApp.Views
                 }
                 
             }
-            AdBanner.IsVisible = !isPremium;
+            //AdBanner.IsVisible = !isPremium;
         }
 
         protected override void OnDisappearing()
@@ -341,7 +385,7 @@ namespace EventApp.Views
                     holiday.Votes = newVotes.ToString();
                     await CelebrateImage.ScaleTo(2, 50);
                     await CelebrateImage.ScaleTo(1, 50);
-                    await viewModel.HolidayStore.VoteHoliday(holidayId, "3");
+                    await Services.GlobalServices.VoteHoliday(holidayId, "3");
 
                 }
                 else
@@ -354,7 +398,7 @@ namespace EventApp.Views
                         holiday.Votes = newVotes.ToString();
                         await CelebrateImage.ScaleTo(2, 50);
                         await CelebrateImage.ScaleTo(1, 50);
-                        await viewModel.HolidayStore.VoteHoliday(holidayId, "1");
+                        await Services.GlobalServices.VoteHoliday(holidayId, "1");
 
                     }
                     else
@@ -364,7 +408,7 @@ namespace EventApp.Views
                         holiday.Votes = newVotes.ToString();
                         await CelebrateImage.ScaleTo(2, 50);
                         await CelebrateImage.ScaleTo(1, 50);
-                        await viewModel.HolidayStore.VoteHoliday(holidayId, "5");
+                        await Services.GlobalServices.VoteHoliday(holidayId, "5");
 
                     }
 
@@ -415,10 +459,12 @@ namespace EventApp.Views
             NoResults.IsVisible = Tweets.Count == 0 ? true : false;
         }
 
-        protected void RefreshHolidaysCommand(object sender, EventArgs e)
+        protected async void RefreshHolidaysCommand(object sender, EventArgs e)
         {
+            
             viewModel.LoadItemsCommand.Execute(null);
             ItemsListView.EndRefresh();
+            mainHolidaysPage = 0;
         }
 
         private async void RefreshSocialMediaFeed()
@@ -453,8 +499,25 @@ namespace EventApp.Views
                 SocialMediaWrapper.IsVisible = false;
                 TodaySelected.IsVisible = true;
                 SocialMediaSelected.IsVisible = false;
+                PastHolidaysWrapper.IsVisible = false;
+                PastSelected.IsVisible = false;
                 TodayLabel.TextColor = Color.FromHex("4c96e8");
                 SocialMediaLabel.TextColor = Color.Gray;
+                PastLabel.TextColor = Color.Gray;
+            }
+            else if (searchType == PastLabel.Text)
+            {
+
+                HolidayListWrapper.IsVisible = false;
+                SocialMediaWrapper.IsVisible = false;
+                PastHolidaysWrapper.IsVisible = true;
+                TodaySelected.IsVisible = false;
+                SocialMediaSelected.IsVisible = false;
+                PastSelected.IsVisible = true;
+                TodayLabel.TextColor = Color.Gray;
+                SocialMediaLabel.TextColor = Color.Gray;
+                PastLabel.TextColor = Color.FromHex("4c96e8");
+
             }
             else
             {
@@ -463,10 +526,13 @@ namespace EventApp.Views
 
                 SocialMediaWrapper.IsVisible = true;
                 HolidayListWrapper.IsVisible = false;
+                PastHolidaysWrapper.IsVisible = false;
                 SocialMediaSelected.IsVisible = true;
                 TodaySelected.IsVisible = false;
+                PastSelected.IsVisible = false;
                 TodayLabel.TextColor = Color.Gray;
                 SocialMediaLabel.TextColor = Color.FromHex("4c96e8");
+                PastLabel.TextColor = Color.Gray;
             }
         }
         public async void PreviewImage(object sender, EventArgs args)

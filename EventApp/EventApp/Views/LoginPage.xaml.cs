@@ -150,7 +150,7 @@ namespace EventApp.Views
                         App.GlobalUser.Approved = responseJSON.results.approved_holidays;
                         App.GlobalUser.LastOnline = responseJSON.results.last_online;
                         MessagingCenter.Send(this, "UpdateMenu", true);
-                        MessagingCenter.Send(this, "UpdateComments");
+                        MessagingCenter.Send(this, "UpdatePosts");
                         MessagingCenter.Send(this, "UpdateHoliday");
                         MessagingCenter.Send(this, "UpdateHolidayFeed");
                         if(avatar != null)

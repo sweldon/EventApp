@@ -82,6 +82,8 @@
     <Compile Include="CustomEditorRenderer.cs" />
     <Compile Include="CustomFrameRenderer.cs" />
     <Compile Include="Control\ShouldChangeText.cs" />
+    <Compile Include="KeyboardViewRenderer.cs" />
+    <Compile Include="ExtendedEditorRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">
@@ -129,12 +131,6 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-Notification.png">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\logo_splash_screen.imageset\Icon.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\logo_splash_screen.imageset\Icon%402x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
     <BundleResource Include="Resources\holidaily_logo_1_transparent.png" />
     <BundleResource Include="Resources\premiumbanner.png" />
     <BundleResource Include="Resources\Icon.png" />
@@ -164,12 +160,21 @@
     <BundleResource Include="Resources\down_active.png" />
     <BundleResource Include="Resources\up.png" />
     <BundleResource Include="Resources\up_active.png" />
-    <BundleResource Include="Resources\holidaily_banner_white.png" />
     <BundleResource Include="Resources\twitter.png" />
     <BundleResource Include="Resources\twitter_verified.png" />
     <BundleResource Include="Resources\Gift.png" />
     <BundleResource Include="Resources\share_twitter_blue.png" />
     <BundleResource Include="Resources\check.png" />
+    <BundleResource Include="Resources\holidaily_avatar.png" />
+    <BundleResource Include="Resources\camera.png" />
+    <BundleResource Include="Resources\picture.png" />
+    <BundleResource Include="Resources\like_neutral.png" />
+    <BundleResource Include="Resources\like_active.png" />
+    <BundleResource Include="Resources\ellipses.png" />
+    <BundleResource Include="Resources\splash_text_blue.png" />
+    <BundleResource Include="Resources\alert.png" />
+    <BundleResource Include="Resources\holidaily_header_white.png" />
+    <BundleResource Include="Resources\calendar.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -196,7 +201,7 @@
     <PackageReference Include="Xamarin.Essentials">
       <Version>1.5.3.2</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1269" />
+    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1451" />
     <PackageReference Include="XLabs.Settings.XamSettings">
       <Version>2.3.0-pre05</Version>
     </PackageReference>
@@ -228,7 +233,7 @@
       <Version>5.0.1</Version>
     </PackageReference>
     <PackageReference Include="Rg.Plugins.Popup">
-      <Version>2.0.0.3</Version>
+      <Version>2.0.0.5</Version>
     </PackageReference>
     <PackageReference Include="BadgeView">
       <Version>2017.10.17</Version>
@@ -241,6 +246,9 @@
     </PackageReference>
     <PackageReference Include="Plugin.StoreReview">
       <Version>2.0.0.5</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Forms.PancakeView">
+      <Version>2.1.0.714</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

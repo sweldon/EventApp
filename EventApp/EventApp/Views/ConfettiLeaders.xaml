@@ -171,11 +171,11 @@
 
                 </ContentView>
             </StackLayout>
-            <controls:MTAdView
+            <!--<controls:MTAdView
                 x:Name="AdBanner"
                 AdsId="{OnPlatform
                 Android='ca-app-pub-9382412071078825/4424502267', 
-                iOS='ca-app-pub-9382412071078825/3775761196'}"/>
+                iOS='ca-app-pub-9382412071078825/3775761196'}"/>-->
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

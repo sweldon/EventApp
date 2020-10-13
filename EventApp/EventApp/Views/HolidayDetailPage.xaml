@@ -14,53 +14,160 @@
 
         <StackLayout VerticalOptions="Start" Padding="0" Spacing="0" Grid.Row="1">
 
-            <ContentView Padding="0" >
+            <ContentView >
 
-            <ListView x:Name="HolidayDetailList"
-    
+            <ListView x:Name="PostList"
+                    VerticalScrollBarVisibility="Never"
                       SeparatorVisibility="None"
-                        ItemsSource="{Binding GroupedCommentList}"
                         HasUnevenRows="true"
-                        IsGroupingEnabled="true"
-                        RefreshCommand="{Binding LoadHolidayComments}"
+                        Refreshing="RefreshPosts"
+                        CachingStrategy="RecycleElement"
                         IsPullToRefreshEnabled="true"
-                        IsVisible="False"
-                        IsRefreshing="{Binding IsBusy, Mode=OneWay}">
-                
-                <ListView.BackgroundColor>
-                    <OnPlatform x:TypeArguments="Color"
-                        Android="#F2F2F2" iOS="#E0E0E0"/>
-                </ListView.BackgroundColor>
+                        BackgroundColor="#e5e5e5"
+                        IsVisible="False">
+               
 
                 <ListView.Header>
 
-                        <StackLayout Spacing="0" Orientation="Vertical" BackgroundColor="White">
+                    <StackLayout Spacing="0">
 
-                        <ContentView Padding="0,10">
-                                <Label x:Name="HolidayDate" TextColor="Gray" HorizontalTextAlignment="Center" FontSize="Small"/>
-                        </ContentView>
-                            
-                        <ContentView Padding="10,0,10,5">
-                                <Label x:Name="Description" FontSize="Small"/>
-                        </ContentView>
 
-                        <ContentView>
+                  
+                                   <ContentView BackgroundColor="#ffffff">
+                
+
+                        <ContentView.Margin>
+                        <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" iOS="0,8,0,0" />
+                        </ContentView.Margin>
+                    
+                    <ContentView x:Name="PostWrapper">
+
+                            <ContentView.GestureRecognizers>
+                            <TapGestureRecognizer
+                            Tapped="AddPost"  />
+                            </ContentView.GestureRecognizers>
+
+                        <Grid Padding="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+
+                            </Grid.RowDefinitions>
+
                             <ffimageloading:CachedImage
-                                x:Name="HolidayImageSource"
-                                Aspect="AspectFill"
-                                RetryCount= "60"
-                                RetryDelay= "1000"
-                                HeightRequest="150">
+                            Source="default_user_128.png"
+                            x:Name="PosterImage"
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            Grid.RowSpan="2"
+                            WidthRequest="48"
+                            HeightRequest="48"
+                            Aspect="AspectFill"
+                            VerticalOptions="Start"
+                            HorizontalOptions="Start"
+                            RetryCount= "60"
+                            RetryDelay= "1000">
 
-                                <ffimageloading:CachedImage.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Tapped="PreviewImage"  />
-                                </ffimageloading:CachedImage.GestureRecognizers>
-
+                            <ffimageloading:CachedImage.Transformations>
+                                <fftransformations:CircleTransformation />
+                            </ffimageloading:CachedImage.Transformations>
                             </ffimageloading:CachedImage>
 
+                            <StackLayout Grid.Column="1">
+                               <ContentView Padding="10, 10, 10, 5">
+                                <Label Text="Post something..." TextColor="Gray" />
+                                </ContentView>
+                          <BoxView HeightRequest="1"
+                                    BackgroundColor="#DEDEDE"
+                                    HorizontalOptions="FillAndExpand" />
+                            </StackLayout>
 
-                        </ContentView>
+                            </Grid>
+                       </ContentView>
+ 
+
+
+             
+                    </ContentView>
+
+                    
+                                   <ContentView BackgroundColor="#ffffff">
+                
+
+                        <ContentView.Margin>
+                        <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" iOS="0,8,0,0" />
+                        </ContentView.Margin>
+                        <StackLayout Spacing="0" Orientation="Vertical" BackgroundColor="White">
+
+                        <Grid Padding="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <ffimageloading:CachedImage
+                            Source="holidaily_avatar.png"
+                            Grid.Column="0"
+                            Grid.Row="0"
+                                Grid.RowSpan="2"
+                            WidthRequest="48"
+                            HeightRequest="48"
+                            Aspect="AspectFill"
+                            VerticalOptions="Start"
+                            HorizontalOptions="Start"
+                            RetryCount= "60"
+                            RetryDelay= "1000">
+
+                            <ffimageloading:CachedImage.Transformations>
+                                <fftransformations:CircleTransformation />
+                            </ffimageloading:CachedImage.Transformations>
+                            </ffimageloading:CachedImage>
+
+                            
+                            <ContentView  Grid.Column="1" Grid.Row="0">
+                                    <Label Text="Holidaily" TextColor="{StaticResource Key='NavigationPrimary'}" HorizontalOptions="Start" FontSize="Small"/>
+                            </ContentView>
+
+                            <ContentView Grid.Column="1" Grid.Row="1" Margin="0,-5">
+                                    <Label x:Name="HolidayDate" TextColor="Gray" HorizontalOptions="Start" FontSize="Micro"/>
+                            </ContentView>
+
+                            </Grid>
+
+                            <StackLayout>
+                            <ContentView Padding="10,0,10,5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                                    <Label x:Name="Description" FontSize="Small"/>
+                            </ContentView>
+
+                            <ContentView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                                <ffimageloading:CachedImage
+                                    x:Name="HolidayImageSource"
+                                    Aspect="AspectFill"
+                                    RetryCount= "60"
+                                    RetryDelay= "1000"
+                                    HeightRequest="150">
+
+                                    <ffimageloading:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Tapped="PreviewImage"  />
+                                    </ffimageloading:CachedImage.GestureRecognizers>
+
+                                </ffimageloading:CachedImage>
+
+
+                            </ContentView>
+                        </StackLayout>
+
+
                         <Grid Padding="10, 0, 10, 0" >
 
                             <Grid.RowDefinitions>
@@ -68,44 +175,19 @@
                             </Grid.RowDefinitions>
                                                 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
+
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
+               
+                                <ColumnDefinition Width="*" />
+
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
 
-                            <ContentView Grid.Column="1" Grid.Row="0">
 
-                                    <Image Source="Comment_Main_Icon.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16" >
-
-                                    <Image.GestureRecognizers>
-                                        <TapGestureRecognizer
-                            Tapped="AddComment"  />
-                                    </Image.GestureRecognizers>
-                                </Image>
-
-                            </ContentView>
-
-
-
-                                <Label Grid.Column="2" Grid.Row="0" Text="Comment" FontSize="Small" TextColor="#808080"
-                         VerticalTextAlignment="Center" HorizontalOptions="Start" Margin="0,-2,0,0">
-
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer
-                          Tapped="AddComment"  />
-                                </Label.GestureRecognizers>
-                            </Label>
-
-
-
-                            <ContentView Grid.Column="4" Grid.Row="0" >
+                            <ContentView Grid.Column="0" Grid.Row="0" >
 
                                     <Image Source="Share_Main_Icon.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16">
                                     <Image.GestureRecognizers>
@@ -115,8 +197,8 @@
                                 </Image>
                             </ContentView>
 
-                                <Label Grid.Column="5" Grid.Row="0" Text="Share" FontSize="Small" TextColor="#808080"
-                            VerticalTextAlignment="Center" HorizontalOptions="Start" Margin="0,-2,0,0">
+                                <Label Grid.Column="1" Grid.Row="0" Text="Share" FontSize="Small" TextColor="#808080"
+                            VerticalTextAlignment="Center" HorizontalOptions="Start" Margin="0,0,0,0">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer
                             Tapped="Share"  />
@@ -125,10 +207,10 @@
 
                             <Image Source="celebrate.png"
                                    WidthRequest="16"
-                                   Grid.Column="7"
+                                   Grid.Column="3"
                                    Grid.Row="0"
                                    x:Name="UpVoteImage"
-                                   HorizontalOptions="Start">
+                                   HorizontalOptions="End">
                                 <Image.GestureRecognizers>
                                     <TapGestureRecognizer
                                   Tapped="UpVote" 
@@ -137,23 +219,23 @@
                             </Image>
 
 
-
-                                <Label Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small" HorizontalTextAlignment="Start" Grid.Column="8" Grid.Row="0" LineBreakMode="NoWrap"
+                                <Label Text="{Binding Votes, StringFormat='{0} Celebrating!'}" FontSize="Small" HorizontalTextAlignment="Start" Grid.Column="4" Grid.Row="0" LineBreakMode="NoWrap"
                                      TextColor="#808080" VerticalTextAlignment="Center" x:Name="CurrentVotes">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="UpVote"  />
                                 </Label.GestureRecognizers>
                             </Label>
 
-
                         </Grid>
 
 
 
                         </StackLayout>
+                  
+                        </ContentView>
 
+                          </StackLayout>
                 </ListView.Header>
-
 
                 <ListView.GroupHeaderTemplate>
 
@@ -199,183 +281,304 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell >
+                                   <ContentView BackgroundColor="#ffffff">
+                
+
+                        <ContentView.Margin>
+                        <OnPlatform x:TypeArguments="Thickness" Android="3,6,3,0" iOS="0,8,0,0" />
+                        </ContentView.Margin>
+
+                        <StackLayout Spacing="0" Orientation="Vertical" BackgroundColor="White" Padding="0">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <ContentView Grid.Column="0"
+                            Grid.Row="0"
+                            Padding="10, 10, 0, 0"
+                            Grid.RowSpan="3">
+
+                            <ffimageloading:CachedImage
+                            Source="{Binding Avatar}"
+                            WidthRequest="48"
+                            HeightRequest="48"
+                            Aspect="AspectFill"
+                            VerticalOptions="Start"
+                            HorizontalOptions="Start"
+                            RetryCount= "60"
+                            RetryDelay= "1000">
+
+                            <ffimageloading:CachedImage.Transformations>
+                                <fftransformations:CircleTransformation />
+                            </ffimageloading:CachedImage.Transformations>
+                            </ffimageloading:CachedImage>
+        
+                                <ContentView.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                    Tapped="OpenProfile"  />
+                                </ContentView.GestureRecognizers>
+
+                            </ContentView>
+
+
+                            
+                            <ContentView  Grid.Column="1" Grid.Row="0" Padding="0, 10, 0, 0">
+                                    <Label Text="{Binding UserName}" TextColor="{StaticResource Key='NavigationPrimary'}" HorizontalOptions="Start" FontSize="Small"/>
+
+                               <ContentView.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                    Tapped="OpenProfile"  />
+                                </ContentView.GestureRecognizers>
+
+                            </ContentView>
+
+                            <ContentView Grid.Column="1" Grid.Row="1" Margin="0,-5">
+                                    <Label Text="{Binding TimeSince}" TextColor="Gray" HorizontalOptions="Start" FontSize="Micro"/>
+                            </ContentView>
+
+                            <ContentView Grid.Column="1"
+                                Grid.Row="2"
+                                Grid.ColumnSpan="2"
+                                Padding="0, 10, 0, 10">
+                            <Label
+                                FormattedText="{Binding Content, Converter={StaticResource CustomTextFormatter}}"
+                                FontSize="Small"/>
+                                </ContentView>
+
+                           <ContentView Grid.Column="2" Grid.Row="0" Margin="0, 15, 0, 0" Padding="0, 0, 10, 0">
+                                 <Image Source="ellipses.png" WidthRequest="18" HeightRequest="18" />
+                                    <ContentView.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Tapped="OpenOptions"  />
+                                    </ContentView.GestureRecognizers>
+                            </ContentView>
+
+
+                          <ContentView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" IsVisible="{Binding ShowImage}">
+                                <ffimageloading:CachedImage
+                                    Source="{Binding Image}"
+                                    Aspect="AspectFill"
+                                    RetryCount= "60"
+                                    RetryDelay= "1000"
+                                    HeightRequest="200">
+
+                                    <ffimageloading:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Tapped="ViewPostimage"  />
+                                    </ffimageloading:CachedImage.GestureRecognizers>
+
+                                </ffimageloading:CachedImage>
+
+
+                            </ContentView>
+
+                            </Grid>
+
+                            <StackLayout Padding="5" IsVisible="{Binding ShowReactions}">
+
+
+                                <BoxView HeightRequest="1"
+                                    BackgroundColor="#DEDEDE"
+                                    HorizontalOptions="FillAndExpand" />
+
+                                <ContentView Padding="10, 0, 10, 0">
+                                    <Label
+                                    TextColor="#4c96e8">
+                                        <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span x:Name="Confetti"
+                                                  TextColor="#4c96e8"
+                                                  FontAttributes="Bold"
+                                                  FontSize="Small"
+                                                  Text="{Binding Likes}"
+                                                  />
+                                            <Span Text="{Binding LikeLabel, StringFormat=' {0}'}" TextColor="#808080" FontSize="Small"/>
+
+
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                    </Label>
+
+                                </ContentView>
+
+                                  <BoxView HeightRequest="1"
+                                    BackgroundColor="#DEDEDE"
+                                    HorizontalOptions="FillAndExpand" />
+
+
+
+                            </StackLayout>
+
+                            <Grid Padding="15, 10, 15, 10" HorizontalOptions="FillAndExpand">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                     <ColumnDefinition Width="*" />
+
+                                </Grid.ColumnDefinitions>
+
+
+                                <StackLayout Orientation="Horizontal" Spacing="5" Grid.Column="0" HorizontalOptions="Start">                            
+                                    <Image Source="{Binding LikeImage}" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16"/>
                            
-                            <ContentView HorizontalOptions="FillAndExpand" Padding="{Binding ThreadPadding}" BackgroundColor="{Binding BackgroundColor}">
+                                    <Label Grid.Column="1" Text="Like" TextColor="{Binding LikeTextColor}"
+                                    VerticalTextAlignment="Center" Margin="0,0,8,0" />
 
-                                <StackLayout >
-
-                                    <Grid HorizontalOptions="FillAndExpand">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
+                                    <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Tapped="LikePost"  />
+                                    </StackLayout.GestureRecognizers>
+                                </StackLayout>
 
 
-                                        <ContentView  Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
-                                            <ffimageloading:CachedImage
+                                <StackLayout Orientation="Horizontal" Spacing="5" Grid.Column="1" HorizontalOptions="End" IsVisible="{Binding ShowReply}">
+                                    <Image Source="reply.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="16" Opacity=".8"/>
+                                    <Label Text="Reply" TextColor="#808080"
+                                    VerticalTextAlignment="Center" Margin="0,0,8,0" />
+
+                                    <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                    Tapped="ReplyPost"  />
+                                    </StackLayout.GestureRecognizers>
+                                </StackLayout>
+
+                            </Grid>
+
+                            <!--Post Comments: this is in the post list so make it a binding?-->
+                            <StackLayout Padding="5" IsVisible="{Binding ShowComments}">
+
+                                <BoxView HeightRequest="1"
+                                    BackgroundColor="#DEDEDE"
+                                    HorizontalOptions="FillAndExpand" />
+
+                                <StackLayout BindableLayout.ItemsSource="{Binding Comments}" Padding="0,0,0,10">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+
+                                            <Grid Padding="{Binding ThreadPadding}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <ContentView Grid.Column="0"
+                                                Grid.Row="0"
+                                                Padding="10, 10, 0, 0"
+                                                Grid.RowSpan="3">
+
+                                                <ffimageloading:CachedImage
                                                 Source="{Binding Avatar}"
-                                                WidthRequest="32"
-                                                HeightRequest="32"
+                                                WidthRequest="48"
+                                                HeightRequest="48"
                                                 Aspect="AspectFill"
                                                 VerticalOptions="Start"
-                                                HorizontalOptions="CenterAndExpand"
+                                                HorizontalOptions="Start"
                                                 RetryCount= "60"
-                                                RetryDelay= "1000"
-                                                LoadingPlaceholder="default_user_128.png">
+                                                RetryDelay= "1000">
+
                                                 <ffimageloading:CachedImage.Transformations>
                                                     <fftransformations:CircleTransformation />
                                                 </ffimageloading:CachedImage.Transformations>
-                                             </ffimageloading:CachedImage>
+                                                </ffimageloading:CachedImage>
 
-                                            <ContentView.GestureRecognizers>
-                                                <TapGestureRecognizer
-                                                Tapped="OpenProfile"  />
-                                            </ContentView.GestureRecognizers>
+                                                <ContentView.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                    Tapped="OpenProfile"  />
+                                                </ContentView.GestureRecognizers>
 
-                                        </ContentView>
+                                                </ContentView>
 
-                                        <Label Text="{Binding UserName}"
-                                            FontSize="12"
-                                            FontAttributes="Bold"
-                                            TextColor="#4c96e8"
-                                            LineBreakMode="TailTruncation"
-                                            Grid.Row="0" Grid.Column="1">
-                                            <Label.GestureRecognizers>
-                                            <TapGestureRecognizer
-                                            Tapped="OpenProfile"  />
-                                            </Label.GestureRecognizers>
-                                        </Label>
 
-                                        <Label Text="{Binding TimeSince}"
-                                               FontSize="12" 
-                                                 Grid.Row="0"
-                                                 Grid.Column="2"
-                                                 HorizontalTextAlignment="End" 
-                                                 Opacity=".8" />
-                                        <Label Grid.Row="1"
-                                               Grid.Column="1"
-                                               FormattedText="{Binding Content, Converter={StaticResource CustomTextFormatter}}"
-                                               FontSize="12"
-                                               Grid.ColumnSpan="2"
-                                            />
-                                    </Grid>
-                                    <Grid Padding="5" HorizontalOptions="FillAndExpand">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
+                            
+                                                <ContentView  Grid.Column="1" Grid.Row="0" Padding="0, 10, 0, 0">
+                                                        <Label Text="{Binding UserName}" TextColor="{StaticResource Key='NavigationPrimary'}" HorizontalOptions="Start" FontSize="Small"/>
+                                                    <ContentView.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                        Tapped="OpenProfile"  />
+                                                    </ContentView.GestureRecognizers>
 
-                                        <ContentView IsVisible="{Binding ShowReport}" Grid.Column="1" HorizontalOptions="Start">
-                                                <Image Source="Flag.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="12"/>
-                                        </ContentView>
+                                                </ContentView>
 
-                                        <Label IsVisible="{Binding ShowReport}" Grid.Column="2" Text="Report" FontSize="Micro" TextColor="#808080"
-                                        VerticalTextAlignment="Center" Margin="0,-2,8,0">
-                                            <Label.GestureRecognizers>
-                                            <TapGestureRecognizer
-                                            Tapped="Report"  />
-                                            </Label.GestureRecognizers>
-                                        </Label>
+                                                <ContentView Grid.Column="1" Grid.Row="1" Margin="0,-5">
+                                                        <Label Text="{Binding TimeSince}" TextColor="Gray" HorizontalOptions="Start" FontSize="Micro"/>
+                                                </ContentView>
 
-                                        <ContentView  IsVisible="{Binding ShowEdit}" Grid.Column="1" HorizontalOptions="End">
-                                                <Image Source="Submit_Menu_Icon.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="14"/>
-                                        </ContentView>
+                                                <ContentView Grid.Column="1"
+                                                    Grid.Row="2"
+                                                    Grid.ColumnSpan="2"
+                                                    Padding="0, 10, 0, 10">
+                                                <Label
+                                                    FormattedText="{Binding Content, Converter={StaticResource CustomTextFormatter}}"
+                                                    FontSize="Small"/>
+                                                    </ContentView>
 
-                                        <Label IsVisible="{Binding ShowEdit}" Grid.Column="2" Text="Edit" FontSize="Micro" TextColor="#808080"
-                                                       VerticalTextAlignment="Center" Margin="0,0,8,0">
-                                            <Label.GestureRecognizers>
-                                                <TapGestureRecognizer
-                                                            Tapped="OnEditTapped"  />
-                                            </Label.GestureRecognizers>
-                                        </Label>
+                                               <ContentView Grid.Column="2" Grid.Row="0" Margin="0, 15, 0, 0" HorizontalOptions="End" Padding="0,0,10,0">
+                                                     <Image Source="ellipses.png" WidthRequest="18" HeightRequest="18" />
+                                                        <ContentView.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                            Tapped="OpenCommentOptions"  />
+                                                        </ContentView.GestureRecognizers>
+                                                </ContentView>
 
-                                        <ContentView IsVisible="{Binding ShowReply}" Grid.Column="3" HorizontalOptions="End">
-                                                <Image Source="reply.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="14" Opacity=".5"/>
-                                        </ContentView>
+                                                
+                                                <StackLayout Orientation="Horizontal" Spacing="5" Grid.Column="2" Grid.Row="4" HorizontalOptions="End" IsVisible="{Binding ShowReply}">
+                                                    <Image Source="reply.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="14" Opacity=".8"/>
+                                                    <Label Text="Reply" TextColor="#808080" FontSize="Small"
+                                                    VerticalTextAlignment="Center" Margin="0,0,8,0" />
 
-                                        <ContentView  IsVisible="{Binding ShowDelete}" Grid.Column="3" HorizontalOptions="End">
-                                                <Image Source="delete.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="14"/>
-                                        </ContentView>
+                                                    <StackLayout.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                    Tapped="ReplyComment"  />
+                                                    </StackLayout.GestureRecognizers>
+                                                </StackLayout>
 
-                                        <Label IsVisible="{Binding ShowReply}" Grid.Column="4" Text="Reply" FontSize="Micro" TextColor="#808080"
-                                                       VerticalTextAlignment="Center" Margin="0,0,8,0">
-                                            <Label.GestureRecognizers>
-                                                <TapGestureRecognizer
-                                                            Tapped="OnReplyTapped"  />
-                                            </Label.GestureRecognizers>
-                                        </Label>
 
-                                        <Label IsVisible="{Binding ShowDelete}" Grid.Column="4" Text="Delete" FontSize="Micro" TextColor="#808080"
-                                                       VerticalTextAlignment="Center" Margin="0,0,8,0">
-                                            <Label.GestureRecognizers>
-                                                <TapGestureRecognizer
-                                                            Tapped="OnDeleteTapped"  />
-                                            </Label.GestureRecognizers>
-                                        </Label>
 
-                                        <ContentView Grid.Column="5" Padding="5" IsEnabled="{Binding Enabled}">
-                                            <ContentView.GestureRecognizers>
-                                                <TapGestureRecognizer
-                                                    Tapped="DownVoteComment"
-                                                    NumberOfTapsRequired="1" />
-                                            </ContentView.GestureRecognizers>
-                                       
-                                            <Image Source="{Binding DownVoteStatus}"
-                                                   Opacity="{Binding ElementOpacity}"
-                                                   x:Name="DownVoteImageComment"
-                                                   IsEnabled="{Binding Enabled}"
-                                                   WidthRequest="14">
-                                                    
-                                            </Image>
-                                        </ContentView>
+                                                </Grid>
 
-                                        <Label Text="{Binding Votes}" FontSize="Small" Grid.Column="6" TextColor="#808080"
-                                                VerticalTextAlignment="Center" Margin="0,-2,0,0"  x:Name="CurrentVotesComment">
-                                        </Label>
 
-                                        <ContentView Grid.Column="7" Padding="5" IsEnabled="{Binding Enabled}">
-                                            <ContentView.GestureRecognizers>
-                                                <TapGestureRecognizer
-                                                    Tapped="UpVoteComment"
-                                                    NumberOfTapsRequired="1" />
-                                            </ContentView.GestureRecognizers>
-                                            <Image Source="{Binding UpVoteStatus}"  
-                                                   Opacity="{Binding ElementOpacity}"
-                                                   x:Name="UpVoteImageComment"
-                                                   WidthRequest="14">
-                                            </Image>
-                                        </ContentView>
-                                    </Grid>
+
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
                                 </StackLayout>
-                            </ContentView>
+                                
+                            </StackLayout>
+
+                    </StackLayout>
+                
+                    </ContentView>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
                 <ListView.Footer>
-                    <ContentView Padding="10">
-                        <Label HorizontalTextAlignment="Center" x:Name="LoadingCommentsDialog" Text="Loading..." IsVisible="false" />
-                    </ContentView>
+                    <ContentView Padding="0,10,0,0"/>
                 </ListView.Footer>
-
             </ListView>
  
         </ContentView>
 
-        <controls:MTAdView
+        <!--<controls:MTAdView
         x:Name="AdBanner"
         AdsId="{OnPlatform
         Android='ca-app-pub-9382412071078825/6429237516', 
-        iOS='ca-app-pub-9382412071078825/8862041693'}"/>
+        iOS='ca-app-pub-9382412071078825/8862041693'}"/>-->
 
     </StackLayout>
 

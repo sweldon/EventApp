@@ -81,9 +81,12 @@ namespace EventApp.Views
                         var response = await App.globalClient.PostAsync(App.HolidailyHost + "/submit/", content);
                         var responseString = await response.Content.ReadAsStringAsync();
                         dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-                        int status = responseJSON.status;
 
-                        if (status == 200)
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            await DisplayAlert($"{responseJSON.title}", $"{responseJSON.message}", "OK");
+                        }
+                        else
                         {
                             PendingWrapper.IsVisible = true;
                             CheckStatusWrapper.IsVisible = true;
@@ -92,10 +95,6 @@ namespace EventApp.Views
                             HolidayNameEntry.Text = "";
                             HolidayDetailEntry.Text = "";
                             UploadedImage.IsVisible = false;
-                        }
-                        else
-                        {
-                            await DisplayAlert("Error", "Something went wrong, please try again.", "OK");
                         }
                     }
                     catch(Exception ex)
