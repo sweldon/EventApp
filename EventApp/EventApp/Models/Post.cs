@@ -168,42 +168,6 @@ namespace EventApp.Models
             }
         }
 
-        private bool likeenabled;
-        public bool LikeEnabled
-        {
-            get { return likeenabled; }
-            set
-            {
-                if (likeenabled == value)
-                {
-                    return;
-                }
-                likeenabled = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string likelabel;
-        public string LikeLabel
-        {
-            get
-            {
-                if (likes == 1)
-                    return "Like";
-                return "Likes";
-            }
-            set
-            {
-                if (likelabel == value)
-                {
-                    return;
-                }
-                likelabel = value;
-                OnPropertyChanged();
-            }
-        }
-
-
         private string avatar;
         public string Avatar
         {
@@ -245,6 +209,41 @@ namespace EventApp.Models
                     return;
                 }
                 bg = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool likeenabled;
+        public bool LikeEnabled
+        {
+            get { return likeenabled; }
+            set
+            {
+                if (likeenabled == value)
+                {
+                    return;
+                }
+                likeenabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string likelabel;
+        public string LikeLabel
+        {
+            get
+            {
+                if (likes == 1)
+                    return "Like";
+                return "Likes";
+            }
+            set
+            {
+                if (likelabel == value)
+                {
+                    return;
+                }
+                likelabel = value;
                 OnPropertyChanged();
             }
         }

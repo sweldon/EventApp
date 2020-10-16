@@ -289,6 +289,8 @@ namespace EventApp.Views
                             ShowEdit = "True", // If you can delete, you can edit
                             ShowDelete = "True",
                             ShowReport = false,
+                            LikeEnabled = true,
+                            LikeTextColor = Color.FromHex("808080")
                         };
                         Object[] data = { c, ParentPost, Container};
                         MessagingCenter.Send(this, "UpdateComments", data);

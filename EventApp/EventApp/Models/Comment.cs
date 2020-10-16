@@ -243,6 +243,114 @@ namespace EventApp.Models
             }
         }
 
+        private bool likeenabled;
+        public bool LikeEnabled
+        {
+            get { return likeenabled; }
+            set
+            {
+                if (likeenabled == value)
+                {
+                    return;
+                }
+                likeenabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string likelabel;
+        public string LikeLabel
+        {
+            get
+            {
+                if (likes == 1)
+                    return "Like";
+                return "Likes";
+            }
+            set
+            {
+                if (likelabel == value)
+                {
+                    return;
+                }
+                likelabel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string likeimage;
+        public string LikeImage
+        {
+            get
+            {
+                if (likeimage == null)
+                    return "like_neutral.png";
+                return likeimage;
+
+            }
+            set
+            {
+                if (likeimage == value)
+                {
+                    return;
+                }
+                likeimage = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Color liketextcolor;
+        public Color LikeTextColor
+        {
+            get
+            {
+                if (liketextcolor == null)
+                    return Color.FromHex("808080");
+                return liketextcolor;
+
+            }
+            set
+            {
+                if (liketextcolor == value)
+                {
+                    return;
+                }
+                liketextcolor = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private int likes;
+        public int Likes
+        {
+            get { return likes; }
+            set
+            {
+                if (likes == value)
+                {
+                    return;
+                }
+                likes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool showreactions;
+        public bool ShowReactions
+        {
+            get { return showreactions; }
+            set
+            {
+                if (showreactions == value)
+                {
+                    return;
+                }
+                showreactions = value;
+                OnPropertyChanged();
+            }
+        }
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")

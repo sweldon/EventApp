@@ -435,7 +435,7 @@
 
                                     <StackLayout.GestureRecognizers>
                                     <TapGestureRecognizer
-                                        Tapped="LikePost"  />
+                                        Tapped="Like"  />
                                     </StackLayout.GestureRecognizers>
                                 </StackLayout>
 
@@ -537,7 +537,18 @@
                                                         </ContentView.GestureRecognizers>
                                                 </ContentView>
 
-                                                
+                                                <StackLayout Orientation="Horizontal" Spacing="5" Grid.Column="1" Grid.Row="4" HorizontalOptions="End">                            
+                                                    <Image Source="{Binding LikeImage}" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="14" Opacity=".8"/>
+                           
+                                                    <Label Grid.Column="1" Text="Like" FontSize="Small" TextColor="{Binding LikeTextColor}"
+                                                    VerticalTextAlignment="Center" Margin="0,0,8,0" />
+
+                                                    <StackLayout.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Tapped="Like"  />
+                                                    </StackLayout.GestureRecognizers>
+                                                </StackLayout>
+
                                                 <StackLayout Orientation="Horizontal" Spacing="5" Grid.Column="2" Grid.Row="4" HorizontalOptions="End" IsVisible="{Binding ShowReply}">
                                                     <Image Source="reply.png" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="14" Opacity=".8"/>
                                                     <Label Text="Reply" TextColor="#808080" FontSize="Small"

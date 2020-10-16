@@ -290,11 +290,12 @@ namespace EventApp.Views
             }
         }
 
-        async void LikePost(object sender, EventArgs args)
-        {
 
+        async void Like(object sender, EventArgs args)
+        {
+            dynamic entity = (sender as StackLayout).BindingContext;
+            string ep = entity.GetType() == typeof(Post) ? "posts" : "comments";
             Utils.Vibrate();
-            Post post = (sender as StackLayout).BindingContext as Post;
 
             if (!isLoggedIn)
             {
@@ -302,39 +303,39 @@ namespace EventApp.Views
                 return;
             }
 
-            if (!post.LikeEnabled)
+            if (!entity.LikeEnabled)
                 return;
-            post.LikeEnabled = false;
-            bool isLiked = post.LikeImage == "like_neutral.png" ? true : false;
+            entity.LikeEnabled = false;
+            bool isLiked = entity.LikeImage == "like_neutral.png" ? true : false;
 
 
-            post.LikeImage = isLiked == false ? "like_neutral.png" : "like_active.png";
-            post.LikeTextColor = isLiked == false ? Color.FromHex("808080"): Color.FromHex("4c96e8");
+            entity.LikeImage = isLiked == false ? "like_neutral.png" : "like_active.png";
+            entity.LikeTextColor = isLiked == false ? Color.FromHex("808080"): Color.FromHex("4c96e8");
 
             if (isLiked)
             {
                 await (sender as StackLayout).ScaleTo(1.5, 50);
                 await (sender as StackLayout).ScaleTo(1, 50);
-                post.Likes += 1;
+                entity.Likes += 1;
               
-                if (post.Likes > 1)
-                    post.LikeLabel = "Likes";
+                if (entity.Likes > 1)
+                    entity.LikeLabel = "Likes";
                 else
-                    post.LikeLabel = "Like";
+                    entity.LikeLabel = "Like";
               
             }
             else
             {
-                post.Likes -= 1;
+                entity.Likes -= 1;
                 
-                if (post.Likes > 1)
-                    post.LikeLabel = "Likes";
+                if (entity.Likes > 1)
+                    entity.LikeLabel = "Likes";
                 else
-                    post.LikeLabel = "Like";
+                    entity.LikeLabel = "Like";
             
             }
 
-            post.ShowReactions = post.Likes > 0 ? true : false;
+            entity.ShowReactions = entity.Likes > 0 ? true : false;
             // Need to update height
             Utils.RefreshElement((sender as StackLayout));
 
@@ -347,7 +348,7 @@ namespace EventApp.Views
                 };
                 var content = new FormUrlEncodedContent(values);
                 await App.globalClient.PatchAsync(App.HolidailyHost +
-                    "/posts/" + post.Id + "/", content);
+                    $"/{ep}/" + entity.Id + "/", content);
 
 
             }
@@ -358,7 +359,7 @@ namespace EventApp.Views
             finally
             {
                 await Task.Delay(1000);
-                post.LikeEnabled = true;
+                entity.LikeEnabled = true;
             }
         }
 
@@ -556,31 +557,6 @@ namespace EventApp.Views
 
         }
 
-        //async Task<ObservableCollection<Comment>> GetPostComments(int PostId)
-        //{
-        //    ObservableCollection<Comment> PostComments = new ObservableCollection<Comment>();
-        //    string url = $"{App.HolidailyHost}/comments/?post={PostId}";
-
-        //    if (isLoggedIn)
-        //    {
-        //        url = $"{url}&username={currentUser}";
-        //    }
-
-        //    var response = await App.globalClient.GetAsync(url);
-        //    var responseString = await response.Content.ReadAsStringAsync();
-        //    dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
-        //    dynamic posts = responseJSON.results;
-
-        //    foreach (var p in posts)
-        //    {
-        //        PostComments.Add(new Comment()
-        //        {
-        //            Content = p.content
-        //        });
-        //    }
-        //    return await Task.FromResult(PostComments);
-        //}
-
         async Task<ObservableCollection<Post>> GetHolidayPosts()
         {
             string url = $"{App.HolidailyHost}/posts/?holiday_id={viewModel.Holiday.Id}";
@@ -688,6 +664,12 @@ namespace EventApp.Views
                         ShowDelete = ShowDeleteComment,
                         ShowReport = showReportComment,
 
+                        LikeImage = comment.liked == true ? "like_active.png" : "like_neutral.png",
+                        Likes = comment.likes,
+                        LikeTextColor = comment.liked == true ? Color.FromHex("4c96e8") : Color.FromHex("808080"),
+                        LikeEnabled = true,
+                        ShowReactions = comment.likes > 0 ? true : false,
+
                     });
                     // Append replies
                     foreach (var r in replies)
@@ -740,7 +722,13 @@ namespace EventApp.Views
                             ShowEdit = ShowDeleteReply, // If you can delete, you can edit
                             ShowDelete = ShowDeleteReply,
                             ShowReport = showReportReply,
-                            ThreadPadding = paddingThickness
+                            ThreadPadding = paddingThickness,
+
+                            LikeImage = r.liked == true ? "like_active.png" : "like_neutral.png",
+                            Likes = r.likes,
+                            LikeTextColor = r.liked == true ? Color.FromHex("4c96e8") : Color.FromHex("808080"),
+                            LikeEnabled = true,
+                            ShowReactions = r.likes > 0 ? true : false
 
                         });
                     }
@@ -757,14 +745,15 @@ namespace EventApp.Views
                     ShowEdit = ShowDeleteVal, // If you can delete, you can edit
                     ShowDelete = ShowDeleteVal,
                     ShowReport = showReport,
-                    Likes = p.likes,
+                    
                     Avatar = avatar,
                     Image = p.image,
                     ShowImage = isMediaVisible,
                     LikeImage = p.liked == true ? "like_active.png" : "like_neutral.png",
+                    Likes = p.likes,
                     LikeTextColor = p.liked == true ? Color.FromHex("4c96e8") : Color.FromHex("808080"),
-                    ShowReactions = p.likes > 0 ? true : false,
                     LikeEnabled = true,
+                    ShowReactions = p.likes > 0 ? true : false,
                     ShowComments = PostComments.Count() > 0 ? true: false,
                     Comments = PostComments
                 });

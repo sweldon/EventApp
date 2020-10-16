@@ -224,11 +224,16 @@ namespace EventApp
             string postId = "";
             string commentUser = "";
             string unread = "";
+            string entityType = "";
             foreach (var data in pushData)
             {
                 if (data.Key == "push_type")
                 {
                     pushType = data.Value.ToString();
+                }
+                else if (data.Key == "entity_type")
+                {
+                    entityType = data.Value.ToString();
                 }
                 else if (data.Key == "comment_id")
                 {
@@ -258,6 +263,7 @@ namespace EventApp
                 {"post_id", postId },
                 {"comment_user", commentUser },
                 {"unread", unread },
+                {"entity_type", entityType },
             };
             return parsedData;
         }
@@ -375,6 +381,7 @@ namespace EventApp
                 string commentId = pushData["comment_id"];
                 string postId = pushData["post_id"];
                 string commentUser = pushData["comment_user"];
+                string entityType = pushData["entity_type"];
                 if (pushType == "news")
                 {
                     OpenNotifications = true;
@@ -396,7 +403,16 @@ namespace EventApp
                 else if (pushType == "like")
                 {
                     NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
-                    Utils.ReadNotification("like", postId);
+                    if(entityType == "comment")
+                    {
+                        Utils.ReadNotification("like_comment", commentId);
+                    }
+                    else
+                    {
+                        // Post like
+                        Utils.ReadNotification("like", postId);
+                    }
+                    
                 }
                 else if (pushType == "rewards")
                 {
