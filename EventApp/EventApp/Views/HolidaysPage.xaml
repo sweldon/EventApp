@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.HolidaysPage"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-             xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
              xmlns:local="clr-namespace:EventApp.Views"
              xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
              >
@@ -12,7 +11,7 @@
                 <local:CustomToolBar/>
             </NavigationPage.TitleView>
 
-        <StackLayout Spacing="0">
+        <StackLayout Spacing="0" VerticalOptions="FillAndExpand">
 
             <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="0">
 
@@ -87,7 +86,7 @@
 
             <StackLayout Spacing="0" x:Name="HolidayListWrapper">
 
-            <StackLayout x:Name="MainFeed" VerticalOptions="Start" Spacing="0">
+            <StackLayout x:Name="MainFeed" VerticalOptions="FillAndExpand" Spacing="0">
 
 
                     <ListView x:Name="ItemsListView"
@@ -99,6 +98,7 @@
                         IsPullToRefreshEnabled="True"
                         Refreshing="RefreshHolidaysCommand"
                         BackgroundColor="#e5e5e5"
+                        VerticalOptions="FillAndExpand"
                         >
 
                     <!--This is for dynamically changing background color based on list size-->
@@ -358,7 +358,7 @@
 
             </StackLayout>
 
-            <StackLayout IsVisible="False" x:Name="SocialMediaWrapper">
+            <StackLayout IsVisible="False" x:Name="SocialMediaWrapper" VerticalOptions="FillAndExpand">
 
                 <ListView x:Name="SocialMediaList"
                     SeparatorVisibility="None"
@@ -366,7 +366,8 @@
                     IsPullToRefreshEnabled="True"
                     Refreshing="RefreshSocialMediaCommand"
                     VerticalScrollBarVisibility="Never"
-                    BackgroundColor="#E5E5E5">
+                    BackgroundColor="#E5E5E5"
+                    VerticalOptions="FillAndExpand">
 
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -564,13 +565,6 @@
                 </ListView>
 
             </StackLayout>
-
-
-            <!--<controls:MTAdView
-            x:Name="AdBanner"
-            AdsId="{OnPlatform
-            Android='ca-app-pub-9382412071078825/8429542879', 
-            iOS='ca-app-pub-9382412071078825/1958380167'}"/>-->
 
         </StackLayout>
 

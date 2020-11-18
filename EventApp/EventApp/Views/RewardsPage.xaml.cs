@@ -60,14 +60,17 @@ namespace EventApp.Views
             };
 
             CrossMTAdmob.Current.OnRewardedVideoAdClosed += (object sender, EventArgs e) => {
-                // Reload
+
+            #if DEBUG
+                CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-3940256099942544/5224354917");
+            #else
                 #if __IOS__
                     CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/4201400125");
-                #endif
-
-                #if __ANDROID__
+                #elif __ANDROID__
                     CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/7152256279");
                 #endif
+            #endif
+
             };
 
             CrossMTAdmob.Current.OnRewarded += (object sender, MTEventArgs e) => {
@@ -218,12 +221,14 @@ namespace EventApp.Views
         {
             MessagingCenter.Send(Application.Current, "UpdateToolbar", true);
 
-            #if __IOS__
-                CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/4201400125");
-            #endif
-
-            #if __ANDROID__
-                        CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/7152256279");
+            #if DEBUG
+                CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-3940256099942544/5224354917");
+            #else
+                #if __IOS__
+                    CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/4201400125");
+                #elif __ANDROID__
+                    CrossMTAdmob.Current.LoadRewardedVideo("ca-app-pub-9382412071078825/7152256279");
+                #endif
             #endif
 
             if (!isLoggedIn)

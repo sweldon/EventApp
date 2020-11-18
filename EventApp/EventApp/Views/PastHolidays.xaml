@@ -6,7 +6,7 @@
              >
 
 
-            <StackLayout VerticalOptions="Start" Spacing="0" IsVisible="{Binding IsVisible}">
+            <StackLayout VerticalOptions="FillAndExpand" Spacing="0" IsVisible="{Binding IsVisible}">
 
       
                 <ListView x:Name="PastHolidaysList"

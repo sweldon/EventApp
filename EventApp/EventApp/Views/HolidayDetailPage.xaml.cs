@@ -196,6 +196,7 @@ namespace EventApp.Views
                             entity.ShowEdit = "False";
                             // Disable voting
                             entity.Enabled = false;
+                            entity.ShowReactions = false;
                         }
                         else
                         {

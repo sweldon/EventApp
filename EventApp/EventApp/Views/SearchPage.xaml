@@ -4,7 +4,6 @@
             x:Class="EventApp.Views.SearchPage"
             Title="{Binding Title}"
             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-            xmlns:local="clr-namespace:EventApp"
             xmlns:local2="clr-namespace:EventApp.Views"
             >
 
@@ -15,8 +14,6 @@
 
 
     <StackLayout VerticalOptions="FillAndExpand" Spacing="0" BackgroundColor="#FFFFFF">
-
-
         
         <Grid HorizontalOptions="FillAndExpand" ColumnSpacing="0">
 
@@ -66,16 +63,17 @@
             </StackLayout>
         </Grid>
 
-        <StackLayout x:Name="PopularWrapper" IsVisible="False">
+        <StackLayout x:Name="PopularWrapper" VerticalOptions="FillAndExpand" IsVisible="False">
 
                 <ListView x:Name="TopHolidayList"
-                 IsRefreshing="{Binding IsBusy, Mode=OneWay}"
-                  SeparatorVisibility="None"
-                  ItemsSource="{Binding TopHolidays}"
-                  HasUnevenRows="true"
-                  RefreshCommand="{Binding LoadTopHolidays}"
-                  IsPullToRefreshEnabled="true"
-                  CachingStrategy="RecycleElement">
+                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                SeparatorVisibility="None"
+                ItemsSource="{Binding TopHolidays}"
+                HasUnevenRows="true"
+                RefreshCommand="{Binding LoadTopHolidays}"
+                IsPullToRefreshEnabled="true"
+                VerticalOptions="FillAndExpand"
+                CachingStrategy="RecycleElement">
 
                 <ListView.BackgroundColor>
                     <OnPlatform x:TypeArguments="Color"
@@ -199,7 +197,7 @@
 
         </StackLayout>
 
-        <StackLayout x:Name="SearchWrapper" IsVisible="True" Spacing="0">
+        <StackLayout x:Name="SearchWrapper" IsVisible="True" Spacing="0" VerticalOptions="FillAndExpand">
             <StackLayout Orientation="Horizontal" Padding="10">
                 <!--Can use TextChanged attr with SearchTextChanged function in the future if you want, I think this is cleaner for now -->
                 <Entry HorizontalOptions="FillAndExpand"
@@ -266,12 +264,13 @@
                 <ContentView >
 
                     <ListView x:Name="SearchHolidayList"
-                     IsRefreshing="false" 
-                      SeparatorVisibility="None"
-                      ItemsSource="{Binding HolidayResults}"
-                      HasUnevenRows="true"
-                      RefreshCommand="{Binding HolidaySearch}"
-                      IsPullToRefreshEnabled="false"
+                    IsRefreshing="false"
+                    VerticalOptions="FillAndExpand"
+                    SeparatorVisibility="None"
+                    ItemsSource="{Binding HolidayResults}"
+                    HasUnevenRows="true"
+                    RefreshCommand="{Binding HolidaySearch}"
+                    IsPullToRefreshEnabled="false"
                        >
                         <ListView.ItemTemplate>
                             <DataTemplate>

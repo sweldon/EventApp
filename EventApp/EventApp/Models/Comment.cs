@@ -120,8 +120,7 @@ namespace EventApp.Models
             }
         }
 
-        private bool enabled;
-        [DefaultValue(true)]
+        private bool enabled = true;
         public bool Enabled
         {
             get { return enabled; }
