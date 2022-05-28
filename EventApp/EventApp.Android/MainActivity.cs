@@ -17,7 +17,14 @@ using System.ComponentModel;
 
 namespace EventApp.Droid
 {
-    [Activity(Label = "Holidaily", Icon = "@drawable/Icon", Theme = "@style/splashscreen", MainLauncher = true, Exported = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [
+        Activity(Label = "Holidaily",
+        Icon = "@drawable/Icon",
+        Theme = "@style/splashscreen",
+        MainLauncher = true,
+        //Exported = true, // Re-enable with next Xamarin.Android update
+        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)
+        ]
     [IntentFilter(
         new[] { Intent.ActionView },
             Categories = new[] {

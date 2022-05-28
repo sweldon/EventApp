@@ -17,6 +17,8 @@ using System.Collections.ObjectModel;
 using Stormlion.PhotoBrowser;
 using FFImageLoading.Forms;
 using System.Collections;
+using Rg.Plugins.Popup.Extensions;
+using System.Net.Http;
 
 #if __IOS__
 using UIKit;
@@ -101,14 +103,26 @@ namespace EventApp.Views
             }
         }
 
+        public string devicePushId
+        {
+            get { return Settings.DevicePushId; }
+            set
+            {
+                if (Settings.DevicePushId == value)
+                    return;
+                Settings.DevicePushId = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string showAds;
         private bool todayDone = false;
-        public ObservableCollection<Tweet> Tweets { get; set; }
+        public ObservableCollection<Post> Posts { get; set; }
         
         public HolidaysPage()
         {
             InitializeComponent();
-            Tweets = new ObservableCollection<Tweet>();
+            Posts = new ObservableCollection<Post>();
             BindingContext = viewModel = new HolidaysViewModel();
             ItemsListView.ItemTapped += (object sender, ItemTappedEventArgs e) => {
                 if (e.Item == null) return;
@@ -126,10 +140,10 @@ namespace EventApp.Views
                 //    return;
                 //}
                 //LoadingCommentsDialog.IsVisible = true;
-                var tweet = e.Item as Tweet;
-                if (Tweets.Last() == tweet)
+                var post = e.Item as Post;
+                if (Posts.Last() == post)
                 {
-                    LoadMoreTweets();
+                    LoadMorePosts();
                 }
                 //LoadingCommentsDialog.IsVisible = false;
             };
@@ -167,13 +181,14 @@ namespace EventApp.Views
         }
 
         public int page = 0;
-        public async void LoadMoreTweets()
+        public async void LoadMorePosts()
         {
             page += 1;
-            ObservableCollection<Tweet> moreTweets = await Services.GlobalServices.GetTweets(page);
-            foreach(Tweet t in moreTweets)
+            ObservableCollection<Post> morePosts = await Services.GlobalServices.GetPosts(buzz: true, page: page);
+            foreach(Post p in morePosts)
             {
-                Tweets.Add(t);
+                Debug.WriteLine(p.Content);
+                Posts.Add(p);
             }
         }
 
@@ -240,7 +255,19 @@ namespace EventApp.Views
                 this.IsEnabled = true;
             }
         }
+        async void LabelSpanToHoliday(object sender, EventArgs args)
+        {
 
+            var item = (sender as Label).BindingContext as Post;
+
+            string holidayId = item.HolidayId;
+            if (holidayId != "-1") // Ad
+            {
+                this.IsEnabled = false;
+                await Navigation.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
+                this.IsEnabled = true;
+            }
+        }
         public async void OpenInTwitter(object sender, EventArgs e)
         {
             var tweet = (sender as StackLayout).BindingContext as Tweet;
@@ -310,7 +337,7 @@ namespace EventApp.Views
                 }
                 
             }
-            //AdBanner.IsVisible = !isPremium;
+            AdBanner.IsVisible = !isPremium;
         }
 
         protected override void OnDisappearing()
@@ -451,12 +478,12 @@ namespace EventApp.Views
         }
 
 
-        protected void RefreshSocialMediaCommand(object sender, EventArgs e)
+        protected void GetBuzzCommand(object sender, EventArgs e)
         {
             page = 0;
-            RefreshSocialMediaFeed();
+            RefreshBuzzFeed();
             SocialMediaList.EndRefresh();
-            NoResults.IsVisible = Tweets.Count == 0 ? true : false;
+            NoResults.IsVisible = Posts.Count == 0 ? true : false;
         }
 
         protected async void RefreshHolidaysCommand(object sender, EventArgs e)
@@ -467,15 +494,15 @@ namespace EventApp.Views
             mainHolidaysPage = 0;
         }
 
-        private async void RefreshSocialMediaFeed()
+        private async void RefreshBuzzFeed()
         {
 
             try
             {
-                //tweets.Clear();
-                Tweets = await Services.GlobalServices.GetTweets();
-                SocialMediaList.ItemsSource = Tweets;
-                NoResults.IsVisible = Tweets.Count == 0 ? true : false;
+                //Posts = await Services.GlobalServices.GetBuzzPosts();
+                Posts = await Services.GlobalServices.GetPosts(buzz: true);
+                SocialMediaList.ItemsSource = Posts;
+                NoResults.IsVisible = Posts.Count == 0 ? true : false;
             }
             catch (Exception ex)
             {
@@ -521,8 +548,8 @@ namespace EventApp.Views
             }
             else
             {
-                if (Tweets.Count == 0)
-                    RefreshSocialMediaFeed();
+                if (Posts.Count == 0)
+                    RefreshBuzzFeed();
 
                 SocialMediaWrapper.IsVisible = true;
                 HolidayListWrapper.IsVisible = false;
@@ -559,6 +586,145 @@ namespace EventApp.Views
                     " image at the moment", "OK");
             }
 
+        }
+
+        // Post functions
+        async void OpenProfile(object sender, EventArgs args)
+        {
+            dynamic item;
+            try
+            {
+                item = (sender as ContentView).BindingContext as dynamic;
+            }
+            catch
+            {
+                item = (sender as ContentView).BindingContext as dynamic;
+            }
+            if (item.Content == "[deleted]" || item.Content == "[blocked]" || item.Content == "[reported]")
+                return;
+
+            string UserName = item.UserName;
+            await Navigation.PushAsync(new UserPage(user: null, userName: UserName));
+        }
+        async void LabelSpanToUser(object sender, EventArgs args)
+        {
+            dynamic item = (sender as Label).BindingContext as dynamic;
+            string UserName = item.UserName;
+            await Navigation.PushAsync(new UserPage(user: null, userName: UserName));
+        }
+        public async void OpenOptions(object sender, EventArgs args)
+        {
+            if (!isLoggedIn)
+            {
+                App.promptLogin(Navigation);
+                return;
+            }
+            Post post = (sender as ContentView).BindingContext as Post;
+            try
+            {
+                await Navigation.PushPopupAsync(new PostOptionsPopUp(post: post, container: (sender as ContentView)));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"{ex}");
+            }
+
+        }
+        public async void ViewPostimage(object sender, EventArgs args)
+        {
+            Post post = (sender as CachedImage).BindingContext as Post;
+            try
+            {
+                new PhotoBrowser
+                {
+                    Photos = new List<Photo>
+                {
+                    new Photo
+                    {
+                        URL = $"{post.Image}",
+                        Title = $"{post.UserName}'s Image"
+                    }
+                }
+                }.Show();
+            }
+            catch (Exception e)
+            {
+                await DisplayAlert("Ouch!", "Sorry, we couldn't load this" +
+                    " image at the moment", "OK");
+                Debug.WriteLine($"{e}");
+            }
+
+        }
+        async void Like(object sender, EventArgs args)
+        {
+            dynamic entity = (sender as StackLayout).BindingContext;
+            string ep = entity.GetType() == typeof(Post) ? "posts" : "comments";
+            Utils.Vibrate();
+
+            if (!isLoggedIn)
+            {
+                App.promptLogin(Navigation);
+                return;
+            }
+
+            if (!entity.LikeEnabled)
+                return;
+            entity.LikeEnabled = false;
+            bool isLiked = entity.LikeImage == "like_neutral.png" ? true : false;
+
+
+            entity.LikeImage = isLiked == false ? "like_neutral.png" : "like_active.png";
+            entity.LikeTextColor = isLiked == false ? Color.FromHex("808080") : Color.FromHex("4c96e8");
+
+            if (isLiked)
+            {
+                await (sender as StackLayout).ScaleTo(1.5, 50);
+                await (sender as StackLayout).ScaleTo(1, 50);
+                entity.Likes += 1;
+
+                if (entity.Likes > 1)
+                    entity.LikeLabel = "Likes";
+                else
+                    entity.LikeLabel = "Like";
+
+            }
+            else
+            {
+                entity.Likes -= 1;
+
+                if (entity.Likes > 1)
+                    entity.LikeLabel = "Likes";
+                else
+                    entity.LikeLabel = "Like";
+
+            }
+
+            entity.ShowReactions = entity.Likes > 0 ? true : false;
+            // Need to update height
+            Utils.RefreshElement((sender as StackLayout));
+
+            try
+            {
+                var values = new Dictionary<string, string>{
+                   { "username", currentUser },
+                   { "device_id", devicePushId },
+                   { "like", isLiked.ToString() },
+                };
+                var content = new FormUrlEncodedContent(values);
+                await App.globalClient.PatchAsync(App.HolidailyHost +
+                    $"/{ep}/" + entity.Id + "/", content);
+
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Could not like post: {ex}");
+            }
+            finally
+            {
+                await Task.Delay(1000);
+                entity.LikeEnabled = true;
+            }
         }
 
     }

@@ -5,6 +5,9 @@ using EventApp.Models;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Diagnostics;
+using Xamarin.Forms;
+using System.Linq;
 
 namespace EventApp.Services
 {
@@ -21,39 +24,221 @@ namespace EventApp.Services
             get { return Settings.IsLoggedIn; }
         }
 
-        public async static Task<ObservableCollection<Tweet>> GetTweets(int page=0)
+        // todo: load more not working
+        public static async Task<ObservableCollection<Post>> GetPosts(string holidayId = null, bool buzz=false, int page=0)
         {
-            ObservableCollection<Tweet> tweets = new ObservableCollection<Tweet>();
-            try
-            {
-                var response = await App.globalClient.GetAsync($"{App.HolidailyHost}/tweets?page={page}");
-                var responseString = await response.Content.ReadAsStringAsync();
-                dynamic tweetList = JsonConvert.DeserializeObject(responseString);
+            ObservableCollection<Post> HolidayPosts = new ObservableCollection<Post>();
+            string url;
 
-                foreach (var t in tweetList)
+            if (buzz)
+            {
+                url = $"{App.HolidailyHost}/posts/?buzz=1&page={page}";
+            }
+            else {
+                url = $"{App.HolidailyHost}/posts/?holiday_id={holidayId}";
+            }
+
+            if (isLoggedIn)
+            {
+                url = $"{url}&username={currentUser}";
+            }
+
+            var response = await App.globalClient.GetAsync(url);
+            var responseString = await response.Content.ReadAsStringAsync();
+            dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+            dynamic posts = responseJSON.results;
+            string ShowDeleteVal;
+            foreach (var p in posts)
+            {
+                string suffix = p.time_since_edit.ToString().Contains("now") ? "" : " ago";
+                string TimeAgo = p.edited == null ? p.time_since : $"{p.time_since} (edited {p.time_since_edit}{suffix})";
+                string postAuthor = p.user;
+                if (String.Equals(postAuthor, currentUser, StringComparison.OrdinalIgnoreCase))
                 {
-                    tweets.Add(new Tweet()
-                    {
-                        UserName = t.user,
-                        Body = t.body,
-                        Timestamp = t.timestamp,
-                        Image = t.image,
-                        UserProfileImage = t.user_profile_image,
-                        ShowImage = t.image == null ? false : true,
-                        Handle = t.handle,
-                        Verified = t.user_verified,
-                        Url = t.url,
-                    });
+                    ShowDeleteVal = "true";
                 }
-            }
-            catch
-            {
+                else
+                {
+                    ShowDeleteVal = "false";
+                }
+                bool showReport = true;
+
+                // If already blocked, reported or it's their own, don't allow another report
+                if (p.blocked == true || p.reported == true ||
+                    (String.Equals(postAuthor, currentUser, StringComparison.OrdinalIgnoreCase))
+                    || p.deleted == true)
+                {
+                    showReport = false;
+                }
+
+                // Show user their own avatar, approved or not
+                string avatar;
+                if (p.user == App.GlobalUser.UserName && Settings.IsLoggedIn)
+                {
+                    avatar = App.GlobalUser.Avatar == null ? "default_user_128.png" : App.GlobalUser.Avatar;
+                }
+                else
+                {
+                    avatar = p.avatar == null ? "default_user_128.png" : p.avatar;
+                }
+                string image = p.image;
+                bool isMediaVisible = string.IsNullOrEmpty(image) ? false : true;
+
+                // post comments
+                var comments = p.comments;
+                ObservableCollection<Comment> PostComments = new ObservableCollection<Comment>();
+                foreach (var comment in comments)
+                {
+
+                    string suffixComment = comment.time_since_edit.ToString().Contains("now") ? "" : " ago";
+                    string TimeAgoComment = comment.edited == null ? comment.time_since :
+                        $"{comment.time_since} (edited {comment.time_since_edit}{suffixComment})";
+                    string commentUser = comment.user;
+                    string avatarComment;
+                    if (comment.UserName == App.GlobalUser.UserName && Settings.IsLoggedIn)
+                    {
+                        avatarComment = App.GlobalUser.Avatar;
+                    }
+                    else
+                    {
+                        avatarComment = comment.avatar == null ? "default_user_128.png" : comment.avatar;
+                    }
+
+                    string commentAuthor = comment.user;
+                    string ShowDeleteComment;
+                    if (String.Equals(commentAuthor, currentUser, StringComparison.OrdinalIgnoreCase))
+                    {
+
+                        ShowDeleteComment = "true";
+                    }
+                    else
+                    {
+
+                        ShowDeleteComment = "false";
+                    }
+                    bool showReportComment = true;
+
+                    // If already blocked, reported or it's their own, don't allow another report
+                    if (comment.blocked == true || comment.reported == true ||
+                        (String.Equals(commentAuthor, currentUser, StringComparison.OrdinalIgnoreCase))
+                        || comment.deleted == true)
+                    {
+                        showReportComment = false;
+                    }
+
+                    dynamic replies = comment.replies;
+
+
+                    PostComments.Add(new Comment()
+                    {
+                        Id = comment.id,
+                        Content = comment.content,
+                        HolidayId = comment.holiday,
+                        UserName = comment.user,
+                        TimeSince = TimeAgoComment,
+                        Avatar = avatarComment,
+                        ShowEdit = ShowDeleteComment, // If you can delete, you can edit
+                        ShowDelete = ShowDeleteComment,
+                        ShowReport = showReportComment,
+
+                        LikeImage = comment.liked == true ? "like_active.png" : "like_neutral.png",
+                        Likes = comment.likes,
+                        LikeTextColor = comment.liked == true ? Color.FromHex("4c96e8") : Color.FromHex("808080"),
+                        LikeEnabled = true,
+                        ShowReactions = comment.likes > 0 ? true : false,
+
+                    });
+                    // Append replies
+                    foreach (var r in replies)
+                    {
+
+                        string avatarReply;
+                        string replyAuthor = r.user;
+                        if (r.UserName == App.GlobalUser.UserName && Settings.IsLoggedIn)
+                        {
+                            avatarReply = App.GlobalUser.Avatar;
+                        }
+                        else
+                        {
+                            avatarReply = r.avatar == null ? "default_user_128.png" : r.avatar;
+                        }
+                        string ShowDeleteReply;
+                        if (String.Equals(replyAuthor, currentUser, StringComparison.OrdinalIgnoreCase))
+                        {
+
+                            ShowDeleteReply = "true";
+                        }
+                        else
+                        {
+
+                            ShowDeleteReply = "false";
+                        }
+                        bool showReportReply = true;
+
+                        // If already blocked, reported or it's their own, don't allow another report
+                        if (r.blocked == true || r.reported == true ||
+                            (String.Equals(replyAuthor, currentUser, StringComparison.OrdinalIgnoreCase))
+                            || r.deleted == true)
+                        {
+                            showReportReply = false;
+                        }
+                        Thickness paddingThickness = new Thickness(Convert.ToDouble(20), 0, 0, 0);
+
+                        string suffixReply = r.time_since_edit.ToString().Contains("now") ? "" : " ago";
+                        string TimeAgoReply = r.edited == null ? r.time_since :
+                            $"{r.time_since} (edited {r.time_since_edit}{suffixReply})";
+
+                        PostComments.Add(new Comment()
+                        {
+                            Id = r.id,
+                            Content = r.content,
+                            HolidayId = r.holiday,
+                            UserName = replyAuthor,
+                            TimeSince = TimeAgoReply,
+                            Avatar = avatarReply,
+                            ShowEdit = ShowDeleteReply, // If you can delete, you can edit
+                            ShowDelete = ShowDeleteReply,
+                            ShowReport = showReportReply,
+                            ThreadPadding = paddingThickness,
+
+                            LikeImage = r.liked == true ? "like_active.png" : "like_neutral.png",
+                            Likes = r.likes,
+                            LikeTextColor = r.liked == true ? Color.FromHex("4c96e8") : Color.FromHex("808080"),
+                            LikeEnabled = true,
+                            ShowReactions = r.likes > 0 ? true : false
+
+                        });
+                    }
+
+                }
+
+                HolidayPosts.Add(new Post()
+                {
+                    Id = p.id,
+                    Content = p.content,
+                    HolidayId = p.holiday,
+                    UserName = p.user,
+                    TimeSince = TimeAgo,
+                    ShowEdit = ShowDeleteVal, // If you can delete, you can edit
+                    ShowDelete = ShowDeleteVal,
+                    ShowReport = showReport,
+
+                    Avatar = avatar,
+                    Image = p.image,
+                    ShowImage = isMediaVisible,
+                    LikeImage = p.liked == true ? "like_active.png" : "like_neutral.png",
+                    Likes = p.likes,
+                    LikeTextColor = p.liked == true ? Color.FromHex("4c96e8") : Color.FromHex("808080"),
+                    LikeEnabled = true,
+                    ShowReactions = p.likes > 0 ? true : false,
+                    ShowComments = PostComments.Count() > 0 ? true : false,
+                    Comments = PostComments,
+                    HolidayName = p.holiday_name
+                });
+
 
             }
-
-
-            return await Task.FromResult(tweets);
-
+            return await Task.FromResult(HolidayPosts);
         }
 
         public static async Task<ObservableCollection<Holiday>> GetHolidaysAsync(int page = 0, bool past = false)

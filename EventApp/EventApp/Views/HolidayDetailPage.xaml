@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.HolidayDetailPage"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-             xmlns:local="clr-namespace:EventApp.Views" xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             xmlns:local="clr-namespace:EventApp.Views" xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations" xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
              Title="{Binding Title}">
 
 
@@ -604,7 +604,13 @@
                 </ListView.Footer>
             </ListView>
  
-
+    <controls:MTAdView
+        VerticalOptions="EndAndExpand"
+        x:Name="AdBanner"
+        AdsId="{OnPlatform
+        Android='ca-app-pub-9382412071078825/6429237516', 
+        iOS='ca-app-pub-9382412071078825/1958380167'}"
+        BackgroundColor="#e5e5e5"/>
     </StackLayout>
 
 </ContentPage>

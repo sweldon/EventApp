@@ -198,6 +198,21 @@ namespace EventApp.Models
             }
         }
 
+        private string holidayName;
+        public string HolidayName
+        {
+            get { return holidayName; }
+            set
+            {
+                if (holidayName == value)
+                {
+                    return;
+                }
+                holidayName = value;
+                OnPropertyChanged();
+            }
+        }
+
         private Color bg;
         public Color BackgroundColor
         {
