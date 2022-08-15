@@ -3,11 +3,12 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.CustomToolBar"
-             xmlns:badge="clr-namespace:BadgeView.Shared;assembly=BadgeView.Shared"
+             
              BackgroundColor="{StaticResource NavigationPrimary}"
              x:Name="CToolBar"
+             
              >
-
+    <!-- xmlns:badge="clr-namespace:BadgeView.Shared;assembly=BadgeView.Shared" -->
         <Grid RowSpacing="0" ColumnSpacing="0" x:Name="NavWrapper">
 
             <Grid.HeightRequest>
@@ -40,7 +41,7 @@
             </Label>
 
            <ContentView Grid.Column="0">
-               <!--845x267-->
+              
             <Image Source="holidaily_header_white.png"
                     VerticalOptions="Center"
                     x:Name="HeaderImage"/>
@@ -94,14 +95,14 @@
                     Android="18, -20, 0, 0" iOS="18, -15, 0, 0"/>
                 </Grid.Margin>
 
-            <badge:CircleView
+             <!--<badge:CircleView
                 BackgroundColor="Red"
                 x:Name="BadgeCircle"
                 HeightRequest="18"
                 WidthRequest="18"
                 CornerRadius="18"
                 VerticalOptions="Center"
-                HorizontalOptions="Center" />
+                HorizontalOptions="Center" />-->
             <Label FontAttributes="Bold"
                    x:Name="BellBadge"
                    TextColor="White"

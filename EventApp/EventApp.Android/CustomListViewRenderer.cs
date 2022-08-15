@@ -1,5 +1,7 @@
 ﻿using System;
-
+using CustomListViewNamespace;
+using EventApp;
+using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
 [assembly: ExportRenderer(typeof(CustomListView), typeof(CustomListViewRenderer))]

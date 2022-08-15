@@ -25,7 +25,7 @@ namespace EventApp.Services
         }
 
         // todo: load more not working
-        public static async Task<ObservableCollection<Post>> GetPosts(string holidayId = null, bool buzz=false, int page=0)
+        public static async Task<ObservableCollection<Post>> GetPosts(string holidayId = null, bool buzz = false, int page = 0)
         {
             ObservableCollection<Post> HolidayPosts = new ObservableCollection<Post>();
             string url;
@@ -34,7 +34,8 @@ namespace EventApp.Services
             {
                 url = $"{App.HolidailyHost}/posts/?buzz=1&page={page}";
             }
-            else {
+            else
+            {
                 url = $"{App.HolidailyHost}/posts/?holiday_id={holidayId}";
             }
 

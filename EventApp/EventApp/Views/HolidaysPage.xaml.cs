@@ -14,7 +14,7 @@ using Xamarin.Essentials;
 using Plugin.Share;
 using Plugin.Share.Abstractions;
 using System.Collections.ObjectModel;
-using Stormlion.PhotoBrowser;
+//using Stormlion.PhotoBrowser;
 using FFImageLoading.Forms;
 using System.Collections;
 using Rg.Plugins.Popup.Extensions;
@@ -118,7 +118,7 @@ namespace EventApp.Views
         public string showAds;
         private bool todayDone = false;
         public ObservableCollection<Post> Posts { get; set; }
-        
+
         public HolidaysPage()
         {
             InitializeComponent();
@@ -128,7 +128,7 @@ namespace EventApp.Views
                 if (e.Item == null) return;
                 Task.Delay(500);
                 if (sender is ListView lv) lv.SelectedItem = null;
-                };
+            };
 
             // Twitter feed infinite scroll
             // Infinite scrolling for comments
@@ -159,7 +159,7 @@ namespace EventApp.Views
                 // Deselect the item.
                 if (sender is ListView lv) lv.SelectedItem = null;
 
-  
+
             };
 
             // Infinite scrolling for main holidays
@@ -185,7 +185,7 @@ namespace EventApp.Views
         {
             page += 1;
             ObservableCollection<Post> morePosts = await Services.GlobalServices.GetPosts(buzz: true, page: page);
-            foreach(Post p in morePosts)
+            foreach (Post p in morePosts)
             {
                 Debug.WriteLine(p.Content);
                 Posts.Add(p);
@@ -293,8 +293,8 @@ namespace EventApp.Views
                     Debug.WriteLine($"Could not sync user data: {ex.Message}");
                 }
             }
-            
-            
+
+
             MessagingCenter.Unsubscribe<HolidayDetailPage, Object[]>(this, "UpdateCelebrateStatus");
             // When logging in from menu we need to refresh the feed statuses
             MessagingCenter.Unsubscribe<LoginPage>(this, "UpdateHolidayFeed");
@@ -307,18 +307,19 @@ namespace EventApp.Views
             {
                 viewModel.LoadItemsCommand.Execute(null);
             }
-                
+
             int numRetries = 0;
-            while(viewModel.Holidays.Count == 0)
+            while (viewModel.Holidays.Count == 0)
             {
                 numRetries++;
-                if (numRetries >= 15) {
+                if (numRetries >= 15)
+                {
                     await DisplayAlert("Error", "Couldn't connect to Holidaily", "OK");
                     return;
                 }
                 await Task.Delay(2000);
             }
-    
+
             if (OpenNotifications)
             {
                 await Navigation.PushModalAsync(new NavigationPage(new NotificationsPage()));
@@ -331,13 +332,13 @@ namespace EventApp.Views
                 {
                     Utils.syncUser();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Debug.WriteLine($"Could not sync user data: {ex.Message}");
                 }
-                
+
             }
-            AdBanner.IsVisible = !isPremium;
+            //AdBanner.IsVisible = !isPremium;
         }
 
         protected override void OnDisappearing()
@@ -359,24 +360,24 @@ namespace EventApp.Views
         async void OnCelebrateTapped(object sender, EventArgs args)
         {
             this.IsEnabled = false;
-            #if __IOS__
+#if __IOS__
                 var haptic = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
                 haptic.Prepare();
                 haptic.ImpactOccurred();
                 haptic.Dispose();
-            #endif
+#endif
 
-            #if __ANDROID__
+#if __ANDROID__
                 var duration = TimeSpan.FromSeconds(.025);
                 Vibration.Vibrate(duration);
-            #endif
-            
+#endif
+
             var view = (VisualElement)sender;
             var GridObject = (Grid)view.Parent;
             var CelebrateImage = (Image)GridObject.Children[4];
             var UpVoteImageFile = CelebrateImage.Source as FileImageSource;
             var UpVoteIcon = UpVoteImageFile.File;
-            
+
             var holidayId = "none";
             var votesInt = -1;
             var CelebrateLabel = (Label)GridObject.Children[5];
@@ -460,7 +461,7 @@ namespace EventApp.Views
             }
 
             var holidayName = holiday.Name;
-            var holidayLink = App.HolidailyHost+"/holiday?id=" + holiday.Id;
+            var holidayLink = App.HolidailyHost + "/holiday?id=" + holiday.Id;
             string blurb = $"{holidayName}! {holiday.Blurb}\nCheck it out on Holidaily!";
 
             if (!CrossShare.IsSupported)
@@ -488,7 +489,7 @@ namespace EventApp.Views
 
         protected async void RefreshHolidaysCommand(object sender, EventArgs e)
         {
-            
+
             viewModel.LoadItemsCommand.Execute(null);
             ItemsListView.EndRefresh();
             mainHolidaysPage = 0;
@@ -562,31 +563,31 @@ namespace EventApp.Views
                 PastLabel.TextColor = Color.Gray;
             }
         }
-        public async void PreviewImage(object sender, EventArgs args)
-        {
-            try
-            {
-                var tweet = (sender as CachedImage).BindingContext as Tweet;
-                string tweetUrl = tweet.Image;
-                new PhotoBrowser
-                {
-                    Photos = new List<Photo>
-                {
-                    new Photo
-                    {
-                        URL = tweetUrl,
-                        Title = $"{tweet.Handle}'s Photo on Twitter"
-                    }
-                }
-                }.Show();
-            }
-            catch
-            {
-                await DisplayAlert("Ouch!", "Sorry, we couldn't load this" +
-                    " image at the moment", "OK");
-            }
+        //public async void PreviewImage(object sender, EventArgs args)
+        //{
+        //    try
+        //    {
+        //        var tweet = (sender as CachedImage).BindingContext as Tweet;
+        //        string tweetUrl = tweet.Image;
+        //        new PhotoBrowser
+        //        {
+        //            Photos = new List<Photo>
+        //        {
+        //            new Photo
+        //            {
+        //                URL = tweetUrl,
+        //                Title = $"{tweet.Handle}'s Photo on Twitter"
+        //            }
+        //        }
+        //        }.Show();
+        //    }
+        //    catch
+        //    {
+        //        await DisplayAlert("Ouch!", "Sorry, we couldn't load this" +
+        //            " image at the moment", "OK");
+        //    }
 
-        }
+        //}
 
         // Post functions
         async void OpenProfile(object sender, EventArgs args)
@@ -630,31 +631,31 @@ namespace EventApp.Views
             }
 
         }
-        public async void ViewPostimage(object sender, EventArgs args)
-        {
-            Post post = (sender as CachedImage).BindingContext as Post;
-            try
-            {
-                new PhotoBrowser
-                {
-                    Photos = new List<Photo>
-                {
-                    new Photo
-                    {
-                        URL = $"{post.Image}",
-                        Title = $"{post.UserName}'s Image"
-                    }
-                }
-                }.Show();
-            }
-            catch (Exception e)
-            {
-                await DisplayAlert("Ouch!", "Sorry, we couldn't load this" +
-                    " image at the moment", "OK");
-                Debug.WriteLine($"{e}");
-            }
+        //public async void ViewPostimage(object sender, EventArgs args)
+        //{
+        //    Post post = (sender as CachedImage).BindingContext as Post;
+        //    try
+        //    {
+        //        new PhotoBrowser
+        //        {
+        //            Photos = new List<Photo>
+        //        {
+        //            new Photo
+        //            {
+        //                URL = $"{post.Image}",
+        //                Title = $"{post.UserName}'s Image"
+        //            }
+        //        }
+        //        }.Show();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        await DisplayAlert("Ouch!", "Sorry, we couldn't load this" +
+        //            " image at the moment", "OK");
+        //        Debug.WriteLine($"{e}");
+        //    }
 
-        }
+        //}
         async void Like(object sender, EventArgs args)
         {
             dynamic entity = (sender as StackLayout).BindingContext;
@@ -710,10 +711,10 @@ namespace EventApp.Views
                    { "device_id", devicePushId },
                    { "like", isLiked.ToString() },
                 };
-                var content = new FormUrlEncodedContent(values);
-                await App.globalClient.PatchAsync(App.HolidailyHost +
-                    $"/{ep}/" + entity.Id + "/", content);
-
+                //var content = new FormUrlEncodedContent(values);
+                //await App.globalClient.PatchAsync(App.HolidailyHost +
+                //    $"/{ep}/" + entity.Id + "/", content);
+                await ApiHelpers.MakePatchRequest(values, ep, entity.Id);
 
             }
             catch (Exception ex)

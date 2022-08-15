@@ -23,13 +23,29 @@ namespace EventApp
             return await Task.FromResult(responseJSON);
         }
 
-        public static async Task<object> MakePatchRequest(Dictionary<string, string> values, string endpoint, string pk)
+        public static async Task<HttpResponseMessage> MakePatchRequest(Dictionary<string, string> values, string endpoint, string pk)
         {
-            var content = new FormUrlEncodedContent(values);
-            var response = await App.globalClient.PatchAsync($"{App.HolidailyHost}/{endpoint}/{pk}/", content);
+
+
+            var method = new HttpMethod("PATCH");
+            var payloadContent = new FormUrlEncodedContent(values);
+            var request = new HttpRequestMessage(method, $"{App.HolidailyHost}/{endpoint}/{pk}/")
+            {
+                Content = payloadContent
+            };
+
+            var response = await App.globalClient.SendAsync(request);
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
             return await Task.FromResult(responseJSON);
+
+
+
+            //var content = new FormUrlEncodedContent(values);
+            //var response = await App.globalClient.PatchAsync($"{App.HolidailyHost}/{endpoint}/{pk}/", content);
+            //var responseString = await response.Content.ReadAsStringAsync();
+            //dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
+            //return await Task.FromResult(responseJSON);
         }
 
         public static async Task<Holiday> GetHolidayById(string id)
