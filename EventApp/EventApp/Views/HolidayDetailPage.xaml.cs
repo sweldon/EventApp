@@ -15,7 +15,7 @@ using System.Collections.Specialized;
 using System.Threading;
 using Rg.Plugins.Popup.Extensions;
 using FFImageLoading.Forms;
-using Stormlion.PhotoBrowser;
+//using Stormlion.PhotoBrowser;
 using System.Collections;
 #if __IOS__
 using UIKit;
@@ -150,16 +150,16 @@ namespace EventApp.Views
             await Navigation.PushAsync(new UserPage(user: null, userName: UserName));
         }
 
-        async void DeletePost(Post post=null, Comment comment=null, dynamic container=null)
+        async void DeletePost(Post post = null, Comment comment = null, dynamic container = null)
         {
             string endpoint = null;
             dynamic entity = null;
-            if(post != null)
+            if (post != null)
             {
                 endpoint = "posts";
                 entity = post;
             }
-            else if(comment != null)
+            else if (comment != null)
             {
                 endpoint = "comments";
                 entity = comment;
@@ -181,8 +181,9 @@ namespace EventApp.Views
                         { "deleted", "1" }
                         };
 
-                        var content = new FormUrlEncodedContent(values);
-                        var response = await App.globalClient.PatchAsync(App.HolidailyHost + $"/{endpoint}/{entity.Id}/", content);
+                        //var content = new FormUrlEncodedContent(values);
+                        //var response = await App.globalClient.PatchAsync(App.HolidailyHost + $"/{endpoint}/{entity.Id}/", content);
+                        var response = await ApiHelpers.MakePatchRequest(values, endpoint, entity.Id);
 
                         var responseString = await response.Content.ReadAsStringAsync();
                         dynamic responseJSON = JsonConvert.DeserializeObject(responseString);
@@ -212,7 +213,7 @@ namespace EventApp.Views
             {
                 await DisplayAlert("Error", "Please try that again", "OK");
             }
-            
+
         }
 
         async void OnDeleteTapped(object sender, EventArgs args)
@@ -311,29 +312,29 @@ namespace EventApp.Views
 
 
             entity.LikeImage = isLiked == false ? "like_neutral.png" : "like_active.png";
-            entity.LikeTextColor = isLiked == false ? Color.FromHex("808080"): Color.FromHex("4c96e8");
+            entity.LikeTextColor = isLiked == false ? Color.FromHex("808080") : Color.FromHex("4c96e8");
 
             if (isLiked)
             {
                 await (sender as StackLayout).ScaleTo(1.5, 50);
                 await (sender as StackLayout).ScaleTo(1, 50);
                 entity.Likes += 1;
-              
+
                 if (entity.Likes > 1)
                     entity.LikeLabel = "Likes";
                 else
                     entity.LikeLabel = "Like";
-              
+
             }
             else
             {
                 entity.Likes -= 1;
-                
+
                 if (entity.Likes > 1)
                     entity.LikeLabel = "Likes";
                 else
                     entity.LikeLabel = "Like";
-            
+
             }
 
             entity.ShowReactions = entity.Likes > 0 ? true : false;
@@ -347,13 +348,14 @@ namespace EventApp.Views
                    { "device_id", devicePushId },
                    { "like", isLiked.ToString() },
                 };
-                var content = new FormUrlEncodedContent(values);
-                await App.globalClient.PatchAsync(App.HolidailyHost +
-                    $"/{ep}/" + entity.Id + "/", content);
+                //var content = new FormUrlEncodedContent(values);
+                //await App.globalClient.PatchAsync(App.HolidailyHost +
+                //    $"/{ep}/" + entity.Id + "/", content);
+                await ApiHelpers.MakePatchRequest(values, ep, entity.Id);
 
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Debug.WriteLine($"Could not like post: {ex}");
             }
@@ -373,8 +375,8 @@ namespace EventApp.Views
             }
             else
             {
-                
-               Post post = (sender as StackLayout).BindingContext as Post;
+
+                Post post = (sender as StackLayout).BindingContext as Post;
                 await Navigation.PushPopupAsync(new NewCommentPopUp(
                     viewModel.Holiday, entity: post, reply: true,
                     container: (sender as StackLayout), post: post));
@@ -389,8 +391,8 @@ namespace EventApp.Views
             }
             else
             {
-                
-               Comment comment = (sender as StackLayout).BindingContext as Comment;
+
+                Comment comment = (sender as StackLayout).BindingContext as Comment;
 
                 //(sender as StackLayout).Parent.Parent.Parent.Parent.Parent.BindingContext
                 var post = (sender as StackLayout).Parent;
@@ -407,7 +409,7 @@ namespace EventApp.Views
 
 
 
-        async void ReportPost(Post post = null, Comment comment = null, dynamic container=null)
+        async void ReportPost(Post post = null, Comment comment = null, dynamic container = null)
         {
             string endpoint = null;
             dynamic entity = null;
@@ -451,9 +453,10 @@ namespace EventApp.Views
                    { "block", block.ToString() },
                    { "device_id", devicePushId },
                 };
-                var content = new FormUrlEncodedContent(values);
-                await App.globalClient.PatchAsync(App.HolidailyHost +
-                    $"/{endpoint}/" + entity.Id + "/", content);
+                //var content = new FormUrlEncodedContent(values);
+                //await App.globalClient.PatchAsync(App.HolidailyHost +
+                //    $"/{endpoint}/" + entity.Id + "/", content);
+                await ApiHelpers.MakePatchRequest(values, endpoint, entity.Id);
             }
 
             Utils.RefreshElement(container);
@@ -531,7 +534,7 @@ namespace EventApp.Views
 
             post.ShowComments = true;
 
-            if(post.Comments == null)
+            if (post.Comments == null)
             {
                 post.Comments = new ObservableCollection<Comment>()
                 {
@@ -542,7 +545,7 @@ namespace EventApp.Views
             {
                 post.Comments.Insert(0, comment);
             }
-            
+
             var index = ((IList)PostList.ItemsSource).IndexOf(post);
             try
             {
@@ -634,7 +637,7 @@ namespace EventApp.Views
         //            string ShowDeleteComment;
         //            if (String.Equals(commentAuthor, currentUser, StringComparison.OrdinalIgnoreCase))
         //            {
-                       
+
         //                ShowDeleteComment = "true";
         //            }
         //            else
@@ -653,7 +656,7 @@ namespace EventApp.Views
         //            }
 
         //            dynamic replies = comment.replies;
-                    
+
 
         //            PostComments.Add(new Comment()
         //            {
@@ -748,7 +751,7 @@ namespace EventApp.Views
         //            ShowEdit = ShowDeleteVal, // If you can delete, you can edit
         //            ShowDelete = ShowDeleteVal,
         //            ShowReport = showReport,
-                    
+
         //            Avatar = avatar,
         //            Image = p.image,
         //            ShowImage = isMediaVisible,
@@ -801,11 +804,11 @@ namespace EventApp.Views
                 if (isLoggedIn)
                 {
                     UpVoteImage.Source = viewModel.Holiday.CelebrateStatus;
-                    if(App.GlobalUser.Avatar != null)
+                    if (App.GlobalUser.Avatar != null)
                     {
                         PosterImage.Source = App.GlobalUser.Avatar;
                     }
-                    
+
                 }
                 else
                 {
@@ -838,7 +841,7 @@ namespace EventApp.Views
 
                     PostList.ItemsSource = HolidayPosts;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Debug.WriteLine($"{ex}");
                 }
@@ -907,11 +910,11 @@ namespace EventApp.Views
                 var container = (ContentView)data[1];
                 if (data[0].GetType() == typeof(Post))
                 {
-                    
+
                     var post = (Post)data[0];
                     Navigation.PushModalAsync(
                        new NavigationPage(
-                           new PostPage(viewModel.Holiday, post, container)
+                           new CustomPostPage(viewModel.Holiday, post, container)
                        ));
 
                 }
@@ -966,11 +969,11 @@ namespace EventApp.Views
 
             });
 
-            #if __IOS__
+#if __IOS__
                 MessagingCenter.Unsubscribe<PostPage, Post>(this, "AddPost");
-            #endif
+#endif
 
-            AdBanner.IsVisible = !isPremium;
+            //AdBanner.IsVisible = !isPremium;
 
         }
 
@@ -1008,32 +1011,32 @@ namespace EventApp.Views
             // unsub to "AddPost" without the bool lock. So we only sub using
             // this lock if not subbed already instead of unsubbing on
             // disappear. This may be a good approach in the future actually.
-            #if __ANDROID__
+#if __ANDROID__
             if (!isAndroidAddPostSubscribed)
                 {
                     isAndroidAddPostSubscribed = true;
-            #endif
+#endif
 
-                    MessagingCenter.Subscribe<PostPage, Post>(this, "AddPost", (sender, post) =>
-                    {
-                        if (HolidayPosts.Count > 0)
-                        {
-                            HolidayPosts.Insert(0, post);
-                            PostList.ScrollTo(((IList)PostList.ItemsSource)[0], ScrollToPosition.Start, true);
-                        }
-                        else
-                        {
-                            //ScrollToFirstPostAsync();
-                            HolidayPosts = new ObservableCollection<Post>(){
+            MessagingCenter.Subscribe<PostPage, Post>(this, "AddPost", (sender, post) =>
+            {
+                if (HolidayPosts.Count > 0)
+                {
+                    HolidayPosts.Insert(0, post);
+                    PostList.ScrollTo(((IList)PostList.ItemsSource)[0], ScrollToPosition.Start, true);
+                }
+                else
+                {
+                    //ScrollToFirstPostAsync();
+                    HolidayPosts = new ObservableCollection<Post>(){
                                 post
                                 };
-                            PostList.ItemsSource = HolidayPosts;
-                            PostList.ScrollTo(((IList)PostList.ItemsSource)[0], ScrollToPosition.Start, true);
-                        }
-                    });
-            #if __ANDROID__
+                    PostList.ItemsSource = HolidayPosts;
+                    PostList.ScrollTo(((IList)PostList.ItemsSource)[0], ScrollToPosition.Start, true);
                 }
-            #endif
+            });
+#if __ANDROID__
+                }
+#endif
         }
 
 
@@ -1072,7 +1075,7 @@ namespace EventApp.Views
                 coolDown = false;
                 return;
             }
-            await Navigation.PushModalAsync(new NavigationPage(new PostPage(holiday: viewModel.Holiday)));
+            await Navigation.PushModalAsync(new NavigationPage(new CustomPostPage(holiday: viewModel.Holiday)));
             await Task.Delay(1000);
             coolDown = false;
         }
@@ -1125,25 +1128,25 @@ namespace EventApp.Views
                         await Services.GlobalServices.VoteHoliday(viewModel.HolidayId, "1");
 
 
-                    Object[] values = { viewModel.Holiday.Name, true, newVotesInt.ToString() };
+                        Object[] values = { viewModel.Holiday.Name, true, newVotesInt.ToString() };
                         MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
+                    }
+                    else
+                    {
+                        newVotesInt -= 2;
+                        CurrentVotes.Text = newVotesInt.ToString() + " Celebrating!";
+                        UpVoteImage.Source = "celebrate.png";
+                        await UpVoteImage.ScaleTo(2, 50);
+                        await UpVoteImage.ScaleTo(1, 50);
+                        await Services.GlobalServices.VoteHoliday(viewModel.HolidayId, "5");
+
+
+                        Object[] values = { viewModel.Holiday.Name, false, newVotesInt.ToString() };
+                        MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
+
+                    }
+
                 }
-                else
-                {
-                    newVotesInt -= 2;
-                    CurrentVotes.Text = newVotesInt.ToString() + " Celebrating!";
-                    UpVoteImage.Source = "celebrate.png";
-                    await UpVoteImage.ScaleTo(2, 50);
-                    await UpVoteImage.ScaleTo(1, 50);
-                    await Services.GlobalServices.VoteHoliday(viewModel.HolidayId, "5");
-
-    
-                    Object[] values = { viewModel.Holiday.Name, false, newVotesInt.ToString() };
-                    MessagingCenter.Send(this, "UpdateCelebrateStatus", values);
-
-                }
-
-            }
 
             }
             this.IsEnabled = true;
@@ -1206,7 +1209,7 @@ namespace EventApp.Views
                             // Undo
                             item.Votes += 2;
                             item.DownVoteStatus = "down.png";
-                            await viewModel.CommentStore.VoteComment(commentId,"4");
+                            await viewModel.CommentStore.VoteComment(commentId, "4");
                         }
                     }
                 }
@@ -1283,30 +1286,30 @@ namespace EventApp.Views
 
         }
 
-        public async void PreviewImage(object sender, EventArgs args)
-        {
-            try
-            {
-                new PhotoBrowser
-                {
-                    Photos = new List<Photo>
-                {
-                    new Photo
-                    {
-                        URL = $"{viewModel.Holiday.HolidayImage}",
-                        Title = $"{viewModel.Holiday.Name}"
-                    }
-                }
-                }.Show();
-            }
-            catch(Exception e)
-            {
-                await DisplayAlert("Ouch!", "Sorry, we couldn't load this" +
-                    " image at the moment", "OK");
-                Debug.WriteLine($"{e}");
-            }
+        //public async void PreviewImage(object sender, EventArgs args)
+        //{
+        //    try
+        //    {
+        //        new PhotoBrowser
+        //        {
+        //            Photos = new List<Photo>
+        //        {
+        //            new Photo
+        //            {
+        //                URL = $"{viewModel.Holiday.HolidayImage}",
+        //                Title = $"{viewModel.Holiday.Name}"
+        //            }
+        //        }
+        //        }.Show();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        await DisplayAlert("Ouch!", "Sorry, we couldn't load this" +
+        //            " image at the moment", "OK");
+        //        Debug.WriteLine($"{e}");
+        //    }
 
-        }
+        //}
         public async void OpenOptions(object sender, EventArgs args)
         {
             if (!isLoggedIn)
@@ -1346,31 +1349,31 @@ namespace EventApp.Views
 
         }
 
-        public async void ViewPostimage(object sender, EventArgs args)
-        {
-            Post post = (sender as CachedImage).BindingContext as Post;
-            try
-            {
-                new PhotoBrowser
-                {
-                    Photos = new List<Photo>
-                {
-                    new Photo
-                    {
-                        URL = $"{post.Image}",
-                        Title = $"{post.UserName}'s Image"
-                    }
-                }
-                }.Show();
-            }
-            catch (Exception e)
-            {
-                await DisplayAlert("Ouch!", "Sorry, we couldn't load this" +
-                    " image at the moment", "OK");
-                Debug.WriteLine($"{e}");
-            }
+        //public async void ViewPostimage(object sender, EventArgs args)
+        //{
+        //    Post post = (sender as CachedImage).BindingContext as Post;
+        //    try
+        //    {
+        //        new PhotoBrowser
+        //        {
+        //            Photos = new List<Photo>
+        //        {
+        //            new Photo
+        //            {
+        //                URL = $"{post.Image}",
+        //                Title = $"{post.UserName}'s Image"
+        //            }
+        //        }
+        //        }.Show();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        await DisplayAlert("Ouch!", "Sorry, we couldn't load this" +
+        //            " image at the moment", "OK");
+        //        Debug.WriteLine($"{e}");
+        //    }
 
-        }
+        //}
 
     }
 }

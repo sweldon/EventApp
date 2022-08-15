@@ -90,7 +90,7 @@ namespace EventApp.Views
                     //var productId = "android.test.purchased";
                     var productId = "holidailypremium";
                     
-                    var connected = await billing.ConnectAsync(ItemType.InAppPurchase);
+                    var connected = await billing.ConnectAsync();
 
                     //Undo Test Purchase
                     //var consumedItem = await billing.ConsumePurchaseAsync(productId,
@@ -114,7 +114,7 @@ namespace EventApp.Views
 
                     //try to purchase item
                     var verify = DependencyService.Get<IInAppBillingVerifyPurchase>();
-                    var purchase = await billing.PurchaseAsync(productId, ItemType.InAppPurchase, "apppayload", verify);
+                    var purchase = await billing.PurchaseAsync(productId, ItemType.InAppPurchase);
                     if (purchase == null)
                     {
                         await DisplayAlert("Error!", "Something went wrong. You have not been charged for anything.", "Try again");
@@ -182,7 +182,7 @@ namespace EventApp.Views
             var billing = CrossInAppBilling.Current;
             try
             {
-                var connected = await billing.ConnectAsync(ItemType.InAppPurchase);
+                var connected = await billing.ConnectAsync();
 
                 if (!connected)
                 {

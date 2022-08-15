@@ -11,13 +11,13 @@ using EventApp.Models;
 using Newtonsoft.Json;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
-using Stormlion.PhotoBrowser;
+//using Stormlion.PhotoBrowser;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 
 namespace EventApp.Views
 {
-    public partial class PostPage : ContentPage
+    public partial class CustomPostPage : ContentPage
     {
         private MediaFile UploadedMedia;
         private Stream UploadedStream;
@@ -46,7 +46,8 @@ namespace EventApp.Views
         private Post EditedPost;
         public ObservableCollection<User> users { get; set; }
         ContentView Container;
-        public PostPage(Holiday holiday, Post post=null, ContentView container =null)
+
+        public CustomPostPage(Holiday holiday, Post post=null, ContentView container =null)
         {
             InitializeComponent();
             Container = container;
@@ -139,7 +140,17 @@ namespace EventApp.Views
                 content.Add(new StringContent(devicePushId), "device_id");
                 try
                 {
-                    var response = await App.globalClient.PatchAsync($"{App.HolidailyHost}/posts/{EditedPost.Id}/", content);
+                    //var response = await App.globalClient.PatchAsync($"{App.HolidailyHost}/posts/{EditedPost.Id}/", content);
+                    var method = new HttpMethod("PATCH");
+                    //var payloadContent = new FormUrlEncodedContent(content);
+                    var request = new HttpRequestMessage(method, $"{App.HolidailyHost}/posts/{EditedPost.Id}/")
+                    {
+                        Content = content
+                    };
+
+                    var response = await App.globalClient.SendAsync(request);
+
+
                     if (response.IsSuccessStatusCode)
                     {
                         var responseString = await response.Content.ReadAsStringAsync();

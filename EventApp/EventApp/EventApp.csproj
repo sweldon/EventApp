@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
+    <PackageReference Include="Xam.Plugins.Settings" Version="3.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Plugin.StoreReview" Version="3.3.1" />
+    <PackageReference Include="Xam.Plugin.Media" Version="5.0.1" />
+    <PackageReference Include="Plugin.InAppBilling" Version="4.0.2" />
+    <PackageReference Include="Plugin.Share" Version="7.1.1" />
+    <PackageReference Include="Rg.Plugins.Popup" Version="2.1.0" />
+    <PackageReference Include="Xamarin.FFImageLoading" Version="2.4.11.982" />
+    <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Xamarin.FFImageLoading.Transformations" Version="2.4.11.982" />
+    <PackageReference Include="Xamarin.Forms.PancakeView" Version="2.3.0.759" />
+    <PackageReference Include="Plugin.PushNotification" Version="3.6.9" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Xam.Plugins.Settings" />
+    <None Remove="Newtonsoft.Json" />
+    <None Remove="Plugin.StoreReview" />
+    <None Remove="Xam.Plugin.Media" />
+    <None Remove="Plugin.InAppBilling" />
+    <None Remove="Plugin.Share" />
+    <None Remove="Rg.Plugins.Popup" />
+    <None Remove="Xamarin.FFImageLoading" />
+    <None Remove="Xamarin.FFImageLoading.Forms" />
+    <None Remove="Microsoft.CSharp" />
+    <None Remove="Xamarin.FFImageLoading.Transformations" />
+    <None Remove="Xamarin.Forms.PancakeView" />
+    <None Remove="Plugin.PushNotification" />
+    <None Remove="BadgeView" />
+  </ItemGroup>
+</Project>

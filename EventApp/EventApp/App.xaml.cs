@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using EventApp.Views;
 using EventApp.Models;
@@ -6,14 +7,14 @@ using EventApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Plugin.PushNotification;
-using Badge.Plugin;
+//using Badge.Plugin;
 using System.Diagnostics;
 using System.Linq;
+using Newtonsoft.Json;
 
-[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace EventApp
 {
     public partial class App : Application
@@ -24,15 +25,19 @@ namespace EventApp
         public Comment OpenComment { get; set; }
         public static User GlobalUser = new User() { };
         public static bool NotificationsRefreshed = false;
-        #if DEBUG
-            #if __IOS__
-                    public static string HolidailyHost = "http://localhost:8888";
-            #else
-                    public static string HolidailyHost = "http://10.0.2.2:8888";
-            #endif
-        #else
-            public static string HolidailyHost = "https://holidailyapp.com";
-        #endif
+
+
+
+#if DEBUG
+#if __IOS__
+        public static string HolidailyHost = "http://localhost:8888";
+#else
+        //public static string HolidailyHost = "http://10.0.2.2:8888";
+        public static string HolidailyHost = "http://localhost:8888";
+#endif
+#else
+        public static string HolidailyHost = "https://holidailyapp.com";
+#endif
         public static HttpClient globalClient = new HttpClient();
         // App-wide reusable instance for choosing random ads
         public static Random randomGenerator = new Random();
@@ -40,14 +45,14 @@ namespace EventApp
 
         public static async void popModalIfActive(INavigation nav)
         {
-            #if __IOS__
+#if __IOS__
                 var isModalShowing = Application.Current.MainPage?.Navigation?.ModalStack?.LastOrDefault();
                 if (isModalShowing != null)
                 {
                     Debug.WriteLine($"Modal closed using swipe, popping before re-opening");
                     await nav.PopModalAsync();
                 }
-            #endif
+#endif
         }
 
         public static async void promptLogin(INavigation nav)
@@ -201,6 +206,7 @@ namespace EventApp
         public App()
         {
             InitializeComponent();
+            MainPage = new MainPage();
             var menuPage = new MenuPage(); // Build hamburger menu
             NavigationPage = new NavigationPage(new HolidaysPage()); // Push main logged-in page on top of stack
             var rootPage = new RootPage(); // Root handles master detail navigation
@@ -276,15 +282,16 @@ namespace EventApp
                 "Later");
             if (userAlert)
             {
-                #if __IOS__
+#if __IOS__
                     Xamarin.Forms.Device.BeginInvokeOnMainThread(() => {
                         Xamarin.Forms.Device.OpenUri(new Uri("https://apps.apple.com/us/app/holidaily-find-holidays/id1449681401"));
                     });
-                #else
-                    Xamarin.Forms.Device.BeginInvokeOnMainThread(() => {
+#else
+                Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+                {
                     Xamarin.Forms.Device.OpenUri(new Uri("https://play.google.com/store/apps/details?id=com.divinity.holidailyapp"));
-                    });
-                #endif
+                });
+#endif
             }
         }
         private async void CheckForUpdates()
@@ -296,11 +303,11 @@ namespace EventApp
                 { "version", appInfo },
                 { "check_update", "true" },
                 };
-                #if __IOS__
+#if __IOS__
                     values["platform"] = "ios";
-                #elif __ANDROID__
+#elif __ANDROID__
                     values["platform"] = "android";
-                #endif
+#endif
                 dynamic response = await ApiHelpers.MakePostRequest(values, "user");
                 bool needsUpdate = response.needs_update;
                 bool forceUpdate = response.force_update;
@@ -355,7 +362,7 @@ namespace EventApp
             });
 
             // Clear badge notifications
-            CrossBadge.Current.ClearBadge();
+            //CrossBadge.Current.ClearBadge();
             CrossPushNotification.Current.OnNotificationReceived += (s, p) =>
             {
                 // User is active in the app
@@ -403,7 +410,7 @@ namespace EventApp
                 else if (pushType == "like")
                 {
                     NavigationPage.PushAsync(new HolidayDetailPage(new HolidayDetailViewModel(holidayId)));
-                    if(entityType == "comment")
+                    if (entityType == "comment")
                     {
                         Utils.ReadNotification("like_comment", commentId);
                     }
@@ -412,7 +419,7 @@ namespace EventApp
                         // Post like
                         Utils.ReadNotification("like", postId);
                     }
-                    
+
                 }
                 else if (pushType == "rewards")
                 {
@@ -431,11 +438,11 @@ namespace EventApp
             {
                 try
                 {
-                    
+
                     var values = new Dictionary<string, string>{
-                        { "username", currentUser },
-                        { "version", appInfo }
-                    };
+                                    { "username", currentUser },
+                                    { "version", appInfo }
+                                };
 
                     #if __IOS__
                         values["platform"] = "ios";
@@ -480,7 +487,7 @@ namespace EventApp
                     }
 
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Debug.WriteLine($"ERROR: {ex}");
                 }
@@ -523,7 +530,8 @@ namespace EventApp
 
         private void AlertUserComment(string commentId, string holidayId, string commentUser)
         {
-            Device.BeginInvokeOnMainThread(() => {
+            Device.BeginInvokeOnMainThread(() =>
+            {
                 handleCommentResponse(commentId, holidayId, commentUser);
             });
         }
@@ -541,7 +549,8 @@ namespace EventApp
 
         private void AlertNews()
         {
-            Device.BeginInvokeOnMainThread(() => {
+            Device.BeginInvokeOnMainThread(() =>
+            {
                 handleNewsResponse();
             });
         }
@@ -557,7 +566,8 @@ namespace EventApp
         }
         private void AlertUserHolidays(string holidayId)
         {
-            Device.BeginInvokeOnMainThread(() => {
+            Device.BeginInvokeOnMainThread(() =>
+            {
                 handleHolidayResponse(holidayId);
             });
         }

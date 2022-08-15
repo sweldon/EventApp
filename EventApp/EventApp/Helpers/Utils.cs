@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using EventApp.Views;
-using MarcTron.Plugin.Controls;
+//using MarcTron.Plugin.Controls;
 using Newtonsoft.Json;
 using Plugin.StoreReview;
 using Xamarin.Forms;

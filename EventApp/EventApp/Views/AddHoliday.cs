@@ -7,7 +7,7 @@ using Xamarin.Forms;
 
 namespace EventApp.Views
 {
-	public class AddHoliday : ContentPage
+	public partial class AddHoliday : ContentPage
 	{
 		public AddHoliday ()
 		{

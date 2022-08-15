@@ -1,25 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
-        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-        xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
-        xmlns:local="clr-namespace:EventApp.Views"
-        xmlns:custom="clr-namespace:EventApp"
-        x:Class="EventApp.App">
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EventApp.App"
+             xmlns:custom="clr-namespace:EventApp"
+             >
+    <!-- xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"-->
     <Application.Resources>
+
         <ResourceDictionary>
-            <!--Global Styles-->
+
             <Color x:Key="NavigationPrimary">#4c96e8</Color>
             <Style TargetType="NavigationPage">
                 <Setter Property="BarBackgroundColor" Value="{StaticResource NavigationPrimary}" />
                 <Setter Property="BarTextColor" Value="White" />
             </Style>
-            <Style TargetType="controls:MTAdView">
+            <!--<Style TargetType="controls:MTAdView">
                 <Setter Property="HeightRequest">
                     <Setter.Value>
                         <x:OnIdiom Phone="50" Tablet="90"/>
                     </Setter.Value>
                 </Setter>
-            </Style>
+            </Style>-->
 
              <custom:CustomTextFormatter x:Key="CustomTextFormatter" />
 

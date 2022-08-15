@@ -84,6 +84,8 @@ namespace EventApp.Views
         {
             InitializeComponent();
 
+            Debug.WriteLine("MADE IT HERE!");
+
             menuItems = new List<HomeMenuItem>
             {
                 new HomeMenuItem {Id = MenuItemType.Holidays, Title="Home", MenuImage="Home_Menu_Icon.png"},

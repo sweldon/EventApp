@@ -6,7 +6,7 @@ namespace EventApp.ViewModels
 {
     public class RegisterPageViewModel : BaseViewModel
     {
-        public LoginViewModel()
+        public RegisterPageViewModel()
         {
             
         }
