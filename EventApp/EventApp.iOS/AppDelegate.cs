@@ -1,15 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using EventApp.ViewModels;
 using EventApp.Views;
 using Foundation;
-using Google.MobileAds;
+using Plugin.PushNotification;
 using UIKit;
 using Xamarin.Forms;
-using Plugin.PushNotification;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
-using BadgeView.iOS;
 
 namespace EventApp.iOS
 {
@@ -26,6 +26,7 @@ namespace EventApp.iOS
         //
         // You have 17 seconds to return from this method, or iOS will terminate your application.
         //
+
         public event PropertyChangedEventHandler PropertyChanged;
         public bool isLoggedIn
         {
@@ -50,18 +51,25 @@ namespace EventApp.iOS
             }
         }
         public static NavigationPage NavigationPage { get; private set; }
+
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
-            MobileAds.Configure("ca-app-pub-9382412071078825~2829867889");
+
+            //MobileAds.Configure("ca-app-pub-9382412071078825~2829867889");
             Rg.Plugins.Popup.Popup.Init();
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
+
             LoadApplication(new App());
+
+
             PushNotificationManager.Initialize(options, true);
-            CircleViewRenderer.Initialize();
-            Stormlion.PhotoBrowser.iOS.Platform.Init();
+            //CircleViewRenderer.Initialize();
+            //Stormlion.PhotoBrowser.iOS.Platform.Init();
+
             return base.FinishedLaunching(app, options);
         }
+
         public override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
         {
             PushNotificationManager.DidRegisterRemoteNotifications(deviceToken);
@@ -143,5 +151,7 @@ namespace EventApp.iOS
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
     }
 }
+

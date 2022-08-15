@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EventApp.Views.HolidaysPage"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:local="clr-namespace:EventApp.Views"
-             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations" xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
              >
 
             <NavigationPage.TitleView>
@@ -490,10 +490,10 @@
                                     RetryDelay= "1000"
                                     HeightRequest="200">
 
-                                    <ffimageloading:CachedImage.GestureRecognizers>
+                                    <!--<ffimageloading:CachedImage.GestureRecognizers>
                                     <TapGestureRecognizer
                                         Tapped="ViewPostimage"  />
-                                    </ffimageloading:CachedImage.GestureRecognizers>
+                                    </ffimageloading:CachedImage.GestureRecognizers>-->
 
                                 </ffimageloading:CachedImage>
 
@@ -743,13 +743,13 @@
 
             </StackLayout>
 
-            <controls:MTAdView
+            <!--<controls:MTAdView
                 VerticalOptions="EndAndExpand"
                 x:Name="AdBanner"
                 AdsId="{OnPlatform
                 Android='ca-app-pub-9382412071078825/8429542879', 
                 iOS='ca-app-pub-9382412071078825/5601168120'}"
-                BackgroundColor="#e5e5e5"/>
+                BackgroundColor="#e5e5e5"/>-->
 
         </StackLayout>
 

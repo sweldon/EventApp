@@ -4,12 +4,12 @@
              x:Class="EventApp.Views.ConfettiLeaders"
              xmlns:local2="clr-namespace:EventApp.Views"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations" xmlns:controls="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob">
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations">
 
     <NavigationPage.TitleView>
         <local2:CustomToolBar/>
     </NavigationPage.TitleView>
-    <StackLayout>
+
         <ListView x:Name="ConfettiLeadersList"
         SeparatorVisibility="None"
         VerticalOptions="FillAndExpand"
@@ -142,15 +142,7 @@
 
 
         </ListView>
+        
 
-        <controls:MTAdView
-            VerticalOptions="EndAndExpand"
-            x:Name="AdBanner"
-            AdsId="{OnPlatform
-            Android='ca-app-pub-9382412071078825/4424502267', 
-            iOS='ca-app-pub-9382412071078825/3775761196'}"
-            BackgroundColor="#e5e5e5"/>
-
-        </StackLayout>
 
 </ContentPage>

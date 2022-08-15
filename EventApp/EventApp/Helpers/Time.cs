@@ -28,7 +28,8 @@ namespace EventApp
             {
                 if (timeSince.Contains("days ago"))
                 {
-                    int daysAgo = Int32.Parse(timeSince.Split(" days ago")[0]);
+                    int daysAgo = Int32.Parse(timeSince.Split(new string[] { " days ago" }, StringSplitOptions.None)[0]);
+                    
                     if (daysAgo > 8)
                     {
                         return false;

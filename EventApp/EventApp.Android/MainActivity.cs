@@ -2,29 +2,30 @@
 
 using Android.App;
 using Android.Content.PM;
+using Android.Runtime;
 using Android.OS;
-using Android.Gms.Ads;
-using System.Diagnostics;
+
+//using System;
+
+//using Android.App;
+//using Android.Content.PM;
+//using Android.OS;
+////using Android.Gms.Ads;
+//using System.Diagnostics;
 using Android.Content;
 using Xamarin.Forms;
 using EventApp.ViewModels;
 using EventApp.Views;
-using Plugin.InAppBilling;
+//using Plugin.InAppBilling;
 using Plugin.CurrentActivity;
 using Plugin.PushNotification;
-using System.Runtime.CompilerServices;
+//using System.Runtime.CompilerServices;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace EventApp.Droid
 {
-    [
-        Activity(Label = "Holidaily",
-        Icon = "@drawable/Icon",
-        Theme = "@style/splashscreen",
-        MainLauncher = true,
-        //Exported = true, // Re-enable with next Xamarin.Android update
-        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)
-        ]
+    [Activity(Label = "Holidaily", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     [IntentFilter(
         new[] { Intent.ActionView },
             Categories = new[] {
@@ -37,6 +38,8 @@ namespace EventApp.Droid
     ]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, INotifyPropertyChanged
     {
+
+
         public NavigationPage NavigationPage { get; private set; }
         public event PropertyChangedEventHandler PropertyChanged;
         public bool isLoggedIn
@@ -78,16 +81,10 @@ namespace EventApp.Droid
             }
         }
 
-        protected override async void OnCreate(Bundle savedInstanceState)
+        protected override void OnCreate(Bundle savedInstanceState)
         {
-
-
-
-            TabLayoutResource = Resource.Layout.Tabbar;
-            ToolbarResource = Resource.Layout.Toolbar;
-
-            base.SetTheme(Resource.Style.MainTheme);
             base.OnCreate(savedInstanceState);
+
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
 
             //Set the default notification channel for your app when running Android Oreo
@@ -109,17 +106,24 @@ namespace EventApp.Droid
 
             refreshToken = false;
 
-            Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
-            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);      
-            MobileAds.Initialize(ApplicationContext, "ca-app-pub-9382412071078825~2735085847");
+            Rg.Plugins.Popup.Popup.Init(this);
+
+
+
+            
+
+
+            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+
+            //MobileAds.Initialize(ApplicationContext, "ca-app-pub-9382412071078825~2735085847");
 
             // In-app purchase
-            CrossCurrentActivity.Current.Init(this, savedInstanceState);
+            //CrossCurrentActivity.Current.Init(this, savedInstanceState);
 
             // FFImageLoading
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
 
-            Stormlion.PhotoBrowser.Droid.Platform.Init(this);
+            //Stormlion.PhotoBrowser.Droid.Platform.Init(this);
 
             var incomingLink = Intent?.Data?.ToString();
             var holidayId = Intent?.Data?.GetQueryParameter("id");
@@ -183,33 +187,42 @@ namespace EventApp.Droid
 
 
             }
+
+
+
             LoadApplication(new App());
+
             PushNotificationManager.ProcessIntent(this, Intent);
-
         }
 
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
+        {
+            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
-    {
-        base.OnActivityResult(requestCode, resultCode, data);
-        InAppBillingImplementation.HandleActivityResult(requestCode, resultCode, data);
-    }
-
-
-    public override void OnBackPressed()
-    {
-        if (Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed))
         {
-            // Do something if there are some pages in the `PopupStack`
+            base.OnActivityResult(requestCode, resultCode, data);
+            //InAppBillingImplementation.HandleActivityResult(requestCode, resultCode, data);
         }
-        else
+
+        public override void OnBackPressed()
         {
-            // Do something if there are not any pages in the `PopupStack`
+            if (Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed))
+            {
+                // Do something if there are some pages in the `PopupStack`
+            }
+            else
+            {
+                // Do something if there are not any pages in the `PopupStack`
+            }
         }
-    }
-    protected void OnPropertyChanged([CallerMemberName] string name = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-    }
 
     }
 }

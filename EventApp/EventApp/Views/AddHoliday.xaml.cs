@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace EventApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class AddHoliday : ContentPage
+    public partial class AddHolidayPage : ContentPage
     {
 
         private MediaFile UploadedMedia;
@@ -42,7 +42,7 @@ namespace EventApp.Views
             }
         }
 
-        public AddHoliday()
+        public AddHolidayPage()
         {
             InitializeComponent();
 

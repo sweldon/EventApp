@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Net.Http;
-using System.Runtime.Remoting;
+//using System.Runtime.Remoting;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EventApp.Models;
