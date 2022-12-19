@@ -22,7 +22,7 @@ namespace EventApp
         #region Setting Constants
 
         private const string AppInfoKey = "app_info_key";
-        private static readonly string AppInfoKeyDefault = "2.0.3";
+        private static readonly string AppInfoKeyDefault = "3.0.0";
 
         private const string SettingsKey = "settings_key";
         private static readonly string SettingsDefault = "no";

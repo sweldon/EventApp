@@ -28,7 +28,7 @@ namespace EventApp
             #if __IOS__
                     public static string HolidailyHost = "http://localhost:8888";
             #else
-                    public static string HolidailyHost = "http://10.0.2.2:8888";
+                    public static string HolidailyHost = "http://10.0.2.2:8000";
             #endif
         #else
             public static string HolidailyHost = "https://holidailyapp.com";

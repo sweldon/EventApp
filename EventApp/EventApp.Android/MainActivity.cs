@@ -22,7 +22,7 @@ namespace EventApp.Droid
         Icon = "@drawable/Icon",
         Theme = "@style/splashscreen",
         MainLauncher = true,
-        //Exported = true, // Re-enable with next Xamarin.Android update
+        Exported = true, // Re-enable with next Xamarin.Android update
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)
         ]
     [IntentFilter(
@@ -113,9 +113,6 @@ namespace EventApp.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);      
             MobileAds.Initialize(ApplicationContext, "ca-app-pub-9382412071078825~2735085847");
 
-            // In-app purchase
-            CrossCurrentActivity.Current.Init(this, savedInstanceState);
-
             // FFImageLoading
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
 
@@ -191,7 +188,6 @@ namespace EventApp.Droid
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
     {
         base.OnActivityResult(requestCode, resultCode, data);
-        InAppBillingImplementation.HandleActivityResult(requestCode, resultCode, data);
     }
 
 
