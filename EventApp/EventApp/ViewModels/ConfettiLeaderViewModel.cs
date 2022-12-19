@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EventApp.ViewModels
 {
@@ -44,7 +45,7 @@ namespace EventApp.ViewModels
                 foreach (var user in userList)
                 {
                     var avatar = user.profile_image == null ? "default_user_128.png" : user.profile_image;
-                    UserList.Insert(0, new User() {
+                    UserList.Add(new User() {
                         UserName = user.username,
                         Confetti = user.confetti,
                         Submissions = user.holiday_submissions,

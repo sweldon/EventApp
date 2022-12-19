@@ -32,6 +32,13 @@ namespace EventApp.Views
             InitializeComponent();
             BindingContext = viewModel = new ConfettiLeaderViewModel();
             Title = "Top 20";
+
+            ConfettiLeadersList.ItemTapped += (object sender, ItemTappedEventArgs e) => {
+                if (e.Item == null) return;
+                Task.Delay(500);
+                if (sender is ListView lv) lv.SelectedItem = null;
+            };
+
             ConfettiLeadersList.ItemSelected += OnItemSelected;
             CommentLock = false;
         }
@@ -40,11 +47,6 @@ namespace EventApp.Views
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
 
-            ((ListView)sender).SelectedItem = null;
-            if (args.SelectedItem == null)
-            {
-                return;
-            }
             var SelectedUser = args.SelectedItem as User;
 
             if (!CommentLock)
@@ -69,7 +71,7 @@ namespace EventApp.Views
             MessagingCenter.Send(Application.Current, "UpdateToolbar", true);
             if (viewModel.UserList.Count == 0)
                 viewModel.LoadUsers.Execute(null);
-            //AdBanner.IsVisible = !isPremium;
+            AdBanner.IsVisible = !isPremium;
 
         }
 

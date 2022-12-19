@@ -206,9 +206,9 @@ namespace EventApp.Views
             }
             else
             {
-                //PendingWrapper.IsVisible = false;
-                //CheckStatusWrapper.IsVisible = false;
-                //SubmissionWrapper.IsVisible = true;
+                PendingWrapper.IsVisible = false;
+                CheckStatusWrapper.IsVisible = false;
+                SubmissionWrapper.IsVisible = true;
             }
         }
 

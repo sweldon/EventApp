@@ -1,11 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.divinity.holidailyapp" android:versionName="2.0.1" android:versionCode="154">
-	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="29" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.divinity.holidailyapp" android:versionName="3.0.0" android:versionCode="164" android:installLocation="auto">
+	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="31" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_SURFACE_FLINGER" />
 	<application android:label="Holidaily" android:icon="@drawable/Icon" android:usesCleartextTraffic="true">
+		<service android:name="crc640921eac73192168e.PNMessagingService" android:exported="true">
+			<intent-filter>
+				<action android:name="com.google.firebase.MESSAGING_EVENT" />
+			</intent-filter>
+		</service>
 		<!-- TODO: DELETE THIS WHEN PUSHING -->
 		<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-9382412071078825~2735085847" />
 		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />

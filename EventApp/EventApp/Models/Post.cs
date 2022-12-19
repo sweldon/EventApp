@@ -168,6 +168,66 @@ namespace EventApp.Models
             }
         }
 
+        private string avatar;
+        public string Avatar
+        {
+            get { return avatar; }
+            set
+            {
+                if (avatar == value)
+                {
+                    return;
+                }
+                avatar = value;
+                OnPropertyChanged();
+            }
+        }
+        public string HolidayId { get; set; }
+        private string timesince;
+        public string TimeSince
+        {
+            get { return timesince; }
+            set
+            {
+                if (timesince == value)
+                {
+                    return;
+                }
+                timesince = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string holidayName;
+        public string HolidayName
+        {
+            get { return holidayName; }
+            set
+            {
+                if (holidayName == value)
+                {
+                    return;
+                }
+                holidayName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Color bg;
+        public Color BackgroundColor
+        {
+            get { return bg; }
+            set
+            {
+                if (bg == value)
+                {
+                    return;
+                }
+                bg = value;
+                OnPropertyChanged();
+            }
+        }
+
         private bool likeenabled;
         public bool LikeEnabled
         {
@@ -199,52 +259,6 @@ namespace EventApp.Models
                     return;
                 }
                 likelabel = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-        private string avatar;
-        public string Avatar
-        {
-            get { return avatar; }
-            set
-            {
-                if (avatar == value)
-                {
-                    return;
-                }
-                avatar = value;
-                OnPropertyChanged();
-            }
-        }
-        public string HolidayId { get; set; }
-        private string timesince;
-        public string TimeSince
-        {
-            get { return timesince; }
-            set
-            {
-                if (timesince == value)
-                {
-                    return;
-                }
-                timesince = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Color bg;
-        public Color BackgroundColor
-        {
-            get { return bg; }
-            set
-            {
-                if (bg == value)
-                {
-                    return;
-                }
-                bg = value;
                 OnPropertyChanged();
             }
         }
